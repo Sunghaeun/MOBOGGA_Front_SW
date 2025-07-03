@@ -1,4 +1,4 @@
-.modal-overlay {
+.modal_overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,12 +11,19 @@
 }
 
 .modal {
+  display: flex;
+  flex-direction: column;
   background: white;
   padding: 20px;
+  padding-bottom: 30px;
   position: relative;
+  width: 25.75rem;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
 }
 
-.modal-close {
+.modal_close {
   display: flex;
   width: 6.1875rem;
   padding: 0.25rem 1.5rem;

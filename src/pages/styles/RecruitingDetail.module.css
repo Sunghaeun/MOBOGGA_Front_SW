@@ -23,10 +23,16 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  align-self: center;
 }
 
 .intro_con {
   width: 100vw - 24px;
+}
+
+.intro_con_left {
+  width: 35%;
+  margin-bottom: 20px;
 }
 
 .recruite_Intro {
@@ -75,6 +81,11 @@
   font-weight: bold;
   color: #ff3d12;
   margin-bottom: 20px;
+  width: 40%;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .infos {
@@ -125,6 +136,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 160px;
+  margin-left: 50%;
 }
 
 .apply_Btn {
@@ -146,10 +159,16 @@
   justify-content: left;
   gap: 16px;
   margin-top: 24px;
+  margin-bottom: 20px;
 }
 
 .sns_icon {
   height: 1.5rem;
   flex-shrink: 0;
   aspect-ratio: 1/1;
+}
+
+.clubDetailText {
+  display: flex;
+  text-align: left;
 }

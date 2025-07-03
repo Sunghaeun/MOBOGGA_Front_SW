@@ -9,16 +9,10 @@
 }
 
 .firstContainer{
-  display: flex;
+  width: 20%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   color:rgba(62, 62, 62, 1);
-}
-
-.firstContainer div{
-  border-left: 1px solid #3E3E3E;
-  border-right: 1px solid #3E3E3E;
-
-  padding: 0px 20px;
-  margin: 0px 20px;
 }
 
 .firstContainer span{
@@ -28,6 +22,7 @@
 .firstContainer span:hover{
   font-weight: 700;
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .secondContainer{
@@ -49,10 +44,24 @@
   margin-bottom:17px;
 }
 
+.contact{
+  span a{
+    color: var(--Gray-06, #636363);
+    text-decoration: none;
+  }
+  span a:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+
 .insta{
   display: flex;
   margin-top:7px;
   margin-bottom:21px;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .insta span{

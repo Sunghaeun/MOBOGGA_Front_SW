@@ -13,11 +13,14 @@
 .card_img {
   width: 145px;
   height: 205px;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .card_text_box {
   width: 318px;
-  padding-left: 10px;
+  padding-left: 20px;
   padding-right: 10px;
   align-items: left;
 }
@@ -30,7 +33,12 @@
   line-height: 48px; /* 150% */
   letter-spacing: 0.96px;
   margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .card_content {
@@ -59,14 +67,19 @@
 }
 
 #order_box {
-  border-radius: 10px;
-  background-color: #f2e8ff;
-  color: #8e3dff;
+  display: flex;
   font-weight: 400;
   line-height: 24px; /* 171.429% */
   letter-spacing: 0.14px;
+}
+
+.card_order {
+  margin-right: 5px;
   padding-left: 4px;
   padding-right: 5px;
+  border-radius: 10px;
+  background-color: #f2e8ff;
+  color: #8e3dff;
 }
 
 .ticket_info {

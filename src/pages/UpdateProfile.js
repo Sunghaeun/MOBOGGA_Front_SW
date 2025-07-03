@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/UpdateProfile.module.css";
 import UpdateProfileWord from "../assets/UpdateProfileWord.svg";
+import Modal from "../components/Modal";
 
 function UpdateProfile() {
   const navigate = useNavigate();
@@ -23,30 +24,91 @@ function UpdateProfile() {
   const onMouseOverConfirmBtn = () => setIsHoveringConfirmBtn(true);
   const onMouseOutConfirmBtn = () => setIsHoveringConfirmBtn(false);
 
-  const onClickCancelBtn = () => {
-    if (window.confirm("취소하시겠습니까?")) {
+  // 모달 상태 관리
+  const [isUpdateConfirmModalOpen, setIsUpdateConfirmModalOpen] =
+    useState(false);
+  const [isUpdateCancelModalOpen, setIsUpdateCancelModalOpen] = useState(false);
+
+  const [validationErrorModal, setValidationErrorModal] = useState({
+    isOpen: false,
+    message: "",
+  });
+
+  const closeValidationErrorModal = () => {
+    setValidationErrorModal({
+      isOpen: false,
+      message: "",
+    });
+  };
+
+  const openUpdateConfirmModal = () => {
+    if (!formData.userName?.trim()) {
+      setValidationErrorModal({
+        isOpen: true,
+        message: "이름을 입력해주세요.",
+      });
+      return;
+    }
+
+    if (!formData.stdId?.trim()) {
+      setValidationErrorModal({
+        isOpen: true,
+        message: "학번을 입력해주세요.",
+      });
+      return;
+    }
+
+    if (!formData.phoneNum?.trim()) {
+      setValidationErrorModal({
+        isOpen: true,
+        message: "전화번호를 입력해주세요.",
+      });
+      return;
+    }
+
+    if (!/^\d{3}-\d{4}-\d{4}$/.test(formData.phoneNum)) {
+      setValidationErrorModal({
+        isOpen: true,
+        message: "전화번호 입력 형식은 다음과 같습니다. 010-1234-5678",
+      });
+      return;
+    }
+
+    // 유효성 통과 시 확인 모달 열기
+    setIsUpdateConfirmModalOpen(true);
+  };
+
+  const closeUpdateConfirmModal = () => setIsUpdateConfirmModalOpen(false);
+  const openUpdateCancelModal = () => setIsUpdateCancelModalOpen(true);
+  const closeUpdateCancelModal = () => setIsUpdateCancelModalOpen(false);
+
+  const handleUpdateConfirmCancel = () => {
+    closeUpdateConfirmModal();
+  };
+  const handleUpdateConfirmConfirm = async () => {
+    try {
+      await saveProfile();
+      closeUpdateConfirmModal();
       navigate("/mypage");
+    } catch (error) {
+      console.error("Error saving profile:", error);
     }
   };
 
-  const onClickConfirmBtn = () => {
-    if (window.confirm("정보를 수정하시겠습니까?")) {
-      saveProfile();
-    }
+  const handleUpdateCancelConfirm = () => {
+    closeUpdateCancelModal();
+    navigate("/mypage");
+  };
+  const handleUpdateCancelCancel = () => {
+    closeUpdateCancelModal();
   };
 
   // 사용자 정보 조회
   useEffect(() => {
-    if (!token) {
-      alert("로그인이 필요한 기능입니다.");
-      navigate("/login");
-      return;
-    }
-
     const fetchUserProfile = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/mypage/student/profile/`,
+          `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -69,7 +131,6 @@ function UpdateProfile() {
         });
       } catch (error) {
         console.error("Error fetching user profile:", error);
-        alert("사용자 정보를 불러오는 데 실패했습니다.");
       } finally {
         setIsLoading(false);
       }
@@ -87,29 +148,9 @@ function UpdateProfile() {
   };
 
   const saveProfile = async () => {
-    if (!formData.userName?.trim()) {
-      alert("이름을 입력해주세요.");
-      return;
-    }
-
-    if (!formData.stdId?.trim()) {
-      alert("학번을 입력해주세요.");
-      return;
-    }
-
-    if (!formData.phoneNum?.trim()) {
-      alert("전화번호를 입력해주세요.");
-      return;
-    }
-
-    if (!/^\d{3}-\d{4}-\d{4}$/.test(formData.phoneNum)) {
-      alert("전화번호 형식을 확인해주세요. 예: 010-1234-5678");
-      return;
-    }
-
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/mypage/student/profile/`,
+        `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
         {
           method: "PUT",
           headers: {
@@ -129,12 +170,8 @@ function UpdateProfile() {
         const errorData = await response.json();
         throw new Error(errorData.message || "저장에 실패했습니다.");
       }
-
-      alert("정보 수정이 완료되었습니다.");
-      navigate("/mypage");
     } catch (error) {
-      console.error("Error saving profile:", error);
-      alert(error.message || "저장에 실패했습니다.");
+      throw error;
     }
   };
 
@@ -198,7 +235,7 @@ function UpdateProfile() {
           }
           onMouseOver={onMouseOverCancelBtn}
           onMouseOut={onMouseOutCancelBtn}
-          onClick={onClickCancelBtn}
+          onClick={openUpdateCancelModal}
         >
           <div className={styles.button_text} id={styles.cancel_button_text}>
             취소
@@ -213,13 +250,78 @@ function UpdateProfile() {
           }
           onMouseOver={onMouseOverConfirmBtn}
           onMouseOut={onMouseOutConfirmBtn}
-          onClick={onClickConfirmBtn}
+          onClick={openUpdateConfirmModal}
         >
           <div className={styles.button_text} id={styles.confirm_button_text}>
             확인
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isUpdateConfirmModalOpen}
+        onClose={() => setIsUpdateConfirmModalOpen(false)}
+      >
+        <div className={styles.modal_content}>
+          <div className={styles.modal_top}>
+            프로필 정보를 수정하시겠습니까?
+          </div>
+          <div className={styles.modal_Btns}>
+            <button
+              onClick={handleUpdateConfirmCancel}
+              className={styles.modal_close_Btn}
+            >
+              취소
+            </button>
+            <button
+              onClick={handleUpdateConfirmConfirm}
+              className={styles.modal_ok_Btn}
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={isUpdateCancelModalOpen}
+        onClose={() => setIsUpdateCancelModalOpen(false)}
+      >
+        <div className={styles.modal_content}>
+          <div className={styles.modal_top}>이 페이지에서 나가시겠습니까?</div>
+          <div className={styles.modal_con}>
+            작성 중인 내용은 저장되지 않습니다.
+          </div>
+          <div className={styles.modal_Btns}>
+            <button
+              onClick={handleUpdateCancelConfirm}
+              className={styles.modal_ok_Btn}
+            >
+              확인
+            </button>
+            <button
+              onClick={handleUpdateCancelCancel}
+              className={styles.modal_close_Btn}
+            >
+              취소
+            </button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={validationErrorModal.isOpen}
+        onClose={closeValidationErrorModal}
+      >
+        <div className={styles.modal_content}>
+          <div className={styles.modal_top}>{validationErrorModal.message}</div>
+          <div className={styles.modal_Btns}>
+            <button
+              onClick={closeValidationErrorModal}
+              className={styles.modal_ok_Btn}
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -18,7 +18,7 @@
   display: flex;
   padding-left: 20px;
 
-  margin-bottom: 200px;;
+  margin-bottom: 200px;
 }
 
 .intro_Info {
@@ -70,11 +70,8 @@
 .title {
   font-size: 48px;
   font-weight: bold;
-  text-shadow:   /* 글씨 더 굵게 보이게  */
-  -0.7px 0 currentColor,
-  0.7px 0 currentColor,
-   0   -0.7px currentColor,
-   0    0.7px currentColor;
+  text-shadow:   /* 글씨 더 굵게 보이게  */ -0.7px 0 currentColor,
+    0.7px 0 currentColor, 0 -0.7px currentColor, 0 0.7px currentColor;
   margin-bottom: 5px;
   line-height: 72px; /* 150% */
   letter-spacing: 1.44px;
@@ -85,6 +82,11 @@
   font-weight: bold;
   color: #ff3d12;
   margin-bottom: 20px;
+  width: 40%;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .infos {
@@ -100,17 +102,17 @@
   line-height: 1.6;
 }
 
-.textBox{
-  width:80px;
+.textBox {
+  width: 80px;
   flex-shrink: 0;
 }
 
 .fixed_Info1 {
   width: 80px;
   font-weight: bold;
-  color: #6666ff;
+  color: #8e3dff;
 
-  display: inline-block; 
+  display: inline-block;
   width: 100%;
 }
 
@@ -118,12 +120,13 @@
   width: 80px;
   font-weight: bold;
   color: #6666ff;
-
 }
 
 .variable_Info {
   color: #333;
   white-space: pre-line;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 /* 공연 회차 선택 등 */
@@ -231,4 +234,8 @@
   font-weight: 400;
   line-height: 2.0625rem; /* 165% */
   letter-spacing: 0.0125rem;
+}
+
+.inner {
+  width: 100%;
 }

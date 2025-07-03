@@ -1,4 +1,4 @@
-.clubDetail{
+.clubDetail {
   padding: 18px 128px 160px 128px;
 
   display: flex;
@@ -6,69 +6,67 @@
   align-items: flex-start;
 }
 
-.titleName{
+.titleName {
   color: var(--gray-10-typo-color, #121212);
 
   font-size: 24px;
   font-weight: 700;
-  text-shadow:   /* 글씨 더 굵게 보이게  */
-  -0.1px 0 currentColor,
-   0.1px 0 currentColor,
-   0   -0.1px currentColor,
-   0    0.1px currentColor;
+  text-shadow:   /* 글씨 더 굵게 보이게  */ -0.1px 0 currentColor,
+    0.1px 0 currentColor, 0 -0.1px currentColor, 0 0.1px currentColor;
   line-height: 40px; /* 166.667% */
   letter-spacing: 2px;
 
   margin-top: 20px;
-  margin-bottom: 30px;;
+  margin-bottom: 30px;
 }
 
-.ClubImg{
+.ClubImg {
   width: 384px;
   height: 384px;
-  border: 4px solid var(--Gradient-01, #FBFBFB);
+  border: 4px solid var(--Gradient-01, #fbfbfb);
   background: lightgray 50% / cover no-repeat;
 
   /* Shadow 02 */
   box-shadow: 8px 8px 20px 0px rgba(0, 0, 0, 0.25);
 
   margin-bottom: 32px;
+  object-fit: cover;
 }
 
-.clubDeatilContainer{
+.clubDeatilContainer {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
 
-  width:100%;
+  width: 100%;
   margin-bottom: 80px;
 }
 
-.clubDeatilLeft{
-  width:420px;
+.clubDeatilLeft {
+  width: 420px;
   /* height:600px; */
 
   display: flex;
   flex-direction: column;
 }
 
-.clubDeatilText1{
-  display: flex;  
+.clubDeatilText1 {
+  display: flex;
   flex-direction: row;
 
   margin-top: 20px;
 }
 
-.clubDeatiltitleDiv{
-  width:60px;
+.clubDeatiltitleDiv {
+  width: 60px;
   flex-shrink: 0;
 
   margin-right: 20px;
 }
 
-.clubDeatiltitle{
-  color: var(--Gray-08, #3E3E3E);
-  display: inline-block; 
+.clubDeatiltitle {
+  color: var(--Gray-08, #3e3e3e);
+  display: inline-block;
   width: 100%;
 
   font-size: 16px;
@@ -76,9 +74,8 @@
   font-weight: 700;
 }
 
-
-.clubDeatilRight{
-  width:100%;
+.clubDeatilRight {
+  width: 100%;
 
   display: flex;
   flex-direction: column;
@@ -87,61 +84,58 @@
   margin-left: 140px;
 }
 
-.clubName{
-  color: var(--main-02, #FF3D12);
+.clubName {
+  color: var(--main-02, #ff3d12);
 
   font-size: 56px;
   font-weight: 700;
-  text-shadow:   /* 글씨 더 굵게 보이게  */
-  -1px 0 currentColor,
-   1px 0 currentColor,
-   0   -1px currentColor,
-   0    1px currentColor;
+  text-shadow:   /* 글씨 더 굵게 보이게  */ -1px 0 currentColor,
+    1px 0 currentColor, 0 -1px currentColor, 0 1px currentColor;
   line-height: 84px; /* 150% */
   letter-spacing: 3px;
 }
 
-.icons{
-  margin-top: 16px;;
+.icons {
+  margin-top: 16px;
 }
 
-.iconImg{
+.iconImg {
   margin-right: 20px;
 
   cursor: pointer;
 }
 
-.content{
+.content {
   margin-top: 28px;
   text-align: left;
 }
 
-.clubDeatiltextDiv{
+.clubDeatiltextDiv {
   /* width: 80px; */
-  text-align: left
+  text-align: left;
 }
 
-.clubDeatiltext{
-  display: inline-block; 
+.clubDeatiltext {
+  display: inline-block;
   width: 100%;
 
   text-align: left;
 }
 
-.EventCardContainer{
-  width:100%;
+.EventCardContainer {
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 24px; 
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
   justify-items: center;
 
   margin-bottom: 50px;
 }
 
-.LastRecruitingCardContainer{
-  width:100%;
+.LastRecruitingCardContainer {
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr); 
-  gap: 24px; 
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
   justify-items: center;
 }

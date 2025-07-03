@@ -3,31 +3,33 @@ import { useNavigate } from "react-router-dom";
 import styles from "./styles/AddInfo.module.css";
 import LoginLogo from "../assets/LoginLogo.svg";
 import FilledLongBtn from "../components/FilledLongBtn";
+import Modal from "../components/Modal"; // 꼭 import 필요
 
 function AddInfo() {
   const navigate = useNavigate();
-
-  const [name, setName] = useState("");
-  const [studentId, setStudentId] = useState("");
-  const [phoneNum, setPhoneNum] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
   //eslint-disable-next-line
   const [error, setError] = useState(null);
 
-  const userId = sessionStorage.getItem("serverResponse");
   const [formData, setFormData] = useState({
-    userName: "",
-    phoneNum: "",
-    stdId: "",
+    name: "",
+    phoneNumber: "",
+    studentId: "",
   });
+
+  const token = localStorage.getItem("jwt");
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/mypage/profile`,
+          `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
           {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
             credentials: "include",
           }
         );
@@ -40,9 +42,9 @@ function AddInfo() {
 
         // 서버에서 받은 데이터를 폼 데이터 형식에 맞게 변환
         setFormData({
-          userName: userData.user.userName || "",
-          phoneNum: userData.user.phoneNum || "",
-          stdId: userData.user.stdId || "",
+          name: userData.name || "",
+          phoneNumber: userData.phoneNumber || "",
+          studentId: userData.studentId?.toString() || "", // 여기 수정
         });
       } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -53,64 +55,67 @@ function AddInfo() {
     };
 
     fetchUserProfile();
-  }, [userId]); // 컴포넌트 마운트 시 한 번만 실행
-  // 사용자 정보 저장 함수
-  // 이 함수는 사용자가 입력한 정보를 서버에 저장하고, 세션 스토리지에 저장한 후 메인 페이지로 이동합니다.
-  // 이 함수는 폼 제출 이벤트를 처리합니다.
-  // e.preventDefault()를 사용하여 기본 폼 제출 동작을 방지합니다.
+    // eslint-disable-next-line
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-
-    // 상태 업데이트 (별도로 state를 유지할 필요는 없지만 유지하려면 아래처럼)
-    if (name === "userName") {
-      setName(value);
-    } else if (name === "stdId") {
-      setStudentId(value);
-    } else if (name === "phoneNum") {
-      setPhoneNum(value);
-    }
   };
 
-  // eslint-disable-next-line
-  const saveProfile = async (e) => {
-    e.preventDefault();
+  const [feedbackModal, setFeedbackModal] = useState({
+    isOpen: false,
+    message: "",
+    onClose: null,
+  });
 
-    // 데이터 유효성 검사
-    if (!formData.userName?.toString()) {
-      alert("이름을 입력해주세요.");
+  const showModal = (message, callback) => {
+    setFeedbackModal({
+      isOpen: true,
+      message,
+      onClose: () => {
+        setFeedbackModal({ isOpen: false, message: "", onClose: null });
+        if (callback) callback();
+      },
+    });
+  };
+
+  const saveProfile = async () => {
+    if (!(formData.name + "").trim()) {
+      showModal("이름을 입력해주세요.");
+      return;
+    }
+    if (!(formData.studentId + "").trim()) {
+      showModal("학번을 입력해주세요.");
+      return;
+    }
+    if (!(formData.phoneNumber + "").trim()) {
+      showModal("전화번호를 입력해주세요.");
       return;
     }
 
-    if (!formData.phoneNum?.toString()) {
-      alert("전화번호를 입력해주세요.");
-      return;
-    }
-
-    if (!formData.stdId?.toString()) {
-      alert("학번을 입력해주세요.");
+    if (!/^\d{3}-\d{4}-\d{4}$/.test(formData.phoneNumber)) {
+      showModal("전화번호 입력 형식은 다음과 같습니다. 010-1234-5678");
       return;
     }
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/mypage/profile`,
+        `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
         {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
             Accept: "application/json",
+            "Content-Type": "application/json",
           },
-          credentials: "include",
           body: JSON.stringify({
-            user: {
-              userName: formData.userName?.toString() || "",
-              phoneNum: formData.phoneNum?.toString() || "",
-              stdId: formData.stdId?.toString() || "",
-            },
+            name: formData.name,
+            phoneNumber: formData.phoneNumber,
+            studentId: formData.studentId,
           }),
         }
       );
@@ -120,16 +125,10 @@ function AddInfo() {
         throw new Error(errorData.message || "저장에 실패했습니다.");
       }
 
-      alert("프로필이 성공적으로 저장되었습니다.");
-      // 세션 스토리지에 사용자 정보 저장
-      sessionStorage.setItem("userName", formData.userName);
-      sessionStorage.setItem("phoneNum", formData.phoneNum);
-      sessionStorage.setItem("stdId", formData.stdId);
-      // 메인 페이지로 이동
-      navigate("/main");
+      showModal("추가 정보 기입이 완료되었습니다.", () => navigate("/main"));
     } catch (error) {
       console.error("Error saving profile:", error);
-      alert(error.message || "저장에 실패했습니다.");
+      showModal(error.message || "저장에 실패했습니다.");
     }
   };
 
@@ -163,9 +162,9 @@ function AddInfo() {
               <div className={styles.info_head}>이름</div>
               <div className={styles.info_body}>
                 <input
-                  name="userName"
+                  name="name"
                   placeholder="이름"
-                  value={formData.userName}
+                  value={formData.name}
                   onChange={handleInputChange}
                 />
               </div>
@@ -174,9 +173,9 @@ function AddInfo() {
               <div className={styles.info_head}>학번</div>
               <div className={styles.info_body}>
                 <input
-                  name="stdId"
+                  name="studentId"
                   placeholder="학번 8자리"
-                  value={formData.stdId}
+                  value={formData.studentId}
                   onChange={handleInputChange}
                 />
               </div>
@@ -186,10 +185,10 @@ function AddInfo() {
               <div className={styles.info_body}>
                 <input
                   type="tel"
-                  name="phoneNum"
+                  name="phoneNumber"
                   id="phone"
                   placeholder="010-0000-0000"
-                  value={formData.phoneNum}
+                  value={formData.phoneNumber}
                   onChange={handleInputChange}
                   pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
                   maxLength="13"
@@ -201,18 +200,33 @@ function AddInfo() {
         <FilledLongBtn
           value="모보까 시작하기"
           onClick={() => {
-            if (!name || !studentId || !phoneNum) {
-              alert("모든 정보를 입력해주세요.");
+            if (
+              !formData.name ||
+              !formData.studentId ||
+              !formData.phoneNumber
+            ) {
+              showModal("모든 정보를 입력해주세요.");
               return;
             }
-            console.log({ userName: formData.userName, stdId: formData.stdId, phoneNum: formData.phoneNum });
             saveProfile();
-            // navigate("/main");
           }}
         />
         <div className={styles.caution}>
           *모보까에 가입함으로써 개인정보 수집에 관해 동의하게 됩니다
         </div>
+        <Modal isOpen={feedbackModal.isOpen} onClose={feedbackModal.onClose}>
+          <div className={styles.modal_content}>
+            <div className={styles.modal_top}>{feedbackModal.message}</div>
+            <div className={styles.modal_Btns}>
+              <button
+                onClick={feedbackModal.onClose}
+                className={styles.modal_ok_Btn}
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </>
   );

@@ -1,13 +1,19 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./styles/MyReservCard.module.css";
 
 function MyReservCard({ data }) {
+  const navigate = useNavigate();
   if (!data) return null;
 
   const {
+    showId,
     poster,
     title,
-    scheduleInfo,
+    order,
+    date,
+    weekday,
+    time,
     location,
     managerPhone,
     accountInfo,
@@ -16,17 +22,28 @@ function MyReservCard({ data }) {
     paid,
   } = data;
 
+  const handleShowDetail = () => {
+    navigate(`/show/${showId}`);
+  }
+
   return (
     <div className={styles.card}>
       <div className={styles.card_img_box}>
-        <img className={styles.card_img} src={poster} alt="공연 이미지" />
+        <img className={styles.card_img} src={poster} alt="공연 이미지" onClick={handleShowDetail} />
       </div>
       <div className={styles.card_text_box}>
-        <div className={styles.card_title}>{title || "공연 제목 없음"}</div>
+        <div className={styles.card_title} onClick={handleShowDetail}>{title || "공연 제목 없음"}</div>
         <div className={styles.card_info_box}>
           <div className={styles.card_content}>
             <div className={styles.card_info_header} id={styles.order_box}>
-              {scheduleInfo}
+              <div className={styles.card_order}>
+                {order || "공연 정보 없음"}
+              </div>
+              <div className={styles.card_date}>
+                {date || "날짜 정보 없음"} (
+                {weekday || "날짜 정보 없음"})
+                {time ? ` ${time}` : ""}
+              </div>
             </div>
           </div>
           <div className={styles.card_content}>
@@ -43,9 +60,7 @@ function MyReservCard({ data }) {
           </div>
           <div
             className={
-              paid === false
-                ? styles.card_content
-                : styles.card_content_hidden
+              paid === false ? styles.card_content : styles.card_content_hidden
             }
             id={styles.account_info}
           >

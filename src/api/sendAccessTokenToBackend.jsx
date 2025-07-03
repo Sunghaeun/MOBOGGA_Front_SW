@@ -14,10 +14,18 @@ const sendAccessTokenToBackend = async (idToken, navigate) => {
       }
     );
     console.log("Response from backend:", response.data);
+
     const jwt = response.data.token;
     localStorage.setItem("jwt", jwt); // 저장 후 라우팅
     console.log("Login successful, JWT stored:", jwt);
-    navigate("/main");
+
+    const isFirst = response.data.first;
+    if (isFirst) {
+      navigate("/add-info");
+      return;
+    } else {
+      navigate("/main");
+    }
   } catch (error) {
     console.error("Login failed with error: ", error);
     throw error;

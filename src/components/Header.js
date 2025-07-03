@@ -39,7 +39,8 @@ function Header() {
             alt=""
             className={
               location.pathname === "/main" ||
-              location.pathname.startsWith("/show")
+              location.pathname.startsWith("/show") ||
+              location.pathname.startsWith("/entertain")
                 ? styles.background
                 : styles.nan
             }
@@ -47,7 +48,8 @@ function Header() {
           <span
             className={
               location.pathname === "/main" ||
-              location.pathname.startsWith("/show")
+              location.pathname.startsWith("/show") ||
+              location.pathname.startsWith("/entertain")
                 ? styles.fronttext
                 : ""
             }

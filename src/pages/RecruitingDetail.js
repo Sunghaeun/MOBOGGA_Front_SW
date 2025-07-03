@@ -20,8 +20,11 @@ function RecruitingDetail() {
   const navigateToPrepage = () => {
     navigate(-1); // 이전 페이지로 이동
   };
-  const navigateToAppypage = () => {
+  const navigateToApplypage = () => {
     navigate(recruiting.applicationUrl);
+  };
+  const navigateToClubDetail = (clubId) => {
+    navigate(`/clubs/${clubId}`); // 동아리 상세 페이지로 이동
   };
 
   const recruite = {
@@ -48,7 +51,7 @@ function RecruitingDetail() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `http://jinjigui.info:8080/recruiting/detail/${recruitingId}`
+        `${process.env.REACT_APP_API_URL}/recruiting/detail/${recruitingId}`
       );
       console.log("API 응답 데이터:", response.data);
       if (response.data) {
@@ -87,7 +90,7 @@ function RecruitingDetail() {
           <div className={styles.intro_Info} >
             <div className={styles.recruite_Top}>리크루팅 정보</div>
             <div className={styles.intro_con}>
-              <div className={styles.intro_con_left} style={{width: "600px"}}>
+              <div className={styles.intro_con_left}>
                 {recruiting && (
                   <img
                     src={recruiting.poster}
@@ -95,7 +98,7 @@ function RecruitingDetail() {
                     alt="recruite_IMG"
                   />
                 )}
-                <div className={styles.sns_icons} style={{marginBottom: "20px"}}>
+                <div className={styles.sns_icons}>
                   {recruiting && (
                     <a href={recruiting.instaUrl}>
                       <img
@@ -124,9 +127,9 @@ function RecruitingDetail() {
                     </a>
                   )}
                 </div>
-                <div className={styles.recruite_left_cont} style={{marginBottom: "20px"}}>
+                <div className={styles.recruite_left_cont}>
                   {
-                    <span className={styles.clubDeatiltext}>
+                    <span className={styles.clubDetailText}>
                       {/* {recruiting.eligibility.split("\n").map((line, index) => (
                         <React.Fragment key={index}>
                           {line}
@@ -140,7 +143,7 @@ function RecruitingDetail() {
               </div>
 
               <div className={styles.recruite_Info}>
-                <div className={styles.club}>
+                <div className={styles.club} onClick={() => navigateToClubDetail(recruiting?.clubId)}>
                   {recruiting?.clubName || "동아리 정보 없음"}
                 </div>
                 <div className={styles.title}>
@@ -187,7 +190,7 @@ function RecruitingDetail() {
               </div>
             </div>
             <div className={styles.recruite_apply}>
-              <button className={styles.apply_Btn} onClick={navigateToAppypage} style={{marginBottom: "20px"}}>
+              <button className={styles.apply_Btn} onClick={navigateToApplypage}>
                 지원하러 가기
               </button>
             </div>

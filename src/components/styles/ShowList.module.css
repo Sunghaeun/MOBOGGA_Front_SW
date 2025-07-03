@@ -32,6 +32,10 @@
   background: var(--gray-10-typo-color, #FBFBFB); 
 
   margin-right: 16px;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .inactiveCategory span{
@@ -54,6 +58,10 @@
   background: var(--gray-10-typo-color, #121212);
 
   margin-right: 16px;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .activeCategory span{

@@ -26,7 +26,7 @@ function ShowList() {
   const getShow = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/attraction/list`
+        `http://jinjigui.info:8080/attraction/list`
       );
       console.log("showlist 데이터 가져오기 성공");
       console.log(res.data.entireList);

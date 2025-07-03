@@ -21,6 +21,7 @@
 .mainImg{
   width: 236px;
   height: 236px;
+  object-fit: cover;
 }
 
 .name{

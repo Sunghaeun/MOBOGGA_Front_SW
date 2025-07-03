@@ -18,17 +18,18 @@ function ShowCard({ show , onClick }) {
         <img src={top2} alt="" className={`${show.category === "즐길거리" ? styles.top1 : styles.hide}`}/> 
         <img src={side1} alt="" className={`${show.category === "공연" ? styles.side : styles.hide}`}/>
         <img src={side2} alt="" className={`${show.category === "즐길거리" ? styles.side1 : styles.hide}`}/> 
-        <span className={`${styles.category} ${show.category === "즐길거리" ? styles.category1 : ""}`}>{show.category}</span>
+        <span className={`${styles.category} ${show.category === "즐길거리" ? styles.category1 : ""}`}>{show.category}</span> 
         <span className={`${styles.tag}
     ${show.tag.length === 1 ? styles.tag1 : ""}
     ${show.tag.length === 3 ? styles.tag3 : ""}
     ${show.tag.length === 4 ? styles.tag4 : ""}
-    ${show.tag.length >= 5 ? styles.tag5 : ""}`}>{show.tag}</span>
+    ${show.tag.length >= 5 ? styles.tag5 : ""}`
+    }>{show.tag}</span>
 
       </div>
       <span className={styles.name}>{show.name}</span> 
       <div className={styles.clubDate}>
-        <span className={styles.club}>{show.clubID}</span>
+        <span className={`${styles.club} ${show.category === "즐길거리" ? styles.tagdetail : ""}`}>{show.clubID}</span>
         <span>|</span>
         <span className={styles.date}>{show.startDate}</span>
         <span >{" - "}</span>

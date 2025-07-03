@@ -1,8 +1,11 @@
-.banner{
+.banner {
   height: 560px;
   flex-shrink: 0;
 
-  background: var(--Gradient-02, linear-gradient(180deg, #CCC 0%, #FBFBFB 50%, #CCC 100%));
+  background: var(
+    --Gradient-02,
+    linear-gradient(180deg, #ccc 0%, #fbfbfb 50%, #ccc 100%)
+  );
 
   padding: 18px 140px 42px 142px;
 }
@@ -10,124 +13,130 @@
 .fade {
   opacity: 0;
   transition: opacity 1s ease-in-out;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .show {
   opacity: 1;
+  cursor: pointer;
 }
 
-.text{
+.text {
   display: flex;
 
   margin-bottom: 30px;
 }
 
-.text span{
+.text span {
   color: var(--gray-10-typo-color, #121212);
   font-size: 24px;
   font-weight: 700;
-  text-shadow:   /* 글씨 더 굵게 보이게  */
-  -0.2px 0 currentColor,
-   0.2px 0 currentColor,
-   0   -0.2px currentColor,
-   0    0.2px currentColor;
+  text-shadow:   /* 글씨 더 굵게 보이게  */ -0.2px 0 currentColor,
+    0.2px 0 currentColor, 0 -0.2px currentColor, 0 0.2px currentColor;
 }
 
-.container{
+.container {
   display: flex;
   justify-content: space-around;
 }
 
-.leftImg{
+.leftImg {
   width: 322px;
   height: 436px;
   flex-shrink: 0;
 
-  border: 4px solid var(--gray-01-background, #FBFBFB);
+  border: 4px solid var(--gray-01-background, #fbfbfb);
   background: lightgray 50% / cover no-repeat;
 
   /* Shadow 02 */
   box-shadow: 8px 8px 20px 0px rgba(0, 0, 0, 0.25);
 }
 
-.leftImg img{
+.leftImg img {
   width: 322px;
   height: 436px;
 }
 
-.rightContainer{
-  width:700px;
+.rightContainer {
+  width: 700px;
   display: flex;
   flex-direction: column;
 
   margin-left: 72px;
 }
 
-.textContainer{
+.textContainer {
   width: 534px;
   height: 200px;
   flex-shrink: 0;
 
-  display:flex;
+  display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-.clubName{
-  color: var(--main-02, #FF3D12);
+.clubName {
+  color: var(--main-02, #ff3d12);
   font-size: 26px;
   font-weight: 700;
-  text-shadow:   /* 글씨 더 굵게 보이게  */
-  -0.2px 0 currentColor,
-   0.2px 0 currentColor,
-   0   -0.2px currentColor,
-   0    0.2px currentColor;
+  text-shadow:   /* 글씨 더 굵게 보이게  */ -0.2px 0 currentColor,
+    0.2px 0 currentColor, 0 -0.2px currentColor, 0 0.2px currentColor;
   letter-spacing: 0.84px;
 }
 
-.name{
-  color: var(--Gray-08, #3E3E3E);
+.name {
+  width: 120%;
+  color: var(--Gray-08, #3e3e3e);
   font-size: 56px;
   font-weight: 700;
-  text-shadow:   /* 글씨 더 굵게 보이게  */
-  -0.4px 0 currentColor,
-   0.4px 0 currentColor,
-   0   -0.4px currentColor,
-   0    0.4px currentColor;
-   letter-spacing: 1.68px;
+  text-shadow:   /* 글씨 더 굵게 보이게  */ -0.4px 0 currentColor,
+    0.4px 0 currentColor, 0 -0.4px currentColor, 0 0.4px currentColor;
+  letter-spacing: 1.68px;
 
-  margin-top:4px;
-  margin-bottom:28px;
+  margin-top: 4px;
+  margin-bottom: 28px;
   text-align: left;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
-.date{
+.date {
   color: var(--gray-10-typo-color, #121212);
   font-size: 20px;
   font-weight: 500;
 }
 
-.imgContainer{
+.imgContainer {
   display: flex;
   justify-content: flex-end;
 
   margin-top: 114px;
 }
 
-.imgBox{
+.imgBox {
   width: 84.286px;
   height: 118px;
 
   margin-left: 36px;
 
-  border: 4px solid var(--gray-01-background, #FBFBFB);
+  border: 4px solid var(--gray-01-background, #fbfbfb);
   background: lightgray 50% / cover no-repeat;
 
   /* Shadow 02 */
   box-shadow: 8px 8px 20px 0px rgba(0, 0, 0, 0.25);
+  &:hover {
+    cursor: pointer;
+  }
 }
 
-.imgBox img{
+.imgBox img {
   width: 84.286px;
   height: 118px;
+  &:hover {
+    cursor: pointer;
+  }
 }
