@@ -145,6 +145,9 @@ function ShowDetail() {
         alert(`현재 ${count}매를 예매할 수 있습니다.`);
       }
     }
+    else{
+      alert("공연 회차를 선택해주세요.");
+    }
   };
 
   const formatDate = (dateString) => {
