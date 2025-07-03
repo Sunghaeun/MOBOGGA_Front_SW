@@ -89,22 +89,29 @@
   height: 35px;
   /* 화살표 background: url('https://freepikpsd.com/media/2019/10/down-arrow-icon-png-7-Transparent-Images.png') calc(100% - 7px) center no-repeat; */
   /* border: 1px solid var(--main-02, #FF3D12); */
+  
   background: var(--main-02, #FF3D12);
+  border: 1px solid var(--main-02, #FF3D12);
+
   cursor: pointer;
-  z-index: 100;
+  z-index: 10000;
+
+  margin-top: 12px;
 }
 
 
 .selectBox2 .label {
   display: flex;
   align-items: center;
+  justify-content: center;      /* 가로 가운데 정렬 */
   width: inherit;
   height: inherit;
   border: 0 none;
   outline: 0 none;
-  padding-left: 15px;
   background: transparent;
   color: var(--gray-01-background, #FBFBFB);
+
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -149,4 +156,14 @@
 
 .selectBox2 .optionItem:last-child {
   border-bottom: 0 none;
+}
+
+.dimmed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4); /* 어두운 투명 배경 */
+  z-index: 50; /* 드롭다운보다 뒤에 위치하도록 조절 */
 }
