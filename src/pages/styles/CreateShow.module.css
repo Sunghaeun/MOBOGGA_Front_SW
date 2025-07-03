@@ -1,0 +1,308 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.CreateBody {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: auto;
+  color: #000;
+  padding-bottom: 200px;
+}
+
+.CreateBody h1 {
+  margin: 50px;
+}
+
+.Create_Container {
+  width: 920px;
+  min-height: 950px;
+  border-radius: 20px;
+  border: 1px solid white;
+}
+
+.show_content_Entire p {
+  font-size: 1.5rem;
+}
+
+.Detail_Entire_Box {
+  display: flex;
+}
+
+.SImage_Box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 290px;
+  height: 400px;
+  margin: 70px 0 10px 80px;
+  /* display: none; */
+  border: 8px solid var(--gray-02-footer-background, #eaeaea);
+  box-shadow: 4px 4px 12px 0px rgba(0, 0, 0, 0.25);
+}
+.SImage_Box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+.entir_Boxs {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.Name_info {
+  margin: 80px 0 0 10px;
+  padding: 0;
+}
+
+.Name_info li {
+  width: 80px;
+  padding: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  margin-bottom: 20px;
+  color: var(--Point-03, #8e3dff);
+  font-size: 15px;
+  border-radius: 20px;
+  list-style: none;
+  font-weight: bold;
+}
+
+.input_Boxs {
+  display: flex;
+  flex-direction: column;
+  width: 380px;
+  margin-top: 80px;
+}
+
+.input_Boxs input,
+.input_Boxs select,
+.Start_To_End input {
+  padding: 15px;
+  margin: 7px;
+  color: #000;
+  font-size: 15px;
+  border: none;
+  border-bottom: 1px solid #ffff;
+}
+
+.Start_To_End input {
+  padding: 12px 10px;
+}
+
+.Start_To_End {
+  display: flex;
+  align-items: center;
+}
+
+/* 상세 공연 만들기 */
+.Each_shows {
+  margin-top: 100px;
+  padding: 20px 0;
+  font-size: 1.5rem;
+}
+
+.Each_shows_Name {
+  display: grid;
+  grid-template-columns: 2fr 4fr 2fr 2fr 2fr 2fr;
+  border-bottom: 1px solid #fff;
+  color: var(--Point-03, #8e3dff);
+  /* Body 02 _ M */
+  font-family: "Pretendard Variable";
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.875rem; /* 166.667% */
+}
+
+.runtime_shows input {
+  display: flex;
+}
+.Detail_show {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #fff;
+}
+
+#form_detail_date {
+  outline: none;
+  width: 150px;
+}
+
+#form_detail_time {
+  outline: none;
+  width: 100px;
+}
+
+.Detail_show input {
+  color: #000;
+  border: none;
+  width: 40px;
+}
+.form_detail_show {
+  outline: none;
+}
+.form_detail_price {
+  outline: none;
+}
+.form_detail_maxPeople {
+  outline: none;
+}
+/* 삭제 버튼 */
+.delete_Btn button {
+  color: #000;
+  border: 1px solid #fff;
+  border-radius: 3px;
+  width: 30px;
+  height: 30px;
+  &:hover {
+    cursor: pointer;
+  }
+  &:active {
+    transform: translateY(-1px);
+  }
+}
+
+/* 회차 추가 버튼 */
+.add_show {
+  display: inline-flex;
+  padding: 0.25rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--gray-01-background, #fbfbfb);
+
+  color: var(--main-02, #ff3d12);
+  /* Body 04 _ R */
+  font-family: "Pretendard Variable";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 171.429% */
+
+  &:hover {
+    border: 1px solid var(--main-02, #ff3d12);
+    background: var(--Main-04, #ffefec);
+  }
+
+  &:active {
+  }
+}
+
+/* 공연 소개 */
+.show_content_Entire {
+  margin: 70px 0 30px 0;
+}
+
+.show_content textarea {
+  color: #000;
+  border: 1px solid #fff;
+  border-radius: 20px;
+  width: 920px;
+  height: 300px;
+  resize: none;
+  padding: 20px;
+  font-size: 1.3rem;
+  margin-bottom: 50px;
+}
+
+.show_content p {
+  display: flex;
+  margin: -48px 30px 0 0;
+  justify-content: flex-end;
+  z-index: 10px;
+}
+
+/* 계좌 입력 */
+.Club_account {
+  display: flex;
+  align-items: flex-start;
+  margin: 10px 0 30px 0;
+}
+
+.Club_account_space {
+  margin: auto;
+  font-size: 1.2rem;
+  margin-right: 60px;
+}
+.Club_account_space2 {
+  margin: auto;
+  font-size: 1.2rem;
+}
+
+#handleQr {
+  margin-left: 25%;
+}
+
+.last_input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-items: start;
+  padding: 0 0 20px 80px;
+}
+
+.last_Detail_input input,
+.last_Detail2_input input {
+  background-color: #161616;
+  color: #fff;
+  padding: 15px;
+  border: 1px solid white;
+  border-radius: 10px;
+}
+
+.last_Detail_input input {
+  width: 250px;
+  margin-left: 30px;
+}
+
+.last_Detail2_input input {
+  width: 50px;
+  margin-left: 30px;
+}
+
+/* 생성 버튼 */
+.make_show_submit {
+  display: inline-flex;
+  padding: 0.25rem 5.875rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--main-02, #ff3d12);
+  color: var(--gray-01-background, #fbfbfb);
+  text-align: center;
+  /* Body 01 _ R */
+  font-family: "IBM Plex Sans KR";
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 2.0625rem; /* 165% */
+}
+
+.make_show_submit:hover {
+  cursor: pointer;
+  border: 1px solid var(--Main-01, #b20);
+  background: var(--Main-01, #b20);
+  box-shadow: 0 6px 12px rgba(235, 90, 60, 0.4);
+}
+
+.make_show_submit:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(235, 90, 60, 0.2);
+}

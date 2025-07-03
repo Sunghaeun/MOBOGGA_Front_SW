@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import "../pages/styles/CreateShow.css";
+import styles from "../pages/styles/CreateShow.module.css";
 import axios from "axios";
 
 function CreateShow() {
@@ -14,6 +14,7 @@ function CreateShow() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [runtime, setRunTime] = useState("");
+  const [intro, setIntro] = useState("");
   const [content, setContent] = useState("");
   const [account, setAccount] = useState("");
   const [maxTickets, setMaxTickets] = useState("");
@@ -207,15 +208,15 @@ function CreateShow() {
       console.log("저장 성공", response.data);
 
       if (response.data.status === true) {
-        Swal.fire("저장이 완료되었습니다.").then(() => {
+        alert("저장이 완료되었습니다.").then(() => {
           navigate("/");
         });
       } else {
-        Swal.fire("저장은 되었지만, 문제가 발생했습니다.");
+        alert("저장은 되었지만, 문제가 발생했습니다.");
       }
     } catch (error) {
       console.error("저장 오류", error);
-      Swal.fire(
+      alert(
         "저장 실패",
         `서버 오류:${error.response?.data?.message || "알 수 없는 오류"}`,
         "error"
@@ -225,19 +226,27 @@ function CreateShow() {
 
   //제목 글자 수 limit
   const handletitle = (e) => {
-    if (e.target.value.length <= 14) {
+    if (e.target.value.length <= 30) {
       setTitle(e.target.value);
     } else {
-      Swal.fire("14글자를 초과할 수 없습니다.");
+      alert("30글자를 초과할 수 없습니다.");
+    }
+  };
+
+  const handleIntro = (e) => {
+    if (e.target.value.length <= 100) {
+      setIntro(e.target.value);
+    } else {
+      alert("100자를 초과할 수 없습니다.");
     }
   };
 
   // 공연 소개란 limit
   const handleContent = (e) => {
-    if (e.target.value.length <= 500) {
+    if (e.target.value.length <= 300) {
       setContent(e.target.value);
     } else {
-      Swal.fire("500자를 초과할 수 없습니다.");
+      alert("300자를 초과할 수 없습니다.");
     }
   };
 
@@ -270,13 +279,13 @@ function CreateShow() {
 
   return (
     <div>
-      <div className="CreateBody">
+      <div className={styles.CreateBody}>
         <h1>공연 새로 만들기</h1>
-        <div className="Create_Container">
-          <div className="Detail_Entire_Box">
-            <div className="SImage_Box">
+        <div className={styles.Create_Container}>
+          <div className={styles.Detail_Entire_Box}>
+            <div className={styles.SImage_Box}>
               <img src={previewURL} alt="미리보기" />
-              <div className="img_show">
+              <div className={styles.img_show}>
                 <input
                   type="file"
                   id="fileUpload"
@@ -286,8 +295,8 @@ function CreateShow() {
               </div>
             </div>
 
-            <div className="entir_Boxs">
-              <ul className="Name_info">
+            <div className={styles.entir_Boxs}>
+              <ul className={styles.Name_info}>
                 <li>공연이름</li>
                 <li>소개글</li>
                 <li>카테고리</li>
@@ -300,7 +309,7 @@ function CreateShow() {
               </ul>
 
               {/* 공연 정보들  */}
-              <div className="input_Boxs">
+              <div className={styles.input_Boxs}>
                 <input
                   type="text"
                   placeholder="공연 이름(공백포함 최대 30자까지 작성 가능합니다.)"
@@ -327,7 +336,7 @@ function CreateShow() {
                   placeholder="공연 장소"
                   onChange={(e) => setLocation(e.target.value)}
                 />
-                <div className="runtime_shows">
+                <div className={styles.runtime_shows}>
                   <input
                     type="number"
                     placeholder="000"
@@ -336,7 +345,7 @@ function CreateShow() {
                   />
                   분
                 </div>
-                <div className="manager">
+                <div className={styles.manager}>
                   <span>
                     <input
                       type="text"
@@ -352,7 +361,7 @@ function CreateShow() {
                     />
                   </span>
                 </div>
-                <div className="bank">
+                <div className={styles.bank}>
                   <span>
                     <select onChange={(e) => setCategory(e.target.value)}>
                       <option value="">OO은행</option>
@@ -379,14 +388,13 @@ function CreateShow() {
                     />
                   </span>
                 </div>
-                <div className="QRImage_Box">
-                  <img src={previewURL} alt="미리보기" />
-                  <div className="QR">
+                <div className={styles.Club_account}>
+                  <div className={styles.qrImage}>
                     <input
                       type="file"
-                      id="fileUpload2"
                       accept="image/*"
-                      onChange={handleImg}
+                      id="handleQr"
+                      onChange={handleQrImageChange}
                     />
                   </div>
                 </div>
@@ -394,17 +402,17 @@ function CreateShow() {
                 <input
                   type="text"
                   placeholder="티켓 수령 장소, 환불 방법 및 기간, 에티켓 등 작성\n(공백 포함 최대 300백자까지 작성 가능합니다.) "
-                  onChange={(e) => setLocation(e.target.value)}
+                  onChange={handleContent}
                 />
               </div>
             </div>
           </div>
 
-          <div className="Each_shows">공연 회차 만들기</div>
+          <div className={styles.Each_shows}>공연 회차 만들기</div>
 
           {/* 상세 공연 이름들 헤더 */}
-          <div className="Each_shows_Name">
-            <div className="form">회차</div>
+          <div className={styles.Each_shows_Name}>
+            <div className={styles.form}>회차</div>
             <div>날짜</div>
             <div>시간</div>
             <div>구매제한매수</div>
@@ -415,11 +423,11 @@ function CreateShow() {
 
           {/* 실제 회차 행들 */}
           {shows.map((show) => (
-            <div key={show.id} className="Detail_show">
+            <div key={show.id} className={styles.Detail_show}>
               {/* 회차 입력란 */}
-              <div className="shows_line">
+              <div className={styles.shows_line}>
                 <input
-                  className="form_detail_show"
+                  className={styles.form_detail_show}
                   type="number"
                   // inputMode="numeric"
                   placeholder="0"
@@ -429,27 +437,27 @@ function CreateShow() {
                 />
                 공
               </div>
-              <div className="form_detail_date_2">
+              <div className={styles.form_detail_date_2}>
                 <input
-                  id="form_detail_date"
+                  id={styles.form_detail_date}
                   type="date"
                   onChange={(e) =>
                     updateSchedule(show.id, "date", e.target.value)
                   }
                 />
               </div>
-              <div className="form_detail_time_2">
+              <div className={styles.form_detail_time_2}>
                 <input
-                  id="form_detail_time"
+                  id={styles.form_detail_time}
                   type="time"
                   onChange={(e) =>
                     updateSchedule(show.id, "time", e.target.value)
                   }
                 />
               </div>
-              <div className="form_detail_price_2">
+              <div className={styles.form_detail_price_2}>
                 <input
-                  className="form_detail_price"
+                  className={styles.form_detail_price}
                   type="number"
                   placeholder="0000"
                   onChange={(e) =>
@@ -458,80 +466,19 @@ function CreateShow() {
                 />
                 원
               </div>
-              <div className="form_detail_maxPeople_2">
-                <input
-                  className="form_detail_maxPeople"
-                  type="number"
-                  // inputMode="numeric"
-                  placeholder="000"
-                  onChange={(e) =>
-                    updateSchedule(show.id, "maxPeople", e.target.value)
-                  }
-                />
-                명
+              {/* 회차 추가 버튼 */}
+              <div className={styles.add_show} onClick={handleAddRow}>
+                추가
               </div>
-              <div className="delete_Btn">
+              <div className={styles.delete_Btn}>
                 <button onClick={() => handleRemoveRow(show.id)}> - </button>
               </div>
             </div>
           ))}
-
-          {/* 회차 추가 버튼 */}
-          <div className="add_show" onClick={handleAddRow}>
-            회차 추가하기
-          </div>
-          <div className="last_input">
-            <div className="Club_account">
-              <label className="Club_account_space">계좌번호</label>
-              <div className="last_Detail_input">
-                <input
-                  type="text"
-                  // inputMode="numeric"
-                  placeholder="ex) 123-1234-1234-12 농협은행"
-                  onChange={(e) => setAccount(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="Club_account">
-              <label className="Club_account_space2">송금계좌 QR</label>
-              <div className="qrImage">
-                <input
-                  type="file"
-                  accept="image/*"
-                  id="handleQr"
-                  onChange={handleQrImageChange}
-                />
-              </div>
-            </div>
-
-            <div className="Club_account">
-              <label className="Club_account_space2">인당 최대 구매수</label>
-              <div className="last_Detail2_input">
-                <input
-                  type="number"
-                  // inputMode="numeric"
-                  placeholder="00"
-                  onChange={(e) => setMaxTickets(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* 공연소개란 */}
-        <div className="show_content_Entire">
-          <p>공연 소개</p>
-          <div className="show_content">
-            <textarea
-              placeholder="공연에 대한 소개를 작성해주세요(최대 500자)."
-              onChange={handleContent}
-            />
-            <p>( {content.length}/500 )</p>
-          </div>
-        </div>
-
-        <button className="make_show_submit" onClick={makeShow}>
-          생성하기
+        <button className={styles.make_show_submit} onClick={makeShow}>
+          공연 만들기
         </button>
       </div>
     </div>

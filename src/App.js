@@ -19,6 +19,7 @@ import UpdateProfile from "./pages/UpdateProfile";
 import ClubDetail from "./pages/ClubDetail";
 import Loading from "./pages/Loading";
 import EntertainDetail from "./pages/EntertainDetail";
+import CreateShow from "./pages/CreateShow";
 
 import "./App.css";
 
@@ -45,7 +46,7 @@ function App() {
           <Route path="/clubs/:id" element={<ClubDetail />} />
           <Route path="/loading" element={<Loading />} />
           <Route path="/entertain/:id" element={<EntertainDetail />} />
-
+          <Route path="/manager/createshow" element={<CreateShow />} />
         </Routes>
         <Footer />
       </div>
