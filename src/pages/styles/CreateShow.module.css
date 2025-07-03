@@ -182,9 +182,9 @@ input[type="number"] {
     border: 1px solid var(--main-02, #ff3d12);
     background: var(--Main-04, #ffefec);
   }
-
+  /* 
   &:active {
-  }
+  } */
 }
 
 /* 공연 소개 */
