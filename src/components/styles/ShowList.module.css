@@ -76,3 +76,77 @@
   display: flex;
   
 }
+
+.buttons{
+  display: flex;
+  justify-content: space-between;
+}
+
+.selectBox2 * { box-sizing: border-box; }
+.selectBox2 {
+  position: relative;
+  width: 182px;
+  height: 35px;
+  /* 화살표 background: url('https://freepikpsd.com/media/2019/10/down-arrow-icon-png-7-Transparent-Images.png') calc(100% - 7px) center no-repeat; */
+  /* border: 1px solid var(--main-02, #FF3D12); */
+  background: var(--main-02, #FF3D12);
+  cursor: pointer;
+  z-index: 100;
+}
+
+
+.selectBox2 .label {
+  display: flex;
+  align-items: center;
+  width: inherit;
+  height: inherit;
+  border: 0 none;
+  outline: 0 none;
+  padding-left: 15px;
+  background: transparent;
+  color: var(--gray-01-background, #FBFBFB);
+  cursor: pointer;
+}
+
+.selectBox2 .optionList {
+  position: absolute; 
+  top: 28px;
+  left: 0;
+  width: 100%;
+  border: 1px solid var(--main-02, #FF3D12);
+  border-top: 0 none;
+  margin-top: 6px;
+  background: var(--gray-01-background, #FBFBFB);
+  color: #fff;
+  color: var(--main-02, #FF3D12);
+  text-align: center;
+
+  list-style-type: none;
+  padding: 0;
+
+  /* padding: 4px 38px 4px 39px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0; */
+  overflow: hidden;
+  max-height: 0;
+  transition: .3s ease-in;
+}
+
+.selectBox2.active .optionList {
+  max-height: 500px;
+}
+
+.selectBox2 .optionItem {
+  border-bottom: 1px solid #FF3D12;
+  padding: 5px 15px 5px;
+  transition: .1s;
+}
+
+.selectBox2 .optionItem:hover {
+  background: #FFEFEC;
+}
+
+.selectBox2 .optionItem:last-child {
+  border-bottom: 0 none;
+}
