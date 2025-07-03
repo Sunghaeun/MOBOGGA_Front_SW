@@ -19,7 +19,7 @@ import UpdateProfile from "./pages/UpdateProfile";
 import ClubDetail from "./pages/ClubDetail";
 import Loading from "./pages/Loading";
 import EntertainDetail from "./pages/EntertainDetail";
-import CreateShow from "./pages/CreateShow";
+import CreateShow from "./pages/Manager/CreateShow";
 
 import "./App.css";
 

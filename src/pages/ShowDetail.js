@@ -172,7 +172,6 @@ function ShowDetail() {
     }
     return timeString;
   };
-  return timeString;
 
   // 로딩 상태
   if (loading) {

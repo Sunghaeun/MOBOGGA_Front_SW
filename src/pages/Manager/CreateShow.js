@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import styles from "../pages/styles/CreateShow.module.css";
+import styles from "../styles/CreateShow.module.css";
 import axios from "axios";
 
 function CreateShow() {
@@ -296,114 +296,162 @@ function CreateShow() {
             </div>
 
             <div className={styles.entir_Boxs}>
-              <ul className={styles.Name_info}>
-                <li>공연이름</li>
-                <li>소개글</li>
-                <li>카테고리</li>
-                <li>장소</li>
-                <li>러닝타임</li>
-                <li>담당자</li>
-                <li>입금계좌</li>
-                <li>송금QR</li>
-                <li>공지</li>
-              </ul>
-
-              {/* 공연 정보들  */}
-              <div className={styles.input_Boxs}>
-                <input
-                  type="text"
-                  placeholder="공연 이름(공백포함 최대 30자까지 작성 가능합니다.)"
-                  value={title}
-                  onChange={handletitle}
-                />
-                <input
-                  type="text"
-                  placeholder="공연에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)"
-                  onChange={(e) => setClubName(e.target.value)}
-                />
-                <select onChange={(e) => setCategory(e.target.value)}>
-                  <option value="">선택</option>
-                  <option value="밴드">밴드</option>
-                  <option value="춤">춤</option>
-                  <option value="아카펠라">아카펠라</option>
-                  <option value="연극">연극</option>
-                  <option value="힙합">힙합</option>
-                  <option value="악기연주">악기연주</option>
-                  <option value="기타">기타</option>
-                </select>
-                <input
-                  type="text"
-                  placeholder="공연 장소"
-                  onChange={(e) => setLocation(e.target.value)}
-                />
-                <div className={styles.runtime_shows}>
-                  <input
-                    type="number"
-                    placeholder="000"
-                    // inputMode="numeric"
-                    onChange={(e) => setRunTime(e.target.value)}
-                  />
-                  분
-                </div>
-                <div className={styles.manager}>
-                  <span>
+              <div className={styles.smallInfo}>
+                *송금QR외 모든 정보는 필수입력사항입니다.
+              </div>
+              <div className={styles.infos}>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>공연이름</span>
+                  </span>
+                  <span className={styles.variable_Info}>
                     <input
                       type="text"
-                      placeholder="이름"
-                      onChange={(e) => setLocation(e.target.value)}
-                    />
-                  </span>{" "}
-                  <span>
-                    <input
-                      type="text"
-                      placeholder="연락처(전화번호 혹은 이메일)"
-                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="공연 이름(공백포함 최대 30자까지 작성 가능합니다.)"
+                      value={title}
+                      onChange={handletitle}
                     />
                   </span>
                 </div>
-                <div className={styles.bank}>
-                  <span>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>소개글</span>
+                  </span>
+                  <span className={styles.variable_Info}>
+                    <input
+                      type="text"
+                      placeholder="공연에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)"
+                      onChange={(e) => setClubName(e.target.value)}
+                    />
+                  </span>
+                </div>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>카테고리</span>
+                  </span>
+                  <span className={styles.variable_Info}>
                     <select onChange={(e) => setCategory(e.target.value)}>
-                      <option value="">OO은행</option>
-                      <option value="농협">농협</option>
-                      <option value="하나">하나</option>
-                      <option value="신한">신한</option>
-                      <option value="현대">현대</option>
-                      <option value="카카오">카카오</option>
-                      <option value="토스">토스</option>
+                      <option value="">선택</option>
+                      <option value="밴드">밴드</option>
+                      <option value="춤">춤</option>
+                      <option value="아카펠라">아카펠라</option>
+                      <option value="연극">연극</option>
+                      <option value="힙합">힙합</option>
+                      <option value="악기연주">악기연주</option>
+                      <option value="기타">기타</option>
                     </select>
-                  </span>{" "}
-                  <span>
-                    <input
-                      type="text"
-                      placeholder="'-'없이 숫자만 입력"
-                      onChange={(e) => setLocation(e.target.value)}
-                    />
                   </span>
-                  <span>
+                </div>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>장소</span>
+                  </span>
+                  <span className={styles.variable_Info}>
                     <input
                       type="text"
-                      placeholder="예금주"
+                      placeholder="공연 장소"
                       onChange={(e) => setLocation(e.target.value)}
                     />
                   </span>
                 </div>
-                <div className={styles.Club_account}>
-                  <div className={styles.qrImage}>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>러닝타임</span>
+                  </span>
+                  <span className={styles.variable_Info}>
                     <input
-                      type="file"
-                      accept="image/*"
-                      id="handleQr"
-                      onChange={handleQrImageChange}
+                      type="number"
+                      placeholder="000"
+                      // inputMode="numeric"
+                      onChange={(e) => setRunTime(e.target.value)}
                     />
-                  </div>
+                  </span>
+                  <span>분</span>
                 </div>
-
-                <input
-                  type="text"
-                  placeholder="티켓 수령 장소, 환불 방법 및 기간, 에티켓 등 작성\n(공백 포함 최대 300백자까지 작성 가능합니다.) "
-                  onChange={handleContent}
-                />
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>담당자</span>
+                  </span>
+                  <span className={styles.variable_Info}>
+                    <div className={styles.manager}>
+                      <span>
+                        <input
+                          type="text"
+                          placeholder="이름"
+                          onChange={(e) => setLocation(e.target.value)}
+                        />
+                      </span>{" "}
+                      <span>
+                        <input
+                          type="text"
+                          placeholder="연락처(전화번호 혹은 이메일)"
+                          onChange={(e) => setLocation(e.target.value)}
+                        />
+                      </span>
+                    </div>
+                  </span>
+                </div>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>입금계좌</span>
+                  </span>
+                  <span className={styles.variable_Info}>
+                    <div className={styles.bank}>
+                      <span>
+                        <select onChange={(e) => setCategory(e.target.value)}>
+                          <option value="">OO은행</option>
+                          <option value="농협">농협</option>
+                          <option value="하나">하나</option>
+                          <option value="신한">신한</option>
+                          <option value="현대">현대</option>
+                          <option value="카카오">카카오</option>
+                          <option value="토스">토스</option>
+                        </select>
+                      </span>{" "}
+                      <span>
+                        <input
+                          type="text"
+                          placeholder="'-'없이 숫자만 입력"
+                          onChange={(e) => setLocation(e.target.value)}
+                        />
+                      </span>
+                      <span>
+                        <input
+                          type="text"
+                          placeholder="예금주"
+                          onChange={(e) => setLocation(e.target.value)}
+                        />
+                      </span>
+                    </div>
+                  </span>
+                </div>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>송금QR</span>
+                  </span>
+                  <span className={styles.variable_Info}>
+                    <div className={styles.qrImage}>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        id="handleQr"
+                        onChange={handleQrImageChange}
+                      />
+                    </div>
+                  </span>
+                </div>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>공지</span>
+                  </span>
+                  <span className={styles.variable_Info}>
+                    <input
+                      type="text"
+                      placeholder="티켓 수령 장소, 환불 방법 및 기간, 에티켓 등 작성\n(공백 포함 최대 300백자까지 작성 가능합니다.) "
+                      onChange={handleContent}
+                    />
+                  </span>
+                </div>
               </div>
             </div>
           </div>

@@ -58,26 +58,9 @@ input[type="number"] {
 }
 .entir_Boxs {
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
-}
-
-.Name_info {
-  margin: 80px 0 0 10px;
-  padding: 0;
-}
-
-.Name_info li {
-  width: 80px;
-  padding: 10px;
-  padding-left: 5px;
-  padding-right: 5px;
-  margin: 10px;
-  margin-bottom: 20px;
-  color: var(--Point-03, #8e3dff);
-  font-size: 15px;
-  border-radius: 20px;
-  list-style: none;
-  font-weight: bold;
+  margin: 70px 0px 10px 8.1rem;
 }
 
 .input_Boxs {
@@ -305,4 +288,55 @@ input[type="number"] {
 .make_show_submit:active {
   transform: translateY(1px);
   box-shadow: 0 2px 4px rgba(235, 90, 60, 0.2);
+}
+
+.info_Box {
+  display: flex;
+  gap: 20px;
+  font-size: 1rem;
+  line-height: 1.6;
+  align-items: left;
+  justify-items: left;
+  margin-bottom: 1.25rem;
+}
+
+.fixed_Info {
+  width: 4rem;
+  flex-shrink: 0;
+  font-weight: bold;
+  color: var(--Point-03, #8e3dff);
+  /* Body 02 _ M */
+  font-family: "Pretendard Variable";
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.875rem; /* 166.667% */
+}
+.info_txt {
+  display: flex;
+  width: 100%;
+}
+
+.variable_Info {
+  color: #333;
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+.variable_Info > input {
+  width: 27rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  border: 1px solid var(--gray-10-typo-color, #121212);
+}
+
+.smallInfo {
+  display: flex;
+  justify-items: left;
+  color: var(--Warning, #d50024);
+  /* Caption _ R */
+  font-family: "Pretendard Variable";
+  font-size: 0.6875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.125rem; /* 163.636% */
+  margin-bottom: 18px;
 }
