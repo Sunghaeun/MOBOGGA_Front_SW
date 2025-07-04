@@ -1,8 +1,6 @@
 /* eslint-disable */
-import React from "react";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 import styles from "./styles/RecruitingDetail.module.css";
 
@@ -21,7 +19,7 @@ function RecruitingDetail() {
     navigate(-1); // 이전 페이지로 이동
   };
   const navigateToApplypage = () => {
-    navigate(recruiting.applicationUrl);
+    window.open(recruiting.applicationUrl);
   };
   const navigateToClubDetail = (clubId) => {
     navigate(`/clubs/${clubId}`); // 동아리 상세 페이지로 이동
