@@ -1,0 +1,91 @@
+
+.modal_strong {
+  color: var(--main-02, #ff3d12);
+  /* Body 03 _ SB */
+  font-family: "IBM Plex Sans KR";
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.6875rem;
+  letter-spacing: 0.01rem;
+}
+
+.modal {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: var(--gray-10-typo-color, #121212);
+  text-align: center;
+  /* Body 01 _ SB */
+  font-family: "IBM Plex Sans KR";
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.0625rem; /* 165% */
+  letter-spacing: 0.0125rem;
+}
+
+.modal_con {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_Btns {
+  display: flex;
+  padding-top: 32px;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_close_Btn {
+  display: flex;
+  padding: 0.25rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--gray-01-background, #fbfbfb);
+  color: var(--main-02, #ff3d12);
+  /* Body 04 _ R */
+  font-family: "IBM Plex Sans KR";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 171.429% */
+  letter-spacing: 0.00875rem;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.modal_ok_Btn {
+  display: inline-flex;
+  padding: 0.25rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--main-02, #ff3d12);
+
+  /* Typo*/
+
+  color: var(--gray-01-background, #fbfbfb);
+  font-family: "IBM Plex Sans KR";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 171.429% */
+  letter-spacing: 0.00875rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
