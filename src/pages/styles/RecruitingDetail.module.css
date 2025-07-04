@@ -152,6 +152,10 @@
   font-weight: 400;
   line-height: 2.0625rem; /* 165% */
   letter-spacing: 0.0125rem;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .sns_icons {

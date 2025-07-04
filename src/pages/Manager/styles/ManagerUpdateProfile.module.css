@@ -1,0 +1,201 @@
+.body {
+  padding: 16px 131px;
+}
+
+.title_box {
+  width: 100%;
+  margin-bottom: 100px;
+}
+
+.title {
+  text-align: left;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 12px;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  height: 745px;
+  align-items: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px; /* 166.667% */
+  letter-spacing: 0.18px;
+}
+
+.logo_box {
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+.words_box {
+  margin-bottom: 56px;
+}
+
+.infos {
+  width: 294px;
+  height: 132px;
+  margin-bottom: 103px;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.info_head {
+  margin-right: auto;
+}
+
+.info_body input {
+  height: 1.5em;
+  border: 1px solid #ccc;
+  padding: 0.5em;
+}
+
+.button_box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.button {
+  border: 1px solid var(--ORANGE);
+  margin-right: 20px;
+  display: inline-flex;
+  padding: 4px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+#cancel_button {
+  background-color: var(--WHITE);
+  cursor: pointer;
+}
+
+#confirm_button {
+  background: var(--ORANGE);
+  cursor: pointer;
+}
+
+#cancel_button_hover {
+  background: var(--Main-04, #ffefec);
+  cursor: pointer;
+}
+
+#confirm_button_hover {
+  border: 1px solid #b20;
+  background: #b20;
+  cursor: pointer;
+}
+
+#cancel_button_text {
+  color: var(--ORANGE);
+}
+
+#confirm_button_text {
+  color: var(--WHITE);
+}
+
+/* 모달 CSS */
+
+.modal_strong {
+  color: var(--main-02, #ff3d12);
+  /* Body 03 _ SB */
+  font-family: "IBM Plex Sans KR";
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.6875rem;
+  letter-spacing: 0.01rem;
+}
+
+.modal {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: var(--gray-10-typo-color, #121212);
+  text-align: center;
+  /* Body 01 _ SB */
+  font-family: "IBM Plex Sans KR";
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.0625rem; /* 165% */
+  letter-spacing: 0.0125rem;
+}
+
+.modal_con {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_Btns {
+  display: flex;
+  padding-top: 32px;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_close_Btn {
+  display: flex;
+  padding: 0.25rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--gray-01-background, #fbfbfb);
+  color: var(--main-02, #ff3d12);
+  /* Body 04 _ R */
+  font-family: "IBM Plex Sans KR";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 171.429% */
+  letter-spacing: 0.00875rem;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.modal_ok_Btn {
+  display: inline-flex;
+  padding: 0.25rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--main-02, #ff3d12);
+
+  /* Typo*/
+
+  color: var(--gray-01-background, #fbfbfb);
+  font-family: "IBM Plex Sans KR";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 171.429% */
+  letter-spacing: 0.00875rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

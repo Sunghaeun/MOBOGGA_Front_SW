@@ -1,0 +1,38 @@
+
+.account_info_box {
+  margin-bottom: 48px;
+}
+
+.account_title {
+  margin-bottom: 12px;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.72px;
+}
+
+.LogoutBtnDefault {
+  margin-top: 20px;
+  margin-left: 47px;
+  border: 1px solid var(--BLACK);
+  background: var(--WHITE);
+  display: inline-flex;
+  padding: 4px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.LogoutBtnHover {
+  margin-top: 20px;
+  margin-left: 47px;
+  border: 1px solid var(--BLACK);
+  background: var(--gray-02-footer-background, #eaeaea);
+  display: inline-flex;
+  padding: 4px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  cursor: pointer;
+}

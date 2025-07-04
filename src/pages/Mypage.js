@@ -1,8 +1,8 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/Mypage.module.css";
-import MyReservCard from "../components/MyReservCard";
+import MyReservCard from "../components/Mypage/MyReservCard";
 import Modal from "../components/Modal";
 import reload_btn from "../assets/temp/reload_btn.png";
 

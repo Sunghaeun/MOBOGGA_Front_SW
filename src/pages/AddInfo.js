@@ -98,7 +98,7 @@ function AddInfo() {
     }
 
     if (!/^\d{3}-\d{4}-\d{4}$/.test(formData.phoneNumber)) {
-      showModal("전화번호 입력 형식은 다음과 같습니다. 010-1234-5678");
+      showModal("전화번호 입력 형식은 다음과 같습니다.\n예) 010-1234-5678");
       return;
     }
 
@@ -215,16 +215,21 @@ function AddInfo() {
           *모보까에 가입함으로써 개인정보 수집에 관해 동의하게 됩니다
         </div>
         <Modal isOpen={feedbackModal.isOpen} onClose={feedbackModal.onClose}>
-          <div className={styles.modal_content}>
-            <div className={styles.modal_top}>{feedbackModal.message}</div>
-            <div className={styles.modal_Btns}>
-              <button
-                onClick={feedbackModal.onClose}
-                className={styles.modal_ok_Btn}
-              >
-                확인
-              </button>
-            </div>
+          <div className={styles.modal_top}>
+            {feedbackModal.message.split("\n").map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                <br />
+              </React.Fragment>
+            ))}
+          </div>
+          <div className={styles.modal_Btns}>
+            <button
+              onClick={feedbackModal.onClose}
+              className={styles.modal_ok_Btn}
+            >
+              확인
+            </button>
           </div>
         </Modal>
       </div>
