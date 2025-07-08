@@ -6,7 +6,7 @@ function CreateRecruiting() {
   return (
     <>
       <div className={styles.main}>
-        main page
+        CreateRecruiting page
       </div>
     </>
   );
