@@ -112,7 +112,7 @@ function Header() {
           </span>
         </div>
 
-        {token ? (
+        {localStorage.getItem("jwt") ? (
           // 로그인 상태 → 프로필 버튼
           <div
             className={styles.profile_btn}

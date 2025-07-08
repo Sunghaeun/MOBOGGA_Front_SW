@@ -1,14 +1,27 @@
-/* eslint-disable */
+/*eslint-disable*/
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/Mypage.module.css";
-import MyReservCard from "../components/Mypage/MyReservCard";
-import Modal from "../components/Modal";
 import reload_btn from "../assets/temp/reload_btn.png";
+import AccountInfoCard from "../components/Mypage/AccountInfoCard";
+import ProfileInfoCard from "../components/Mypage/ProfileInfoCard";
+import ProfileUpdateBtn from "../components/Mypage/ProfileUpdateBtn";
+import MyReservCard from "../components/Mypage/MyReservCard";
+import LoginOverModal from "../components/Mypage/LoginOverModal";
 
-function Mypage() {
+function ManagerMypage() {
   const navigate = useNavigate();
-
+  const token = localStorage.getItem("jwt");
+  if (!token) {
+    return (
+      <>
+        {navigate("/login")}
+        <LoginOverModal
+          isOpen={true}
+        />
+      </>
+    ); // 토큰이 없으면 컴포넌트 렌더링을 중단
+  }
   const [formData, setFormData] = useState({
     userName: "",
     stdId: "",
@@ -16,54 +29,11 @@ function Mypage() {
     email: "",
   });
 
-  const [isHoveringLogoutBtn, setIsHoveringLogoutBtn] = useState(false);
-  const [isHoveringUpdateBtn, setIsHoveringUpdateBtn] = useState(false);
+  const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false); // 상태 추가
 
-  const onMouseOverLogoutBtn = () => {
-    setIsHoveringLogoutBtn(true);
-  };
-
-  const onMouseOutLogoutBtn = () => {
-    setIsHoveringLogoutBtn(false);
-  };
-
-  const onMouseOverUpdateBtn = () => {
-    setIsHoveringUpdateBtn(true);
-  };
-
-  const onMouseOutUpdateBtn = () => {
-    setIsHoveringUpdateBtn(false);
-  };
-
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-
-  const onClickLogoutBtn = () => {
-    setIsLogoutModalOpen(true);
-  };
-
-  const handleLogoutConfirm = () => {
-    setIsLogoutModalOpen(false);
-    navigate(`/logout`);
-  };
-
-  const handleLogoutCancel = () => {
-    setIsLogoutModalOpen(false);
-    navigate(`/mypage`);
-  };
-
-  const onClickProfileUpdateBtn = () => {
-    navigate(`/mypage/update`);
-  };
-
-  const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false);
-
-  const handleLoginOverConfirm = () => {
-    setIsLoginOverModalOpen(false);
-    localStorage.removeItem("jwt");
-    navigate(`/login`);
-  };
-
-  const token = localStorage.getItem("jwt");
+  const [myReservCards, setMyReservCards] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchUserProfile = async () => {
     try {
@@ -76,6 +46,7 @@ function Mypage() {
           },
         }
       );
+
       if (!response.ok) {
         throw new Error("사용자 정보를 불러오는데 실패했습니다.");
       }
@@ -98,10 +69,6 @@ function Mypage() {
       setIsLoading(false);
     }
   };
-
-  const [myReservCards, setMyReservCards] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const getMyReservCards = async () => {
     try {
@@ -173,55 +140,9 @@ function Mypage() {
     <>
       <div className={styles.body}>
         <div className={styles.sidebar}>
-          <div className={styles.account_info_box}>
-            <div className={styles.account_title_box}>
-              <div className={styles.account_title}>현재 로그인 계정</div>
-            </div>
-            <div className={styles.account}>{formData.email}</div>
-            <div
-              className={
-                isHoveringLogoutBtn
-                  ? styles.LogoutBtnHover
-                  : styles.LogoutBtnDefault
-              }
-              onClick={onClickLogoutBtn}
-              onMouseOver={onMouseOverLogoutBtn}
-              onMouseOut={onMouseOutLogoutBtn}
-            >
-              로그아웃
-            </div>
-          </div>
-          <div className={styles.profile_info_box}>
-            <div className={styles.profile_title_box}>
-              <div className={styles.profile_title}>프로필</div>
-            </div>
-            <div className={styles.profile_detail_box}>
-              <div className={styles.detail_box}>
-                <div className={styles.detail_head}>이름</div>
-                <div className={styles.detail_body}>{formData.userName}</div>
-              </div>
-              <div className={styles.detail_box}>
-                <div className={styles.detail_head}>학번</div>
-                <div className={styles.detail_body}>{formData.stdId}</div>
-              </div>
-              <div className={styles.detail_box}>
-                <div className={styles.detail_head}>연락처</div>
-                <div className={styles.detail_body}>{formData.phoneNum}</div>
-              </div>
-            </div>
-          </div>
-          <div
-            className={
-              isHoveringUpdateBtn
-                ? styles.ProfileUpdateBtnHover
-                : styles.ProfileUpdateBtnDefault
-            }
-            onClick={onClickProfileUpdateBtn}
-            onMouseOver={onMouseOverUpdateBtn}
-            onMouseOut={onMouseOutUpdateBtn}
-          >
-            프로필 정보 수정
-          </div>
+          <AccountInfoCard formData={formData} />
+          <ProfileInfoCard formData={formData} type="manager" />
+          <ProfileUpdateBtn onClick={ProfileUpdateBtn} />
         </div>
         <div className={styles.container}>
           <div className={styles.container_header}>
@@ -265,50 +186,9 @@ function Mypage() {
             </div>
           </div>
         </div>
-        <Modal
-          isOpen={isLogoutModalOpen}
-          onClose={() => setIsLogoutModalOpen(false)}
-        >
-          <div className={styles.modal_content}>
-            <div className={styles.modal_top}>로그아웃하시겠습니까?</div>
-            <div className={styles.modal_Btns}>
-              <button
-                onClick={handleLogoutCancel}
-                className={styles.modal_close_Btn}
-              >
-                취소
-              </button>
-              <button
-                onClick={handleLogoutConfirm}
-                className={styles.modal_ok_Btn}
-              >
-                확인
-              </button>
-            </div>
-          </div>
-        </Modal>
-        <Modal
-          isOpen={isLoginOverModalOpen}
-          onClose={() => setIsLoginOverModalOpen(false)}
-        >
-          <div className={styles.modal_content}>
-            <div className={styles.modal_top}>세션이 만료되었습니다.</div>
-            <div className={styles.modal_con}>
-              다시 로그인해주세요.
-            </div>
-            <div className={styles.modal_Btns}>
-              <button
-                onClick={handleLoginOverConfirm}
-                className={styles.modal_ok_Btn}
-              >
-                확인
-              </button>
-            </div>
-          </div>
-        </Modal>
       </div>
     </>
   );
 }
 
-export default Mypage;
+export default ManagerMypage;
