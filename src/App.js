@@ -27,6 +27,8 @@ import AddInfo from "./pages/AddInfo";
 import Loading from "./pages/Loading";
 import Error404 from "./pages/Error404";
 
+import CreateRecruiting from "./pages/CreateRecruiting";
+
 import "./App.css";
 
 function App() {
@@ -62,6 +64,8 @@ function App() {
           <Route path="/add-info" element={<AddInfo />} />
           <Route path="/loading" element={<Loading />} />
           <Route path="/404" element={<Error404 />} />
+          <Route path="/createrecruiting" element={<CreateRecruiting />} />
+
         </Routes>
         <Footer />
       </div>
