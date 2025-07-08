@@ -68,13 +68,14 @@ function ShowList() {
           ))}
         </div>
         
-{/* 드롭다운 !! */}
-{dropdownOpen && (
-  <div
-    className={styles.dimmed}
-    onClick={() => setDropdownOpen(false)} // 바깥 클릭 시 드롭다운 닫기
-  />
-)}
+        {/* 드롭다운 !! */}
+        {dropdownOpen && (
+          <div
+            className={styles.dimmed}
+            onClick={() => setDropdownOpen(false)} // 바깥 클릭 시 드롭다운 닫기
+          />
+        )}
+        
         <div className={styles.selectBox2}>
 
           <button
