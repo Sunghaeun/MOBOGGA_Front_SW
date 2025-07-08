@@ -1,8 +1,9 @@
 import { useState } from "react";
 import styles from "./styles/AccountInfoCard.module.css";
+import LogoutModal from "./LogoutModal"; // Assuming you have a LogoutModal component
 
-function AccountInfoCard({ userInfo, formData }) {
-  const [, setIsLogoutModalOpen] = useState(false);
+function AccountInfoCard({ formData }) {
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isHoveringLogoutBtn, setIsHoveringLogoutBtn] = useState(false);
 
   const onClickLogoutBtn = () => {
@@ -36,6 +37,9 @@ function AccountInfoCard({ userInfo, formData }) {
           로그아웃
         </div>
       </div>
+      {isLogoutModalOpen && (
+        <LogoutModal onClose={() => setIsLogoutModalOpen(false)} />
+      )}
     </div>
   );
 }

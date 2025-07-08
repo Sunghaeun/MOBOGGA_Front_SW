@@ -1,13 +1,31 @@
 /*eslint-disable*/
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerMypage.module.css";
 import reload_btn from "../../assets/temp/reload_btn.png";
 import AccountInfoCard from "../../components/Mypage/AccountInfoCard";
 import ProfileInfoCard from "../../components/Mypage/ProfileInfoCard";
 import ProfileUpdateBtn from "../../components/Mypage/ProfileUpdateBtn";
 import MyReservCard from "../../components/Mypage/MyReservCard";
+import LoginOverModal from "../../components/Mypage/LoginOverModal";
 
 function ManagerMypage() {
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("jwt");
+  const type = localStorage.getItem("type");
+
+  useEffect(() => {
+    if (!token || !type || type !== "manager") {
+      navigate("/404", { replace: true });
+      return null;
+    }
+  }, [token, type, navigate]);
+
+  if (!token || !type || type !== "manager") {
+    return null; // 컴포넌트 렌더링을 중단
+  }
+
   const [formData, setFormData] = useState({
     userName: "",
     stdId: "",
@@ -15,11 +33,11 @@ function ManagerMypage() {
     email: "",
   });
 
+  const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false); // 상태 추가
+
   const [myReservCards, setMyReservCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const token = localStorage.getItem("jwt");
 
   const fetchUserProfile = async () => {
     try {
@@ -48,6 +66,7 @@ function ManagerMypage() {
         stdId: userData.studentId || "",
       });
     } catch (error) {
+      setIsLoginOverModalOpen(true);
       console.error("Error fetching user profile:", error);
       setError(error.message);
     } finally {
@@ -125,8 +144,8 @@ function ManagerMypage() {
     <>
       <div className={styles.body}>
         <div className={styles.sidebar}>
-          <AccountInfoCard userInfo={formData} />
-          <ProfileInfoCard userInfo={formData} />
+          <AccountInfoCard formData={formData} />
+          <ProfileInfoCard formData={formData} type="manager" />
           <ProfileUpdateBtn onClick={ProfileUpdateBtn} />
         </div>
         <div className={styles.container}>
@@ -171,6 +190,12 @@ function ManagerMypage() {
             </div>
           </div>
         </div>
+        {isLoginOverModalOpen && (
+          <LoginOverModal
+            isOpen={isLoginOverModalOpen}
+            onClose={() => setIsLoginOverModalOpen(false)}
+          />
+        )}
       </div>
     </>
   );

@@ -85,11 +85,12 @@ function UpdateProfile() {
   const handleUpdateConfirmCancel = () => {
     closeUpdateConfirmModal();
   };
+  
   const handleUpdateConfirmConfirm = async () => {
     try {
       await saveProfile();
       closeUpdateConfirmModal();
-      navigate("/mypage");
+      window.location.reload();
     } catch (error) {
       console.error("Error saving profile:", error);
     }
