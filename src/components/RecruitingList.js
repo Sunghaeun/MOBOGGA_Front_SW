@@ -64,7 +64,7 @@ function RecruitingList() {
         </div>
 
       <div className={styles.recruitingList}>
-        {recruiting.map((item, index) => (
+        {filteredList.map((item, index) => (
           <RecruitingCard key={index} show={item} onClick={()=>navigate(`/recruiting/${item.recruitingId}`)}/>
         ))}
       </div>
