@@ -28,6 +28,7 @@ import Loading from "./pages/Loading";
 import Error404 from "./pages/Error404";
 
 import CreateRecruiting from "./pages/CreateRecruiting";
+import ManageClubDetail from "./pages/ManageClubDetail";
 
 import "./App.css";
 
@@ -64,7 +65,10 @@ function App() {
           <Route path="/add-info" element={<AddInfo />} />
           <Route path="/loading" element={<Loading />} />
           <Route path="/404" element={<Error404 />} />
-          <Route path="/createrecruiting" element={<CreateRecruiting />} />
+
+          <Route path="/create/recruiting" element={<CreateRecruiting />} />
+          {/* 임시 id 1로 설정 :id로 바꾸기 */}
+          <Route path="/manager/club/1" element={<ManageClubDetail />} />
 
         </Routes>
         <Footer />
