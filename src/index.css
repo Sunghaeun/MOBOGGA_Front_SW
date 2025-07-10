@@ -3,20 +3,243 @@
   --DEEPORANGE: #bb2200;
   --BLACK: #121212;
   --WHITE: #fbfbfb;
+
+  --TITLE01 {
+    /* Title 01 */
+    font-size: 56px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 84px; /* 150% */
+  }
+
+  --TITLE02_B {
+    /* Title 02 _ EB */
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 72px; /* 150% */
+  }
+
+  --TITLE02 {
+    /* Title 02 _ M */
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 72px; /* 150% */
+  }
+
+  --TITLE03 {
+    /* Title 03 */
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 56px; /* 140% */
+  }
+
+  --TITLE04_B {
+    /* Title 04 _ EB */
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 48px; /* 150% */
+  }
+
+  --TITLE04 {
+    /* Title 04 _ M */
+    font-family: "Pretendard Variable";
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 48px; /* 150% */
+  }
+
+  --TITLE05 {
+    /* Title 05 */
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 42px; /* 150% */
+  }
+
+  --TITLE06 {
+    /* Title 06 */
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 40px; /* 166.667% */
+  }
+
+  --BODY01_B {
+    /* Body 01 _ EB */
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 33px; /* 165% */
+  }
+
+  --BODY01_SB {
+    /* Body 01 _ SB */
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 33px; /* 165% */
+  }
+
+  --BODY01_M {
+    /* Body 01 _ M */
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 33px; /* 165% */
+    letter-spacing: 0.2px;
+  }
+
+  --BODY01 {
+    /* Body 01 _ R */
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 33px; /* 165% */
+  }
+
+  --BODY02_B {
+    /* Body 02 _ EB */
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 30px; /* 166.667% */
+  }
+
+  --BODY02_SB {
+    /* Body 02 _ SB */
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px; /* 166.667% */
+  }
+
+  --BODY02_M {
+    /* Body 02 _ M */
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 30px; /* 166.667% */
+  }
+
+  --BODY02 {
+    /* Body 02 _ R */
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 30px; /* 166.667% */
+  }
+
+  --BODY03_B {
+    /* Body 03 _ EB */
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 27px; /* 168.75% */
+  }
+
+  --BODY03_SB {
+    /* Body 03 _ SB */
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 27px; /* 168.75% */
+  }
+
+  --BODY03_M {
+    /* Body 03 _ M */
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 27px; /* 168.75% */
+  }
+
+  --BODY03 {
+    /* Body 03 _ R */
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 27px; /* 168.75% */
+  }
+
+  --BODY04_B {
+    /* Body 04 _ EB */
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 24px; /* 171.429% */
+  }
+
+  --BODY04_SB {
+    /* Body 04 _ SB */
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; /* 171.429% */
+  }
+
+  --BODY04_M {
+    /* Body 04 _ M */
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px; /* 171.429% */
+  }
+
+  --BODY04 {
+    /* Body 04 _ R */
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 171.429% */
+  }
+
+  --CAPTION_B {
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 18px; /* 163.636% */
+    letter-spacing: 0.11px;
+  }
+
+  --CAPTION_SB {
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 18px; /* 163.636% */
+  }
+
+  --CAPTION_M {
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px; /* 163.636% */
+  }
+
+  --CAPTION {
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px; /* 163.636% */
+  }
 }
 
 body {
   margin: 0;
 
-  font-family: "IBM Plex Sans KR";
+  font-family: "Pretendard Variable";
   font-weight: 400;
   font-style: normal;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  color: #121212;
-  background-color: #fbfbfb;
+  color: var(--BLACK);
+  background-color: var(--WHITE);
 }
 
 code {
