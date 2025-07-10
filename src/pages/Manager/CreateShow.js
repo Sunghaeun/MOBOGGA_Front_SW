@@ -280,19 +280,19 @@ function CreateShow() {
   return (
     <div>
       <div className={styles.CreateBody}>
-        <h1>공연 새로 만들기</h1>
+        <div className={styles.headText}>공연 새로 만들기</div>
         <div className={styles.Create_Container}>
           <div className={styles.Detail_Entire_Box}>
-            <div className={styles.SImage_Box}>
-              <img src={previewURL} alt="미리보기" />
-              <div className={styles.img_show}>
-                <input
-                  type="file"
-                  id="fileUpload"
-                  accept="image/*"
-                  onChange={handleImg}
-                />
+            <div className={styles.SImage_Box_Entire}>
+              <div className={styles.SImage_Box}>
+                <img src={previewURL} alt="미리보기" />
               </div>
+              <input
+                type="file"
+                id="fileUpload"
+                accept="image/*"
+                onChange={handleImg}
+              />
             </div>
 
             <div className={styles.entir_Boxs}>
@@ -310,6 +310,7 @@ function CreateShow() {
                       placeholder="공연 이름(공백포함 최대 30자까지 작성 가능합니다.)"
                       value={title}
                       onChange={handletitle}
+                      style={{ width: "27rem" }}
                     />
                   </span>
                 </div>
@@ -318,10 +319,11 @@ function CreateShow() {
                     <span className={styles.info_txt}>소개글</span>
                   </span>
                   <span className={styles.variable_Info}>
-                    <input
+                    <textarea
                       type="text"
-                      placeholder="공연에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)"
+                      placeholder={`공연에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
                       onChange={(e) => setClubName(e.target.value)}
+                      style={{ height: "6rem", width: "27rem" }}
                     />
                   </span>
                 </div>
@@ -351,6 +353,7 @@ function CreateShow() {
                       type="text"
                       placeholder="공연 장소"
                       onChange={(e) => setLocation(e.target.value)}
+                      style={{ width: "10.75rem" }}
                     />
                   </span>
                 </div>
@@ -364,6 +367,7 @@ function CreateShow() {
                       placeholder="000"
                       // inputMode="numeric"
                       onChange={(e) => setRunTime(e.target.value)}
+                      style={{ width: "3rem" }}
                     />
                   </span>
                   <span>분</span>
@@ -374,20 +378,18 @@ function CreateShow() {
                   </span>
                   <span className={styles.variable_Info}>
                     <div className={styles.manager}>
-                      <span>
-                        <input
-                          type="text"
-                          placeholder="이름"
-                          onChange={(e) => setLocation(e.target.value)}
-                        />
-                      </span>{" "}
-                      <span>
-                        <input
-                          type="text"
-                          placeholder="연락처(전화번호 혹은 이메일)"
-                          onChange={(e) => setLocation(e.target.value)}
-                        />
-                      </span>
+                      <input
+                        type="text"
+                        placeholder="이름"
+                        onChange={(e) => setLocation(e.target.value)}
+                        style={{ width: "4.75rem" }}
+                      />
+                      <input
+                        type="text"
+                        placeholder="연락처(전화번호 혹은 이메일)"
+                        onChange={(e) => setLocation(e.target.value)}
+                        style={{ width: "21rem" }}
+                      />
                     </div>
                   </span>
                 </div>
@@ -397,31 +399,30 @@ function CreateShow() {
                   </span>
                   <span className={styles.variable_Info}>
                     <div className={styles.bank}>
-                      <span>
-                        <select onChange={(e) => setCategory(e.target.value)}>
-                          <option value="">OO은행</option>
-                          <option value="농협">농협</option>
-                          <option value="하나">하나</option>
-                          <option value="신한">신한</option>
-                          <option value="현대">현대</option>
-                          <option value="카카오">카카오</option>
-                          <option value="토스">토스</option>
-                        </select>
-                      </span>{" "}
-                      <span>
-                        <input
-                          type="text"
-                          placeholder="'-'없이 숫자만 입력"
-                          onChange={(e) => setLocation(e.target.value)}
-                        />
-                      </span>
-                      <span>
-                        <input
-                          type="text"
-                          placeholder="예금주"
-                          onChange={(e) => setLocation(e.target.value)}
-                        />
-                      </span>
+                      <select
+                        onChange={(e) => setCategory(e.target.value)}
+                        style={{ width: "8rem" }}
+                      >
+                        <option value="">OO은행</option>
+                        <option value="농협">농협</option>
+                        <option value="하나">하나</option>
+                        <option value="신한">신한</option>
+                        <option value="현대">현대</option>
+                        <option value="카카오">카카오</option>
+                        <option value="토스">토스</option>
+                      </select>
+                      <input
+                        type="text"
+                        placeholder="'-'없이 숫자만 입력"
+                        onChange={(e) => setLocation(e.target.value)}
+                        style={{ width: "11.75rem" }}
+                      />
+                      <input
+                        type="text"
+                        placeholder="예금주"
+                        onChange={(e) => setLocation(e.target.value)}
+                        style={{ width: "4.75rem" }}
+                      />
                     </div>
                   </span>
                 </div>
@@ -445,10 +446,11 @@ function CreateShow() {
                     <span className={styles.info_txt}>공지</span>
                   </span>
                   <span className={styles.variable_Info}>
-                    <input
+                    <textarea
                       type="text"
-                      placeholder="티켓 수령 장소, 환불 방법 및 기간, 에티켓 등 작성\n(공백 포함 최대 300백자까지 작성 가능합니다.) "
+                      placeholder={`티켓 수령 장소, 환불 방법 및 기간, 에티켓 등 작성\n(공백 포함 최대 300백자까지 작성 가능합니다.)`}
                       onChange={handleContent}
+                      style={{ width: "27rem", height: "16rem" }}
                     />
                   </span>
                 </div>
