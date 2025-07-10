@@ -6,7 +6,20 @@ function CreateRecruiting() {
   return (
     <>
       <div className={styles.main}>
-        CreateRecruiting page
+        <div className={styles.title}>
+          <span>리쿠르팅 새로 만들기</span>
+        </div>
+
+        <div className={styles.inputContainer}>
+          
+        </div>
+
+        <div className={styles.buttonContainer}>
+          <div className={styles.createClub}>
+            <span>리쿠르팅 만들기</span>
+          </div>
+        </div>
+
       </div>
     </>
   );

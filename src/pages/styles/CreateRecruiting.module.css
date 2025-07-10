@@ -1,0 +1,44 @@
+.main{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 128px 160px 128px;
+}
+
+.title span{
+  font: var(--TITLE06);
+  color: var(--gray-10-typo-color, #121212);
+}
+
+
+
+
+
+
+
+
+.buttonContainer{
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.createClub{
+  width:127px;
+  height: 33px;
+
+  display: inline-flex;
+  padding: 4px 94px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--main-02, #FF3D12);
+  background: var(--main-02, #FF3D12);
+}
+
+.createClub span{
+  font: var(--BODY01);
+  color: var(--gray-01-background, #FBFBFB);
+}
