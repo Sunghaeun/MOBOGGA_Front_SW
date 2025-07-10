@@ -24,6 +24,7 @@ function ClubDetail() {
   const [lastRecruitingList, setLastRecruitingList] = useState([]);
   const [lastEventList, setLastEventList] = useState([]);
 
+// api 주소 바뀌는지 확인해야함 !!!!
   const getClub = async () => {
     try {
       const res = await axios.get(
@@ -141,6 +142,13 @@ function ClubDetail() {
             <span className={styles.content}>{clubList.content}</span>
           </div>
         </div>
+
+        <div className={styles.setcenter}>
+          <div className={styles.modifyClub}>
+            <span>수정하기</span>
+          </div>
+        </div>
+        
 
         <span className={styles.titleName}> 진행 중인 이벤트 </span>
         <div className={styles.EventCardContainer}>
