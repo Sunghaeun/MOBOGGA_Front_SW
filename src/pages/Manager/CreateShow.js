@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import styles from "../styles/CreateShow.module.css";
 import axios from "axios";
+import DELETE from "../../assets/button_delete.svg";
 
 function CreateShow() {
   const navigate = useNavigate();
@@ -458,78 +459,82 @@ function CreateShow() {
             </div>
           </div>
 
-          <div className={styles.Each_shows}>공연 회차 만들기</div>
+          <div className={styles.Each_show_All}>
+            <div className={styles.Each_shows}>공연 회차 만들기</div>
 
-          {/* 상세 공연 이름들 헤더 */}
-          <div className={styles.Each_shows_Name}>
-            <div className={styles.form}>회차</div>
-            <div>날짜</div>
-            <div>시간</div>
-            <div>구매제한매수</div>
-            <div>가격</div>
-            <div>회차추가</div>
-            <div>삭제</div>
+            {/* 상세 공연 이름들 헤더 */}
+            <div className={styles.Each_shows_Name}>
+              <div className={styles.form}>회차</div>
+              <div>날짜</div>
+              <div>시간</div>
+              <div>구매제한매수</div>
+              <div>가격</div>
+              <div>회차추가</div>
+              <div>삭제</div>
+            </div>
+
+            {/* 실제 회차 행들 */}
+            {shows.map((show) => (
+              <div key={show.id} className={styles.Detail_show}>
+                {/* 회차 입력란 */}
+                <div className={styles.shows_line}>
+                  <input
+                    className={styles.form_detail_show}
+                    type="number"
+                    // inputMode="numeric"
+                    placeholder="0"
+                    onChange={(e) =>
+                      updateSchedule(show.id, "order", e.target.value)
+                    }
+                  />
+                  공
+                </div>
+                <div className={styles.form_detail_date_2}>
+                  <input
+                    id={styles.form_detail_date}
+                    type="date"
+                    onChange={(e) =>
+                      updateSchedule(show.id, "date", e.target.value)
+                    }
+                  />
+                </div>
+                <div className={styles.form_detail_time_2}>
+                  <input
+                    id={styles.form_detail_time}
+                    type="time"
+                    onChange={(e) =>
+                      updateSchedule(show.id, "time", e.target.value)
+                    }
+                  />
+                </div>
+                <div className={styles.form_detail_price_2}>
+                  <input
+                    className={styles.form_detail_price}
+                    type="number"
+                    placeholder="0000"
+                    onChange={(e) =>
+                      updateSchedule(show.id, "cost", e.target.value)
+                    }
+                  />
+                  원
+                </div>
+                {/* 회차 추가 버튼 */}
+                <div className={styles.add_show} onClick={handleAddRow}>
+                  추가
+                </div>
+                <div className={styles.delete_Btn}>
+                  <button onClick={() => handleRemoveRow(show.id)}>
+                    <img src={DELETE} alt="delete"></img>
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* 실제 회차 행들 */}
-          {shows.map((show) => (
-            <div key={show.id} className={styles.Detail_show}>
-              {/* 회차 입력란 */}
-              <div className={styles.shows_line}>
-                <input
-                  className={styles.form_detail_show}
-                  type="number"
-                  // inputMode="numeric"
-                  placeholder="0"
-                  onChange={(e) =>
-                    updateSchedule(show.id, "order", e.target.value)
-                  }
-                />
-                공
-              </div>
-              <div className={styles.form_detail_date_2}>
-                <input
-                  id={styles.form_detail_date}
-                  type="date"
-                  onChange={(e) =>
-                    updateSchedule(show.id, "date", e.target.value)
-                  }
-                />
-              </div>
-              <div className={styles.form_detail_time_2}>
-                <input
-                  id={styles.form_detail_time}
-                  type="time"
-                  onChange={(e) =>
-                    updateSchedule(show.id, "time", e.target.value)
-                  }
-                />
-              </div>
-              <div className={styles.form_detail_price_2}>
-                <input
-                  className={styles.form_detail_price}
-                  type="number"
-                  placeholder="0000"
-                  onChange={(e) =>
-                    updateSchedule(show.id, "cost", e.target.value)
-                  }
-                />
-                원
-              </div>
-              {/* 회차 추가 버튼 */}
-              <div className={styles.add_show} onClick={handleAddRow}>
-                추가
-              </div>
-              <div className={styles.delete_Btn}>
-                <button onClick={() => handleRemoveRow(show.id)}> - </button>
-              </div>
-            </div>
-          ))}
+          <button className={styles.make_show_submit} onClick={makeShow}>
+            공연 만들기
+          </button>
         </div>
-
-        <button className={styles.make_show_submit} onClick={makeShow}>
-          공연 만들기
-        </button>
       </div>
     </div>
   );

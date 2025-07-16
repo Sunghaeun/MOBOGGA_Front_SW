@@ -112,11 +112,11 @@ input[type="number"] {
 }
 
 .Each_shows_Name {
-  display: flex;
-  flex-direction: row;
-  grid-template-columns: 2fr 4fr 2fr 2fr 2fr 2fr;
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto;
+  padding-top: 15px;
+  padding-bottom: 15px;
   border-bottom: 1px solid #fff;
-  color: var(--gray-10-typo-color, #121212);
   /* Body 02 _ SB */
   font-family: "Pretendard Variable";
   font-size: 1.125rem;
@@ -130,7 +130,7 @@ input[type="number"] {
 }
 .Detail_show {
   display: grid;
-  grid-template-columns: auto auto auto auto auto auto;
+  grid-template-columns: auto auto auto auto auto auto auto;
   padding-top: 15px;
   padding-bottom: 15px;
   border-bottom: 1px solid #fff;
@@ -162,6 +162,7 @@ input[type="number"] {
 }
 /* 삭제 버튼 */
 .delete_Btn button {
+  background-color: #fff;
   color: #000;
   border: 1px solid #fff;
   border-radius: 3px;
