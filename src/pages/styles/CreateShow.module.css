@@ -112,8 +112,6 @@ input[type="number"] {
 }
 
 .Each_shows_Name {
-  display: grid;
-  grid-template-columns: auto auto auto auto auto auto auto;
   padding-top: 15px;
   padding-bottom: 15px;
   border-bottom: 1px solid #fff;
@@ -129,11 +127,25 @@ input[type="number"] {
   display: flex;
 }
 .Detail_show {
-  display: grid;
-  grid-template-columns: auto auto auto auto auto auto auto;
   padding-top: 15px;
   padding-bottom: 15px;
   border-bottom: 1px solid #fff;
+}
+
+.Each_shows_Name,
+.Detail_show {
+  display: grid;
+  grid-template-columns:
+    7.5rem /* 회차 */
+    15rem /* 날짜 */
+    12rem /* 시간 */
+    12rem /* 구매제한매수 */
+    12rem /* 가격 */
+    6rem; /* 삭제 */
+  gap: 1rem;
+  padding: 15px 0;
+  align-items: center;
+  border-bottom: 1px solid #eee;
 }
 
 #form_detail_date {
@@ -159,6 +171,26 @@ input[type="number"] {
 }
 .form_detail_maxPeople {
   outline: none;
+}
+.form_detail_number {
+  outline: none;
+  display: flex;
+  width: 5.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--gray-10-typo-color, #121212);
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  justify-self: center;
+  gap: 7px;
+}
+.ticket_Btn {
+  border: none;
+  background-color: #fff;
+  font-size: 1.2rem;
+  &:hover {
+    cursor: pointer;
+  }
 }
 /* 삭제 버튼 */
 .delete_Btn button {

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/CreateShow.module.css";
 import axios from "axios";
 import DELETE from "../../assets/button_delete.svg";
@@ -20,6 +20,7 @@ function CreateShow() {
   const [account, setAccount] = useState("");
   const [maxTickets, setMaxTickets] = useState("");
   const [category, setCategory] = useState("");
+  const [count, setCount] = useState(1);
   const [schedule, setSchedule] = useState({
     order: 0,
     date: "",
@@ -28,6 +29,21 @@ function CreateShow() {
     maxPeople: "",
   });
   const [previewURL, setPreviewURL] = useState(null);
+  useEffect(() => {
+    setCount(1);
+  }, [schedule]);
+
+  const Minus = () => {
+    if (count > 1) {
+      setCount(count - 1);
+    }
+  };
+
+  const Plus = () => {
+    if (count) {
+      setCount(count + 1);
+    }
+  };
 
   //기존값 확인하고 새로 생긴 schedule 정보 받아옴
   const updateSchedule = (id, key, value) => {
@@ -469,7 +485,6 @@ function CreateShow() {
               <div>시간</div>
               <div>구매제한매수</div>
               <div>가격</div>
-              <div>회차추가</div>
               <div>삭제</div>
             </div>
 
@@ -507,6 +522,15 @@ function CreateShow() {
                     }
                   />
                 </div>
+                <div className={styles.form_detail_number}>
+                  <button className={styles.ticket_Btn} onClick={Minus}>
+                    -
+                  </button>
+                  <span className={styles.ticket_Count}>{count}</span>
+                  <button className={styles.ticket_Btn} onClick={Plus}>
+                    +
+                  </button>
+                </div>
                 <div className={styles.form_detail_price_2}>
                   <input
                     className={styles.form_detail_price}
@@ -518,10 +542,6 @@ function CreateShow() {
                   />
                   원
                 </div>
-                {/* 회차 추가 버튼 */}
-                <div className={styles.add_show} onClick={handleAddRow}>
-                  추가
-                </div>
                 <div className={styles.delete_Btn}>
                   <button onClick={() => handleRemoveRow(show.id)}>
                     <img src={DELETE} alt="delete"></img>
@@ -530,10 +550,16 @@ function CreateShow() {
               </div>
             ))}
           </div>
+          {/* 회차 추가 버튼 */}
+          <div className={styles.add_show} onClick={handleAddRow}>
+            추가
+          </div>
 
-          <button className={styles.make_show_submit} onClick={makeShow}>
-            공연 만들기
-          </button>
+          <div>
+            <button className={styles.make_show_submit} onClick={makeShow}>
+              공연 만들기
+            </button>
+          </div>
         </div>
       </div>
     </div>
