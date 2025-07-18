@@ -176,3 +176,9 @@
   border-color: var(--main-02, #FF3D12);
 }
 
+.required{
+  color: var(--Warning, #D50024) !important;
+  font: var(--CAPTION_M) !important;
+  margin-left: 2px;
+  margin-bottom: 10px;
+}
