@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useState} from 'react';
+
 import styles from "./styles/CreateRecruiting.module.css";
 
 import insta from "../assets/icons/snsicons.svg";
@@ -6,8 +7,30 @@ import kakao from "../assets/icons/kakao.svg";
 import youtube from "../assets/icons/youtubeicons.svg";
 import link from "../assets/icons/linkicons.svg";
 
+import NotEnteredModal from "../components/modal/NotEnteredModal";
+import EditCheckModal from "../components/modal/EditCheckModal";
+
 
 function CreateRecruiting() {
+
+  // 1) 누락된 정보 확인 모달
+  const [notEnteredModalOpen, setNotEnteredModalOpen] = useState(false);
+  const openNotEnteredModal = () => setNotEnteredModalOpen(true);
+  const closeNotEnteredModal = () => {
+    setNotEnteredModalOpen(false);
+    document.body.style.removeProperty('overflow');
+  };
+
+  // 2) 리쿠르팅 생성 확인 모달
+  const [editCheckModalOpen, setEditCheckModalOpen] = useState(false);
+  const openEditCheckModal = () => setEditCheckModalOpen(true);
+  const closeEditCheckModal = () => {
+    setEditCheckModalOpen(false);
+    document.body.style.removeProperty('overflow');
+  };
+
+
+
   return (
     <>
       <div className={styles.main}>
@@ -20,7 +43,7 @@ function CreateRecruiting() {
             <div className={styles.photoInput}>
             
             </div>
-            <div className={styles.photobutton}>
+            <div className={styles.photobutton} onClick={() => openNotEnteredModal()}>
               <span>이미지 추가</span>
             </div>
           </div>
@@ -32,7 +55,7 @@ function CreateRecruiting() {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>제목</span>
+                <span onClick={() => openEditCheckModal()}>제목</span>
                 <span className={styles.required}>*</span>
               </div>
               <input placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)" type="text"></input>
@@ -168,6 +191,17 @@ function CreateRecruiting() {
         </div>
 
       </div>
+
+        <NotEnteredModal
+          open={notEnteredModalOpen}
+          close={closeNotEnteredModal}
+        />
+        <EditCheckModal
+          open={editCheckModalOpen}
+          close={closeEditCheckModal}
+        />
+
+
     </>
   );
 }
