@@ -9,6 +9,7 @@ import link from "../assets/icons/linkicons.svg";
 
 import NotEnteredModal from "../components/modal/NotEnteredModal";
 import EditCheckModal from "../components/modal/EditCheckModal";
+import PageOut from "../components/modal/PageOut";
 
 
 function CreateRecruiting() {
@@ -29,7 +30,13 @@ function CreateRecruiting() {
     document.body.style.removeProperty('overflow');
   };
 
-
+  // 3) 페이지 나가기 모달
+  const [pageOutModalOpen, setPageOutModalOpen] = useState(false);
+  const openPageOutModal = () => setPageOutModalOpen(true);
+  const closePageOutModal = () => {
+    setPageOutModalOpen(false);
+    document.body.style.removeProperty('overflow');
+  };
 
   return (
     <>
@@ -63,7 +70,7 @@ function CreateRecruiting() {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>카테고리</span>
+                <span onClick={() => openPageOutModal()}>카테고리</span>
                 <span className={styles.required}>*</span>
               </div>
               <input placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)" type="text"></input>
@@ -200,7 +207,10 @@ function CreateRecruiting() {
           open={editCheckModalOpen}
           close={closeEditCheckModal}
         />
-
+        <PageOut
+          open={pageOutModalOpen}
+          close={closePageOutModal}
+        />
 
     </>
   );
