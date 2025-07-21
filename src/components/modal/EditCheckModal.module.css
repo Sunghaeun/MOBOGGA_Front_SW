@@ -1,0 +1,148 @@
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.6);
+} 
+
+.modal button {
+  outline: none;
+  cursor: pointer;
+  border: 0;
+}
+
+/* 모달 박스 디자인  */
+.modal > section {
+/* 모달 박스 크기 및 테두리 */
+  width: 33vw;
+  height: 200px;
+  flex-shrink: 0;
+  margin: 0 auto;
+
+  background:#FFF;
+  margin-bottom: 150px;
+
+  position: relative;
+
+  /* 팝업이 열릴때 스르륵 열리는 효과 */
+  animation: modal-show 0.3s;
+  overflow: hidden;
+}
+
+
+.modal > section > main {
+  padding: 20px;
+
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal.openModal {
+  display: flex;
+  align-items: center;
+  /* 팝업이 열릴때 스르륵 열리는 효과 */
+  animation: modal-bg-show 0.3s;
+}
+
+
+.close{
+  margin: 20px;
+  border:1px solid black;
+}
+
+@keyframes modal-show {
+  from {
+    opacity: 0;
+    margin-top: -50px;
+  }
+  to {
+    opacity: 1;
+    margin-top: 0;
+  }
+}
+@keyframes modal-bg-show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.closeB{
+  position: absolute;
+  top: 20px;   
+  right: 20px;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.topContainer{
+  display:flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.topContainer span {
+  font: var(--BODY01_SB);
+  color: var(--BLACK);
+  text-align: center;
+  margin-top: 24px;
+  margin-bottom: 20px;
+}
+
+.topContainer p {
+  font: var(--BODY04);
+  color: var(--BLACK);
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 26px;
+}
+
+.bottomContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.button{
+  display: inline-flex;
+  padding: 4px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  border: 1px solid var(--main-02, #FF3D12);
+  background: var(--gray-01-background, #FBFBFB);
+
+  margin-right: 16px;
+}
+
+.button span {
+  color: var(--main-02, #FF3D12);
+  font:var( --BODY04);
+}
+
+.button1{
+  display: inline-flex;
+  padding: 4px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  border: 1px solid var(--main-02, #FF3D12);
+  background: var(--main-02, #FF3D12);
+}
+
+.button1 span {
+  color: var(--WHITE);
+  font:var( --BODY04);
+}
