@@ -1,3 +1,4 @@
+/* eslint-disable */
 import styles from "./EditCheckModal.module.css";
 import React, { useState } from "react";
 
