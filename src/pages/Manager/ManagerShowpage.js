@@ -1,15 +1,14 @@
 /*eslint-disable*/
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./styles/ManagerMypage.module.css";
+import styles from "./styles/ManagerShowpage.module.css";
 import AccountInfoCard from "../../components/Mypage/AccountInfoCard";
 import ProfileInfoCard from "../../components/Mypage/ProfileInfoCard";
 import ProfileUpdateBtn from "../../components/Mypage/ProfileUpdateBtn";
-import ClubUpdateBtn from "../../components/Manager/ClubUpdateBtn";
-import ReservManageCard from "../../components/Manager/ReservManageCard";
+import ShowManageCard from "../../components/Manager/ShowManageCard";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
 
-function ManagerMypage() {
+function ManagerShowpage() {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("jwt");
@@ -36,7 +35,7 @@ function ManagerMypage() {
   });
 
   const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false); // 상태 추가
-  const [reservManageCards, setReservManageCards] = useState([]);
+  const [showManageCards, setShowManageCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -76,7 +75,7 @@ function ManagerMypage() {
     }
   };
 
-  const getReservManageCards = async () => {
+  const getShowManageCards = async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -103,12 +102,12 @@ function ManagerMypage() {
         throw new Error("공연 내역 데이터 형식이 올바르지 않습니다.");
       }
 
-      setReservManageCards(data.performanceList || []);
+      setShowManageCards(data.performanceList || []);
       console.log("공연 내역 데이터:", data.performanceList);
     } catch (err) {
       console.error("에러 발생:", err);
       setError(err.message);
-      setReservManageCards([]);
+      setShowManageCards([]);
     } finally {
       setIsLoading(false);
     }
@@ -117,7 +116,7 @@ function ManagerMypage() {
   // 사용자 정보 조회
   useEffect(() => {
     fetchManagerProfile();
-    getReservManageCards();
+    getShowManageCards();
   }, []);
 
   if (isLoading) {
@@ -150,20 +149,19 @@ function ManagerMypage() {
           <AccountInfoCard formData={formData} />
           <ProfileInfoCard formData={formData} type="manager" />
           <ProfileUpdateBtn onClick={ProfileUpdateBtn} />
-          <ClubUpdateBtn onClick={ClubUpdateBtn} />
         </div>
         <div className={styles.container}>
           <div className={styles.category_box}>
             <div
               className={styles.category_list}
               onClick={() => navigate("/manager/mypage")}
-              id={styles.highlight}
             >
               예매자 목록
             </div>
             <div
               className={styles.category_list}
               onClick={() => navigate("/manager/show")}
+              id={styles.highlight}
             >
               공연
             </div>
@@ -191,18 +189,18 @@ function ManagerMypage() {
                   </button>
                 </div>
               )} */}
-              {!isLoading && !error && reservManageCards.length === 0 && (
+              {!isLoading && !error && showManageCards.length === 0 && (
                 <div className={styles.no_show}>공연 내역이 없습니다.</div>
               )}
               {!isLoading &&
                 !error &&
-                reservManageCards.length > 0 &&
-                reservManageCards.map((reservManageCard) => (
+                showManageCards.length > 0 &&
+                showManageCards.map((showManageCard) => (
                   <div
-                    key={reservManageCard.scheduleId * Math.random()}
-                    className="reserv_manage_card"
+                    key={showManageCard.scheduleId * Math.random()}
+                    className="show_manage_card"
                   >
-                    <ReservManageCard data={reservManageCard} />
+                    <ShowManageCard data={showManageCard} />
                   </div>
                 ))}
             </div>
@@ -219,4 +217,4 @@ function ManagerMypage() {
   );
 }
 
-export default ManagerMypage;
+export default ManagerShowpage;

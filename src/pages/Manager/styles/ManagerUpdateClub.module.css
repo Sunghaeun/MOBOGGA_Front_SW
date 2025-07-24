@@ -1,0 +1,258 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 131px;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px;
+  letter-spacing: 0.18px;
+}
+
+.title_box {
+  width: 100%;
+  margin-bottom: 100px;
+}
+
+.title {
+  text-align: left;
+}
+
+.info_box {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.club_content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 350px;
+}
+
+.image_upload_box {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  text-align: center;
+  align-items: center;
+}
+
+.club_img {
+  width: 359px;
+  height: 359px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  box-shadow: 8px 8px 20px 0px rgba(0, 0, 0, 0.25);
+  margin-bottom: 28px;
+}
+
+.img_change_btn {
+  width: 113px;
+  height: 32px;
+  margin-top: 8px;
+  padding: 4px 12px;
+  color: var(--ORANGE);
+  background: var(--WHITE);
+  border: 1px solid var(--ORANGE);
+  &:hover {
+    background: var(--HOVER);
+    cursor: pointer;
+  }
+}
+
+.info_box {
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.textarea {
+  width: 518px;
+  height: 340px;
+  resize: none;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+}
+
+.club_side {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 12px;
+}
+
+.info_head {
+  width: 90px;
+  text-align: left;
+  color: var(--Point-03, #8e3dff);
+  align-content: center;
+
+  /* Body 03 _ EB */
+  font-family: "Pretendard Variable";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 27px; /* 168.75% */
+}
+
+.info input {
+  margin-bottom: 6px;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  width: 518px;
+}
+
+.link_box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.link_box input {
+  width: 482px;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+}
+
+.link_box img {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.link {
+  display: block;
+}
+
+.button_box {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.update_button {
+  color: var(--WHITE);
+  text-align: center;
+  background: var(--ORANGE);
+  border: none;
+  margin-top: 94px;
+  margin-bottom: 160px;
+  padding: 4px 94px;
+
+  /* Body 01 _ R */
+  font-family: "Pretendard Variable";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 33px; /* 165% */
+}
+
+.update_button:hover {
+  background: #b20;
+}
+
+/* 모달 CSS */
+
+.modal_strong {
+  color: var(--main-02, #ff3d12);
+  /* Body 03 _ SB */
+  font-family: "IBM Plex Sans KR";
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.6875rem;
+  letter-spacing: 0.01rem;
+}
+
+.modal {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: var(--gray-10-typo-color, #121212);
+  text-align: center;
+  /* Body 01 _ SB */
+  font-family: "IBM Plex Sans KR";
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.0625rem; /* 165% */
+  letter-spacing: 0.0125rem;
+}
+
+.modal_con {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_Btns {
+  display: flex;
+  padding-top: 32px;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_close_Btn {
+  display: flex;
+  padding: 0.25rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--gray-01-background, #fbfbfb);
+  color: var(--main-02, #ff3d12);
+  /* Body 04 _ R */
+  font-family: "IBM Plex Sans KR";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 171.429% */
+  letter-spacing: 0.00875rem;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.modal_ok_Btn {
+  display: inline-flex;
+  padding: 0.25rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--main-02, #ff3d12);
+
+  /* Typo*/
+
+  color: var(--gray-01-background, #fbfbfb);
+  font-family: "IBM Plex Sans KR";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 171.429% */
+  letter-spacing: 0.00875rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

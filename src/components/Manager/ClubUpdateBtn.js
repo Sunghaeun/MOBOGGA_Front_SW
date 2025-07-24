@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./styles/ProfileUpdateBtn.module.css";
+import styles from "./styles/ClubUpdateBtn.module.css";
 
-function ProfileUpdateBtn({ onClick }) {
+function ClubUpdateBtn({ onClick }) {
   const navigate = useNavigate();
   const [isHoveringUpdateBtn, setIsHoveringUpdateBtn] = useState(false);
 
-  const onClickProfileUpdateBtn = () => {
-    localStorage.getItem("type") === "manager"
-      ? navigate(`/manager/mypage/update`)
-      : navigate(`/mypage/update`);
+  const onClickClubUpdateBtn = () => {
+      navigate(`/manager/club/update`);
   };
 
   const onMouseOverUpdateBtn = () => {
@@ -24,16 +22,16 @@ function ProfileUpdateBtn({ onClick }) {
     <div
       className={
         isHoveringUpdateBtn
-          ? styles.ProfileUpdateBtnHover
-          : styles.ProfileUpdateBtnDefault
+          ? styles.ClubUpdateBtnHover
+          : styles.ClubUpdateBtnDefault
       }
-      onClick={onClickProfileUpdateBtn}
+      onClick={onClickClubUpdateBtn}
       onMouseOver={onMouseOverUpdateBtn}
       onMouseOut={onMouseOutUpdateBtn}
     >
-      프로필 정보 수정
+      동아리 정보 수정
     </div>
   );
 }
 
-export default ProfileUpdateBtn;
+export default ClubUpdateBtn;
