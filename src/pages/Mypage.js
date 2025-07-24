@@ -141,7 +141,7 @@ function ManagerMypage() {
       <div className={styles.body}>
         <div className={styles.sidebar}>
           <AccountInfoCard formData={formData} />
-          <ProfileInfoCard formData={formData} type="manager" />
+          <ProfileInfoCard formData={formData} type="user" />
           <ProfileUpdateBtn onClick={ProfileUpdateBtn} />
         </div>
         <div className={styles.container}>

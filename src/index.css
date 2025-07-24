@@ -3,6 +3,7 @@
   --DEEPORANGE: #bb2200;
   --BLACK: #121212;
   --WHITE: #fbfbfb;
+  --HOVER: #eaeaea;
 
   --TITLE01: 800 56px/84px "Pretendard Variable";
   --TITLE02_B: 800 48px/72px "Pretendard Variable";
@@ -36,7 +37,7 @@
   --CAPTION_B: 800 11px/18px "Pretendard Variable";
   --CAPTION_SB: 600 11px/18px "Pretendard Variable";
   --CAPTION_M: 500 11px/18px "Pretendard Variable";
-  --CAPTION: 400 11px/18px "Pretendard Variable";
+  --CAPTION: 400 11px/18px;
 }
 
 
