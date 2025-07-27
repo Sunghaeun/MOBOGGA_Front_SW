@@ -6,6 +6,7 @@ import moboggaLogo from "../assets/Logo.svg";
 import header1 from "../assets/header/1.svg";
 import header2 from "../assets/header/2.svg";
 import header3 from "../assets/header/3.svg";
+import sidebar from "../assets/header/sidebar.svg";
 import profile_btn from "../assets/temp/profile_logo.svg"; // 주석 해제 필요
 
 function Header() {
@@ -126,7 +127,14 @@ function Header() {
             <span>로그인</span>
           </div>
         )}
+
       </div>
+      <div className={styles.sidebar}>
+          <img
+            src={sidebar}
+            alt="사이드바"
+          />
+        </div>
     </header>
   );
 }

@@ -18,7 +18,7 @@ function ShowList() {
 // 1) show 데이터 가져오기
   const getShow = async () => {
     try {
-      const res = await axios.get(`http://jinjigui.info:8080/attraction/list`);
+      const res = await axios.get(`https://jinjigui.info:443/attraction/list`);
       const converted = res.data.entireList.map((item) => {
         const [startDate, endDate] = item.period.split(" - ");
         return {
@@ -53,7 +53,7 @@ function ShowList() {
     <div className={styles.column}>
       <div className={styles.buttons}>
         <div className={styles.category}>
-          {["전체", "공연", "즐길거리"].map((category, idx) => (
+          {["전체", "공연", "체험", "스트릿공연", "먹거리", "예배"].map((category, idx) => (
             <div
               key={idx}
               className={
