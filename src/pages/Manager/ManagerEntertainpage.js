@@ -1,15 +1,14 @@
 /*eslint-disable*/
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./styles/ManagerMypage.module.css";
+import styles from "./styles/ManagerEntertainpage.module.css";
 import AccountInfoCard from "../../components/Mypage/AccountInfoCard";
 import ProfileInfoCard from "../../components/Mypage/ProfileInfoCard";
 import ProfileUpdateBtn from "../../components/Mypage/ProfileUpdateBtn";
-import ClubUpdateBtn from "../../components/Manager/ClubUpdateBtn";
 import ReservManageCard from "../../components/Manager/ReservManageCard";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
 
-function ManagerMypage() {
+function ManagerEntertainpage() {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("jwt");
@@ -150,14 +149,12 @@ function ManagerMypage() {
           <AccountInfoCard formData={formData} />
           <ProfileInfoCard formData={formData} type="manager" />
           <ProfileUpdateBtn onClick={ProfileUpdateBtn} />
-          <ClubUpdateBtn onClick={ClubUpdateBtn} />
         </div>
         <div className={styles.container}>
           <div className={styles.category_box}>
             <div
               className={styles.category_list}
               onClick={() => navigate("/manager/mypage")}
-              id={styles.highlight}
             >
               예매자 목록
             </div>
@@ -170,6 +167,7 @@ function ManagerMypage() {
             <div
               className={styles.category_list}
               onClick={() => navigate("/manager/entertain")}
+              id={styles.highlight}
             >
               즐길거리
             </div>
@@ -219,4 +217,4 @@ function ManagerMypage() {
   );
 }
 
-export default ManagerMypage;
+export default ManagerEntertainpage;

@@ -1,10 +1,16 @@
+/* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./styles/ManagerUpdateProfile.module.css";
-import UpdateProfileWord from "../../assets/UpdateProfileWord.svg";
+import styles from "./styles/ManagerUpdateClub.module.css";
+import UpdateClubWord from "../../assets/UpdateClubWord.svg";
 import Modal from "../../components/Modal";
 
-function ManagerUpdateProfile() {
+import instaIcon from "../../assets/icons/snsicons.svg";
+import kakaoIcon from "../../assets/icons/kakao.svg";
+import youtubeIcon from "../../assets/icons/youtubeicons.svg";
+import linktreeIcon from "../../assets/icons/linkicons.svg";
+
+function ManagerUpdateClub() {
   const navigate = useNavigate();
   const token = localStorage.getItem("jwt");
   const [isLoading, setIsLoading] = useState(true);
@@ -13,33 +19,35 @@ function ManagerUpdateProfile() {
     clubName: "",
     userName: "",
     phoneNum: "",
+    description: "",
+    instagram: "",
+    kakao: "",
+    youtube: "",
+    linktree: "",
+    semester: "",
+    imageUrl: "",
   });
 
   const [isHoveringCancelBtn, setIsHoveringCancelBtn] = useState(false);
   const [isHoveringConfirmBtn, setIsHoveringConfirmBtn] = useState(false);
 
-  // 마우스 오버 효과 핸들러
-  const onMouseOverCancelBtn = () => setIsHoveringCancelBtn(true);
-  const onMouseOutCancelBtn = () => setIsHoveringCancelBtn(false);
-  const onMouseOverConfirmBtn = () => setIsHoveringConfirmBtn(true);
-  const onMouseOutConfirmBtn = () => setIsHoveringConfirmBtn(false);
-
   // 모달 상태 관리
   const [isUpdateConfirmModalOpen, setIsUpdateConfirmModalOpen] =
     useState(false);
   const [isUpdateCancelModalOpen, setIsUpdateCancelModalOpen] = useState(false);
-
   const [validationErrorModal, setValidationErrorModal] = useState({
     isOpen: false,
     message: "",
   });
 
   const closeValidationErrorModal = () => {
-    setValidationErrorModal({
-      isOpen: false,
-      message: "",
-    });
+    setValidationErrorModal({ isOpen: false, message: "" });
   };
+
+  const onMouseOverCancelBtn = () => setIsHoveringCancelBtn(true);
+  const onMouseOutCancelBtn = () => setIsHoveringCancelBtn(false);
+  const onMouseOverConfirmBtn = () => setIsHoveringConfirmBtn(true);
+  const onMouseOutConfirmBtn = () => setIsHoveringConfirmBtn(false);
 
   const openUpdateConfirmModal = () => {
     if (!formData.clubName?.trim()) {
@@ -49,7 +57,6 @@ function ManagerUpdateProfile() {
       });
       return;
     }
-
     if (!formData.userName?.trim()) {
       setValidationErrorModal({
         isOpen: true,
@@ -57,7 +64,6 @@ function ManagerUpdateProfile() {
       });
       return;
     }
-
     if (!formData.phoneNum?.trim()) {
       setValidationErrorModal({
         isOpen: true,
@@ -65,7 +71,6 @@ function ManagerUpdateProfile() {
       });
       return;
     }
-
     if (!/^\d{3}-\d{4}-\d{4}$/.test(formData.phoneNum)) {
       setValidationErrorModal({
         isOpen: true,
@@ -73,8 +78,6 @@ function ManagerUpdateProfile() {
       });
       return;
     }
-
-    // 유효성 통과 시 확인 모달 열기
     setIsUpdateConfirmModalOpen(true);
   };
 
@@ -82,10 +85,9 @@ function ManagerUpdateProfile() {
   const openUpdateCancelModal = () => setIsUpdateCancelModalOpen(true);
   const closeUpdateCancelModal = () => setIsUpdateCancelModalOpen(false);
 
-  const handleUpdateConfirmCancel = () => {
-    closeUpdateConfirmModal();
-  };
-  
+  const handleUpdateConfirmCancel = () => closeUpdateConfirmModal();
+  const handleUpdateCancelCancel = () => closeUpdateCancelModal();
+
   const handleUpdateConfirmConfirm = async () => {
     try {
       await saveProfile();
@@ -100,16 +102,12 @@ function ManagerUpdateProfile() {
     closeUpdateCancelModal();
     navigate("/manager/mypage");
   };
-  const handleUpdateCancelCancel = () => {
-    closeUpdateCancelModal();
-  };
 
   // 사용자 정보 조회
   useEffect(() => {
     const fetchManagerProfile = async () => {
       try {
         const response = await fetch(
-          // `${process.env.REACT_APP_API_URL}/manager/mypage/profile`,
           `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
           {
             headers: {
@@ -118,27 +116,28 @@ function ManagerUpdateProfile() {
             },
           }
         );
-
-        if (!response.ok) {
+        if (!response.ok)
           throw new Error("사용자 정보를 불러오는데 실패했습니다.");
-        }
-
         const userData = await response.json();
-        console.log("Manager Data:", userData);
-
         setFormData({
           clubName: userData.clubName || "",
-          userName: userData.managerName || userData.userName || userData.name || "",
+          userName:
+            userData.managerName || userData.userName || userData.name || "",
           phoneNum: userData.phoneNumber || "",
+          description: userData.description || "",
+          instagram: userData.instagram || "",
+          kakao: userData.kakao || "",
+          youtube: userData.youtube || "",
+          linktree: userData.linktree || "",
+          semester: userData.semester || "",
+          imageUrl: userData.imageUrl || "",
         });
-        console.log("userData:", userData);
       } catch (error) {
         console.error("Error fetching user profile:", error);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchManagerProfile();
   }, [token, navigate]);
 
@@ -153,7 +152,6 @@ function ManagerUpdateProfile() {
   const saveProfile = async () => {
     try {
       const response = await fetch(
-        // `${process.env.REACT_APP_API_URL}/manager/mypage/profile`,
         `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
         {
           method: "PUT",
@@ -164,12 +162,18 @@ function ManagerUpdateProfile() {
           },
           body: JSON.stringify({
             clubName: formData.clubName,
-            name: formData.userName,
+            managerName: formData.userName,
             phoneNumber: formData.phoneNum,
+            description: formData.description,
+            instagram: formData.instagram,
+            kakao: formData.kakao,
+            youtube: formData.youtube,
+            linktree: formData.linktree,
+            semester: formData.semester,
+            imageUrl: formData.imageUrl,
           }),
         }
       );
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "저장에 실패했습니다.");
@@ -179,95 +183,106 @@ function ManagerUpdateProfile() {
     }
   };
 
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
+  if (isLoading) return <div>로딩 중...</div>;
 
   return (
     <div className={styles.body}>
       <div className={styles.title_box}>
         <div className={styles.title}>
-          <img src={UpdateProfileWord} alt="프로필 정보 수정" />
+          <img src={UpdateClubWord} alt="동아리 정보 수정" />
         </div>
       </div>
       <div className={styles.info_box}>
-        <div className={styles.infos}>
-          <div className={styles.info} id={styles.user_name_box}>
-            <div className={styles.info_head}>동아리명</div>
-            <div className={styles.info_body}>
-              <input
-                name="clubName"
-                value={formData.clubName}
-                onChange={handleInputChange}
-              />
+        <div className={styles.club_content}>
+          <div className={styles.image_upload_box}>
+            <img
+              src={formData.imageUrl || "https://via.placeholder.com/320x220"}
+              alt="동아리 이미지"
+              className={styles.club_img}
+            />
+            <button className={styles.img_change_btn}>이미지 변경</button>
+          </div>
+        </div>
+        <div className={styles.club_side}>
+          <div className={styles.info}>
+            <div className={styles.info_head}>소개글</div>
+            <textarea
+              name="description"
+              className={styles.textarea}
+              value={formData.description}
+              onChange={handleInputChange}
+              rows={7}
+            />
+          </div>
+          <div className={styles.info}>
+            <div className={styles.info_head}>관련링크</div>
+            <div className={styles.link_box}>
+              <div className={styles.link}>
+                <img src={instaIcon} alt="Instagram" />
+                <input
+                  name="instagram"
+                  placeholder="https://instagram.com/..."
+                  value={formData.instagram}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className={styles.link}>
+                <img src={kakaoIcon} alt="Kakao" />
+                <input
+                  name="kakao"
+                  placeholder="http://kakao.com/..."
+                  value={formData.kakao}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className={styles.link}>
+                <img src={youtubeIcon} alt="YouTube" />
+                <input
+                  name="youtube"
+                  placeholder="https://youtube.com/..."
+                  value={formData.youtube}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className={styles.link}>
+                <img src={linktreeIcon} alt="Linktree" />
+                <input
+                  name="linktree"
+                  placeholder="https://linktr.ee/..."
+                  value={formData.linktree}
+                  onChange={handleInputChange}
+                />
+              </div>
             </div>
           </div>
-          <div className={styles.info} id={styles.user_name_box}>
-            <div className={styles.info_head}>담당자</div>
-            <div className={styles.info_body}>
-              <input
-                name="userName"
-                value={formData.userName}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-          <div className={styles.info} id={styles.phone_num_box}>
-            <div className={styles.info_head}>전화번호</div>
-            <div className={styles.info_body}>
-              <input
-                type="tel"
-                name="phoneNum"
-                id="phone"
-                placeholder="010-0000-0000"
-                pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
-                maxLength="13"
-                value={formData.phoneNum}
-                onChange={handleInputChange}
-              />
-            </div>
+          <div className={styles.info}>
+            <div className={styles.info_head}>필수학기</div>
+            <input
+              name="semester"
+              placeholder="숫자로만 입력"
+              value={formData.semester}
+              onChange={handleInputChange}
+            />
           </div>
         </div>
       </div>
       <div className={styles.button_box}>
-        <div
-          className={styles.button}
-          id={
-            isHoveringCancelBtn
-              ? styles.cancel_button_hover
-              : styles.cancel_button
-          }
-          onMouseOver={onMouseOverCancelBtn}
-          onMouseOut={onMouseOutCancelBtn}
-          onClick={openUpdateCancelModal}
-        >
-          <div className={styles.button_text} id={styles.cancel_button_text}>
-            취소
-          </div>
-        </div>
-        <div
-          className={styles.button}
-          id={
-            isHoveringConfirmBtn
-              ? styles.confirm_button_hover
-              : styles.confirm_button
-          }
+        <button
+          className={styles.update_button}
+          onClick={openUpdateConfirmModal}
           onMouseOver={onMouseOverConfirmBtn}
           onMouseOut={onMouseOutConfirmBtn}
-          onClick={openUpdateConfirmModal}
         >
-          <div className={styles.button_text} id={styles.confirm_button_text}>
-            확인
-          </div>
-        </div>
+          수정하기
+        </button>
       </div>
       <Modal
         isOpen={isUpdateConfirmModalOpen}
-        onClose={() => setIsUpdateConfirmModalOpen(false)}
+        onClose={closeUpdateConfirmModal}
       >
         <div className={styles.modal_content}>
           <div className={styles.modal_top}>
-            프로필 정보를 수정하시겠습니까?
+            동아리 정보를 수정하시겠습니까?
           </div>
           <div className={styles.modal_Btns}>
             <button
@@ -285,10 +300,7 @@ function ManagerUpdateProfile() {
           </div>
         </div>
       </Modal>
-      <Modal
-        isOpen={isUpdateCancelModalOpen}
-        onClose={() => setIsUpdateCancelModalOpen(false)}
-      >
+      <Modal isOpen={isUpdateCancelModalOpen} onClose={closeUpdateCancelModal}>
         <div className={styles.modal_content}>
           <div className={styles.modal_top}>이 페이지에서 나가시겠습니까?</div>
           <div className={styles.modal_con}>
@@ -330,4 +342,4 @@ function ManagerUpdateProfile() {
   );
 }
 
-export default ManagerUpdateProfile;
+export default ManagerUpdateClub;

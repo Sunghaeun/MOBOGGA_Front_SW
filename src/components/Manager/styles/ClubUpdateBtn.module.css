@@ -1,15 +1,15 @@
-.ProfileUpdateBtnDefault {
+
+.ClubUpdateBtnDefault {
   margin-left: 26px;
   display: inline-flex;
-  margin-bottom: 12px;
   padding: 4px 24px;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border: 1px solid var(--ORANGE);
+  border: 1px solid var(--BLACK);
   background: var(--WHITE);
 
-  color: var(--ORANGE);
+  color: var(--BLACK);
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -17,18 +17,17 @@
   letter-spacing: 0.14px;
 }
 
-.ProfileUpdateBtnHover {
+.ClubUpdateBtnHover {
   margin-left: 26px;
   display: inline-flex;
-  margin-bottom: 12px;
   padding: 4px 24px;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border: 1px solid var(--ORANGE);
+  border: 1px solid var(--BLACK);
   background: var(--Main-04, #ffefec);
 
-  color: var(--ORANGE);
+  color: var(--BLACK);
   font-size: 14px;
   font-style: normal;
   font-weight: 400;

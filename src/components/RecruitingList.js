@@ -17,7 +17,7 @@ function RecruitingList() {
     const [recruiting, setRecruiting] = useState([]);
     const getRecruiting = async () => {
       try {
-        const res = await axios.get(`http://jinjigui.info:8080/recruiting/list`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/recruiting/list`);
         console.log("recruiting 데이터 가져오기 성공");
         console.log(res.data);
         setRecruiting(res.data.recruitingList);

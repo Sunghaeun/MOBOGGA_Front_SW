@@ -20,8 +20,15 @@ import Recruiting from "./pages/Recruiting";
 import RecruitingDetail from "./pages/RecruitingDetail";
 
 import Mypage from "./pages/Mypage";
-import ManagerMypage from "./pages/Manager/ManagerMypage";
 import UpdateProfile from "./pages/UpdateProfile";
+
+import ManagerMypage from "./pages/Manager/ManagerMypage";
+import ManagerUpdateProfile from "./pages/Manager/ManagerUpdateProfile";
+import ManagerUpdateClub from "./pages/Manager/ManagerUpdateClub"; // Assuming this is the correct path for the manager update club page
+import ManagerHolderList from "./pages/Manager/ManagerHolderList";
+import ManagerShowpage from "./pages/Manager/ManagerShowpage";
+import ManagerEntertainpage from "./pages/Manager/ManagerEntertainpage";
+import ManagerRecruitingpage from "./pages/Manager/ManagerRecruitingpage";
 
 import AddInfo from "./pages/AddInfo";
 import Loading from "./pages/Loading";
@@ -60,7 +67,12 @@ function App() {
           <Route path="/mypage/update" element={<UpdateProfile />} />
 
           <Route path="/manager/mypage" element={<ManagerMypage />} />
-          <Route path="/manager/mypage/update" element={<UpdateProfile />} />
+          <Route path="/manager/mypage/update" element={<ManagerUpdateProfile />} />
+          <Route path="/manager/club/update" element={<ManagerUpdateClub />} />
+          <Route path="/manager/holder" element={<ManagerHolderList />} />
+          <Route path="/manager/show" element={<ManagerShowpage />} />
+          <Route path="/manager/entertain" element={<ManagerEntertainpage />} />
+          <Route path="/manager/recruiting" element={<ManagerRecruitingpage />} />
 
           <Route path="/add-info" element={<AddInfo />} />
           <Route path="/loading" element={<Loading />} />

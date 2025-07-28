@@ -16,7 +16,7 @@ function ProfileInfoCard({ formData, type }) {
           </div>
           <div className={styles.detail_box}>
             <div className={styles.detail_head}>
-              {type === "manager" ? "이름" : "학번"}
+              {type === "manager" ? "담당자" : "학번"}
             </div>
             <div className={styles.detail_body}>
               {type === "manager" ? formData.userName : formData.stdId}

@@ -18,7 +18,8 @@ function ShowList() {
 // 1) show 데이터 가져오기
   const getShow = async () => {
     try {
-      const res = await axios.get(`https://jinjigui.info:443/attraction/list`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/attraction/list`);
+
       const converted = res.data.entireList.map((item) => {
         const [startDate, endDate] = item.period.split(" - ");
         return {
