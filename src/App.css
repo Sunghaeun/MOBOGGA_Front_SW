@@ -36,15 +36,3 @@
     transform: rotate(360deg);
   }
 }
-
-.ibm-plex-sans-kr-regular {
-  font-family: "IBM Plex Sans KR", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  color: var(--gray-10-typo-color, #121212);
-  font-size: 16px;
-}
-
-body {
-  font-family: "IBM Plex Sans KR", sans-serif;
-}

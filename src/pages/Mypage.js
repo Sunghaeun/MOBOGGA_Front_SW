@@ -12,16 +12,6 @@ import LoginOverModal from "../components/Mypage/LoginOverModal";
 function ManagerMypage() {
   const navigate = useNavigate();
   const token = localStorage.getItem("jwt");
-  if (!token) {
-    return (
-      <>
-        {navigate("/login")}
-        <LoginOverModal
-          isOpen={true}
-        />
-      </>
-    ); // 토큰이 없으면 컴포넌트 렌더링을 중단
-  }
   const [formData, setFormData] = useState({
     userName: "",
     stdId: "",
@@ -29,11 +19,20 @@ function ManagerMypage() {
     email: "",
   });
 
-  const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false); // 상태 추가
-
+  const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false);
   const [myReservCards, setMyReservCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const fetchUserProfile = async () => {
     try {
@@ -46,15 +45,10 @@ function ManagerMypage() {
           },
         }
       );
-
       if (!response.ok) {
         throw new Error("사용자 정보를 불러오는데 실패했습니다.");
       }
-
       const userData = await response.json();
-      console.log("User Data:", userData);
-
-      // 서버에서 받은 데이터를 폼 데이터 형식에 맞게 변환
       setFormData({
         userName: userData.name || "",
         email: userData.email || "",
@@ -63,7 +57,6 @@ function ManagerMypage() {
       });
     } catch (error) {
       setIsLoginOverModalOpen(true);
-      console.error("Error fetching user profile:", error);
       setError(error.message);
     } finally {
       setIsLoading(false);
@@ -74,7 +67,6 @@ function ManagerMypage() {
     try {
       setIsLoading(true);
       setError(null);
-
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/mypage/student/reservation`,
         {
@@ -85,21 +77,15 @@ function ManagerMypage() {
           credentials: "include",
         }
       );
-
       if (!response.ok) {
         throw new Error("예매 내역을 불러오는데 실패했습니다.");
       }
-
       const data = await response.json();
-
       if (!data || !data.performanceList) {
         throw new Error("예매 내역 데이터 형식이 올바르지 않습니다.");
       }
-
       setMyReservCards(data.performanceList || []);
-      console.log("예매 내역 데이터:", data.performanceList);
     } catch (err) {
-      console.error("에러 발생:", err);
       setError(err.message);
       setMyReservCards([]);
     } finally {
@@ -107,34 +93,65 @@ function ManagerMypage() {
     }
   };
 
-  // 사용자 정보 조회
   useEffect(() => {
     fetchUserProfile();
     getMyReservCards();
   }, []);
 
-  if (isLoading) {
-    console.log("로딩 중 화면 렌더링");
+  if (!token) {
     return (
       <>
-        <div className={styles.loading}>로딩중...</div>
+        {navigate("/login")}
+        <LoginOverModal isOpen={true} />
       </>
     );
   }
 
-  // if (error) {
-  //   console.log("에러 화면 렌더링:", error);
-  //   return (
-  //     <>
-  //       <div className={styles.error_message}>
-  //         error: {error}
-  //         <button onClick={getMyReservCards} className={styles.retry_button}>
-  //           다시 시도
-  //         </button>
-  //       </div>
-  //     </>
-  //   );
-  // }
+  if (isMobile) {
+    return (
+      <div className={styles.mobile_body}>
+        <header className={styles.mobile_header}>
+          <button className={styles.back_btn} onClick={() => navigate(-1)}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="20"
+              viewBox="0 0 12 20"
+              fill="none"
+            >
+              <path
+                d="M9.18206 19.6042L0.290237 10.7388C0.184697 10.6332 0.110114 10.5189 0.0664908 10.3958C0.0221636 10.2726 0 10.1407 0 10C0 9.85928 0.0221636 9.72735 0.0664908 9.60422C0.110114 9.48109 0.184697 9.36675 0.290237 9.26121L9.18206 0.369393C9.42832 0.123131 9.73615 0 10.1055 0C10.4749 0 10.7916 0.131926 11.0554 0.395778C11.3193 0.659631 11.4512 0.967458 11.4512 1.31926C11.4512 1.67106 11.3193 1.97889 11.0554 2.24274L3.29815 10L11.0554 17.7573C11.3017 18.0035 11.4248 18.3068 11.4248 18.667C11.4248 19.028 11.2929 19.3404 11.029 19.6042C10.7652 19.8681 10.4573 20 10.1055 20C9.75374 20 9.44591 19.8681 9.18206 19.6042Z"
+                fill="#121212"
+              />
+            </svg>
+          </button>
+          <span className={styles.header_title}>마이페이지</span>
+          <img
+            src={reload_btn}
+            alt="새로고침"
+            className={styles.reload_icon}
+            onClick={getMyReservCards}
+          />
+        </header>
+        <div className={styles.mobile_section_title}>공연 예매 내역</div>
+        <div className={styles.mobile_reservlist}>
+          {isLoading && <div className={styles.loading}>로딩중...</div>}
+          {!isLoading && !error && myReservCards.length === 0 && (
+            <div className={styles.no_reserv}>예매 내역이 없습니다.</div>
+          )}
+          {!isLoading &&
+            !error &&
+            myReservCards.map((myReservCard) => (
+              <MyReservCard key={myReservCard.scheduleId} data={myReservCard} />
+            ))}
+        </div>
+        <LoginOverModal
+          isOpen={isLoginOverModalOpen}
+          onClose={() => setIsLoginOverModalOpen(false)}
+        />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -162,14 +179,6 @@ function ManagerMypage() {
           <div className={styles.reservlist_content}>
             <div className={styles.reservlist_content}>
               {isLoading && <div className="loading">로딩중...</div>}
-              {/* {error && (
-                <div className="error-message">
-                  에러: {error}
-                  <button onClick={getMyReservCards} className="retry-button">
-                    다시 시도
-                  </button>
-                </div>
-              )} */}
               {!isLoading && !error && myReservCards.length === 0 && (
                 <div className={styles.no_reserv}>예매 내역이 없습니다.</div>
               )}
