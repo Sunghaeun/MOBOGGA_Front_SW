@@ -16,15 +16,12 @@ const KakaoLinkButton = ({ data }) => {
   }, []);
 
   const { accountInfo } = data;
-  if (!accountInfo) {
-    accountInfo = "농협 302-1258-7317-21";
-  }
 
   const sendKakaoMessage = () => {
     if (!window.Kakao) return;
     window.Kakao.Link.sendDefault({
       objectType: "text",
-      text: `💸 송금 부탁드립니다!\n\n계좌번호: ${accountInfo}\n예금주: 홍길동\n금액: 15,000원`,
+      text: `💸 송금 부탁드립니다!\n\n계좌번호: ${accountInfo || "농협 302-1258-7317-21"}\n예금주: 홍길동\n금액: 15,000원`,
       link: {
         mobileWebUrl: "https://mobogga.netlify.app/pay",
         webUrl: "https://mobogga.netlify.app/pay",
