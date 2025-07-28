@@ -183,9 +183,19 @@
     display: none;
   }
 
+  .inactiveCategory{
+    margin-right: 12px;
+    border-radius: 4px;
+  }
+
   .inactiveCategory span{
     font:var(--BODY04);
     
+  }
+
+  .activeCategory{
+    margin-right: 12px;
+    border-radius: 4px;
   }
 
   .activeCategory span{
