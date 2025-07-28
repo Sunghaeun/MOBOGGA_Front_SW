@@ -1,11 +1,11 @@
 import React from "react";
 import styles from "./styles/ShowCard.module.css";
 
-import top1 from "../assets/main/topTape.svg";
-import top2 from "../assets/main/topTape2.svg";
+// import top1 from "../assets/main/topTape.svg";
+// import top2 from "../assets/main/topTape2.svg";
 
-import side1 from "../assets/main/sideTape.svg";
-import side2 from "../assets/main/sideTape2.svg";
+// import side1 from "../assets/main/sideTape.svg";
+// import side2 from "../assets/main/sideTape2.svg";
 
 
 
