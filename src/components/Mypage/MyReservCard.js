@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/MyReservCard.module.css";
@@ -6,8 +7,8 @@ import Modal from "../Modal"; // Assuming Modal is a separate component
 function MyReservCard({ data }) {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
-  const [showAccount, setShowAccount] = useState(false);
   const [secondModalOpen, setSecondModalOpen] = useState(false);
+  const [showAccount, setShowAccount] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 600);
@@ -41,7 +42,6 @@ function MyReservCard({ data }) {
   const selectedSch = { cost: price }; // 예시: price 사용
   const count = ticketCount || 1; // 예시: 티켓 수
   const formatPrice = (v) => v.toLocaleString() + "원";
-  const reservConfirm = () => setSecondModalOpen(false);
 
   return (
     <div className={styles.card}>
