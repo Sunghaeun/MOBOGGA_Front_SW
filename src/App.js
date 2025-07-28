@@ -37,6 +37,9 @@ import Error404 from "./pages/Error404";
 import CreateRecruiting from "./pages/CreateRecruiting";
 import ManageClubDetail from "./pages/ManageClubDetail";
 
+import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
+import TossAppLauncher from "./components/Mypage/TossAppLauncher";
+
 import "./App.css";
 
 function App() {
@@ -81,6 +84,9 @@ function App() {
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
           {/* 임시 id 1로 설정 :id로 바꾸기 */}
           <Route path="/manager/club/1" element={<ManageClubDetail />} />
+
+          <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
+          <Route path="/tosslinktest" element={<TossAppLauncher />} />
 
         </Routes>
         <Footer />
