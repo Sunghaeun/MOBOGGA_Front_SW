@@ -19,6 +19,7 @@ function ShowList() {
   const getShow = async () => {
     try {
       const res = await axios.get(`${process.env.REACT_APP_API_URL}/attraction/list`);
+
       const converted = res.data.entireList.map((item) => {
         const [startDate, endDate] = item.period.split(" - ");
         return {
@@ -53,7 +54,7 @@ function ShowList() {
     <div className={styles.column}>
       <div className={styles.buttons}>
         <div className={styles.category}>
-          {["전체", "공연", "즐길거리"].map((category, idx) => (
+          {["전체", "공연", "체험", "스트릿공연", "먹거리", "예배"].map((category, idx) => (
             <div
               key={idx}
               className={

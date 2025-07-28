@@ -1,5 +1,7 @@
 .banner {
   height: 560px;
+  width:100vw;
+  box-sizing: border-box;
   flex-shrink: 0;
 
   background: var(
