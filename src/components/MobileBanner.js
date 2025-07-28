@@ -6,7 +6,7 @@ import styles from "./styles/MobileBanner.module.css";
 
 
 
-function Banner() {
+function MobileBanner() {
 
 //   const [show, setShow] = useState([]);
 //   const [currentIndex, setCurrentIndex] = useState(0);
@@ -69,4 +69,4 @@ function Banner() {
   );
 }
 
-export default Banner;
+export default MobileBanner;
