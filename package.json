@@ -15,7 +15,7 @@
     "react-router-dom": "^7.5.3",
     "react-scripts": "5.0.1",
     "recoil": "^0.7.7",
-    "web-vitals": "^2.1.4" 
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -40,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/kakao-js-sdk": "^1.39.5"
   }
 }

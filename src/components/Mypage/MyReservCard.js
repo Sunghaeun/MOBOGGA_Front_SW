@@ -3,12 +3,23 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/MyReservCard.module.css";
 import Modal from "../Modal"; // Assuming Modal is a separate component
+import KakaoLinkButton from "./KakaoLinkButton";
+import TossAppLauncher from "./TossAppLauncher";
 
 function MyReservCard({ data }) {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
   const [secondModalOpen, setSecondModalOpen] = useState(false);
   const [showAccount, setShowAccount] = useState(false);
+
+  const handleCopyClipBoard = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      alert("클립보드에 링크가 복사되었습니다.");
+    } catch (e) {
+      alert("복사에 실패하였습니다");
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 600);
@@ -22,6 +33,7 @@ function MyReservCard({ data }) {
     showId,
     poster,
     title,
+    qrImage,
     order,
     date,
     weekday,
@@ -41,15 +53,21 @@ function MyReservCard({ data }) {
   const show = { qrImage: "" }; // 또는 실제 데이터
   const selectedSch = { cost: price }; // 예시: price 사용
   const count = ticketCount || 1; // 예시: 티켓 수
-  const formatPrice = (v) => v.toLocaleString() + "원";
 
   return (
     <div className={styles.card}>
       <div className={styles.card_img_box}>
-        <img className={styles.card_img} src={poster} alt="공연 이미지" onClick={handleShowDetail} />
+        <img
+          className={styles.card_img}
+          src={poster}
+          alt="공연 이미지"
+          onClick={handleShowDetail}
+        />
       </div>
       <div className={styles.card_text_box}>
-        <div className={styles.card_title} onClick={handleShowDetail}>{title || "공연 제목 없음"}</div>
+        <div className={styles.card_title} onClick={handleShowDetail}>
+          {title || "공연 제목 없음"}
+        </div>
         <div className={styles.card_info_box}>
           <div className={styles.card_content}>
             <div className={styles.card_info_header} id={styles.order_box}>
@@ -57,8 +75,7 @@ function MyReservCard({ data }) {
                 {order || "공연 정보 없음"}
               </div>
               <div className={styles.card_date}>
-                {date || "날짜 정보 없음"} (
-                {weekday || "날짜 정보 없음"})
+                {date || "날짜 정보 없음"} ({weekday || "날짜 정보 없음"})
                 {time ? ` ${time}` : ""}
               </div>
             </div>
@@ -76,8 +93,8 @@ function MyReservCard({ data }) {
             </div>
           </div>
           {/* 계좌정보: 모바일이면 버튼, PC면 그대로 노출 */}
-          {paid === false && (
-            isMobile ? (
+          {paid === false &&
+            (isMobile ? (
               <>
                 {!showAccount ? (
                   <button
@@ -88,7 +105,10 @@ function MyReservCard({ data }) {
                   </button>
                 ) : (
                   <div className={styles.card_content}>
-                    <div className={styles.card_info_header} id={styles.account_box}>
+                    <div
+                      className={styles.card_info_header}
+                      id={styles.account_box}
+                    >
                       계좌번호:
                     </div>
                     <div className={styles.card_account}>{accountInfo}</div>
@@ -97,17 +117,21 @@ function MyReservCard({ data }) {
               </>
             ) : (
               <div className={styles.card_content} id={styles.account_info}>
-                <div className={styles.card_info_header} id={styles.account_box}>
+                <div
+                  className={styles.card_info_header}
+                  id={styles.account_box}
+                >
                   계좌번호:
                 </div>
                 <div className={styles.card_account}>{accountInfo}</div>
               </div>
-            )
-          )}
+            ))}
           <div className={styles.ticket_info}>
             <div className={styles.ticket_num}>{ticketCount}매</div>
             <span className={styles.divider} />
-            <div className={styles.ticket_price}>{price?.toLocaleString()}원</div>
+            <div className={styles.ticket_price}>
+              {price?.toLocaleString()}원
+            </div>
             <span className={styles.divider} />
             <div className={styles.deposit_status}>
               {paid ? (
@@ -127,30 +151,55 @@ function MyReservCard({ data }) {
         >
           <div className={styles.modal_top}>
             <p className={styles.modal_title}>송금 정보</p>
-            <button className={styles.modal_close} onClick={() => setSecondModalOpen(false)}>×</button>
+            <button
+              className={styles.modal_close}
+              onClick={() => setSecondModalOpen(false)}
+            >
+              ×
+            </button>
           </div>
           <div className={styles.modal_mid}>
             <div className={styles.modal_qr_wrap}>
-              <img className={styles.modal_qr_img} src={show.qrImage} alt="QR 코드" />
+              <img
+                className={styles.modal_qr_img}
+                src={qrImage}
+                alt="QR 코드"
+              />
             </div>
             <div className={styles.modal_account}>
               <span className={styles.modal_strong_bl}>
-                한동은행 1001 - 1234 - 5678 -90
+                {accountInfo || "계좌 정보 없음"}
               </span>
+              <button
+                className={styles.modal_copy_btn}
+                onClick={() => {
+                  handleCopyClipBoard(accountInfo || "계좌 정보 없음");
+                }}
+              >
+                복사
+              </button>
             </div>
             <div className={styles.modal_desc}>
-              혹은 <span className={styles.modal_strong_bl}>QR코드</span>로 <span className={styles.modal_strong_bl}>{formatPrice((selectedSch?.cost || 0) * count)}</span> 송금 해주세요.<br />
-              입금자명은 <span className={styles.modal_strong_or}>학번+이름</span>으로 해주세요.<br />
-              계좌번호는 마이페이지에서 다시 볼 수 있습니다.
+              입금하실 금액:{" "}
+              <span className={styles.modal_strong_bl}>
+                {price?.toLocaleString()}원
+              </span>{" "}
+              <br />
+              입금자명은{" "}
+              <span className={styles.modal_strong_or}>학번+이름</span>으로
+              해주세요.
+              <br />
+              동아리 담당자의 확인 후 예매 확정이 이뤄집니다. <br />
             </div>
-            <a
-              className={styles.kakao_btn}
-              href="https://mobogga.netlify.app/main"
+            <KakaoLinkButton
+              data={KakaoLinkButton}
               target="_blank"
               rel="noopener noreferrer"
-            >
-              카카오페이로 송금하기
-            </a>
+            ></KakaoLinkButton>
+            <TossAppLauncher
+              target="_blank"
+              rel="noopener noreferrer"
+            ></TossAppLauncher>
           </div>
         </Modal>
       )}

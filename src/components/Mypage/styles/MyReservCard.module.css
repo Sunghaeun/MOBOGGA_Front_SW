@@ -356,23 +356,6 @@
     color: #ff3d12;
   }
 
-  .kakao_btn {
-    display: block;
-    width: 90%;
-    max-width: 400px;
-    margin: 0 auto 16px auto;
-    background: #ff3d12;
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 8px;
-    padding: 14px 0; /* 버튼 높이 줄임 */
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-  }
-
   .modal_link {
     font-size: 0.95rem;
     color: #222;
@@ -380,6 +363,17 @@
     margin-top: 8px;
     margin-bottom: 0;
     word-break: break-all;
+  }
+
+  .modal_copy_btn {
+    padding: 3px 5px;
+    background: none;
+    border: 1px solid #ff3d12;
+    border-radius: 5px;
+    color: #ff3d12;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 8px;
   }
 }
 
