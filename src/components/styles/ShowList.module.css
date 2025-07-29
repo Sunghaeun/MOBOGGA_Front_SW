@@ -170,6 +170,7 @@
   .showlist {
     grid-template-columns: repeat(2, 1fr); 
     gap: 12px; 
+    width:100%;
   }
 
   .category{
@@ -204,5 +205,9 @@
 
   .selectBox2{
     display: none;
+  }
+
+  .showCard{
+    width:calc((100% - 40px)/2) !important;
   }
 }
