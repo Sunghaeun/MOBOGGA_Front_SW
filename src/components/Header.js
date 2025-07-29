@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./styles/Header.module.css";
 
@@ -8,10 +9,16 @@ import header2 from "../assets/header/2.svg";
 import header3 from "../assets/header/3.svg";
 import sidebar from "../assets/header/sidebar.svg";
 import profile_btn from "../assets/temp/profile_logo.svg"; // 주석 해제 필요
+import Sidebar from "./Mobile/Sidebar"; // Assuming Sidebar is a component that handles the sidebar functionality
 
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleSide = () => {
+    setIsOpen(true);
+  };
 
   return (
     <header className={styles.header}>
@@ -133,14 +140,12 @@ function Header() {
             <span>로그인</span>
           </div>
         )}
-
       </div>
-      <div className={styles.sidebar}>
-          <img
-            src={sidebar}
-            alt="사이드바"
-          />
-        </div>
+      <div className={styles.sidebar} onClick={toggleSide}>
+        <img src={sidebar} alt="사이드바" />
+      </div>
+
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
     </header>
   );
 }
