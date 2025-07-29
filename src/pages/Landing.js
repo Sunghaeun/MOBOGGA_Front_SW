@@ -5,7 +5,6 @@ import GoogleStartBtnHover from "../assets/GoogleStartBtn-Hover.svg";
 import LandingPageTape from "../assets/LandingPageTape.svg";
 import LandingPageWords from "../assets/LandingPageWords.svg";
 import LandingPageMobile from "../assets/LandingPageMobile.svg";
-import FilledLongBtn from "../components/FilledLongBtn";
 
 function Landing() {
   const [isHovering, setIsHovering] = useState(false);
