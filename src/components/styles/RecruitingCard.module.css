@@ -24,15 +24,70 @@
 .name{
   color: var(--main-02, #FF3D12);
   text-align: center;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 33px; /* 165% */
-  letter-spacing: 0.2px;
+  font:var(--BODY01_B);
 
   margin-top: 12px;
   margin-bottom: 4px;
 }
 
+.secondline{
+  display: flex;
+  flex-direction: row;
+}
+
+.secondline span{
+  font:var(--BODY04);
+}
+
+.recruitingType{
+  color: var(--Point-01, #5A00D6);
+  font:var(--BODY04_SB) !important;
+
+  margin-right: 12px;
+}
+
 .title{
-  font-size: 14px;
+  margin-left: 12px;
+  width:150px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 440px) {
+  .showCard {
+    width: 124px;
+    height: auto;
+
+    margin-bottom: 12px;
+  }
+
+  .card img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 124.00/175.41;
+
+    border: 2px solid var(--gray-02-footer-background, #EAEAEA);
+  }
+
+  .name {
+   font:var(--BODY04);
+   margin-top: 4px;
+   color: var(--Gray-08, #3E3E3E);
+   margin-bottom:0px;
+  }
+
+  .secondline .recruitingType{
+    font:var(--CAPTION) !important;
+    margin: 0px;
+  }
+
+  .separator{
+    display: none;
+  }
+
+  .title {
+    display: none;
+  }
 }
