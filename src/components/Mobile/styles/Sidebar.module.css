@@ -1,0 +1,59 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80%;
+  height: 100%;
+  background-color: white;
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
+  padding: 24px;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.open {
+  right: 0;
+}
+
+.closeButton {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: right;
+  margin-bottom: 24px;
+  cursor: pointer;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.menuHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.submenu {
+  margin: 0 0 20px 12px;
+  text-align: left;
+}
+
+.submenu div {
+  font-size: 15px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
