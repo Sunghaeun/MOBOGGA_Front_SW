@@ -27,3 +27,58 @@
     cursor: pointer;
   }
 }
+
+/* 모바일 반응형 */
+@media screen and (max-width: 768px) {
+  .body {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    background: var(
+      --Gradient-02,
+      linear-gradient(180deg, #ccc 0%, #fbfbfb 50%, #ccc 100%)
+    );
+  }
+
+  .tape_box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .landing_mobile {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+
+  .landing_mobile_btn {
+    display: flex;
+    position: absolute;
+    bottom: 20%;
+    width: 50%;
+    height: 3vh;
+    padding: 3vw 20vw;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    background: var(--main-02, #ff3d12);
+    color: var(--gray-01-background, #fbfbfb);
+    text-align: center;
+
+    /* Body 02 _ SB */
+    font-family: "Pretendard Variable";
+    font-size: 5vw;
+    font-style: normal;
+    font-weight: 600;
+
+    cursor: pointer;
+  }
+}
