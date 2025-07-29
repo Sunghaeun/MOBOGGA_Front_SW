@@ -170,6 +170,7 @@
   .showlist {
     grid-template-columns: repeat(2, 1fr); 
     gap: 12px; 
+    width:100%;
   }
 
   .category{
@@ -183,9 +184,19 @@
     display: none;
   }
 
+  .inactiveCategory{
+    margin-right: 12px;
+    border-radius: 4px;
+  }
+
   .inactiveCategory span{
     font:var(--BODY04);
     
+  }
+
+  .activeCategory{
+    margin-right: 12px;
+    border-radius: 4px;
   }
 
   .activeCategory span{
@@ -194,5 +205,9 @@
 
   .selectBox2{
     display: none;
+  }
+
+  .showCard{
+    width:calc((100% - 40px)/2) !important;
   }
 }
