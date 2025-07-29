@@ -4,6 +4,8 @@ import GoogleStartBtnDefault from "../assets/GoogleStartBtn-Default.svg";
 import GoogleStartBtnHover from "../assets/GoogleStartBtn-Hover.svg";
 import LandingPageTape from "../assets/LandingPageTape.svg";
 import LandingPageWords from "../assets/LandingPageWords.svg";
+import LandingPageMobile from "../assets/LandingPageMobile.svg";
+import FilledLongBtn from "../components/FilledLongBtn";
 
 function Landing() {
   const [isHovering, setIsHovering] = useState(false);
@@ -42,30 +44,52 @@ function Landing() {
     window.location.href = authUrl.toString();
   };
 
-  return (
-    <>
-      <div className={styles.body}>
-        <div className={styles.words_box}>
-          <div className={styles.words_img_box}>
-            <img className={styles.words_img} src={LandingPageWords} alt="" />
-          </div>
-          <div className={styles.google_start_btn_box}>
+  if (window.innerWidth < 768) {
+    return (
+      <>
+        <div className={styles.body}>
+          <div className={styles.tape_box}>
             <img
-              className={styles.google_start_btn}
-              src={isHovering ? GoogleStartBtnHover : GoogleStartBtnDefault}
-              alt="google-start-btn"
-              onMouseOver={onMouseOver}
-              onMouseOut={onMouseOut}
-              onClick={onClickGoogleStartBtn}
+              className={styles.landing_mobile}
+              src={LandingPageMobile}
+              alt=""
             />
           </div>
+          <div
+            className={styles.landing_mobile_btn}
+            onClick={onClickGoogleStartBtn}
+          >
+            모보까 로그인
+          </div>
         </div>
-        <div className={styles.tape_box}>
-          <img className={styles.landing_tape} src={LandingPageTape} alt="" />
+      </>
+    );
+  } else {
+    return (
+      <>
+        <div className={styles.body}>
+          <div className={styles.tape_box}>
+            <img className={styles.landing_tape} src={LandingPageTape} alt="" />
+          </div>
+          <div className={styles.words_box}>
+            <div className={styles.words_img_box}>
+              <img className={styles.words_img} src={LandingPageWords} alt="" />
+            </div>
+            <div className={styles.google_start_btn_box}>
+              <img
+                className={styles.google_start_btn}
+                src={isHovering ? GoogleStartBtnHover : GoogleStartBtnDefault}
+                alt="google-start-btn"
+                onMouseOver={onMouseOver}
+                onMouseOut={onMouseOut}
+                onClick={onClickGoogleStartBtn}
+              />
+            </div>
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 }
 
 export default Landing;
