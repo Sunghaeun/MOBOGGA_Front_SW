@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "./styles/Header.module.css";
 
@@ -6,12 +7,18 @@ import moboggaLogo from "../assets/Logo.svg";
 import header1 from "../assets/header/1.svg";
 import header2 from "../assets/header/2.svg";
 import header3 from "../assets/header/3.svg";
+import sidebar from "../assets/header/sidebar.svg";
 import profile_btn from "../assets/temp/profile_logo.svg"; // 주석 해제 필요
+import Sidebar from "./Mobile/Sidebar"; // Assuming Sidebar is a component that handles the sidebar functionality
 
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const token = localStorage.getItem("jwt");
+
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleSide = () => {
+    setIsOpen(true);
+  };
 
   return (
     <header className={styles.header}>
@@ -112,13 +119,20 @@ function Header() {
           </span>
         </div>
 
-        {token ? (
-          // 로그인 상태 → 프로필 버튼
+        {localStorage.getItem("jwt") &&
+        localStorage.getItem("type") === "manager" ? (
+          // 매니저 로그인 상태 → 매니저 마이페이지 버튼
           <div
-            className={styles.profile_btn}
-            onClick={() => navigate("/mypage")}
+            className={styles.manager_btn}
+            onClick={() => navigate("/manager/mypage")}
           >
-            <img src={profile_btn} alt="프로필" />
+            <img src={profile_btn} alt="매니저 마이페이지" />
+          </div>
+        ) : localStorage.getItem("jwt") &&
+          localStorage.getItem("type") === "user" ? (
+          // 일반 사용자 로그인 상태 → 일반 마이페이지 버튼
+          <div className={styles.user_btn} onClick={() => navigate("/mypage")}>
+            <img src={profile_btn} alt="마이페이지" />
           </div>
         ) : (
           // 비로그인 상태 → 로그인 버튼
@@ -127,6 +141,11 @@ function Header() {
           </div>
         )}
       </div>
+      <div className={styles.sidebar} onClick={toggleSide}>
+        <img src={sidebar} alt="사이드바" />
+      </div>
+
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
     </header>
   );
 }

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./styles/UpdateProfile.module.css";
-import UpdateProfileWord from "../assets/UpdateProfileWord.svg";
-import Modal from "../components/Modal";
+import styles from "./styles/ManagerUpdateProfile.module.css";
+import UpdateProfileWord from "../../assets/UpdateProfileWord.svg";
+import Modal from "../../components/Modal";
 
-function UpdateProfile() {
+function ManagerUpdateProfile() {
   const navigate = useNavigate();
   const token = localStorage.getItem("jwt");
   const [isLoading, setIsLoading] = useState(true);
 
   const [formData, setFormData] = useState({
+    clubName: "",
     userName: "",
-    stdId: "",
     phoneNum: "",
   });
 
@@ -42,18 +42,18 @@ function UpdateProfile() {
   };
 
   const openUpdateConfirmModal = () => {
-    if (!formData.userName?.trim()) {
+    if (!formData.clubName?.trim()) {
       setValidationErrorModal({
         isOpen: true,
-        message: "이름을 입력해주세요.",
+        message: "동아리명을 입력해주세요.",
       });
       return;
     }
 
-    if (!formData.stdId?.trim()) {
+    if (!formData.userName?.trim()) {
       setValidationErrorModal({
         isOpen: true,
-        message: "학번을 입력해주세요.",
+        message: "담당자 이름을 입력해주세요.",
       });
       return;
     }
@@ -85,11 +85,12 @@ function UpdateProfile() {
   const handleUpdateConfirmCancel = () => {
     closeUpdateConfirmModal();
   };
+  
   const handleUpdateConfirmConfirm = async () => {
     try {
       await saveProfile();
       closeUpdateConfirmModal();
-      navigate("/mypage");
+      navigate("/manager/mypage");
     } catch (error) {
       console.error("Error saving profile:", error);
     }
@@ -97,7 +98,7 @@ function UpdateProfile() {
 
   const handleUpdateCancelConfirm = () => {
     closeUpdateCancelModal();
-    navigate("/mypage");
+    navigate("/manager/mypage");
   };
   const handleUpdateCancelCancel = () => {
     closeUpdateCancelModal();
@@ -105,9 +106,10 @@ function UpdateProfile() {
 
   // 사용자 정보 조회
   useEffect(() => {
-    const fetchUserProfile = async () => {
+    const fetchManagerProfile = async () => {
       try {
         const response = await fetch(
+          // `${process.env.REACT_APP_API_URL}/manager/mypage/profile`,
           `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
           {
             headers: {
@@ -122,13 +124,14 @@ function UpdateProfile() {
         }
 
         const userData = await response.json();
-        console.log("User Data:", userData);
+        console.log("Manager Data:", userData);
 
         setFormData({
-          userName: userData.name || "",
-          stdId: userData.studentId?.toString() || "",
+          clubName: userData.clubName || "",
+          userName: userData.managerName || userData.userName || userData.name || "",
           phoneNum: userData.phoneNumber || "",
         });
+        console.log("userData:", userData);
       } catch (error) {
         console.error("Error fetching user profile:", error);
       } finally {
@@ -136,7 +139,7 @@ function UpdateProfile() {
       }
     };
 
-    fetchUserProfile();
+    fetchManagerProfile();
   }, [token, navigate]);
 
   const handleInputChange = (e) => {
@@ -150,6 +153,7 @@ function UpdateProfile() {
   const saveProfile = async () => {
     try {
       const response = await fetch(
+        // `${process.env.REACT_APP_API_URL}/manager/mypage/profile`,
         `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
         {
           method: "PUT",
@@ -159,9 +163,9 @@ function UpdateProfile() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            clubName: formData.clubName,
             name: formData.userName,
             phoneNumber: formData.phoneNum,
-            studentId: formData.stdId,
           }),
         }
       );
@@ -189,21 +193,21 @@ function UpdateProfile() {
       <div className={styles.info_box}>
         <div className={styles.infos}>
           <div className={styles.info} id={styles.user_name_box}>
-            <div className={styles.info_head}>이름</div>
+            <div className={styles.info_head}>동아리명</div>
             <div className={styles.info_body}>
               <input
-                name="userName"
-                value={formData.userName}
+                name="clubName"
+                value={formData.clubName}
                 onChange={handleInputChange}
               />
             </div>
           </div>
-          <div className={styles.info} id={styles.std_num_box}>
-            <div className={styles.info_head}>학번</div>
+          <div className={styles.info} id={styles.user_name_box}>
+            <div className={styles.info_head}>담당자</div>
             <div className={styles.info_body}>
               <input
-                name="stdId"
-                value={formData.stdId}
+                name="userName"
+                value={formData.userName}
                 onChange={handleInputChange}
               />
             </div>
@@ -326,4 +330,4 @@ function UpdateProfile() {
   );
 }
 
-export default UpdateProfile;
+export default ManagerUpdateProfile;

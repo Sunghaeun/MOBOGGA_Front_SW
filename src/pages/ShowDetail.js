@@ -33,7 +33,7 @@ function ShowDetail() {
 
     try {
       const response = await axios.get(
-        `http://jinjigui.info:8080/show/detail/${showId}`
+        `${process.env.REACT_APP_API_URL}/show/detail/${showId}`
       );
       console.log("API 응답 데이터:", response.data);
       if (response.data) {
@@ -75,7 +75,7 @@ function ShowDetail() {
       console.log(requestData);
       console.log("JWT_TOKEN: ", token);
       const response = await axios.post(
-        `http://jinjigui.info:8080/show/detail/reservation`,
+        `${process.env.REACT_APP_API_URL}/show/detail/reservation`,
         requestData,
         {
           headers: {

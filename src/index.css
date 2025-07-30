@@ -3,20 +3,56 @@
   --DEEPORANGE: #bb2200;
   --BLACK: #121212;
   --WHITE: #fbfbfb;
+  --HOVER: #eaeaea;
+
+  --TITLE01: 800 56px/84px "Pretendard Variable";
+  --TITLE02_B: 800 48px/72px "Pretendard Variable";
+  --TITLE02: 500 48px/72px "Pretendard Variable";
+  --TITLE03: 800 40px/56px "Pretendard Variable";
+  --TITLE04_B: 800 32px/48px "Pretendard Variable";
+  --TITLE04: 500 32px/48px "Pretendard Variable";
+  --TITLE05: 800 28px/42px "Pretendard Variable";
+  --TITLE06: 800 24px/40px "Pretendard Variable";
+
+  --BODY01_B: 800 20px/33px "Pretendard Variable";
+  --BODY01_SB: 600 20px/33px "Pretendard Variable";
+  --BODY01_M: 500 20px/33px "Pretendard Variable";
+  --BODY01: 400 20px/33px "Pretendard Variable";
+
+  --BODY02_B: 800 18px/30px "Pretendard Variable";
+  --BODY02_SB: 600 18px/30px "Pretendard Variable";
+  --BODY02_M: 500 18px/30px "Pretendard Variable";
+  --BODY02: 400 18px/30px "Pretendard Variable";
+
+  --BODY03_B: 800 16px/27px "Pretendard Variable";
+  --BODY03_SB: 600 16px/27px "Pretendard Variable";
+  --BODY03_M: 500 16px/27px "Pretendard Variable";
+  --BODY03: 400 16px/27px "Pretendard Variable";
+
+  --BODY04_B: 800 14px/24px "Pretendard Variable";
+  --BODY04_SB: 600 14px/24px "Pretendard Variable";
+  --BODY04_M: 500 14px/24px "Pretendard Variable";
+  --BODY04: 400 14px/24px "Pretendard Variable";
+
+  --CAPTION_B: 800 11px/18px "Pretendard Variable";
+  --CAPTION_SB: 600 11px/18px "Pretendard Variable";
+  --CAPTION_M: 500 11px/18px "Pretendard Variable";
+  --CAPTION: 400 11px/18px "Pretendard Variable";
 }
+
 
 body {
   margin: 0;
 
-  font-family: "IBM Plex Sans KR";
+  font-family: "Pretendard Variable";
   font-weight: 400;
   font-style: normal;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  color: #121212;
-  background-color: #fbfbfb;
+  color: var(--BLACK);
+  background-color: var(--WHITE);
 }
 
 code {

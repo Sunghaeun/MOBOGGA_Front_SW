@@ -1,0 +1,22 @@
+.banner {
+ display: flex;
+ flex-direction: column;
+ align-items: flex-start;
+}
+
+.text{
+  font:var(--BODY01_B);
+  color:var(--BLACK);
+
+  margin-top: 15px;
+  margin-left: 22px;
+  margin-bottom: 15px;
+}
+
+.container{
+  width: 440px;
+  height: 459px;
+  flex-shrink: 0;
+
+  background-color: antiquewhite;
+}

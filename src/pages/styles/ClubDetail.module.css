@@ -139,3 +139,29 @@
   gap: 24px;
   justify-items: center;
 }
+
+.setcenter{
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modifyClub{
+  width:70px;
+  height: 33px;
+
+  display: inline-flex;
+  padding: 4px 94px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--main-02, #FF3D12);
+  background: var(--main-02, #FF3D12);
+}
+
+.modifyClub span{
+  font: var(--BODY01);
+  color: var(--gray-01-background, #FBFBFB);
+}

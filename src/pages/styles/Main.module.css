@@ -9,12 +9,16 @@
 
 .categoryText{
   color: var(--gray-10-typo-color, #121212);
-  font-size: 24px;
-  font-weight: 700;
-  text-shadow:   /* 글씨 더 굵게 보이게  */
-  -0.2px 0 currentColor,
-   0.2px 0 currentColor,
-   0   -0.2px currentColor,
-   0    0.2px currentColor;
+  font:var(--TITLE06);
 }
 
+@media (max-width: 440px) {
+.main{
+  padding: 60px 20px 90px 20px;
+}
+
+  .categoryText{
+    font:var(--BODY01_B);
+  }
+  
+}

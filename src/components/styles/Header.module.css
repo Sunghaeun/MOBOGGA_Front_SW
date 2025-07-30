@@ -8,6 +8,8 @@
 
 .header{
   height: 88px;
+  width:100vw;
+  box-sizing: border-box;
 
   display: flex;
   align-items: center;
@@ -73,4 +75,37 @@
 
 .selectPadding{
   padding: 0 !important;
+}
+
+.profile_btn{
+  width:30px !important;
+  height: 30px !important;
+  margin-left: 33px;
+}
+
+.sidebar {
+  display: none;
+}
+
+@media (max-width:440px) {
+  .right{
+    display: none;
+  }
+
+  .sidebar {
+    display: block;
+    cursor: pointer;
+  }
+
+  .header {
+    padding: 0 24px;
+    height:64px;
+  }
+
+  .logo img{
+    width: 100px;
+    height: 20px;
+  }
+
+  
 }

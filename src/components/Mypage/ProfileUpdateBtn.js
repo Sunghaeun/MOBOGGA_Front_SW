@@ -7,7 +7,9 @@ function ProfileUpdateBtn({ onClick }) {
   const [isHoveringUpdateBtn, setIsHoveringUpdateBtn] = useState(false);
 
   const onClickProfileUpdateBtn = () => {
-    navigate(`/mypage/update`);
+    localStorage.getItem("type") === "manager"
+      ? navigate(`/manager/mypage/update`)
+      : navigate(`/mypage/update`);
   };
 
   const onMouseOverUpdateBtn = () => {

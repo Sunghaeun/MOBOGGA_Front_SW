@@ -1,5 +1,5 @@
 {
-  "proxy": "http://localhost:8080",
+  "proxy": "https://localhost:443",
   "name": "mobogga_front",
   "version": "0.1.0",
   "private": true,
@@ -11,6 +11,7 @@
     "axios": "^1.9.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-responsive": "^10.0.1",
     "react-router-dom": "^7.5.3",
     "react-scripts": "5.0.1",
     "recoil": "^0.7.7",
@@ -39,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/kakao-js-sdk": "^1.39.5"
   }
 }

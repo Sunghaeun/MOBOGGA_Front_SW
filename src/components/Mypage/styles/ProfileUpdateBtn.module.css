@@ -1,7 +1,7 @@
-
 .ProfileUpdateBtnDefault {
   margin-left: 26px;
   display: inline-flex;
+  margin-bottom: 12px;
   padding: 4px 24px;
   justify-content: center;
   align-items: center;
@@ -20,6 +20,7 @@
 .ProfileUpdateBtnHover {
   margin-left: 26px;
   display: inline-flex;
+  margin-bottom: 12px;
   padding: 4px 24px;
   justify-content: center;
   align-items: center;

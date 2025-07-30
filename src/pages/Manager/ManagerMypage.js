@@ -1,13 +1,33 @@
 /*eslint-disable*/
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerMypage.module.css";
-import reload_btn from "../../assets/temp/reload_btn.png";
 import AccountInfoCard from "../../components/Mypage/AccountInfoCard";
 import ProfileInfoCard from "../../components/Mypage/ProfileInfoCard";
 import ProfileUpdateBtn from "../../components/Mypage/ProfileUpdateBtn";
-import MyReservCard from "../../components/Mypage/MyReservCard";
+import ClubUpdateBtn from "../../components/Manager/ClubUpdateBtn";
+import ReservManageCard from "../../components/Manager/ReservManageCard";
+import LoginOverModal from "../../components/Mypage/LoginOverModal";
 
 function ManagerMypage() {
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("jwt");
+  const type = localStorage.getItem("type");
+
+  localStorage.setItem("type", "manager");
+
+  useEffect(() => {
+    if (!token || !type || type !== "manager") {
+      navigate("/404", { replace: true });
+      return null;
+    }
+  }, [token, type, navigate]);
+
+  if (!token || !type || type !== "manager") {
+    return null; // 컴포넌트 렌더링을 중단
+  }
+
   const [formData, setFormData] = useState({
     userName: "",
     stdId: "",
@@ -15,15 +35,15 @@ function ManagerMypage() {
     email: "",
   });
 
-  const [myReservCards, setMyReservCards] = useState([]);
+  const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false); // 상태 추가
+  const [reservManageCards, setReservManageCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const token = localStorage.getItem("jwt");
-
-  const fetchUserProfile = async () => {
+  const fetchManagerProfile = async () => {
     try {
       const response = await fetch(
+        // `${process.env.REACT_APP_API_URL}/manager/mypage/profile`,
         `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
         {
           headers: {
@@ -37,30 +57,32 @@ function ManagerMypage() {
         throw new Error("사용자 정보를 불러오는데 실패했습니다.");
       }
 
-      const userData = await response.json();
-      console.log("User Data:", userData);
+      const managerData = await response.json();
+      console.log("manager Data:", managerData);
 
       // 서버에서 받은 데이터를 폼 데이터 형식에 맞게 변환
       setFormData({
-        userName: userData.name || "",
-        email: userData.email || "",
-        phoneNum: userData.phoneNumber || "",
-        stdId: userData.studentId || "",
+        userName: managerData.name || "",
+        email: managerData.email || "",
+        phoneNum: managerData.phoneNumber || "",
+        stdId: managerData.studentId || "",
       });
     } catch (error) {
-      console.error("Error fetching user profile:", error);
+      setIsLoginOverModalOpen(true);
+      console.error("Error fetching manager profile:", error);
       setError(error.message);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getMyReservCards = async () => {
+  const getReservManageCards = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
       const response = await fetch(
+        // `${process.env.REACT_APP_API_URL}/mypage/manager/reservation`,
         `${process.env.REACT_APP_API_URL}/mypage/student/reservation`,
         {
           headers: {
@@ -72,21 +94,21 @@ function ManagerMypage() {
       );
 
       if (!response.ok) {
-        throw new Error("예매 내역을 불러오는데 실패했습니다.");
+        throw new Error("공연 내역을 불러오는데 실패했습니다.");
       }
 
       const data = await response.json();
 
       if (!data || !data.performanceList) {
-        throw new Error("예매 내역 데이터 형식이 올바르지 않습니다.");
+        throw new Error("공연 내역 데이터 형식이 올바르지 않습니다.");
       }
 
-      setMyReservCards(data.performanceList || []);
-      console.log("예매 내역 데이터:", data.performanceList);
+      setReservManageCards(data.performanceList || []);
+      console.log("공연 내역 데이터:", data.performanceList);
     } catch (err) {
       console.error("에러 발생:", err);
       setError(err.message);
-      setMyReservCards([]);
+      setReservManageCards([]);
     } finally {
       setIsLoading(false);
     }
@@ -94,8 +116,8 @@ function ManagerMypage() {
 
   // 사용자 정보 조회
   useEffect(() => {
-    fetchUserProfile();
-    getMyReservCards();
+    fetchManagerProfile();
+    getReservManageCards();
   }, []);
 
   if (isLoading) {
@@ -125,27 +147,41 @@ function ManagerMypage() {
     <>
       <div className={styles.body}>
         <div className={styles.sidebar}>
-          <AccountInfoCard userInfo={formData} />
-          <ProfileInfoCard userInfo={formData} />
+          <AccountInfoCard formData={formData} />
+          <ProfileInfoCard formData={formData} type="manager" />
           <ProfileUpdateBtn onClick={ProfileUpdateBtn} />
+          <ClubUpdateBtn onClick={ClubUpdateBtn} />
         </div>
         <div className={styles.container}>
-          <div className={styles.container_header}>
-            <div className={styles.reservlist_title}>
-              공연 예매 내역{" "}
-              <span style={{ color: "gray", fontSize: "20px" }}>(최신순)</span>
+          <div className={styles.category_box}>
+            <div
+              className={styles.category_list}
+              onClick={() => navigate("/manager/mypage")}
+              id={styles.highlight}
+            >
+              예매자 목록
             </div>
-            <div className={styles.reload_btn_box}>
-              <img
-                src={reload_btn}
-                alt="새로고침"
-                className={styles.reload_icon}
-                onClick={getMyReservCards}
-              />
+            <div
+              className={styles.category_list}
+              onClick={() => navigate("/manager/show")}
+            >
+              공연
+            </div>
+            <div
+              className={styles.category_list}
+              onClick={() => navigate("/manager/entertain")}
+            >
+              즐길거리
+            </div>
+            <div
+              className={styles.category_list}
+              onClick={() => navigate("/manager/recruiting")}
+            >
+              리크루팅
             </div>
           </div>
-          <div className={styles.reservlist_content}>
-            <div className={styles.reservlist_content}>
+          <div className={styles.content_list}>
+            <div className={styles.content}>
               {isLoading && <div className="loading">로딩중...</div>}
               {/* {error && (
                 <div className="error-message">
@@ -155,22 +191,29 @@ function ManagerMypage() {
                   </button>
                 </div>
               )} */}
-              {!isLoading && !error && myReservCards.length === 0 && (
-                <div className={styles.no_reserv}>예매 내역이 없습니다.</div>
+              {!isLoading && !error && reservManageCards.length === 0 && (
+                <div className={styles.no_show}>공연 내역이 없습니다.</div>
               )}
               {!isLoading &&
                 !error &&
-                myReservCards.map((myReservCard) => (
+                reservManageCards.length > 0 &&
+                reservManageCards.map((reservManageCard) => (
                   <div
-                    key={myReservCard.scheduleId * Math.random()}
-                    className="myreservcard"
+                    key={reservManageCard.scheduleId * Math.random()}
+                    className="reserv_manage_card"
                   >
-                    <MyReservCard data={myReservCard} />
+                    <ReservManageCard data={reservManageCard} />
                   </div>
                 ))}
             </div>
           </div>
         </div>
+        {isLoginOverModalOpen && (
+          <LoginOverModal
+            isOpen={isLoginOverModalOpen}
+            onClose={() => setIsLoginOverModalOpen(false)}
+          />
+        )}
       </div>
     </>
   );

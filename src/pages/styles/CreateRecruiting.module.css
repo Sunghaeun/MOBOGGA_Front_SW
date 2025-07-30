@@ -1,0 +1,184 @@
+.main{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 128px 160px 128px;
+}
+
+.title span{
+  font: var(--TITLE06);
+  color: var(--gray-10-typo-color, #121212);
+}
+
+.inputContainer{
+  /* border: 1px solid var(--gray-01-border, #353333); */
+  display: flex;
+  flex-direction: row;
+  width:calc(100vw - 256px);
+
+  margin-top: 30px;
+}
+
+.photoInput{
+  width: 359.708px;
+  height: 508px;
+  flex-shrink: 0;
+  /* aspect-ratio: 359.71/508.00; 반응형 만들기 위해 사용해야함 ! 그치만 밖에 잇는 크기 설정 미리 해줘야함 */
+
+  border: 8px solid var(--gray-01-background, #FBFBFB);
+  background:lightgray 50% / cover no-repeat;
+
+  /* Shadow 02 */
+  box-shadow: 8px 8px 20px 0px rgba(0, 0, 0, 0.25);
+}
+
+.photobutton{
+  display: inline-flex;
+  padding: 4px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  border: 1px solid var(--main-02, #FF3D12);
+  background: var(--gray-01-background, #FBFBFB);
+
+  margin-top: 28px;
+  cursor: pointer;
+}
+
+.photobutton span{
+  font: var(--BODY04_M);
+  color: var(--main-02, #FF3D12);
+}
+
+.rightInput{
+  margin-left: 70px;
+  width:100vw;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.announcement{
+  color: var(--Warning, #D50024);
+  font: var(--CAPTION);
+}
+
+.row{
+  display: flex;
+  flex-direction: row;
+  width:100%;
+
+  margin-top: 24px;
+}
+
+.inputTitle{
+  width:90px;
+  height:36px;
+  display: flex;
+  align-items: center;
+  /* border:1px solid black; */
+
+}
+
+.inputTitle span{
+  color: var(--Point-03, #8E3DFF);
+  font:var(--BODY03_B);
+}
+
+.row input{
+  width:100%;
+  height:36px;
+  padding-left: 8px;
+  border: 1px solid var(--gray-01-border, #ccc);
+  color: var(--gray-10-typo-color, #121212);
+}
+
+.row input:focus{
+  outline: none;
+  border-color: var(--main-02, #FF3D12);
+}
+
+
+.buttonContainer{
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 94px;
+}
+
+.createClub{
+  width:127px;
+  height: 33px;
+
+  display: inline-flex;
+  padding: 4px 94px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--main-02, #FF3D12);
+  background: var(--main-02, #FF3D12);
+}
+
+.createClub span{
+  font: var(--BODY01);
+  color: var(--gray-01-background, #FBFBFB);
+}
+
+.miniInput{
+  width: 96px !important;
+  margin-left: 17px;
+  margin-right: 20px;
+}
+
+.linkContainer{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.linkContainer img{
+  margin-right: 6px;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+}
+
+.linkrow{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.linkrow1{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--gray-01-background, #ccc);
+  resize: vertical; /* 높이 조절 가능 */
+  line-height: 1.5;
+}
+
+.textarea:focus{
+  outline: none;
+  border-color: var(--main-02, #FF3D12);
+}
+
+.required{
+  color: var(--Warning, #D50024) !important;
+  font: var(--CAPTION_M) !important;
+  margin-left: 2px;
+  margin-bottom: 10px;
+}
