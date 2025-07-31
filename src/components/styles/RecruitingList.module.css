@@ -6,10 +6,7 @@
 }
 
 .title{
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 800;
-  line-height: 40px; /* 166.667% */
+  font:var(--TITLE06);
 
   text-align: left;
 }
@@ -109,3 +106,70 @@
   font-size: 16px;
   
 }
+
+.categoryHeader{
+  position: relative;
+}
+
+.categoryHeader img {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  cursor: pointer;
+}
+
+@media (max-width: 440px) {
+  .column{
+    padding: 0px 22px 90px 20px;
+  }
+
+  .title{
+    font:var(--BODY03_SB);
+  }
+
+  .buttons{
+    margin-top:8px;
+  }
+
+  .category{
+    margin-bottom:32px;
+    overflow-x: auto;       /* 좌우 스크롤 가능하게 만듦 */
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category::-webkit-scrollbar {
+    display: none;
+  }
+
+  .inactiveCategory{
+    margin-right: 12px;
+    border-radius: 4px;
+  }
+
+  .inactiveCategory span{
+    font:var(--BODY04);
+    
+  }
+
+  .activeCategory{
+    margin-right: 12px;
+    border-radius: 4px;
+  }
+
+  .activeCategory span{
+    font:var(--BODY04);
+  } 
+
+  .createButton{
+    display: none;
+  }
+
+  .recruitingList{
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 10px; 
+
+    padding-top: 0px;
+  }
+}
+
