@@ -14,9 +14,84 @@
 }
 
 .container{
-  width: 440px;
-  height: 459px;
+  width: 100vw;
+  height: 460px;
   flex-shrink: 0;
 
-  background-color: antiquewhite;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+}
+
+.MainImg{
+  width: 313.682px;
+  height: 443px;
+  flex-shrink: 0;
+  aspect-ratio: 313.68/443.00;
+
+  margin:0px 10px 0px 10px;
+}
+
+.MainImg img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  border: 4px solid var(--gray-02-footer-background, #EAEAEA);
+  background: lightgray 50% / cover no-repeat;
+}
+
+.imgBox{
+  width: 293.856px;
+  height: 415px;
+  flex-shrink: 0;
+  aspect-ratio: 293.86/415.00;
+
+  margin:0px 10px 0px 10px;
+}
+
+.miniImgBox{
+  width: 273.856px;
+  height: 385px;
+  flex-shrink: 0;
+  aspect-ratio: 273.86/385.00;
+
+  margin:0px 10px 0px 10px;
+}
+
+.miniImgBox img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  border: 4px solid var(--gray-02-footer-background, #EAEAEA);
+  background: lightgray 50% / cover no-repeat;
+
+}
+
+.imgBox img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  border: 4px solid var(--gray-02-footer-background, #EAEAEA);
+  background: lightgray 50% / cover no-repeat;
+}
+
+.imgBox1{
+
+}
+
+.fade {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.show {
+  opacity: 1;
+  cursor: pointer;
 }
