@@ -59,24 +59,33 @@
 .MainImg span{
   color: #FFF;
   position: absolute;
+
+  white-space: nowrap;         /* ✅ 한 줄로 표시 */
+  overflow: hidden;            /* ✅ 넘치는 건 잘라냄 */
+  text-overflow: ellipsis;     /* ✅ 잘린 부분에 ... */
+  max-width: 270px;        
 }
 
 .name{
-  top: 0;
-  left: 0;
+  top: 340px;
+  left: 20px;
   font:var(--TITLE06);
+  z-index: 5;
 }
 
 .date{
-  top: 20;
-  left: 0;
+  top: 375px;
+  left: 20px;
   font:var(--BODY03_SB);
+  z-index: 5;
 }
 
 .clubName{
-  top: 40;
-  left: 0;
+  top: 418px;
+  left: 20px;
   font:var(--CAPTION_B);
+  z-index: 5;
+
 }
 
 .imgBox{
