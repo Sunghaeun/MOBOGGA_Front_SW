@@ -131,7 +131,7 @@ function ShowList() {
             onClick={() => {
               const { category, id } = item;
               if (category === "공연") navigate(`/show/${id}`);
-              else if (category === "즐길거리") navigate(`/entertain/${id}`);
+              else if (category === "체험" || category === "스트릿공연" || category === "먹거리" || category === "예배") navigate(`/entertain/${id}`);
             }}
           />
         ))}
