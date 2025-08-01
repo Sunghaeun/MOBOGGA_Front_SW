@@ -5,6 +5,8 @@ import styles from "./styles/RecruitingList.module.css";
 import axios from "axios";
 import { useNavigate} from "react-router-dom";
 
+import back from "../assets/icons/back.svg";
+
 
 
 function RecruitingList() {
@@ -40,7 +42,13 @@ function RecruitingList() {
   
   return (
     <div className={styles.column}>
-      <span className={styles.title}>카테고리</span>
+      <div className={styles.categoryHeader}>
+        <img
+          src={back}
+          alt="back"
+        />
+        <span className={styles.title}>카테고리</span>
+      </div>
       <div className={styles.buttons}>
           <div className={styles.category}>
             {["전체", "정기모집", "추가모집", "상시모집"].map((category, idx) => (

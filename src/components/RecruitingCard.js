@@ -1,14 +1,19 @@
 import React from "react";
 import styles from "./styles/RecruitingCard.module.css";
 
-function RecruitingCard({ show, onClick  }) {
+function RecruitingCard({ show, onClick }) {
   return (
     <div className={styles.showCard} onClick={onClick}>
       <div className={styles.card}>
         <img src={show.poster} alt={show.club} className={styles.mainImg}/>
       </div>
       <span className={styles.name}>{show.clubName}</span>
-      <span className={styles.title}>{show.recruitingTitle}</span>
+      {/* 여기에 정기/추가모집/상시모집 넣어야해유~ */}
+      <div className={styles.secondline}>
+        <span className={styles.recruitingType}>{/*{show.recruitingType}*/}정기모집</span>
+        <span className={styles.separator}>|</span>
+        <span className={styles.title}>{show.recruitingTitle}</span>
+      </div>
     </div>
   );
 }
