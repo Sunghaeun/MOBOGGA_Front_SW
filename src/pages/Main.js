@@ -7,7 +7,7 @@ import ShowList from "../components/ShowList";
 import MobileBanner from "../components/MobileBanner";
 
 function Main() {
-  const isMobile = useMediaQuery({ query: "(max-width: 440px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 1280px)" });
   return (
     <>
       {isMobile ? <MobileBanner /> : <Banner />}

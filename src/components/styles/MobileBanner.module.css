@@ -14,9 +14,130 @@
 }
 
 .container{
-  width: 440px;
-  height: 459px;
+  width: 100vw;
+  height: 460px;
   flex-shrink: 0;
 
-  background-color: antiquewhite;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+}
+
+.MainImg{
+  position: relative;
+  width: 313.682px;
+  height: 443px;
+  flex-shrink: 0;
+
+  margin:0px 10px 0px 10px;
+
+  z-index: 1;
+}
+
+.MainImg img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  border: 4px solid var(--gray-02-footer-background, #EAEAEA);
+  background: lightgray 50% / cover no-repeat;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 102%;
+  height: 102%;
+
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 45.94%, #000 100%);
+  z-index: 2;
+  pointer-events: none; /* ✅ 클릭은 이미지로 전달되게 */
+}
+
+.MainImg span{
+  color: #FFF;
+  position: absolute;
+
+  white-space: nowrap;         /* ✅ 한 줄로 표시 */
+  overflow: hidden;            /* ✅ 넘치는 건 잘라냄 */
+  text-overflow: ellipsis;     /* ✅ 잘린 부분에 ... */
+  max-width: 270px;        
+}
+
+.name{
+  top: 340px;
+  left: 20px;
+  font:var(--TITLE06);
+  z-index: 5;
+}
+
+.date{
+  top: 375px;
+  left: 20px;
+  font:var(--BODY03_SB);
+  z-index: 5;
+}
+
+.clubName{
+  top: 418px;
+  left: 20px;
+  font:var(--CAPTION_B);
+  z-index: 5;
+
+}
+
+.imgBox{
+  width: 293.856px;
+  height: 415px;
+  flex-shrink: 0;
+  aspect-ratio: 293.86/415.00;
+
+  margin:0px 10px 0px 10px;
+}
+
+.miniImgBox{
+  width: 273.856px;
+  height: 385px;
+  flex-shrink: 0;
+  aspect-ratio: 273.86/385.00;
+
+  margin:0px 10px 0px 10px;
+}
+
+.miniImgBox img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  border: 4px solid var(--gray-02-footer-background, #EAEAEA);
+  background: lightgray 50% / cover no-repeat;
+
+}
+
+.imgBox img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  border: 4px solid var(--gray-02-footer-background, #EAEAEA);
+  background: lightgray 50% / cover no-repeat;
+}
+
+.imgBox1{
+
+}
+
+.fade {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.show {
+  opacity: 1;
+  cursor: pointer;
 }
