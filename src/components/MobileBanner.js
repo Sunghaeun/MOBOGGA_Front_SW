@@ -55,39 +55,96 @@ if (show.length === 0) {
   return <div className={styles.banner}>Loading...</div>;
 }
 
+const len = show.length;
+const prev2 = show[(currentIndex - 2 + len) % len];
+const prev1 = show[(currentIndex - 1 + len) % len];
+const next1 = show[(currentIndex + 1) % len];
+const next2 = show[(currentIndex + 2) % len];
 const current = show[currentIndex];
+
 
   return (
     <div className={styles.banner}>
       <div className={styles.text}>
         <span>오늘의 추천</span>
       </div>
+
       <div className={styles.container}>
-
         <div className={`${styles.imgBox1} ${styles.miniImgBox}`}>
-          <img src={show[0].photo} alt="banner1" onClick={()=>navigate(`${show[0].category === "공연" ? `/show/${show[0].id}` : `/entertain/${show[0].id}`}`)}/>
-        </div>
-        <div className={`${styles.imgBox2} ${styles.imgBox}`}>  
-          <img src={show[1].photo} alt="banner2" onClick={()=>navigate(`${show[1].category === "공연" ? `/show/${show[1].id}` : `/entertain/${show[1].id}`}`)}/>
-        </div>
-
-        <div className={styles.MainImg}>
           <img
-            src={current.photo}
-            alt={current.name}
-            className={`${styles.fade} ${fade ? styles.show : ""}`} onClick={()=>navigate(`${current.category === "공연" ? `/show/${current.id}` : `/entertain/${current.id}`}`)}
+            src={prev2.photo}
+            alt="banner1"
+            onClick={() =>
+              navigate(
+                prev2.category === "공연"
+                  ? `/show/${prev2.id}`
+                  : `/entertain/${prev2.id}`
+              )
+            }
           />
         </div>
 
-        <div className={`${styles.imgBox3} ${styles.imgBox}`}>
-          <img src={show[2].photo} alt="banner3" onClick={()=>navigate(`${show[2].category === "공연" ? `/show/${show[2].id}` : `/entertain/${show[2].id}`}`)}/>
+        <div className={`${styles.imgBox2} ${styles.imgBox}`}>
+          <img
+            src={prev1.photo}
+            alt="banner2"
+            onClick={() =>
+              navigate(
+                prev1.category === "공연"
+                  ? `/show/${prev1.id}`
+                  : `/entertain/${prev1.id}`
+              )
+            }
+          />
         </div>
-        <div className={`${styles.imgBox4} ${styles.miniImgBox}`}>
-          <img src={show[3].photo} alt="banner4" onClick={()=>navigate(`${show[3].category === "공연" ? `/show/${show[3].id}` : `/entertain/${show[3].id}`}`)}/>
 
+       <div className={styles.MainImg}>
+          <div className={styles.overlay}></div> {/* ✅ 그라데이션 오버레이 */}
+          <img
+            src={current.photo}
+            alt={current.name}
+            className={`${styles.fade} ${fade ? styles.show : ""}`}
+            onClick={() => navigate(
+              current.category === "공연" ? `/show/${current.id}` : `/entertain/${current.id}`
+            )}
+          />
+
+          <span className={styles.name}>{current.name}</span>
+          <span className={styles.date}>{current.period}</span>
+          <span className={styles.clubName}>{current.clubID}</span>
+
+        </div>
+
+        <div className={`${styles.imgBox3} ${styles.imgBox}`}>
+          <img
+            src={next1.photo}
+            alt="banner3"
+            onClick={() =>
+              navigate(
+                next1.category === "공연"
+                  ? `/show/${next1.id}`
+                  : `/entertain/${next1.id}`
+              )
+            }
+          />
+        </div>
+
+        <div className={`${styles.imgBox4} ${styles.miniImgBox}`}>
+          <img
+            src={next2.photo}
+            alt="banner4"
+            onClick={() =>
+              navigate(
+                next2.category === "공연"
+                  ? `/show/${next2.id}`
+                  : `/entertain/${next2.id}`
+              )
+            }
+          />
         </div>
       </div>
     </div>
+
   );
 }
 

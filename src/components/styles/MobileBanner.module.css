@@ -25,12 +25,14 @@
 }
 
 .MainImg{
+  position: relative;
   width: 313.682px;
   height: 443px;
   flex-shrink: 0;
-  aspect-ratio: 313.68/443.00;
 
   margin:0px 10px 0px 10px;
+
+  z-index: 1;
 }
 
 .MainImg img{
@@ -40,6 +42,41 @@
 
   border: 4px solid var(--gray-02-footer-background, #EAEAEA);
   background: lightgray 50% / cover no-repeat;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 102%;
+  height: 102%;
+
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 45.94%, #000 100%);
+  z-index: 2;
+  pointer-events: none; /* ✅ 클릭은 이미지로 전달되게 */
+}
+
+.MainImg span{
+  color: #FFF;
+  position: absolute;
+}
+
+.name{
+  top: 0;
+  left: 0;
+  font:var(--TITLE06);
+}
+
+.date{
+  top: 20;
+  left: 0;
+  font:var(--BODY03_SB);
+}
+
+.clubName{
+  top: 40;
+  left: 0;
+  font:var(--CAPTION_B);
 }
 
 .imgBox{
