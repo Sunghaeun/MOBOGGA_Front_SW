@@ -27,7 +27,7 @@ import ManagerUpdateProfile from "./pages/Manager/ManagerUpdateProfile";
 import ManagerUpdateClub from "./pages/Manager/ManagerUpdateClub"; // Assuming this is the correct path for the manager update club page
 import ManagerHolderList from "./pages/Manager/ManagerHolderList";
 import ManagerShowpage from "./pages/Manager/ManagerShowpage";
-import ManagerEntertainpage from "./pages/Manager/ManagerEntertainpage";
+import ManagerEntertainpage from "./pages/Manager/CreateEntertain";
 import ManagerRecruitingpage from "./pages/Manager/ManagerRecruitingpage";
 
 import AddInfo from "./pages/AddInfo";
@@ -39,7 +39,6 @@ import ManageClubDetail from "./pages/ManageClubDetail";
 
 import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
 import TossAppLauncher from "./components/Mypage/TossAppLauncher";
-import EntertainDetail from "./pages/EntertainDetail";
 import CreateShow from "./pages/Manager/CreateShow";
 
 import "./App.css";
