@@ -44,11 +44,41 @@ function ShowList() {
     getShow();
   }, []);
 
-//3) 가져온 데이터별 카테고리 별로 필터링
+// 3) 가져온 데이터별 카테고리 별로 필터링
   const filteredList =
     selectedCategory === "전체"
       ? show
       : show.filter((item) => item.category === selectedCategory);
+
+
+// 4) 관리자 권한 받아오기
+  const [auth, setAuth] = useState([]);
+const getAuth = async () => {
+  try {
+    const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
+
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/api/auth/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,  // 헤더에 토큰 추가
+        },
+        withCredentials: true
+      }
+    );
+
+    console.log("Response from backend:", response.data);
+
+    setAuth(response.data);
+  } catch (error) {
+    console.error("Login failed with error: ", error);
+    throw error;
+  }
+};
+
+  useEffect(() => {
+    getAuth();
+  }, []);
 
   return (
     <div className={styles.column}>
