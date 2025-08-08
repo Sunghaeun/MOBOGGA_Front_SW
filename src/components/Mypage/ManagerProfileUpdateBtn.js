@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ProfileUpdateBtn.module.css";
 
-function ProfileUpdateBtn({ onClick }) {
+function ManagerProfileUpdateBtn({ onClick }) {
   const navigate = useNavigate();
   const [isHoveringUpdateBtn, setIsHoveringUpdateBtn] = useState(false);
 
   const onClickProfileUpdateBtn = () => {
-    navigate(`/mypage/update`);
+      navigate(`/manager/mypage/update`);
   };
 
   const onMouseOverUpdateBtn = () => {
@@ -34,4 +34,4 @@ function ProfileUpdateBtn({ onClick }) {
   );
 }
 
-export default ProfileUpdateBtn;
+export default ManagerProfileUpdateBtn;

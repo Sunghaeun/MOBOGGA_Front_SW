@@ -1,0 +1,12 @@
+/*
+[권장] ManagerUpdateProfile.module.css는 더 이상 사용하지 않고,
+UpdateProfile.module.css만 import해서 관리하는 것이 유지보수와 스타일 일관성에 가장 좋습니다.
+
+만약 두 파일 모두 UpdateProfile.module.css만 import하도록 JS 파일을 수정했다면,
+이 파일은 삭제하거나, 아래처럼 안내 주석만 남겨두는 것이 좋습니다.
+*/
+
+/*
+이 파일은 더 이상 사용하지 않습니다.
+UpdateProfile.module.css만 사용하세요.
+*/

@@ -3,34 +3,30 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerMypage.module.css";
 import AccountInfoCard from "../../components/Mypage/AccountInfoCard";
-import ProfileInfoCard from "../../components/Mypage/ProfileInfoCard";
-import ProfileUpdateBtn from "../../components/Mypage/ProfileUpdateBtn";
+import ManagerProfileInfoCard from "../../components/Mypage/ManagerProfileInfoCard";
+import ManagerProfileUpdateBtn from "../../components/Mypage/ManagerProfileUpdateBtn";
 import ClubUpdateBtn from "../../components/Manager/ClubUpdateBtn";
 import ReservManageCard from "../../components/Manager/ReservManageCard";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
 
 function ManagerMypage() {
   const navigate = useNavigate();
-
   const token = localStorage.getItem("jwt");
-  const type = localStorage.getItem("type");
-
-  localStorage.setItem("type", "manager");
 
   useEffect(() => {
-    if (!token || !type || type !== "manager") {
+    if (!token) {
       navigate("/404", { replace: true });
       return null;
     }
-  }, [token, type, navigate]);
+  }, [token, navigate]);
 
-  if (!token || !type || type !== "manager") {
+  if (!token) {
     return null; // 컴포넌트 렌더링을 중단
   }
 
   const [formData, setFormData] = useState({
-    userName: "",
-    stdId: "",
+    name: "",
+    clubName: "",
     phoneNum: "",
     email: "",
   });
@@ -43,8 +39,7 @@ function ManagerMypage() {
   const fetchManagerProfile = async () => {
     try {
       const response = await fetch(
-        // `${process.env.REACT_APP_API_URL}/manager/mypage/profile`,
-        `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
+        `${process.env.REACT_APP_API_URL}/mypage/manager/profile`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -62,10 +57,10 @@ function ManagerMypage() {
 
       // 서버에서 받은 데이터를 폼 데이터 형식에 맞게 변환
       setFormData({
-        userName: managerData.name || "",
-        email: managerData.email || "",
+        clubName: managerData.clubName || "",
+        name: managerData.name || "",
         phoneNum: managerData.phoneNumber || "",
-        stdId: managerData.studentId || "",
+        email: managerData.email || "",
       });
     } catch (error) {
       setIsLoginOverModalOpen(true);
@@ -82,8 +77,7 @@ function ManagerMypage() {
       setError(null);
 
       const response = await fetch(
-        // `${process.env.REACT_APP_API_URL}/mypage/manager/reservation`,
-        `${process.env.REACT_APP_API_URL}/mypage/student/reservation`,
+        `${process.env.REACT_APP_API_URL}/mypage/manager/show`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -99,12 +93,12 @@ function ManagerMypage() {
 
       const data = await response.json();
 
-      if (!data || !data.performanceList) {
+      if (!data || !data.reservationList) {
         throw new Error("공연 내역 데이터 형식이 올바르지 않습니다.");
       }
 
-      setReservManageCards(data.performanceList || []);
-      console.log("공연 내역 데이터:", data.performanceList);
+      setReservManageCards(data.reservationList || []);
+      console.log("공연 내역 데이터:", data.reservationList);
     } catch (err) {
       console.error("에러 발생:", err);
       setError(err.message);
@@ -148,8 +142,8 @@ function ManagerMypage() {
       <div className={styles.body}>
         <div className={styles.sidebar}>
           <AccountInfoCard formData={formData} />
-          <ProfileInfoCard formData={formData} type="manager" />
-          <ProfileUpdateBtn onClick={ProfileUpdateBtn} />
+          <ManagerProfileInfoCard formData={formData} />
+          <ManagerProfileUpdateBtn onClick={ManagerProfileUpdateBtn} />
           <ClubUpdateBtn onClick={ClubUpdateBtn} />
         </div>
         <div className={styles.container}>

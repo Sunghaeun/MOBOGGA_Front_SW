@@ -9,13 +9,13 @@ import ProfileUpdateBtn from "../components/Mypage/ProfileUpdateBtn";
 import MyReservCard from "../components/Mypage/MyReservCard";
 import LoginOverModal from "../components/Mypage/LoginOverModal";
 
-function ManagerMypage() {
+function Mypage() {
   const navigate = useNavigate();
   const token = localStorage.getItem("jwt");
   const [formData, setFormData] = useState({
-    userName: "",
-    stdId: "",
-    phoneNum: "",
+    name: "",
+    studentId: "",
+    phoneNumber: "",
     email: "",
   });
 
@@ -50,11 +50,12 @@ function ManagerMypage() {
       }
       const userData = await response.json();
       setFormData({
-        userName: userData.name || "",
+        name: userData.name || "",
         email: userData.email || "",
-        phoneNum: userData.phoneNumber || "",
-        stdId: userData.studentId || "",
+        phoneNumber: userData.phoneNumber || "",
+        studentId: userData.studentId || "",
       });
+      console.log("userData:", userData);
     } catch (error) {
       setIsLoginOverModalOpen(true);
       setError(error.message);
@@ -158,7 +159,7 @@ function ManagerMypage() {
       <div className={styles.body}>
         <div className={styles.sidebar}>
           <AccountInfoCard formData={formData} />
-          <ProfileInfoCard formData={formData} type="user" />
+          <ProfileInfoCard formData={formData} />
           <ProfileUpdateBtn onClick={ProfileUpdateBtn} />
         </div>
         <div className={styles.container}>
@@ -200,4 +201,4 @@ function ManagerMypage() {
   );
 }
 
-export default ManagerMypage;
+export default Mypage;
