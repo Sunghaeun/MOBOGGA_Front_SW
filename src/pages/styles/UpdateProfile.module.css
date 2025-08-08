@@ -17,6 +17,10 @@
   margin-bottom: 12px;
 }
 
+.back_btn {
+  display: none;
+}
+
 .body {
   display: flex;
   flex-direction: column;

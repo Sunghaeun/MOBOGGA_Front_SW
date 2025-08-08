@@ -1,6 +1,6 @@
 import styles from "./styles/ProfileInfoCard.module.css";
 
-function ProfileInfoCard({ formData }) {
+function ManagerProfileInfoCard({ formData, type }) {
   return (
     <div className={styles.profileInfoCard}>
       <div className={styles.profile_info_box}>
@@ -9,20 +9,16 @@ function ProfileInfoCard({ formData }) {
         </div>
         <div className={styles.profile_detail_box}>
           <div className={styles.detail_box}>
-            <div className={styles.detail_head}>이름</div>
-            <div className={styles.detail_body}>
-              {formData.name}
-            </div>
+            <div className={styles.detail_head}>동아리명</div>
+            <div className={styles.detail_body}>{formData.clubName}</div>
           </div>
           <div className={styles.detail_box}>
-            <div className={styles.detail_head}>학번</div>
-            <div className={styles.detail_body}>
-              {formData.studentId}
-            </div>
+            <div className={styles.detail_head}>담당자 </div>
+            <div className={styles.detail_body}>{formData.name}</div>
           </div>
           <div className={styles.detail_box}>
             <div className={styles.detail_head}>연락처</div>
-            <div className={styles.detail_body}>{formData.phoneNumber}</div>
+            <div className={styles.detail_body}>{formData.phoneNum}</div>
           </div>
         </div>
       </div>
@@ -30,4 +26,4 @@ function ProfileInfoCard({ formData }) {
   );
 }
 
-export default ProfileInfoCard;
+export default ManagerProfileInfoCard;

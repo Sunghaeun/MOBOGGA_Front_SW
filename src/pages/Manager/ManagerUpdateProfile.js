@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./styles/ManagerUpdateProfile.module.css";
+import styles from "../styles/UpdateProfile.module.css";
 import UpdateProfileWord from "../../assets/UpdateProfileWord.svg";
 import Modal from "../../components/Modal";
 
