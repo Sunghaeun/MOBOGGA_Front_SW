@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -5,6 +6,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 
 import Landing from "./pages/Landing";
+import ComingSoon from "./pages/ComingSoon"; // Assuming this is the correct path for the Coming Soon page
 import Main from "./pages/Main";
 
 import ShowDetail from "./pages/ShowDetail";
@@ -49,7 +51,8 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/main" element={<Main />} />
+          <Route path="/*" element={<ComingSoon />} />
+          {/* <Route path="/main" element={<Main />} />
 
           <Route path="/show/:showId" element={<ShowDetail />} />
           <Route path="/entertain/:id" element={<EntertainDetail />} />
@@ -82,11 +85,11 @@ function App() {
           <Route path="/404" element={<Error404 />} />
 
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
-          {/* 임시 id 1로 설정 :id로 바꾸기 */}
+          
           <Route path="/manager/club/1" element={<ManageClubDetail />} />
 
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
-          <Route path="/tosslinktest" element={<TossAppLauncher />} />
+          <Route path="/tosslinktest" element={<TossAppLauncher />} /> */}
 
         </Routes>
         <Footer />
