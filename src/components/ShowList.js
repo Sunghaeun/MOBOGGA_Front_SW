@@ -52,7 +52,7 @@ function ShowList() {
 
 
 // 4) 관리자 권한 받아오기
-  const [auth, setAuth] = useState([]);
+const [auth, setAuth] = useState([]);
 const getAuth = async () => {
   try {
     const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
@@ -75,6 +75,10 @@ const getAuth = async () => {
     throw error;
   }
 };
+
+useEffect(() => {
+  console.log("현재 로그인한 사용자 권한:", auth);
+}, [auth]);
 
   useEffect(() => {
     getAuth();
