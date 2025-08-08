@@ -50,7 +50,7 @@ function App() {
       <div className="App">
         <Header />
         <Routes>
-          <Route path="/" element={<Landing />} />
+          {/* <Route path="/" element={<Landing />} /> */}
           <Route path="/*" element={<ComingSoon />} />
           {/* <Route path="/main" element={<Main />} />
 
