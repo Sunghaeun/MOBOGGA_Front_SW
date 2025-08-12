@@ -10,22 +10,22 @@ import LINK from "../../assets/icons/linkicons.svg";
 function CreateEntertain() {
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState("");
+  const [name, setName] = useState("");
   const [poster, setPoster] = useState(null);
-  const [clubName, setClubName] = useState("");
   const [location, setLocation] = useState("");
+  const [introductionLetter, setIntroductionLetter] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [time, setTime] = useState("");
+  const [timeList, setTimeList] = useState("");
   const [manager, setManager] = useState("");
-  const [managerphone, setManagerPhone] = useState("");
-  const [intro, setIntro] = useState("");
+  const [managerPhoneNumber, setManagerPhone] = useState("");
+  const [etcInfo, setEtcInfo] = useState("");
   const [category, setCategory] = useState("");
-  const [insta, setInsta] = useState("");
-  const [kakao, setKakao] = useState("");
-  const [youtube, setYoutube] = useState("");
-  const [notion, setNotion] = useState("");
-  const [link, setLink] = useState("");
+  const [inUrl, setInUrl] = useState("");
+  const [kakaUrl, setKakaUrl] = useState("");
+  const [youUrl, setYouUrl] = useState("");
+  const [noUrl, setNoUrl] = useState("");
+  const [url, setUrl] = useState("");
 
   const [content, setContent] = useState("");
   const [count, setCount] = useState(1);
@@ -43,7 +43,7 @@ function CreateEntertain() {
 
   //모든 입력란을 받아야 submit 가능 + 빈칸이 어디인지 알려줌
   const makeEntertain = async () => {
-    if (!title) {
+    if (!name) {
       alert("제목을 입력해 주세요");
       return;
     }
@@ -65,16 +65,24 @@ function CreateEntertain() {
       return;
     }
     //보내주어야 하는 전체 데이터
-    // const requestData = {
-    //   userId: sessionStorage.getItem("serverResponse"),
-    //   title,
-    //   clubName,
-    //   location,
-    //   startDate,
-    //   endDate,
-    //   category,
-    //   content,
-    // };
+    const requestData = {
+      userId: sessionStorage.getItem("serverResponse"),
+      name,
+      introductionLetter,
+      category,
+      location,
+      startDate,
+      endDate,
+      timeList,
+      manager,
+      managerPhoneNumber, //피그마에 없음.
+      etcInfo,
+      inUrl,
+      kakaUrl,
+      youUrl,
+      noUrl,
+      url,
+    };
     const formData = new FormData();
     formData.append("poster", poster);
 
@@ -106,7 +114,7 @@ function CreateEntertain() {
 
     try {
       const response = await axios.post(
-        `https://jinjigui.info:443/manager/create/save`,
+        `https://jinjigui.info:443/manager/entertain/create`,
         formData,
         {
           headers: {
@@ -135,9 +143,9 @@ function CreateEntertain() {
   };
 
   //제목 글자 수 limit
-  const handletitle = (e) => {
+  const handlename = (e) => {
     if (e.target.value.length <= 30) {
-      setTitle(e.target.value);
+      setName(e.target.value);
     } else {
       alert("30글자를 초과할 수 없습니다.");
     }
@@ -145,7 +153,7 @@ function CreateEntertain() {
 
   const handleIntro = (e) => {
     if (e.target.value.length <= 100) {
-      setIntro(e.target.value);
+      setIntroductionLetter(e.target.value);
     } else {
       alert("100자를 초과할 수 없습니다.");
     }
@@ -192,8 +200,8 @@ function CreateEntertain() {
                     <input
                       type="text"
                       placeholder="즐길거리 이름(공백포함 최대 30자까지 작성 가능합니다.)"
-                      value={title}
-                      onChange={handletitle}
+                      value={name}
+                      onChange={handlename}
                       style={{ width: "27rem" }}
                     />
                   </span>
@@ -206,7 +214,7 @@ function CreateEntertain() {
                     <textarea
                       type="text"
                       placeholder={`즐길거리에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
-                      onChange={(e) => setClubName(e.target.value)}
+                      onChange={(e) => setIntroductionLetter(e.target.value)}
                       style={{ height: "6rem", width: "27rem" }}
                     />
                   </span>
@@ -326,7 +334,7 @@ function CreateEntertain() {
                           placeholder="인스타그램 링크 입력"
                           style={{ width: "22rem" }}
                           className={styles.sns_link}
-                          onChange={(e) => setInsta(e.target.value)}
+                          onChange={(e) => setInUrl(e.target.value)}
                         ></input>
                       </span>
                     </div>
@@ -340,7 +348,7 @@ function CreateEntertain() {
                           placeholder="카카오톡 오픈채팅방 또는 채널 링크 입력"
                           style={{ width: "22rem" }}
                           className={styles.sns_link}
-                          onChange={(e) => setKakao(e.target.value)}
+                          onChange={(e) => setKakaUrl(e.target.value)}
                         ></input>
                       </span>
                     </div>
@@ -354,7 +362,7 @@ function CreateEntertain() {
                           placeholder="유튜브 링크 입력"
                           style={{ width: "22rem" }}
                           className={styles.sns_link}
-                          onChange={(e) => setYoutube(e.target.value)}
+                          onChange={(e) => setYouUrl(e.target.value)}
                         ></input>
                       </span>
                     </div>
@@ -368,7 +376,7 @@ function CreateEntertain() {
                           placeholder="노션(Notion) 링크 입력"
                           style={{ width: "22rem" }}
                           className={styles.sns_link}
-                          onChange={(e) => setNotion(e.target.value)}
+                          onChange={(e) => setNoUrl(e.target.value)}
                         ></input>
                       </span>
                     </div>
@@ -382,7 +390,7 @@ function CreateEntertain() {
                           placeholder="구글 폼, 페이스북 등의 링크 입력"
                           style={{ width: "22rem" }}
                           className={styles.sns_link}
-                          onChange={(e) => setLink(e.target.value)}
+                          onChange={(e) => setUrl(e.target.value)}
                         ></input>
                       </span>
                     </div>
