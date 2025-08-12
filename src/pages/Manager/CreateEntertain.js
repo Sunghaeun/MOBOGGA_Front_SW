@@ -7,7 +7,7 @@ function CreateEntertain() {
 
   const [title, setTitle] = useState("");
   const [poster, setPoster] = useState(null);
-  const [qrImage, setQrImage] = useState(null);
+  const [place, setPlace] = useState("");
   const [clubName, setClubName] = useState("");
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -26,16 +26,6 @@ function CreateEntertain() {
       setPoster(file);
       setPreviewURL(URL.createObjectURL(file)); //미리 보기 url 생성
     } else {
-      setQrImage(null);
-    }
-  };
-
-  const handleQrImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setQrImage(file);
-    } else {
-      setQrImage(null);
     }
   };
 
@@ -86,18 +76,6 @@ function CreateEntertain() {
     // };
     const formData = new FormData();
     formData.append("poster", poster);
-
-    // if (qrImage && qrImage instanceof File) {
-    //   formData.append("qrImage", qrImage);
-    // } else {
-    //   console.warn("qrImage가 존재하지 않거나 파일이 아닙니다:", qrImage);
-    // }
-    if (qrImage && qrImage instanceof File) {
-      formData.append("qrImage", qrImage);
-    } else {
-      console.log("QR 이미지 없음, formData에 추가되지 않음");
-      formData.delete("qrImage");
-    }
 
     // formData.append(
     //   "request",
@@ -257,8 +235,7 @@ function CreateEntertain() {
                     <input
                       type="text"
                       placeholder="진행 장소"
-                      value={title}
-                      onChange={handletitle}
+                      value={place}
                       style={{ width: "27rem" }}
                     />
                   </span>

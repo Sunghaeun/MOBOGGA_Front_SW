@@ -327,7 +327,6 @@ input[type="number"] {
 .make_show_submit {
   width: 17.5rem;
   display: inline-flex;
-  padding: 0.25rem 5rem;
   justify-content: center;
   align-items: center;
   align-self: center;
