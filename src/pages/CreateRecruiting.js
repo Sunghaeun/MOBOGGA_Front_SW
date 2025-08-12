@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
 import styles from "./styles/CreateRecruiting.module.css";
 
@@ -41,20 +41,23 @@ function CreateRecruiting() {
   // 4) 저장할 데이터 배열에 미리 저장해두기
     const [data, setData] = useState({
       name: "",
-      field: "",
+      category: "",
       startDate: "",
       endDate: "",
       mandatorySemesters: "",
+      meetingTime: "",
       content: "",
       eligibility: "",
       notice: "",
       manager: "",
       managerPhoneNumber: "",
+      introductionLetter: "",
       inUrl: "",
       kakaUrl: "",
       youUrl: "",
       noUrl: "",
       url: "",
+      applyUrl: "",
       photo: "",
   });
 
@@ -65,8 +68,6 @@ function CreateRecruiting() {
       [e.target.name]: e.target.value,
     });
   };
-
-
   
   return (
     <>
@@ -80,13 +81,13 @@ function CreateRecruiting() {
             <div className={styles.photoInput}>
             
             </div>
-            <div className={styles.photobutton} onClick={() => openNotEnteredModal()}>
+            <div className={styles.photobutton}>
               <span>이미지 추가</span>
             </div>
           </div>
 
           <div className={styles.rightInput}>
-            <span className={styles.announcement}>
+            <span className={styles.announcement} onClick={() => openNotEnteredModal()}>
               *관련 링크 외 모든 정보는 필수입력사항입니다
             </span>
 
