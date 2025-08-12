@@ -8,7 +8,7 @@ function ReservManageCard({ data }) {
   const navigate = useNavigate();
   if (!data) return null;
 
-  const { scheduleId, poster, title, order } = data;
+  const { scheduleId, poster, title, order, applyPeople, maxPeople } = data;
 
   const handleHolderList = () => {
     navigate(`/manager/holder/${scheduleId}`);
@@ -32,7 +32,7 @@ function ReservManageCard({ data }) {
           <div className={styles.card_info} id={styles.order_box}>
             <div className={styles.card_order}>{order || "공연 정보 없음"}</div>
             <div className={styles.card_applyPeople}>
-              현황: {data.applyPeople || 0}/{data.maxPeople || 0}
+              현황: {applyPeople}/{maxPeople}
             </div>
           </div>
           <div className={styles.card_btn_box}>

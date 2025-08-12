@@ -82,3 +82,39 @@
     cursor: pointer;
   }
 }
+
+
+/* comingsoon 디자인 */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.812); /* 반투명 검정 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlayText{
+  font-family: "Pretendard Variable";
+  font-size: 5vw;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.highlight {
+  color: #FF3D12; /* 브랜드 컬러 강조 */
+  font-weight: 800;
+}
+
+.subText{
+  font-size: 3vw !important;
+  color: #333 !important; /* 서브 텍스트 색상 */
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 700 !important;
+}

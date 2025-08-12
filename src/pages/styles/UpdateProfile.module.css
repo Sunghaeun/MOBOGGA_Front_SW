@@ -17,6 +17,10 @@
   margin-bottom: 12px;
 }
 
+.back_btn {
+  display: none;
+}
+
 .body {
   display: flex;
   flex-direction: column;
@@ -197,5 +201,145 @@
 
   &:hover {
     cursor: pointer;
+  }
+}
+
+@media (max-width: 768px) {
+  .body {
+    height: 600px;
+    padding: 0 16px;
+    font-size: 16px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .logo_box {
+    display: none;
+  }
+
+  .mobile_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 16px;
+  }
+
+  .header_title {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .highlight {
+    color: var(--main-02, #ff3d12);
+    font-weight: 700;
+  }
+
+  .back_btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #ff3d12;
+    cursor: pointer;
+    transform: translateX(-600%);
+  }
+
+  .words_box {
+    width: 100%;
+    padding-left: 50px;
+    text-align: left;
+  }
+
+  .words_box .word_title {
+    color: var(--gray-10-typo-color, #121212);
+    font-family: "Pretendard Variable";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 40px;
+  }
+
+  .word_content {
+    font-family: "Pretendard Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 27px;
+  }
+
+  .infos {
+    margin-bottom: 40px;
+  }
+
+  .info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .info_head {
+    margin-bottom: 4px;
+    font-size: 14px;
+  }
+
+  .info_body {
+    width: 100%;
+  }
+
+  .info_body input {
+    width: 100%;
+    font-size: 16px;
+    border-radius: 4px;
+  }
+
+  .btn_box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 300px; /* 버튼을 인풋과 더 많이 떨어뜨림 */
+  }
+
+  .start_btn {
+    padding: 10px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--ORANGE);
+    border-radius: 7px;
+    background: var(--ORANGE);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    &:hover {
+      border: 1px solid var(--DEEPORANGE);
+      background: var(--DEEPORANGE);
+      cursor: pointer;
+    }
+  }
+
+  .modal_top {
+    font-size: 1.1rem;
+    line-height: 1.8rem;
+    padding: 0 8px;
+  }
+
+  .modal_Btns {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .modal_ok_Btn,
+  .modal_close_Btn {
+    width: 100%;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .body {
+    font-size: 15px;
+  }
+  .info_head {
+    font-size: 13px;
   }
 }
