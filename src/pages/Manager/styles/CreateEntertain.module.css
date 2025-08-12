@@ -376,6 +376,7 @@ input[type="number"] {
   font-style: normal;
   font-weight: 500;
   line-height: 1.875rem; /* 166.667% */
+  padding-top: 2px;
 }
 .info_txt {
   display: flex;

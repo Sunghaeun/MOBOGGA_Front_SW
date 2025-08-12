@@ -12,13 +12,20 @@ function CreateEntertain() {
 
   const [title, setTitle] = useState("");
   const [poster, setPoster] = useState(null);
-  const [place, setPlace] = useState("");
   const [clubName, setClubName] = useState("");
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [time, setTime] = useState("");
+  const [manager, setManager] = useState("");
+  const [managerphone, setManagerPhone] = useState("");
   const [intro, setIntro] = useState("");
   const [category, setCategory] = useState("");
+  const [insta, setInsta] = useState("");
+  const [kakao, setKakao] = useState("");
+  const [youtube, setYoutube] = useState("");
+  const [notion, setNotion] = useState("");
+  const [link, setLink] = useState("");
 
   const [content, setContent] = useState("");
   const [count, setCount] = useState(1);
@@ -35,7 +42,7 @@ function CreateEntertain() {
   };
 
   //모든 입력란을 받아야 submit 가능 + 빈칸이 어디인지 알려줌
-  const makeShow = async () => {
+  const makeEntertain = async () => {
     if (!title) {
       alert("제목을 입력해 주세요");
       return;
@@ -66,18 +73,7 @@ function CreateEntertain() {
     //   startDate,
     //   endDate,
     //   category,
-    //   runtime,
-    //   account,
     //   content,
-    //   maxTickets,
-    // scheduleList:[schedule]
-    //   schedule: shows.map((show) => ({
-    //     order: show.order,
-    //     date: show.date,
-    //     time: show.time,
-    //     cost: show.cost,
-    //     maxPeople: show.maxPeople,
-    //   })),
     // };
     const formData = new FormData();
     formData.append("poster", poster);
@@ -240,7 +236,8 @@ function CreateEntertain() {
                     <input
                       type="text"
                       placeholder="진행 장소"
-                      value={place}
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
                       style={{ width: "27rem" }}
                     />
                   </span>
@@ -251,8 +248,17 @@ function CreateEntertain() {
                   </span>
                   <span className={styles.variable_Info}>
                     <div className={styles.form_detail_date_2}>
-                      <input id={styles.form_detail_date} type="date" /> ~
-                      <input id={styles.form_detail_date} type="date" />
+                      <input
+                        id={styles.form_detail_date}
+                        type="date"
+                        onChange={(e) => setStartDate(e.target.value)}
+                      />
+                      ~
+                      <input
+                        id={styles.form_detail_date}
+                        type="date"
+                        onChange={(e) => setEndDate(e.target.value)}
+                      />
                     </div>
                     <div className={styles.smallInfo}>
                       하루만 진행할 경우 같은 날짜로 선택해주세요
@@ -280,14 +286,14 @@ function CreateEntertain() {
                       <input
                         type="text"
                         placeholder="이름"
-                        onChange={(e) => setLocation(e.target.value)}
                         style={{ width: "4.75rem" }}
+                        onChange={(e) => setManager(e.target.value)}
                       />
                       <input
                         type="text"
                         placeholder="연락처(전화번호 혹은 이메일)"
-                        onChange={(e) => setLocation(e.target.value)}
                         style={{ width: "21rem" }}
+                        onChange={(e) => setManagerPhone(e.target.value)}
                       />
                     </div>
                   </span>
@@ -320,6 +326,7 @@ function CreateEntertain() {
                           placeholder="인스타그램 링크 입력"
                           style={{ width: "22rem" }}
                           className={styles.sns_link}
+                          onChange={(e) => setInsta(e.target.value)}
                         ></input>
                       </span>
                     </div>
@@ -333,6 +340,7 @@ function CreateEntertain() {
                           placeholder="카카오톡 오픈채팅방 또는 채널 링크 입력"
                           style={{ width: "22rem" }}
                           className={styles.sns_link}
+                          onChange={(e) => setKakao(e.target.value)}
                         ></input>
                       </span>
                     </div>
@@ -346,6 +354,7 @@ function CreateEntertain() {
                           placeholder="유튜브 링크 입력"
                           style={{ width: "22rem" }}
                           className={styles.sns_link}
+                          onChange={(e) => setYoutube(e.target.value)}
                         ></input>
                       </span>
                     </div>
@@ -359,6 +368,7 @@ function CreateEntertain() {
                           placeholder="노션(Notion) 링크 입력"
                           style={{ width: "22rem" }}
                           className={styles.sns_link}
+                          onChange={(e) => setNotion(e.target.value)}
                         ></input>
                       </span>
                     </div>
@@ -372,6 +382,7 @@ function CreateEntertain() {
                           placeholder="구글 폼, 페이스북 등의 링크 입력"
                           style={{ width: "22rem" }}
                           className={styles.sns_link}
+                          onChange={(e) => setLink(e.target.value)}
                         ></input>
                       </span>
                     </div>
@@ -382,7 +393,7 @@ function CreateEntertain() {
           </div>
 
           <div>
-            <button className={styles.make_show_submit} onClick={makeShow}>
+            <button className={styles.make_show_submit} onClick={makeEntertain}>
               즐길거리 만들기
             </button>
           </div>
