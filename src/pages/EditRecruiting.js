@@ -135,7 +135,7 @@ const getRecruiting = async () => {
     });
 
     alert("리쿠르팅 수정 완료");
-
+ 
     // 수정 후 최신 데이터 재조회
     await getRecruiting();
   } catch (err) {
