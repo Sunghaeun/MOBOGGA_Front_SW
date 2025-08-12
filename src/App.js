@@ -75,7 +75,6 @@ function App() {
           <Route path="/manager/club/update" element={<ManagerUpdateClub />} />
           <Route path="/manager/holder" element={<ManagerHolderList />} />
           <Route path="/manager/show" element={<ManagerShowpage />} />
-          */}
           <Route path="/manager/entertain" element={<ManagerEntertainpage />} />
           <Route
             path="/manager/recruiting"
