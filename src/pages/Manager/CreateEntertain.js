@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import styles from "../styles/CreateShow.module.css";
+import styles from "./styles/CreateEntertain.module.css";
 import axios from "axios";
 function CreateEntertain() {
   const navigate = useNavigate();
@@ -13,6 +13,8 @@ function CreateEntertain() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [intro, setIntro] = useState("");
+  const [category, setCategory] = useState("");
+
   const [content, setContent] = useState("");
   const [count, setCount] = useState(1);
   const [previewURL, setPreviewURL] = useState(null);
@@ -189,12 +191,16 @@ function CreateEntertain() {
               <div className={styles.SImage_Box}>
                 <img src={previewURL} alt="미리보기" />
               </div>
-              <input
-                type="file"
-                id="fileUpload"
-                accept="image/*"
-                onChange={handleImg}
-              />
+              <label className={styles.inputFileLabel} htmlFor="inputFile">
+                이미지 추가
+                <input
+                  className={styles.inputFile}
+                  type="file"
+                  id="inputFile"
+                  accept="image/*"
+                  onChange={handleImg}
+                />
+              </label>
             </div>
 
             <div className={styles.entir_Boxs}>
@@ -206,7 +212,7 @@ function CreateEntertain() {
                   <span className={styles.variable_Info}>
                     <input
                       type="text"
-                      placeholder="공연 이름(공백포함 최대 30자까지 작성 가능합니다.)"
+                      placeholder="즐길거리 이름(공백포함 최대 30자까지 작성 가능합니다.)"
                       value={title}
                       onChange={handletitle}
                       style={{ width: "27rem" }}
@@ -220,15 +226,68 @@ function CreateEntertain() {
                   <span className={styles.variable_Info}>
                     <textarea
                       type="text"
-                      placeholder={`공연에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
+                      placeholder={`즐길거리에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
                       onChange={(e) => setClubName(e.target.value)}
                       style={{ height: "6rem", width: "27rem" }}
                     />
                   </span>
                 </div>
-                <div className={styles.form_detail_date_2}>
-                  <input id={styles.form_detail_date} type="date" /> ~
-                  <input id={styles.form_detail_date} type="date" />
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>카테고리</span>
+                  </span>
+                  <span className={styles.variable_Info}>
+                    <select onChange={(e) => setCategory(e.target.value)}>
+                      <option value="">선택</option>
+                      <option value="밴드">밴드</option>
+                      <option value="춤">춤</option>
+                      <option value="아카펠라">아카펠라</option>
+                      <option value="연극">연극</option>
+                      <option value="힙합">힙합</option>
+                      <option value="악기연주">악기연주</option>
+                      <option value="기타">기타</option>
+                    </select>
+                  </span>
+                </div>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>장소</span>
+                  </span>
+                  <span className={styles.variable_Info}>
+                    <input
+                      type="text"
+                      placeholder="진행 장소"
+                      value={title}
+                      onChange={handletitle}
+                      style={{ width: "27rem" }}
+                    />
+                  </span>
+                </div>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>날짜</span>
+                  </span>
+                  <span className={styles.variable_Info}>
+                    <div className={styles.form_detail_date_2}>
+                      <input id={styles.form_detail_date} type="date" /> ~
+                      <input id={styles.form_detail_date} type="date" />
+                    </div>
+                    <div className={styles.smallInfo}>
+                      하루만 진행할 경우 같은 날짜로 선택해주세요
+                    </div>
+                  </span>
+                </div>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>시간</span>
+                  </span>
+                  <span className={styles.variable_Info}>
+                    <input
+                      type="text"
+                      placeholder={`시간 입력`}
+                      style={{ width: "27rem" }}
+                    />
+                  </span>
                 </div>
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
@@ -263,6 +322,12 @@ function CreateEntertain() {
                       style={{ width: "27rem", height: "16rem" }}
                     />
                   </span>
+                </div>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>관련링크</span>
+                  </span>
+                  <span className={styles.variable_Info}></span>
                 </div>
               </div>
             </div>

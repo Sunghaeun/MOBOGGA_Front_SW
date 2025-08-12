@@ -80,7 +80,7 @@ function App() {
           />
           <Route path="/manager/club/update" element={<ManagerUpdateClub />} />
           <Route path="/manager/holder" element={<ManagerHolderList />} />
-          <Route path="/manager/show" element={<ManagerShowpage />} />
+          <Route path="/manager/show" element={<ManagerShowpage />} />*/}
           <Route path="/manager/entertain" element={<ManagerEntertainpage />} />
           <Route
             path="/manager/recruiting"
@@ -92,11 +92,11 @@ function App() {
           <Route path="/404" element={<Error404 />} />
 
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
-          
+
           <Route path="/manager/club/1" element={<ManageClubDetail />} />
 
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
-          <Route path="/tosslinktest" element={<TossAppLauncher />} /> */}
+          <Route path="/tosslinktest" element={<TossAppLauncher />} />
         </Routes>
         <Footer />
       </div>
