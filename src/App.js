@@ -51,28 +51,22 @@ function App() {
       <div className="App">
         <Header />
         <Routes>
-          {/* <Route path="/" element={<Landing />} /> */}
-          <Route path="/*" element={<ComingSoon />} />
-          {/* <Route path="/main" element={<Main />} />
-
+          <Route path="/" element={<Landing />} />
+          {/* <Route path="/*" element={<ComingSoon />} /> */}
+          <Route path="/main" element={<Main />} />
           <Route path="/show/:showId" element={<ShowDetail />} />
           <Route path="/entertain/:id" element={<EntertainDetail />} />
-
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
-
           <Route path="/clubs" element={<Clubs />} />
           <Route path="/clubs/:id" element={<ClubDetail />} />
-
           <Route path="/recruiting" element={<Recruiting />} />
           <Route
             path="/recruiting/:recruitingId"
             element={<RecruitingDetail />}
           />
-
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/mypage/update" element={<UpdateProfile />} />
-
           <Route path="/manager/mypage" element={<ManagerMypage />} />
           <Route
             path="/manager/mypage/update"
@@ -80,21 +74,18 @@ function App() {
           />
           <Route path="/manager/club/update" element={<ManagerUpdateClub />} />
           <Route path="/manager/holder" element={<ManagerHolderList />} />
-          <Route path="/manager/show" element={<ManagerShowpage />} />*/}
+          <Route path="/manager/show" element={<ManagerShowpage />} />
+          */}
           <Route path="/manager/entertain" element={<ManagerEntertainpage />} />
           <Route
             path="/manager/recruiting"
             element={<ManagerRecruitingpage />}
           />
-
           <Route path="/add-info" element={<AddInfo />} />
           <Route path="/loading" element={<Loading />} />
           <Route path="/404" element={<Error404 />} />
-
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
-
           <Route path="/manager/club/1" element={<ManageClubDetail />} />
-
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
           <Route path="/tosslinktest" element={<TossAppLauncher />} />
         </Routes>
