@@ -16,12 +16,6 @@ function CreateEntertain() {
   const [content, setContent] = useState("");
   const [count, setCount] = useState(1);
   const [previewURL, setPreviewURL] = useState(null);
-  useEffect(() => {
-    setCount(1);
-  }, [schedule]);
-
-  //schedule 추가 초기 state 설정정
-  const [shows, setShows] = useState([{ id: Date.now() }]);
 
   /* 사진 미리보기 기능 */
   const handleImg = (e) => {
@@ -66,32 +60,28 @@ function CreateEntertain() {
       alert("끝 날짜를 입력해 주세요");
       return;
     }
-
-    console.log("show : ", shows);
-    console.log("Schedule : ", schedule);
-
     //보내주어야 하는 전체 데이터
-    const requestData = {
-      userId: sessionStorage.getItem("serverResponse"),
-      title,
-      clubName,
-      location,
-      startDate,
-      endDate,
-      category,
-      runtime,
-      account,
-      content,
-      maxTickets,
-      // scheduleList:[schedule]
-      schedule: shows.map((show) => ({
-        order: show.order,
-        date: show.date,
-        time: show.time,
-        cost: show.cost,
-        maxPeople: show.maxPeople,
-      })),
-    };
+    // const requestData = {
+    //   userId: sessionStorage.getItem("serverResponse"),
+    //   title,
+    //   clubName,
+    //   location,
+    //   startDate,
+    //   endDate,
+    //   category,
+    //   runtime,
+    //   account,
+    //   content,
+    //   maxTickets,
+    // scheduleList:[schedule]
+    //   schedule: shows.map((show) => ({
+    //     order: show.order,
+    //     date: show.date,
+    //     time: show.time,
+    //     cost: show.cost,
+    //     maxPeople: show.maxPeople,
+    //   })),
+    // };
     const formData = new FormData();
     formData.append("poster", poster);
 
@@ -107,10 +97,10 @@ function CreateEntertain() {
       formData.delete("qrImage");
     }
 
-    formData.append(
-      "request",
-      new Blob([JSON.stringify(requestData)], { type: "application/json" })
-    ); //request는 모두 application으로 긔긔
+    // formData.append(
+    //   "request",
+    //   new Blob([JSON.stringify(requestData)], { type: "application/json" })
+    // ); //request는 모두 application으로 긔긔
     // formData.append("title", title);
     // formData.append("clubName", clubName);
     // formData.append("location", location);
