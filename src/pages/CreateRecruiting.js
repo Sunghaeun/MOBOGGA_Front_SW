@@ -1,25 +1,23 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 
 import styles from "./styles/CreateRecruiting.module.css";
 
-import insta from "../assets/icons/snsicons.svg";
+import insta from "../assets/icons/instagram.svg";
 import kakao from "../assets/icons/kakao.svg";
-import youtube from "../assets/icons/youtubeicons.svg";
+import youtube from "../assets/icons/youtube.svg";
 import link from "../assets/icons/linkicons.svg";
 
 import NotEnteredModal from "../components/modal/NotEnteredModal";
 import EditCheckModal from "../components/modal/EditCheckModal";
 import PageOut from "../components/modal/PageOut";
 
-
 function CreateRecruiting() {
-
   // 1) 누락된 정보 확인 모달
   const [notEnteredModalOpen, setNotEnteredModalOpen] = useState(false);
   const openNotEnteredModal = () => setNotEnteredModalOpen(true);
   const closeNotEnteredModal = () => {
     setNotEnteredModalOpen(false);
-    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty("overflow");
   };
 
   // 2) 리쿠르팅 생성 확인 모달
@@ -27,7 +25,7 @@ function CreateRecruiting() {
   const openEditCheckModal = () => setEditCheckModalOpen(true);
   const closeEditCheckModal = () => {
     setEditCheckModalOpen(false);
-    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty("overflow");
   };
 
   // 3) 페이지 나가기 모달
@@ -35,7 +33,7 @@ function CreateRecruiting() {
   const openPageOutModal = () => setPageOutModalOpen(true);
   const closePageOutModal = () => {
     setPageOutModalOpen(false);
-    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty("overflow");
   };
 
   return (
@@ -47,10 +45,11 @@ function CreateRecruiting() {
 
         <div className={styles.inputContainer}>
           <div className={styles.leftInput}>
-            <div className={styles.photoInput}>
-            
-            </div>
-            <div className={styles.photobutton} onClick={() => openNotEnteredModal()}>
+            <div className={styles.photoInput}></div>
+            <div
+              className={styles.photobutton}
+              onClick={() => openNotEnteredModal()}
+            >
               <span>이미지 추가</span>
             </div>
           </div>
@@ -65,7 +64,10 @@ function CreateRecruiting() {
                 <span onClick={() => openEditCheckModal()}>제목</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)" type="text"></input>
+              <input
+                placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
+                type="text"
+              ></input>
             </div>
 
             <div className={styles.row}>
@@ -73,7 +75,10 @@ function CreateRecruiting() {
                 <span onClick={() => openPageOutModal()}>카테고리</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)" type="text"></input>
+              <input
+                placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
+                type="text"
+              ></input>
             </div>
 
             <div className={styles.row}>
@@ -81,7 +86,10 @@ function CreateRecruiting() {
                 <span>모집기간</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)" type="text"></input>
+              <input
+                placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
+                type="text"
+              ></input>
             </div>
 
             <div className={styles.row}>
@@ -89,7 +97,10 @@ function CreateRecruiting() {
                 <span>필수학기</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="필수학기(없는 경우, “없음”이라고 입력해주세요.)" type="text"></input>
+              <input
+                placeholder="필수학기(없는 경우, “없음”이라고 입력해주세요.)"
+                type="text"
+              ></input>
             </div>
 
             <div className={styles.row}>
@@ -97,7 +108,10 @@ function CreateRecruiting() {
                 <span>정모시간</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="정모시간(없는 경우, “없음”이라고 입력해주세요.)" type="text"></input>
+              <input
+                placeholder="정모시간(없는 경우, “없음”이라고 입력해주세요.)"
+                type="text"
+              ></input>
             </div>
 
             <div className={styles.row}>
@@ -138,11 +152,18 @@ function CreateRecruiting() {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>문의    </span>
+                <span>문의 </span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="이름" type="text" className={styles.miniInput}></input>
-              <input placeholder="연락처(전화번호 혹은 메일)" type="text"></input>
+              <input
+                placeholder="이름"
+                type="text"
+                className={styles.miniInput}
+              ></input>
+              <input
+                placeholder="연락처(전화번호 혹은 메일)"
+                type="text"
+              ></input>
             </div>
 
             <div className={styles.row}>
@@ -150,7 +171,10 @@ function CreateRecruiting() {
                 <span>지원링크</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="Goolge forms, Walla 등 리크루팅 링크 입력" type="text"></input>
+              <input
+                placeholder="Goolge forms, Walla 등 리크루팅 링크 입력"
+                type="text"
+              ></input>
             </div>
 
             <div className={styles.row}>
@@ -176,18 +200,18 @@ function CreateRecruiting() {
                 </div>
               </div>
             </div>
-            
-              <div className={styles.row}>
-                <div className={styles.inputTitle}>
-                  <span>소개글</span>
-                  <span className={styles.required}>*</span>
-                </div>
-                  <textarea
-                    placeholder={`리크루팅에 대한 간략한 소개\n(공백 포함 최대 300자까지 작성 가능합니다.)`}
-                    className={styles.textarea}
-                    rows={4}
-                  ></textarea>
+
+            <div className={styles.row}>
+              <div className={styles.inputTitle}>
+                <span>소개글</span>
+                <span className={styles.required}>*</span>
               </div>
+              <textarea
+                placeholder={`리크루팅에 대한 간략한 소개\n(공백 포함 최대 300자까지 작성 가능합니다.)`}
+                className={styles.textarea}
+                rows={4}
+              ></textarea>
+            </div>
           </div>
         </div>
 
@@ -196,22 +220,14 @@ function CreateRecruiting() {
             <span>리쿠르팅 만들기</span>
           </div>
         </div>
-
       </div>
 
-        <NotEnteredModal
-          open={notEnteredModalOpen}
-          close={closeNotEnteredModal}
-        />
-        <EditCheckModal
-          open={editCheckModalOpen}
-          close={closeEditCheckModal}
-        />
-        <PageOut
-          open={pageOutModalOpen}
-          close={closePageOutModal}
-        />
-
+      <NotEnteredModal
+        open={notEnteredModalOpen}
+        close={closeNotEnteredModal}
+      />
+      <EditCheckModal open={editCheckModalOpen} close={closeEditCheckModal} />
+      <PageOut open={pageOutModalOpen} close={closePageOutModal} />
     </>
   );
 }

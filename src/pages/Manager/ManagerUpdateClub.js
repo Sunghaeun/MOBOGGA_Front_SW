@@ -5,9 +5,9 @@ import styles from "./styles/ManagerUpdateClub.module.css";
 import UpdateClubWord from "../../assets/UpdateClubWord.svg";
 import Modal from "../../components/Modal";
 
-import instaIcon from "../../assets/icons/snsicons.svg";
+import instaIcon from "../../assets/icons/instagram.svg";
 import kakaoIcon from "../../assets/icons/kakao.svg";
-import youtubeIcon from "../../assets/icons/youtubeicons.svg";
+import youtubeIcon from "../../assets/icons/youtube.svg";
 import linktreeIcon from "../../assets/icons/linkicons.svg";
 
 function ManagerUpdateClub() {

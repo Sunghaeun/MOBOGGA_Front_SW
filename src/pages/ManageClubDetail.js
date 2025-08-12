@@ -5,8 +5,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-import insta from "../assets/icons/snsicons.svg";
-import youtube from "../assets/icons/youtubeicons.svg";
+import insta from "../assets/icons/instagram.svg";
+import youtube from "../assets/icons/youtube.svg";
 import kakao from "../assets/icons/kakao.svg";
 import link from "../assets/icons/linkicons.svg";
 
@@ -24,7 +24,7 @@ function ClubDetail() {
   const [lastRecruitingList, setLastRecruitingList] = useState([]);
   const [lastEventList, setLastEventList] = useState([]);
 
-// api 주소 바뀌는지 확인해야함 !!!!
+  // api 주소 바뀌는지 확인해야함 !!!!
   const getClub = async () => {
     try {
       const res = await axios.get(
@@ -148,7 +148,6 @@ function ClubDetail() {
             <span>수정하기</span>
           </div>
         </div>
-        
 
         <span className={styles.titleName}> 진행 중인 이벤트 </span>
         <div className={styles.EventCardContainer}>
