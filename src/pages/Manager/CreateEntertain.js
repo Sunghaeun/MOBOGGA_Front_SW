@@ -2,6 +2,11 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import styles from "./styles/CreateEntertain.module.css";
 import axios from "axios";
+import INSTA from "../../assets/icons/instagram.svg";
+import KAKAO from "../../assets/icons/kakao.svg";
+import YOUTUBE from "../../assets/icons/youtube.svg";
+import NOTION from "../../assets/icons/notion.svg";
+import LINK from "../../assets/icons/linkicons.svg";
 function CreateEntertain() {
   const navigate = useNavigate();
 
@@ -304,7 +309,73 @@ function CreateEntertain() {
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>관련링크</span>
                   </span>
-                  <span className={styles.variable_Info}></span>
+                  <span className={styles.variable_Info}>
+                    <div className={styles.sns}>
+                      <span className={styles.sns_icon}>
+                        <img src={INSTA} alt="sns_icon" />
+                      </span>
+                      <span className={styles.variable_Info}>
+                        <input
+                          type="text"
+                          placeholder="인스타그램 링크 입력"
+                          style={{ width: "22rem" }}
+                          className={styles.sns_link}
+                        ></input>
+                      </span>
+                    </div>
+                    <div className={styles.sns}>
+                      <span className={styles.sns_icon}>
+                        <img src={KAKAO} alt="sns_icon" />
+                      </span>
+                      <span className={styles.variable_Info}>
+                        <input
+                          type="text"
+                          placeholder="카카오톡 오픈채팅방 또는 채널 링크 입력"
+                          style={{ width: "22rem" }}
+                          className={styles.sns_link}
+                        ></input>
+                      </span>
+                    </div>
+                    <div className={styles.sns}>
+                      <span className={styles.sns_icon}>
+                        <img src={YOUTUBE} alt="sns_icon" />
+                      </span>
+                      <span className={styles.variable_Info}>
+                        <input
+                          type="text"
+                          placeholder="유튜브 링크 입력"
+                          style={{ width: "22rem" }}
+                          className={styles.sns_link}
+                        ></input>
+                      </span>
+                    </div>
+                    <div className={styles.sns}>
+                      <span className={styles.sns_icon}>
+                        <img src={NOTION} alt="sns_icon" />
+                      </span>
+                      <span className={styles.variable_Info}>
+                        <input
+                          type="text"
+                          placeholder="노션(Notion) 링크 입력"
+                          style={{ width: "22rem" }}
+                          className={styles.sns_link}
+                        ></input>
+                      </span>
+                    </div>
+                    <div className={styles.sns}>
+                      <span className={styles.sns_icon}>
+                        <img src={LINK} alt="sns_icon" />
+                      </span>
+                      <span className={styles.variable_Info}>
+                        <input
+                          type="text"
+                          placeholder="구글 폼, 페이스북 등의 링크 입력"
+                          style={{ width: "22rem" }}
+                          className={styles.sns_link}
+                        ></input>
+                      </span>
+                    </div>
+                  </span>
                 </div>
               </div>
             </div>
