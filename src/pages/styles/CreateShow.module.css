@@ -62,6 +62,22 @@ input[type="number"] {
   height: 100%;
   object-fit: cover;
 }
+
+.inputFile {
+  display: none;
+}
+
+.inputFileLabel {
+  margin-top: 2rem;
+  display: inline-flex;
+  padding: 0.25rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--gray-01-background, #fbfbfb);
+  color: #ff3d12;
+}
 .entir_Boxs {
   display: flex;
   flex-direction: column;

@@ -304,12 +304,16 @@ function CreateShow() {
               <div className={styles.SImage_Box}>
                 <img src={previewURL} alt="미리보기" />
               </div>
-              <input
-                type="file"
-                id="fileUpload"
-                accept="image/*"
-                onChange={handleImg}
-              />
+              <label className={styles.inputFileLabel} htmlFor="inputFile">
+                이미지 추가
+                <input
+                  className={styles.inputFile}
+                  type="file"
+                  id="inputFile"
+                  accept="image/*"
+                  onChange={handleImg}
+                />
+              </label>
             </div>
 
             <div className={styles.entir_Boxs}>
