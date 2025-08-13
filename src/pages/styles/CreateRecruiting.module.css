@@ -182,3 +182,9 @@
   margin-left: 2px;
   margin-bottom: 10px;
 }
+
+.recruitinImg{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

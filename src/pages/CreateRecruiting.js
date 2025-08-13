@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 import styles from "./styles/CreateRecruiting.module.css";
 
@@ -36,6 +37,86 @@ function CreateRecruiting() {
     document.body.style.removeProperty("overflow");
   };
 
+  // 4) 저장할 데이터 배열에 미리 저장해두기
+  const [data, setData] = useState({
+    name: "",
+    category: "",
+    startDate: "",
+    endDate: "",
+    mandatorySemesters: "",
+    meetingTime: "",
+    content: "",
+    eligibility: "",
+    notice: "",
+    manager: "",
+    managerPhoneNumber: "",
+    introductionLetter: "",
+    inUrl: "",
+    kakaUrl: "",
+    youUrl: "",
+    noUrl: "",
+    url: "",
+    applyUrl: "",
+    photo: "",
+  });
+
+  // 7) 리쿠르팅 생성 post
+  const handleSubmit = async () => {
+    try {
+      const token = localStorage.getItem("jwt");
+      const url = `${process.env.REACT_APP_API_URL}/manager/recruiting/create`;
+
+      // photo는 미리보기 전용이므로 서버 전송용 request에서는 제외
+      const { photo, ...requestDto } = data;
+
+      const formData = new FormData();
+      formData.append(
+        "request",
+        new Blob([JSON.stringify(requestDto)], { type: "application/json" })
+      );
+      if (photoFile) {
+        formData.append("poster", photoFile); // 원본 파일 그대로 전송
+      }
+
+      await axios.post(url, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
+
+      alert("리쿠르팅 생성 완료"); //이제 이게 모달이 되어야겠지?
+    } catch (err) {
+      console.error("리쿠르팅 생성 실패", err);
+      alert("요청 중 오류가 발생했습니다.");
+    }
+  };
+
+  // 8) 이미지 업로드
+  const [photoFile, setPhotoFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const onChangeInput = (e) => {
+    setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleFileButtonClick = () => fileInputRef.current?.click();
+
+  const handleFileChange = (e) => {
+    const f = e.target.files?.[0] ?? null;
+    setPhotoFile(f);
+    if (f) {
+      const preview = URL.createObjectURL(f);
+      setData((prev) => ({ ...prev, photo: preview }));
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (data.photo?.startsWith("blob:")) {
+        URL.revokeObjectURL(data.photo);
+      }
+    };
+  }, [photoFile]);
+
   return (
     <>
       <div className={styles.main}>
@@ -52,10 +133,20 @@ function CreateRecruiting() {
             >
               <span>이미지 추가</span>
             </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
           </div>
 
           <div className={styles.rightInput}>
-            <span className={styles.announcement}>
+            <span
+              className={styles.announcement}
+              onClick={() => openNotEnteredModal()}
+            >
               *관련 링크 외 모든 정보는 필수입력사항입니다
             </span>
 
@@ -120,9 +211,11 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <textarea
-                placeholder={`활동내용(주요 활동, 모집 분야 등 100자 내로 간략하게 작성해주세요.`}
+                name="content"
+                placeholder={`활동내용(주요 활동, 모집 분야 등 100자 내로 간략하게 작성해주세요.)`}
                 className={styles.textarea}
                 rows={4}
+                onChange={onChangeInput}
               ></textarea>
             </div>
 
@@ -132,9 +225,11 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <textarea
+                name="eligibility"
                 placeholder={`지원자격(모집대상 및 지원자격을 200자 내로 작성해주세요.)`}
                 className={styles.textarea}
                 rows={4}
+                onChange={onChangeInput}
               ></textarea>
             </div>
 
@@ -144,9 +239,11 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <textarea
+                name="notice"
                 placeholder={`면접안내(면접 일정, 장소, 내용 등 200자 내로 작성해주세요.)`}
                 className={styles.textarea}
                 rows={4}
+                onChange={onChangeInput}
               ></textarea>
             </div>
 
@@ -184,19 +281,39 @@ function CreateRecruiting() {
               <div className={styles.linkContainer}>
                 <div className={styles.linkrow}>
                   <img src={insta} alt="Instagram" />
-                  <input placeholder="인스타그램 링크 입력" type="text"></input>
+                  <input
+                    name="inUrl"
+                    placeholder="인스타그램 링크 입력"
+                    type="text"
+                    onChange={onChangeInput}
+                  ></input>
                 </div>
                 <div className={styles.linkrow1}>
                   <img src={kakao} alt="KakaoTalk" />
-                  <input placeholder="카카오톡 링크 입력" type="text"></input>
+                  <input
+                    name="kakaUrl"
+                    placeholder="카카오톡 링크 입력"
+                    type="text"
+                    onChange={onChangeInput}
+                  ></input>
                 </div>
                 <div className={styles.linkrow1}>
                   <img src={youtube} alt="YouTube" />
-                  <input placeholder="유튜브 링크 입력" type="text"></input>
+                  <input
+                    name="youUrl"
+                    placeholder="유튜브 링크 입력"
+                    type="text"
+                    onChange={onChangeInput}
+                  ></input>
                 </div>
                 <div className={styles.linkrow1}>
                   <img src={link} alt="Link" />
-                  <input placeholder="링크 입력" type="text"></input>
+                  <input
+                    name="url"
+                    placeholder="링크 입력"
+                    type="text"
+                    onChange={onChangeInput}
+                  ></input>
                 </div>
               </div>
             </div>
@@ -216,7 +333,7 @@ function CreateRecruiting() {
         </div>
 
         <div className={styles.buttonContainer}>
-          <div className={styles.createClub}>
+          <div className={styles.createClub} onClick={handleSubmit}>
             <span>리쿠르팅 만들기</span>
           </div>
         </div>
