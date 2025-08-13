@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 import styles from "./styles/CreateRecruiting.module.css";
 
@@ -61,13 +62,64 @@ function CreateRecruiting() {
       photo: "",
   });
 
-  // 일반 필드 변경
-  const onChangeInput = (e) => {
-    setData({
-      ...data,
-      [e.target.name]: e.target.value,
+
+// 7) 리쿠르팅 생성 post 
+  const handleSubmit = async () => {
+  try {
+    const token = localStorage.getItem("jwt");
+    const url = `${process.env.REACT_APP_API_URL}/manager/recruiting/create`;
+
+    // photo는 미리보기 전용이므로 서버 전송용 request에서는 제외
+    const { photo, ...requestDto } = data;
+
+    const formData = new FormData();
+    formData.append(
+      "request",
+      new Blob([JSON.stringify(requestDto)], { type: "application/json" })
+    );
+    if (photoFile) {
+      formData.append("poster", photoFile); // 원본 파일 그대로 전송
+    }
+
+    await axios.post(url, formData, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
     });
+
+    alert("리쿠르팅 수정 완료");
+ 
+  } catch (err) {
+    console.error("리쿠르팅 수정 실패", err);
+    alert("요청 중 오류가 발생했습니다.");
+  }
+};
+
+  // 8) 이미지 업로드
+  const [photoFile, setPhotoFile] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const onChangeInput = (e) => {
+    setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  const handleFileButtonClick = () => fileInputRef.current?.click();
+
+  const handleFileChange = (e) => {
+    const f = e.target.files?.[0] ?? null;
+    setPhotoFile(f);
+    if (f) {
+      const preview = URL.createObjectURL(f);
+      setData((prev) => ({ ...prev, photo: preview }));
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (data.photo?.startsWith("blob:")) {
+        URL.revokeObjectURL(data.photo);
+      }
+    };
+  }, [photoFile]);
   
   return (
     <>
@@ -79,11 +131,18 @@ function CreateRecruiting() {
         <div className={styles.inputContainer}>
           <div className={styles.leftInput}>
             <div className={styles.photoInput}>
-            
+              <img src={data.photo} alt={data.name} className={styles.recruitinImg} />
             </div>
-            <div className={styles.photobutton}>
+            <div className={styles.photobutton} onClick={handleFileButtonClick}>
               <span>이미지 추가</span>
             </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
           </div>
 
           <div className={styles.rightInput}>
@@ -227,7 +286,7 @@ function CreateRecruiting() {
         </div>
 
         <div className={styles.buttonContainer}>
-          <div className={styles.createClub}>
+          <div className={styles.createClub} onClick={handleSubmit}>
             <span>리쿠르팅 만들기</span>
           </div>
         </div>

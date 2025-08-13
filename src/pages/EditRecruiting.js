@@ -71,7 +71,7 @@ const getRecruiting = async () => {
     try {
       const token = localStorage.getItem("jwt");
       const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/manager/recruiting/update/2`,
+        `${process.env.REACT_APP_API_URL}/manager/recruiting/update/20`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const src = res.data ?? {};
