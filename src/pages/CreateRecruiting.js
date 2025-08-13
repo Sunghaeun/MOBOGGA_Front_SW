@@ -86,10 +86,10 @@ function CreateRecruiting() {
       withCredentials: true,
     });
 
-    alert("리쿠르팅 수정 완료");
+    alert("리쿠르팅 생성 완료"); //이제 이게 모달이 되어야겠지?
  
   } catch (err) {
-    console.error("리쿠르팅 수정 실패", err);
+    console.error("리쿠르팅 생성 실패", err);
     alert("요청 중 오류가 발생했습니다.");
   }
 };
@@ -155,7 +155,7 @@ function CreateRecruiting() {
                 <span onClick={() => openEditCheckModal()}>제목</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)" type="text" onChange={onChangeInput}></input>
+              <input name="name" placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)" type="text" onChange={onChangeInput}></input>
             </div>
 
             <div className={styles.row}>
@@ -163,7 +163,7 @@ function CreateRecruiting() {
                 <span onClick={() => openPageOutModal()}>카테고리</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)" type="text" onChange={onChangeInput}></input>
+              <input name="category" placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)" type="text" onChange={onChangeInput}></input>
             </div>
 
             <div className={styles.row}>
@@ -171,7 +171,7 @@ function CreateRecruiting() {
                 <span>모집기간</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)" type="text" onChange={onChangeInput}></input>
+              <input name="startDate" placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)" type="text" onChange={onChangeInput}></input>
             </div>
 
             <div className={styles.row}>
@@ -179,7 +179,7 @@ function CreateRecruiting() {
                 <span>필수학기</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="필수학기(없는 경우, “없음”이라고 입력해주세요.)" type="text" onChange={onChangeInput}></input>
+              <input name="mandatorySemesters" placeholder="필수학기(없는 경우, “없음”이라고 입력해주세요.)" type="text" onChange={onChangeInput}></input>
             </div>
 
             <div className={styles.row}>
@@ -187,7 +187,7 @@ function CreateRecruiting() {
                 <span>정모시간</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="정모시간(없는 경우, “없음”이라고 입력해주세요.)" type="text" onChange={onChangeInput}></input>
+              <input name="meetingTime" placeholder="정모시간(없는 경우, “없음”이라고 입력해주세요.)" type="text" onChange={onChangeInput}></input>
             </div>
 
             <div className={styles.row}>
@@ -196,7 +196,8 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <textarea
-                placeholder={`활동내용(주요 활동, 모집 분야 등 100자 내로 간략하게 작성해주세요.`}
+                name="content"
+                placeholder={`활동내용(주요 활동, 모집 분야 등 100자 내로 간략하게 작성해주세요.)`}
                 className={styles.textarea}
                 rows={4}
                 onChange={onChangeInput}
@@ -209,6 +210,7 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <textarea
+                name="eligibility"
                 placeholder={`지원자격(모집대상 및 지원자격을 200자 내로 작성해주세요.)`}
                 className={styles.textarea}
                 rows={4}
@@ -222,6 +224,7 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <textarea
+                name="notice"
                 placeholder={`면접안내(면접 일정, 장소, 내용 등 200자 내로 작성해주세요.)`}
                 className={styles.textarea}
                 rows={4}
@@ -234,8 +237,8 @@ function CreateRecruiting() {
                 <span>문의    </span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="이름" type="text" className={styles.miniInput} onChange={onChangeInput}></input>
-              <input placeholder="연락처(전화번호 혹은 메일)" type="text" onChange={onChangeInput}></input>
+              <input name="manager" placeholder="이름" type="text" className={styles.miniInput} onChange={onChangeInput}></input>
+              <input name="managerPhoneNumber" placeholder="연락처(전화번호 혹은 메일)" type="text" onChange={onChangeInput}></input>
             </div>
 
             <div className={styles.row}>
@@ -243,7 +246,7 @@ function CreateRecruiting() {
                 <span>지원링크</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input placeholder="Goolge forms, Walla 등 리크루팅 링크 입력" type="text" onChange={onChangeInput}></input>
+              <input name="applyUrl" placeholder="Goolge forms, Walla 등 리크루팅 링크 입력" type="text" onChange={onChangeInput}></input>
             </div>
 
             <div className={styles.row}>
@@ -253,19 +256,19 @@ function CreateRecruiting() {
               <div className={styles.linkContainer}>
                 <div className={styles.linkrow}>
                   <img src={insta} alt="Instagram" />
-                  <input placeholder="인스타그램 링크 입력" type="text" onChange={onChangeInput}></input>
+                  <input name="inUrl" placeholder="인스타그램 링크 입력" type="text" onChange={onChangeInput}></input>
                 </div>
                 <div className={styles.linkrow1}>
                   <img src={kakao} alt="KakaoTalk" />
-                  <input placeholder="카카오톡 링크 입력" type="text" onChange={onChangeInput}></input>
+                  <input name="kakaUrl" placeholder="카카오톡 링크 입력" type="text" onChange={onChangeInput}></input>
                 </div>
                 <div className={styles.linkrow1}>
                   <img src={youtube} alt="YouTube" />
-                  <input placeholder="유튜브 링크 입력" type="text" onChange={onChangeInput}></input>
+                  <input name="youUrl" placeholder="유튜브 링크 입력" type="text" onChange={onChangeInput}></input>
                 </div>
                 <div className={styles.linkrow1}>
                   <img src={link} alt="Link" />
-                  <input placeholder="링크 입력" type="text" onChange={onChangeInput}></input>
+                  <input name="url" placeholder="링크 입력" type="text" onChange={onChangeInput}></input>
                 </div>
               </div>
             </div>
@@ -276,6 +279,7 @@ function CreateRecruiting() {
                   <span className={styles.required}>*</span>
                 </div>
                   <textarea
+                    name="introductionLetter"
                     placeholder={`리크루팅에 대한 간략한 소개\n(공백 포함 최대 300자까지 작성 가능합니다.)`}
                     className={styles.textarea}
                     rows={4}

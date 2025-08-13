@@ -1,3 +1,6 @@
+// 사진 아무것도 선택하지 않았을 때
+// 사진을 선택하지 않았을 때는 기존 사진을 유지하고 있음 잘하는건가??
+
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
@@ -71,7 +74,7 @@ const getRecruiting = async () => {
     try {
       const token = localStorage.getItem("jwt");
       const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/manager/recruiting/update/20`,
+        `${process.env.REACT_APP_API_URL}/manager/recruiting/update/2`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const src = res.data ?? {};
@@ -134,7 +137,7 @@ const getRecruiting = async () => {
       withCredentials: true,
     });
 
-    alert("리쿠르팅 수정 완료");
+    alert("리쿠르팅 수정 완료"); //이제 이게 모달이 되어야겠지?
  
     // 수정 후 최신 데이터 재조회
     await getRecruiting();
@@ -208,7 +211,7 @@ const getRecruiting = async () => {
               <input
                 type="text"
                 name="name"
-                placeholder="리크루팅 제목 ..."
+                placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
                 value={data.name}
                 onChange={onChangeInput}
               />
@@ -221,7 +224,7 @@ const getRecruiting = async () => {
               <input
                 type="text"
                 name="category"
-                placeholder="카테고리"
+                placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
                 value={data.category}
                 onChange={onChangeInput}
               />
@@ -234,7 +237,7 @@ const getRecruiting = async () => {
               <input
                 type="text" /* 필요시 date 두 개로 분리 */
                 name="startDate"
-                placeholder="시작일"
+                placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
                 value={data.startDate}
                 onChange={onChangeInput}
               />
@@ -255,7 +258,7 @@ const getRecruiting = async () => {
               <input
                 type="text"
                 name="mandatorySemesters"
-                placeholder="필수학기"
+                placeholder="필수학기(없는 경우, “없음”이라고 입력해주세요.)"
                 value={data.mandatorySemesters}
                 onChange={onChangeInput}
               />
@@ -268,7 +271,7 @@ const getRecruiting = async () => {
               <input
                 type="text"
                 name="meetingTime"
-                placeholder="정모시간"
+                placeholder="정모시간(없는 경우, “없음”이라고 입력해주세요.)"
                 value={data.meetingTime}
                 onChange={onChangeInput}
               />
@@ -282,7 +285,7 @@ const getRecruiting = async () => {
                 name="content"
                 rows={4}
                 className={styles.textarea}
-                placeholder="활동내용..."
+                placeholder={`활동내용(주요 활동, 모집 분야 등 100자 내로 간략하게 작성해주세요.`}
                 value={data.content}
                 onChange={onChangeInput}
               />
@@ -296,7 +299,7 @@ const getRecruiting = async () => {
                 name="eligibility"
                 rows={4}
                 className={styles.textarea}
-                placeholder="지원자격..."
+                placeholder={`지원자격(모집대상 및 지원자격을 200자 내로 작성해주세요.)`}
                 value={data.eligibility}
                 onChange={onChangeInput}
               />
@@ -310,7 +313,7 @@ const getRecruiting = async () => {
                 name="notice"
                 rows={4}
                 className={styles.textarea}
-                placeholder="면접안내..."
+                placeholder={`면접안내(면접 일정, 장소, 내용 등 200자 내로 작성해주세요.)`}
                 value={data.notice}
                 onChange={onChangeInput}
               />
@@ -331,7 +334,7 @@ const getRecruiting = async () => {
               <input
                 type="text"
                 name="managerPhoneNumber"
-                placeholder="연락처"
+                placeholder="연락처(전화번호 혹은 메일)"
                 value={data.managerPhoneNumber}
                 onChange={onChangeInput}
               />
@@ -344,7 +347,7 @@ const getRecruiting = async () => {
               <input
                 type="text"
                 name="applyUrl"
-                placeholder="Google Forms 등"
+                placeholder="Goolge forms, Walla 등 리크루팅 링크 입력"
                 value={data.applyUrl}
                 onChange={onChangeInput}
               />
@@ -358,7 +361,7 @@ const getRecruiting = async () => {
                   <input
                     type="text"
                     name="inUrl"
-                    placeholder="인스타그램 링크"
+                    placeholder="인스타그램 링크 입력"
                     value={data.inUrl}
                     onChange={onChangeInput}
                   />
@@ -368,7 +371,7 @@ const getRecruiting = async () => {
                   <input
                     type="text"
                     name="kakaUrl"
-                    placeholder="카카오톡 링크"
+                    placeholder="카카오톡 링크 입력"
                     value={data.kakaUrl}
                     onChange={onChangeInput}
                   />
@@ -378,7 +381,7 @@ const getRecruiting = async () => {
                   <input
                     type="text"
                     name="youUrl"
-                    placeholder="유튜브 링크"
+                    placeholder="유튜브 링크 입력"
                     value={data.youUrl}
                     onChange={onChangeInput}
                   />
@@ -388,7 +391,7 @@ const getRecruiting = async () => {
                   <input
                     type="text"
                     name="url"
-                    placeholder="웹사이트 링크"
+                    placeholder="링크 입력"
                     value={data.url}
                     onChange={onChangeInput}
                   />
@@ -404,7 +407,7 @@ const getRecruiting = async () => {
                 name="introductionLetter"
                 rows={4}
                 className={styles.textarea}
-                placeholder="소개글..."
+                placeholder={`리크루팅에 대한 간략한 소개\n(공백 포함 최대 300자까지 작성 가능합니다.)`}
                 value={data.introductionLetter}
                 onChange={onChangeInput}
               />
@@ -419,19 +422,18 @@ const getRecruiting = async () => {
         </div>
       </div>
 
-        <NotEnteredModal
-          open={notEnteredModalOpen}
-          close={closeNotEnteredModal}
-        />
-        <EditCheckModal
-          open={editCheckModalOpen}
-          close={closeEditCheckModal}
-        />
-        <PageOut
-          open={pageOutModalOpen}
-          close={closePageOutModal}
-        />
-
+      <NotEnteredModal
+        open={notEnteredModalOpen}
+        close={closeNotEnteredModal}
+      />
+      <EditCheckModal
+        open={editCheckModalOpen}
+        close={closeEditCheckModal}
+      />
+      <PageOut
+        open={pageOutModalOpen}
+        close={closePageOutModal}
+      />
     </>
   );
 }
