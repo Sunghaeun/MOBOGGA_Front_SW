@@ -268,7 +268,7 @@ function CreateShow() {
   //제목 글자 수 limit
   const handlename = (e) => {
     if (e.target.value.length <= 30) {
-      setname(e.target.value);
+      setName(e.target.value);
     } else {
       alert("30글자를 초과할 수 없습니다.");
     }

@@ -483,6 +483,7 @@ function ShowDetail() {
                     className={styles.modal_ok_Btn}
                     onClick={() => {
                       setFailModalOpen(false);
+                      window.scrollTo(0, 0); // 화면 맨 위로 이동
                       navigate("/login"); //로그인 안 했을 때 로그인 페이지로 이동
                     }}
                   >
