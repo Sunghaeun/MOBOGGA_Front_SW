@@ -40,6 +40,29 @@ function CreateEntertain() {
     } else {
     }
   };
+  const [auth, setAuth] = useState([]);
+  const getAuth = async () => {
+    try {
+      const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
+          },
+          withCredentials: true,
+        }
+      );
+
+      console.log("Response from backend:", response.data);
+
+      setAuth(response.data);
+    } catch (error) {
+      console.error("Login failed with error: ", error);
+      throw error;
+    }
+  };
 
   //모든 입력란을 받아야 submit 가능 + 빈칸이 어디인지 알려줌
   const makeEntertain = async () => {

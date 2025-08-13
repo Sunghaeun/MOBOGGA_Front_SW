@@ -49,6 +49,30 @@ function ShowDetail() {
     }
   };
 
+  const [auth, setAuth] = useState([]);
+  const getAuth = async () => {
+    try {
+      const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
+          },
+          withCredentials: true,
+        }
+      );
+
+      console.log("Response from backend:", response.data);
+
+      setAuth(response.data);
+    } catch (error) {
+      console.error("Login failed with error: ", error);
+      throw error;
+    }
+  };
+
   // 올바른 useEffect 사용
   useEffect(() => {
     fetchData();
@@ -87,6 +111,7 @@ function ShowDetail() {
       reservationData(response.data);
       setOpen(false);
       setSecondModalOpen(true);
+      setIsDisable(true);
     } catch (error) {
       console.log("예매 데이터 보내기 실패: ", error);
 
@@ -100,15 +125,10 @@ function ShowDetail() {
     }
   };
 
-  const reservationData = async (responseData) => {
-    try {
-      if (responseData.available === true) {
-        setIsDisable(true);
-      } else {
-        console.log("예매 실패!");
-      }
-    } catch (error) {
-      console.error("가져오기 ERROR:", error);
+  const reservationData = (responseData) => {
+    if (!responseData) {
+      console.error("응답 데이터 없음");
+      return;
     }
   };
 
@@ -343,7 +363,7 @@ function ShowDetail() {
               </button>
             </div>
             <div className={styles.count_info}>
-              *한 회차 당 최대 <span>{selectedSch.maxTickets}</span>매까지
+              {/* *한 회차 당 최대 <span>{selectedSch.maxTickets}</span>매까지 */}
               예매가능합니다
             </div>
           </div>
