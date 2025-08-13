@@ -111,7 +111,7 @@ const getRecruiting = async () => {
     getRecruiting();
   }, []);
 
-// 7) 리쿠르팅 수정 post 요청
+// 7) 리쿠르팅 수정 put 요청
   const handleSubmit = async () => {
   try {
     const token = localStorage.getItem("jwt");
