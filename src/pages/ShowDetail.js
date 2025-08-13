@@ -483,7 +483,7 @@ function ShowDetail() {
                     className={styles.modal_ok_Btn}
                     onClick={() => {
                       setFailModalOpen(false);
-                      window.location.reload();
+                      navigate("/login"); //로그인 안 했을 때 로그인 페이지로 이동
                     }}
                   >
                     확인

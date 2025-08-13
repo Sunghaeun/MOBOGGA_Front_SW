@@ -7,7 +7,7 @@ import DELETE from "../../assets/button_delete.svg";
 function CreateShow() {
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState("");
+  const [name, setName] = useState("");
   const [poster, setPoster] = useState(null);
   const [qrImage, setQrImage] = useState(null);
   const [clubName, setClubName] = useState("");
@@ -103,7 +103,7 @@ function CreateShow() {
 
   //모든 입력란을 받아야 submit 가능 + 빈칸이 어디인지 알려줌
   const makeShow = async () => {
-    if (!title) {
+    if (!name) {
       alert("제목을 입력해 주세요");
       return;
     }
@@ -175,7 +175,7 @@ function CreateShow() {
     //보내주어야 하는 전체 데이터
     const requestData = {
       userId: sessionStorage.getItem("serverResponse"),
-      title,
+      name,
       clubName,
       location,
       startDate,
@@ -213,7 +213,7 @@ function CreateShow() {
       "request",
       new Blob([JSON.stringify(requestData)], { type: "application/json" })
     ); //request는 모두 application으로 긔긔
-    // formData.append("title", title);
+    // formData.append("name", name);
     // formData.append("clubName", clubName);
     // formData.append("location", location);
     // formData.append("startDate", startDate);
@@ -266,9 +266,9 @@ function CreateShow() {
   };
 
   //제목 글자 수 limit
-  const handletitle = (e) => {
+  const handlename = (e) => {
     if (e.target.value.length <= 30) {
-      setTitle(e.target.value);
+      setname(e.target.value);
     } else {
       alert("30글자를 초과할 수 없습니다.");
     }
@@ -353,8 +353,8 @@ function CreateShow() {
                     <input
                       type="text"
                       placeholder="공연 이름(공백포함 최대 30자까지 작성 가능합니다.)"
-                      value={title}
-                      onChange={handletitle}
+                      value={name}
+                      onChange={handlename}
                       style={{ width: "27rem" }}
                     />
                   </span>
