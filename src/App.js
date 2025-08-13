@@ -85,11 +85,7 @@ function App() {
           <Route path="/loading" element={<Loading />} />
           <Route path="/404" element={<Error404 />} />
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
-<<<<<<< HEAD
-=======
           <Route path="/edit/recruiting" element={<EditRecruiting />} />
-
->>>>>>> main
           <Route path="/manager/club/1" element={<ManageClubDetail />} />
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
           <Route path="/tosslinktest" element={<TossAppLauncher />} />
