@@ -20,10 +20,6 @@ function ManagerMypage() {
     }
   }, [token, navigate]);
 
-  if (!token) {
-    return null; // 컴포넌트 렌더링을 중단
-  }
-
   const [formData, setFormData] = useState({
     name: "",
     clubName: "",

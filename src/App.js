@@ -42,6 +42,8 @@ import ManageClubDetail from "./pages/ManageClubDetail";
 import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
 import TossAppLauncher from "./components/Mypage/TossAppLauncher";
 
+import FAQ from "./pages/FAQ";
+
 import "./App.css";
 
 function App() {
@@ -50,9 +52,9 @@ function App() {
       <div className="App">
         <Header />
         <Routes>
-          {/* <Route path="/" element={<Landing />} /> */}
-          <Route path="/*" element={<ComingSoon />} />
-          {/* <Route path="/main" element={<Main />} />
+          <Route path="/" element={<Landing />} />
+          {/* <Route path="/*" element={<ComingSoon />} /> */}
+          <Route path="/main" element={<Main />} />
 
           <Route path="/show/:showId" element={<ShowDetail />} />
           <Route path="/entertain/:id" element={<EntertainDetail />} />
@@ -89,7 +91,9 @@ function App() {
           <Route path="/manager/club/1" element={<ManageClubDetail />} />
 
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
-          <Route path="/tosslinktest" element={<TossAppLauncher />} /> */}
+          <Route path="/tosslinktest" element={<TossAppLauncher />} />
+
+          <Route path="/faq" element={<FAQ />} />
 
         </Routes>
         <Footer />

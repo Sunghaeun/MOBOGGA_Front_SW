@@ -119,23 +119,14 @@ function Header() {
           </span>
         </div>
 
-        {localStorage.getItem("jwt") &&
-        localStorage.getItem("type") === "manager" ? (
-          // 매니저 로그인 상태 → 매니저 마이페이지 버튼
+        {localStorage.getItem("jwt") ? (
           <div
             className={styles.manager_btn}
-            onClick={() => navigate("/manager/mypage")}
+            onClick={() => navigate("/mypage")}
           >
-            <img src={profile_btn} alt="매니저 마이페이지" />
-          </div>
-        ) : localStorage.getItem("jwt") &&
-          localStorage.getItem("type") === "user" ? (
-          // 일반 사용자 로그인 상태 → 일반 마이페이지 버튼
-          <div className={styles.user_btn} onClick={() => navigate("/mypage")}>
             <img src={profile_btn} alt="마이페이지" />
           </div>
         ) : (
-          // 비로그인 상태 → 로그인 버튼
           <div className={styles.login} onClick={() => navigate("/login")}>
             <span>로그인</span>
           </div>
