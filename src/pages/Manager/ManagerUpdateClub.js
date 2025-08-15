@@ -16,7 +16,7 @@ function ManagerUpdateClub() {
   const fileInputRef = useRef(null);
 
   // 토큰을 실시간으로 가져오는 함수
-  const getToken = () => localStorage.getItem("jwt");
+  const getToken = useCallback(() => localStorage.getItem("jwt"), []);
 
   const [formData, setFormData] = useState({
     clubName: "",
@@ -286,7 +286,7 @@ function ManagerUpdateClub() {
       }
     };
     fetchClubProfile();
-  }, [navigate, handleTokenExpired, isTokenValid]);
+  }, [navigate, handleTokenExpired, isTokenValid, getToken]);
 
   // formData 변경 감지용 useEffect
   useEffect(() => {
