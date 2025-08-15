@@ -180,37 +180,22 @@ function ManagerEntertainpage() {
 
       if (!response.ok) {
         throw new Error(
-          `서버 응답 오류 (${response.status}): 공연 내역을 불러오는데 실패했습니다.`
+          `서버 응답 오류 (${response.status}): 즐길거리 내역을 불러오는데 실패했습니다.`
         );
       }
 
       const data = await response.json();
       console.log("Entertain 전체 응답 데이터:", data);
 
-      // 다양한 가능한 데이터 구조 체크
-      let performanceList = null;
-      if (data && data.performanceList) {
-        performanceList = data.performanceList;
-      } else if (data && data.entertainList) {
-        performanceList = data.entertainList;
-      } else if (data && data.reservationList) {
-        performanceList = data.reservationList;
-      } else if (data && Array.isArray(data)) {
-        performanceList = data;
-      } else if (data && data.data) {
-        performanceList = data.data;
+      // API 응답에서 entertainList 추출
+      if (!data || !data.entertainList) {
+        console.log("entertainList가 없습니다. 전체 응답:", data);
+        setEntertainCards([]);
+        return;
       }
 
-      if (!performanceList) {
-        console.log(
-          "사용 가능한 데이터 구조를 찾을 수 없습니다. 전체 응답:",
-          data
-        );
-        performanceList = []; // 빈 배열로 설정
-      }
-
-      setEntertainCards(performanceList);
-      console.log("설정된 즐길거리 내역 데이터:", performanceList);
+      setEntertainCards(data.entertainList || []);
+      console.log("설정된 즐길거리 내역 데이터:", data.entertainList);
     } catch (err) {
       console.error("에러 발생:", err);
 
@@ -306,14 +291,14 @@ function ManagerEntertainpage() {
                 </div>
               )} */}
               {!isLoading && !error && entertainCards.length === 0 && (
-                <div className={styles.no_show}>공연 내역이 없습니다.</div>
+                <div className={styles.no_show}>즐길거리 내역이 없습니다.</div>
               )}
               {!isLoading &&
                 !error &&
                 entertainCards.length > 0 &&
                 entertainCards.map((entertainCard) => (
                   <div
-                    key={entertainCard.entertainId * Math.random()}
+                    key={entertainCard.entertainId || Math.random()}
                     className="entertain_card"
                   >
                     <EntertainCard data={entertainCard} />
