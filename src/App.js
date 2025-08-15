@@ -38,6 +38,7 @@ import OAuthCallback from "./pages/OAuthCallback";
 import Error404 from "./pages/Error404";
 
 import CreateRecruiting from "./pages/CreateRecruiting";
+import EditRecruiting from "./pages/EditRecruiting";
 import ManageClubDetail from "./pages/ManageClubDetail";
 
 import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
@@ -95,6 +96,7 @@ function App() {
           <Route path="/404" element={<Error404 />} />
 
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
+          <Route path="/edit/recruiting" element={<EditRecruiting />} />
 
           <Route path="/manager/club/1" element={<ManageClubDetail />} />
 
