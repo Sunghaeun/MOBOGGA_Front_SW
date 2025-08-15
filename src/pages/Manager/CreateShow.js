@@ -103,6 +103,8 @@ function CreateShow() {
 
   //모든 입력란을 받아야 submit 가능 + 빈칸이 어디인지 알려줌
   const makeShow = async () => {
+    const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
+
     if (!name) {
       alert("제목을 입력해 주세요");
       return;
@@ -212,17 +214,7 @@ function CreateShow() {
     formData.append(
       "request",
       new Blob([JSON.stringify(requestData)], { type: "application/json" })
-    ); //request는 모두 application으로 긔긔
-    // formData.append("name", name);
-    // formData.append("clubName", clubName);
-    // formData.append("location", location);
-    // formData.append("startDate", startDate);
-    // formData.append("endDate", endDate);
-    // formData.append("runtime", runtime);
-    // formData.append("account", account);
-    // formData.append("content", content);
-    // formData.append("maxTickets", maxTickets);
-    // formData.append("poster", poster);
+    );
 
     console.log("폼 데이터 확인:");
     for (let [key, value] of formData.entries()) {
@@ -237,21 +229,21 @@ function CreateShow() {
 
     try {
       const response = await axios.post(
-        `https://jinjigui.info:443/manager/create/save`,
+        `https://jinjigui.info:443/manager/entertain/create`,
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+            // Content-Type는 FormData면 axios가 자동 처리
           },
+          withCredentials: true, // 쿠키 기반 인증 필요 시
         }
       );
-
       console.log("저장 성공", response.data);
-
-      if (response.data.status === true) {
-        alert("저장이 완료되었습니다.").then(() => {
-          navigate("/");
-        });
+      if (response.data.status == "ok") {
+        // 문자열 "true"도 boolean true로 통과
+        alert("저장이 완료되었습니다.");
+        navigate("/");
       } else {
         alert("저장은 되었지만, 문제가 발생했습니다.");
       }
@@ -259,8 +251,7 @@ function CreateShow() {
       console.error("저장 오류", error);
       alert(
         "저장 실패",
-        `서버 오류:${error.response?.data?.message || "알 수 없는 오류"}`,
-        "error"
+        `서버 오류:${error.response?.data?.message || "알 수 없는 오류"}`
       );
     }
   };
