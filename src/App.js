@@ -29,7 +29,7 @@ import ManagerUpdateProfile from "./pages/Manager/ManagerUpdateProfile";
 import ManagerUpdateClub from "./pages/Manager/ManagerUpdateClub"; // Assuming this is the correct path for the manager update club page
 import ManagerHolderList from "./pages/Manager/ManagerHolderList";
 import ManagerShowpage from "./pages/Manager/ManagerShowpage";
-import ManagerEntertainpage from "./pages/Manager/CreateEntertain";
+import ManagerEntertainpage from "./pages/Manager/ManagerEntertainpage";
 import ManagerRecruitingpage from "./pages/Manager/ManagerRecruitingpage";
 
 import AddInfo from "./pages/AddInfo";
@@ -38,6 +38,7 @@ import OAuthCallback from "./pages/OAuthCallback";
 import Error404 from "./pages/Error404";
 
 import CreateRecruiting from "./pages/CreateRecruiting";
+import CreateEntertain from "./pages/Manager/CreateEntertain";
 import EditRecruiting from "./pages/EditRecruiting";
 import ManageClubDetail from "./pages/ManageClubDetail";
 
@@ -93,6 +94,7 @@ function App() {
           <Route path="/login/oauth2/code/google" element={<OAuthCallback />} />
           <Route path="/404" element={<Error404 />} />
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
+          <Route path="/create/entertain" element={CreateEntertain} />
           <Route path="/edit/recruiting" element={<EditRecruiting />} />
           <Route path="/manager/club/1" element={<ManageClubDetail />} />
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
