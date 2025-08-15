@@ -133,6 +133,7 @@ function CreateEntertain() {
           },
         }
       );
+      //새로 만든 즐길거리에 바로 입장가능하게 해줌
       const { publicId, showId, id } = response.data || {};
       const detailId = publicId ?? showId ?? id; // 공개 상세에서 쓰는 id 우선
       navigate(`/show/${detailId}`);
