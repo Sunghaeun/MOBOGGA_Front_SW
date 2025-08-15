@@ -3,47 +3,92 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerEntertainpage.module.css";
 import AccountInfoCard from "../../components/Mypage/AccountInfoCard";
-import ProfileInfoCard from "../../components/Mypage/ProfileInfoCard";
-import ProfileUpdateBtn from "../../components/Mypage/ProfileUpdateBtn";
-import ReservManageCard from "../../components/Manager/ReservManageCard";
+import ManagerProfileInfoCard from "../../components/Mypage/ManagerProfileInfoCard";
+import ManagerProfileUpdateBtn from "../../components/Mypage/ManagerProfileUpdateBtn";
+import ClubUpdateBtn from "../../components/Manager/ClubUpdateBtn";
+import EntertainCard from "../../components/Manager/EntertainCard";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
 
 function ManagerEntertainpage() {
   const navigate = useNavigate();
-
   const token = localStorage.getItem("jwt");
-  const type = localStorage.getItem("type");
 
-  localStorage.setItem("type", "manager");
-
+  // 초기 토큰 체크
   useEffect(() => {
-    if (!token || !type || type !== "manager") {
-      navigate("/404", { replace: true });
-      return null;
-    }
-  }, [token, type, navigate]);
+    console.log("=== MANAGER ENTERTAIN PAGE INIT ===");
+    console.log("Token exists:", !!token);
 
-  if (!token || !type || type !== "manager") {
-    return null; // 컴포넌트 렌더링을 중단
-  }
+    if (!token) {
+      console.log("No token found - redirecting to 404");
+      navigate("/404", { replace: true });
+      return;
+    }
+
+    if (!isTokenValid()) {
+      console.log("Token expired - showing login modal");
+      handleTokenExpired();
+      return;
+    }
+
+    console.log("Token valid - proceeding to fetch data");
+  }, [token, navigate]);
 
   const [formData, setFormData] = useState({
-    userName: "",
-    stdId: "",
+    name: "",
+    clubName: "",
     phoneNum: "",
     email: "",
+    clubPoster: "",
   });
 
   const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false); // 상태 추가
-  const [reservManageCards, setReservManageCards] = useState([]);
+  const [entertainCards, setEntertainCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 토큰 유효성 검증 함수
+  const isTokenValid = () => {
+    if (!token) return false;
+
+    try {
+      const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+      const currentTime = Date.now() / 1000;
+
+      console.log("Token validation:");
+      console.log("Current time:", new Date(currentTime * 1000));
+      console.log("Token expires:", new Date(tokenPayload.exp * 1000));
+      console.log("Token valid:", tokenPayload.exp > currentTime);
+
+      return tokenPayload.exp > currentTime;
+    } catch (e) {
+      console.error("Token parsing error:", e);
+      return false;
+    }
+  };
+
+  // 토큰 만료 처리 함수
+  const handleTokenExpired = () => {
+    console.log(
+      "Token expired - clearing localStorage and showing login modal"
+    );
+    localStorage.removeItem("jwt");
+    setIsLoginOverModalOpen(true);
+    setError("로그인이 만료되었습니다. 다시 로그인해주세요.");
+  };
+
   const fetchManagerProfile = async () => {
     try {
+      console.log("=== FETCH MANAGER PROFILE START ===");
+      console.log("Token exists:", !!token);
+      console.log("Token valid:", isTokenValid());
+
+      if (!isTokenValid()) {
+        handleTokenExpired();
+        return;
+      }
+
       const response = await fetch(
-        // `${process.env.REACT_APP_API_URL}/manager/mypage/profile`,
-        `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
+        `${process.env.REACT_APP_API_URL}/mypage/manager/profile`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -52,8 +97,23 @@ function ManagerEntertainpage() {
         }
       );
 
+      console.log("Manager profile response status:", response.status);
+
+      // 401/403 에러 명시적 처리
+      if (response.status === 401 || response.status === 403) {
+        console.log("Authentication/Authorization failed");
+        const errorText = await response.text();
+        console.log("Error response:", errorText);
+        handleTokenExpired();
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error("사용자 정보를 불러오는데 실패했습니다.");
+        const errorText = await response.text();
+        console.log("API Error response:", errorText);
+        throw new Error(
+          `서버 응답 오류 (${response.status}): 사용자 정보를 불러오는데 실패했습니다.`
+        );
       }
 
       const managerData = await response.json();
@@ -61,28 +121,40 @@ function ManagerEntertainpage() {
 
       // 서버에서 받은 데이터를 폼 데이터 형식에 맞게 변환
       setFormData({
-        userName: managerData.name || "",
-        email: managerData.email || "",
+        clubName: managerData.clubName || "",
+        name: managerData.name || "",
         phoneNum: managerData.phoneNumber || "",
-        stdId: managerData.studentId || "",
+        email: managerData.email || "",
+        clubPoster: managerData.clubPoster || "",
       });
     } catch (error) {
-      setIsLoginOverModalOpen(true);
       console.error("Error fetching manager profile:", error);
-      setError(error.message);
+
+      // 네트워크 에러 vs 인증 에러 구분
+      if (error.message.includes("401") || error.message.includes("403")) {
+        handleTokenExpired();
+      } else {
+        setError(error.message);
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getReservManageCards = async () => {
+  const getEntertainCards = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
+      console.log("=== FETCH ENTERTAIN CARDS START ===");
+
+      if (!isTokenValid()) {
+        handleTokenExpired();
+        return;
+      }
+
       const response = await fetch(
-        // `${process.env.REACT_APP_API_URL}/mypage/manager/reservation`,
-        `${process.env.REACT_APP_API_URL}/mypage/student/reservation`,
+        `${process.env.REACT_APP_API_URL}/mypage/manager/show`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -92,22 +164,59 @@ function ManagerEntertainpage() {
         }
       );
 
+      console.log("Entertain cards response status:", response.status);
+
+      // 401/403 에러 처리 - entertain API 전용
+      if (response.status === 401 || response.status === 403) {
+        console.log("Authentication/Authorization failed for entertain cards");
+        const errorText = await response.text();
+        console.log("Error response:", errorText);
+
+        // entertain API 401 에러는 토큰을 삭제하지 않고 에러만 설정
+        setError("즐길거리 데이터에 접근할 권한이 없습니다.");
+        setEntertainCards([]);
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error("공연 내역을 불러오는데 실패했습니다.");
+        throw new Error(
+          `서버 응답 오류 (${response.status}): 공연 내역을 불러오는데 실패했습니다.`
+        );
       }
 
       const data = await response.json();
+      console.log("Entertain 전체 응답 데이터:", data);
 
-      if (!data || !data.performanceList) {
-        throw new Error("공연 내역 데이터 형식이 올바르지 않습니다.");
+      // 다양한 가능한 데이터 구조 체크
+      let performanceList = null;
+      if (data && data.performanceList) {
+        performanceList = data.performanceList;
+      } else if (data && data.entertainList) {
+        performanceList = data.entertainList;
+      } else if (data && data.reservationList) {
+        performanceList = data.reservationList;
+      } else if (data && Array.isArray(data)) {
+        performanceList = data;
+      } else if (data && data.data) {
+        performanceList = data.data;
       }
 
-      setReservManageCards(data.performanceList || []);
-      console.log("공연 내역 데이터:", data.performanceList);
+      if (!performanceList) {
+        console.log(
+          "사용 가능한 데이터 구조를 찾을 수 없습니다. 전체 응답:",
+          data
+        );
+        performanceList = []; // 빈 배열로 설정
+      }
+
+      setEntertainCards(performanceList);
+      console.log("설정된 즐길거리 내역 데이터:", performanceList);
     } catch (err) {
       console.error("에러 발생:", err);
+
+      // entertain API 에러는 토큰을 삭제하지 않음
       setError(err.message);
-      setReservManageCards([]);
+      setEntertainCards([]);
     } finally {
       setIsLoading(false);
     }
@@ -115,8 +224,14 @@ function ManagerEntertainpage() {
 
   // 사용자 정보 조회
   useEffect(() => {
-    fetchManagerProfile();
-    getReservManageCards();
+    const fetchData = async () => {
+      if (token && isTokenValid()) {
+        await fetchManagerProfile();
+        await getEntertainCards();
+      }
+    };
+
+    fetchData();
   }, []);
 
   if (isLoading) {
@@ -147,8 +262,9 @@ function ManagerEntertainpage() {
       <div className={styles.body}>
         <div className={styles.sidebar}>
           <AccountInfoCard formData={formData} />
-          <ProfileInfoCard formData={formData} type="manager" />
-          <ProfileUpdateBtn onClick={ProfileUpdateBtn} />
+          <ManagerProfileInfoCard formData={formData} />
+          <ManagerProfileUpdateBtn onClick={ManagerProfileUpdateBtn} />
+          <ClubUpdateBtn onClick={ClubUpdateBtn} />
         </div>
         <div className={styles.container}>
           <div className={styles.category_box}>
@@ -189,18 +305,18 @@ function ManagerEntertainpage() {
                   </button>
                 </div>
               )} */}
-              {!isLoading && !error && reservManageCards.length === 0 && (
+              {!isLoading && !error && entertainCards.length === 0 && (
                 <div className={styles.no_show}>공연 내역이 없습니다.</div>
               )}
               {!isLoading &&
                 !error &&
-                reservManageCards.length > 0 &&
-                reservManageCards.map((reservManageCard) => (
+                entertainCards.length > 0 &&
+                entertainCards.map((entertainCard) => (
                   <div
-                    key={reservManageCard.scheduleId * Math.random()}
-                    className="reserv_manage_card"
+                    key={entertainCard.entertainId * Math.random()}
+                    className="entertain_card"
                   >
-                    <ReservManageCard data={reservManageCard} />
+                    <EntertainCard data={entertainCard} />
                   </div>
                 ))}
             </div>

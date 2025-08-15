@@ -42,14 +42,6 @@ function ManagerUpdateProfile() {
   };
 
   const openUpdateConfirmModal = () => {
-    if (!formData.clubName?.trim()) {
-      setValidationErrorModal({
-        isOpen: true,
-        message: "동아리명을 입력해주세요.",
-      });
-      return;
-    }
-
     if (!formData.userName?.trim()) {
       setValidationErrorModal({
         isOpen: true,
@@ -85,7 +77,7 @@ function ManagerUpdateProfile() {
   const handleUpdateConfirmCancel = () => {
     closeUpdateConfirmModal();
   };
-  
+
   const handleUpdateConfirmConfirm = async () => {
     try {
       await saveProfile();
@@ -109,8 +101,7 @@ function ManagerUpdateProfile() {
     const fetchManagerProfile = async () => {
       try {
         const response = await fetch(
-          // `${process.env.REACT_APP_API_URL}/manager/mypage/profile`,
-          `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
+          `${process.env.REACT_APP_API_URL}/mypage/manager/profile`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -128,7 +119,8 @@ function ManagerUpdateProfile() {
 
         setFormData({
           clubName: userData.clubName || "",
-          userName: userData.managerName || userData.userName || userData.name || "",
+          userName:
+            userData.managerName || userData.userName || userData.name || "",
           phoneNum: userData.phoneNumber || "",
         });
         console.log("userData:", userData);
@@ -153,8 +145,7 @@ function ManagerUpdateProfile() {
   const saveProfile = async () => {
     try {
       const response = await fetch(
-        // `${process.env.REACT_APP_API_URL}/manager/mypage/profile`,
-        `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
+        `${process.env.REACT_APP_API_URL}/mypage/manager/profile`,
         {
           method: "PUT",
           headers: {
@@ -199,6 +190,12 @@ function ManagerUpdateProfile() {
                 name="clubName"
                 value={formData.clubName}
                 onChange={handleInputChange}
+                disabled
+                style={{
+                  backgroundColor: "#f5f5f5",
+                  color: "#666",
+                  cursor: "not-allowed",
+                }}
               />
             </div>
           </div>

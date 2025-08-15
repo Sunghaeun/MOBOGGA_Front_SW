@@ -34,6 +34,7 @@ import ManagerRecruitingpage from "./pages/Manager/ManagerRecruitingpage";
 
 import AddInfo from "./pages/AddInfo";
 import Loading from "./pages/Loading";
+import OAuthCallback from "./pages/OAuthCallback";
 import Error404 from "./pages/Error404";
 
 import CreateRecruiting from "./pages/CreateRecruiting";
@@ -42,6 +43,8 @@ import ManageClubDetail from "./pages/ManageClubDetail";
 
 import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
 import TossAppLauncher from "./components/Mypage/TossAppLauncher";
+
+import FAQ from "./pages/FAQ";
 
 import "./App.css";
 
@@ -74,15 +77,22 @@ function App() {
           <Route path="/mypage/update" element={<UpdateProfile />} />
 
           <Route path="/manager/mypage" element={<ManagerMypage />} />
-          <Route path="/manager/mypage/update" element={<ManagerUpdateProfile />} />
+          <Route
+            path="/manager/mypage/update"
+            element={<ManagerUpdateProfile />}
+          />
           <Route path="/manager/club/update" element={<ManagerUpdateClub />} />
-          <Route path="/manager/holder" element={<ManagerHolderList />} />
+          <Route path="/manager/holder/:scheduleId" element={<ManagerHolderList />} />
           <Route path="/manager/show" element={<ManagerShowpage />} />
           <Route path="/manager/entertain" element={<ManagerEntertainpage />} />
-          <Route path="/manager/recruiting" element={<ManagerRecruitingpage />} />
+          <Route
+            path="/manager/recruiting"
+            element={<ManagerRecruitingpage />}
+          />
 
           <Route path="/add-info" element={<AddInfo />} />
           <Route path="/loading" element={<Loading />} />
+          <Route path="/login/oauth2/code/google" element={<OAuthCallback />} />
           <Route path="/404" element={<Error404 />} />
 
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
@@ -93,6 +103,7 @@ function App() {
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
           <Route path="/tosslinktest" element={<TossAppLauncher />} />
 
+          <Route path="/faq" element={<FAQ />} />
         </Routes>
         <Footer />
       </div>

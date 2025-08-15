@@ -20,6 +20,31 @@ function Header() {
     setIsOpen(true);
   };
 
+  // 사용자 역할 확인 함수
+  const getUserRole = () => {
+    const token = localStorage.getItem("jwt");
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.role || null;
+    } catch (error) {
+      console.error("Token parsing error:", error);
+      return null;
+    }
+  };
+
+  // 프로필 버튼 클릭 핸들러
+  const handleProfileClick = () => {
+    const userRole = getUserRole();
+
+    if (userRole === "ROLE_CLUB") {
+      navigate("/manager/mypage");
+    } else {
+      navigate("/mypage");
+    }
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
@@ -119,23 +144,11 @@ function Header() {
           </span>
         </div>
 
-        {localStorage.getItem("jwt") &&
-        localStorage.getItem("type") === "manager" ? (
-          // 매니저 로그인 상태 → 매니저 마이페이지 버튼
-          <div
-            className={styles.manager_btn}
-            onClick={() => navigate("/manager/mypage")}
-          >
-            <img src={profile_btn} alt="매니저 마이페이지" />
-          </div>
-        ) : localStorage.getItem("jwt") &&
-          localStorage.getItem("type") === "user" ? (
-          // 일반 사용자 로그인 상태 → 일반 마이페이지 버튼
-          <div className={styles.user_btn} onClick={() => navigate("/mypage")}>
+        {localStorage.getItem("jwt") ? (
+          <div className={styles.manager_btn} onClick={handleProfileClick}>
             <img src={profile_btn} alt="마이페이지" />
           </div>
         ) : (
-          // 비로그인 상태 → 로그인 버튼
           <div className={styles.login} onClick={() => navigate("/login")}>
             <span>로그인</span>
           </div>
