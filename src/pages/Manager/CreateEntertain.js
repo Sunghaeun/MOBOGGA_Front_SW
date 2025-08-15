@@ -8,6 +8,8 @@ import YOUTUBE from "../../assets/icons/youtube.svg";
 import NOTION from "../../assets/icons/notion.svg";
 import LINK from "../../assets/icons/linkicons.svg";
 function CreateEntertain() {
+  const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
+
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
@@ -65,6 +67,10 @@ function CreateEntertain() {
   //모든 입력란을 받아야 submit 가능 + 빈칸이 어디인지 알려줌
   const makeEntertain = async () => {
     const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
+    if (!token) {
+      console.log("로그인 토큰이 없습니다");
+      return;
+    }
 
     // 필수 입력 체크
     if (!name) return alert("제목을 입력해 주세요");
@@ -114,6 +120,9 @@ function CreateEntertain() {
       }
     }
 
+    const urlCreate = `${API_BASE}/api/manager/entertain/create`;
+    console.log("POST URL:", urlCreate);
+
     try {
       const response = await axios.post(
         `https://jinjigui.info:443/manager/entertain/create`,
@@ -121,9 +130,7 @@ function CreateEntertain() {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            // Content-Type는 FormData면 axios가 자동 처리
           },
-          withCredentials: true, // 쿠키 기반 인증 필요 시
         }
       );
 
@@ -228,13 +235,11 @@ function CreateEntertain() {
                   <span className={styles.variable_Info}>
                     <select onChange={(e) => setCategory(e.target.value)}>
                       <option value="">선택</option>
-                      <option value="밴드">밴드</option>
-                      <option value="춤">춤</option>
-                      <option value="아카펠라">아카펠라</option>
-                      <option value="연극">연극</option>
-                      <option value="힙합">힙합</option>
-                      <option value="악기연주">악기연주</option>
-                      <option value="기타">기타</option>
+                      <option value="공연">공연</option>
+                      <option value="체험">체험</option>
+                      <option value="스트릿공연">스트릿공연</option>
+                      <option value="먹거리">먹거리</option>
+                      <option value="예배">예배</option>
                     </select>
                   </span>
                 </div>
