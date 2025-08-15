@@ -7,24 +7,22 @@ import axios from "axios";
 
 import styles from "./styles/CreateRecruiting.module.css";
 
-import insta from "../assets/icons/snsicons.svg";
+import insta from "../assets/icons/instagram.svg";
 import kakao from "../assets/icons/kakao.svg";
-import youtube from "../assets/icons/youtubeicons.svg";
+import youtube from "../assets/icons/youtube.svg";
 import link from "../assets/icons/linkicons.svg";
 
 import NotEnteredModal from "../components/modal/NotEnteredModal";
 import EditCheckModal from "../components/modal/EditCheckModal";
 import PageOut from "../components/modal/PageOut";
 
-
 function CreateRecruiting() {
-
   // 1) 누락된 정보 확인 모달
   const [notEnteredModalOpen, setNotEnteredModalOpen] = useState(false);
   const openNotEnteredModal = () => setNotEnteredModalOpen(true);
   const closeNotEnteredModal = () => {
     setNotEnteredModalOpen(false);
-    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty("overflow");
   };
 
   // 2) 리쿠르팅 생성 확인 모달
@@ -32,7 +30,7 @@ function CreateRecruiting() {
   const openEditCheckModal = () => setEditCheckModalOpen(true);
   const closeEditCheckModal = () => {
     setEditCheckModalOpen(false);
-    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty("overflow");
   };
 
   // 3) 페이지 나가기 모달
@@ -40,38 +38,36 @@ function CreateRecruiting() {
   const openPageOutModal = () => setPageOutModalOpen(true);
   const closePageOutModal = () => {
     setPageOutModalOpen(false);
-    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty("overflow");
   };
 
   // 4) 저장할 데이터 배열에 미리 저장해두기
-    const [data, setData] = useState({
-      name: "",
-      category: "",
-      startDate: "",
-      endDate: "",
-      mandatorySemesters: "",
-      meetingTime: "",
-      content: "",
-      eligibility: "",
-      notice: "",
-      manager: "",
-      managerPhoneNumber: "",
-      introductionLetter: "",
-      inUrl: "",
-      kakaUrl: "",
-      youUrl: "",
-      noUrl: "",
-      url: "",
-      applyUrl: "",
-      photo: null,
+  const [data, setData] = useState({
+    name: "",
+    category: "",
+    startDate: "",
+    endDate: "",
+    mandatorySemesters: "",
+    meetingTime: "",
+    content: "",
+    eligibility: "",
+    notice: "",
+    manager: "",
+    managerPhoneNumber: "",
+    introductionLetter: "",
+    inUrl: "",
+    kakaUrl: "",
+    youUrl: "",
+    noUrl: "",
+    url: "",
+    applyUrl: "",
+    photo: null,
   });
 
   // 일반 필드 변경
 
-
-
-// 5) 리쿠르팅 정보 가져오기
-const getRecruiting = async () => {
+  // 5) 리쿠르팅 정보 가져오기
+  const getRecruiting = async () => {
     try {
       const token = localStorage.getItem("jwt");
       const res = await axios.get(
@@ -109,44 +105,44 @@ const getRecruiting = async () => {
     }
   };
 
-// 6) 리쿠르팅 정보 불러오기
+  // 6) 리쿠르팅 정보 불러오기
 
   useEffect(() => {
     getRecruiting();
   }, []);
 
-// 7) 리쿠르팅 수정 put 요청
+  // 7) 리쿠르팅 수정 put 요청
   const handleSubmit = async () => {
-  try {
-    const token = localStorage.getItem("jwt");
-    const url = `${process.env.REACT_APP_API_URL}/manager/recruiting/update/2`;
+    try {
+      const token = localStorage.getItem("jwt");
+      const url = `${process.env.REACT_APP_API_URL}/manager/recruiting/update/2`;
 
-    // photo는 미리보기 전용이므로 서버 전송용 request에서는 제외
-    const { photo, ...requestDto } = data;
+      // photo는 미리보기 전용이므로 서버 전송용 request에서는 제외
+      const { photo, ...requestDto } = data;
 
-    const formData = new FormData();
-    formData.append(
-      "request",
-      new Blob([JSON.stringify(requestDto)], { type: "application/json" })
-    );
-    if (photoFile) {
-      formData.append("poster", photoFile); // 원본 파일 그대로 전송
+      const formData = new FormData();
+      formData.append(
+        "request",
+        new Blob([JSON.stringify(requestDto)], { type: "application/json" })
+      );
+      if (photoFile) {
+        formData.append("poster", photoFile); // 원본 파일 그대로 전송
+      }
+
+      await axios.put(url, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
+
+      alert("리쿠르팅 수정 완료"); //이제 이게 모달이 되어야겠지?
+
+      // 수정 후 최신 데이터 재조회
+      await getRecruiting();
+    } catch (err) {
+      console.error("리쿠르팅 수정 실패", err);
+      alert("요청 중 오류가 발생했습니다.");
     }
-
-    await axios.put(url, formData, {
-      headers: { Authorization: `Bearer ${token}` },
-      withCredentials: true,
-    });
-
-    alert("리쿠르팅 수정 완료"); //이제 이게 모달이 되어야겠지?
- 
-    // 수정 후 최신 데이터 재조회
-    await getRecruiting();
-  } catch (err) {
-    console.error("리쿠르팅 수정 실패", err);
-    alert("요청 중 오류가 발생했습니다.");
-  }
-};
+  };
 
   // 8) 이미지 업로드
   const [photoFile, setPhotoFile] = useState(null);
@@ -175,7 +171,6 @@ const getRecruiting = async () => {
     };
   }, [photoFile]);
 
-
   return (
     <>
       <div className={styles.main}>
@@ -186,7 +181,11 @@ const getRecruiting = async () => {
         <div className={styles.inputContainer}>
           <div className={styles.leftInput}>
             <div className={styles.photoInput}>
-              <img src={data.photo} alt={data.name} className={styles.recruitinImg} />
+              <img
+                src={data.photo}
+                alt={data.name}
+                className={styles.recruitinImg}
+              />
             </div>
             <div className={styles.photobutton} onClick={handleFileButtonClick}>
               <span>이미지 추가</span>
@@ -207,7 +206,8 @@ const getRecruiting = async () => {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>제목</span><span className={styles.required}>*</span>
+                <span>제목</span>
+                <span className={styles.required}>*</span>
               </div>
               <input
                 type="text"
@@ -220,7 +220,8 @@ const getRecruiting = async () => {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>카테고리</span><span className={styles.required}>*</span>
+                <span>카테고리</span>
+                <span className={styles.required}>*</span>
               </div>
               <input
                 type="text"
@@ -233,7 +234,8 @@ const getRecruiting = async () => {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>모집기간</span><span className={styles.required}>*</span>
+                <span>모집기간</span>
+                <span className={styles.required}>*</span>
               </div>
               <input
                 type="text" /* 필요시 date 두 개로 분리 */
@@ -254,7 +256,8 @@ const getRecruiting = async () => {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>필수학기</span><span className={styles.required}>*</span>
+                <span>필수학기</span>
+                <span className={styles.required}>*</span>
               </div>
               <input
                 type="text"
@@ -267,7 +270,8 @@ const getRecruiting = async () => {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>정모시간</span><span className={styles.required}>*</span>
+                <span>정모시간</span>
+                <span className={styles.required}>*</span>
               </div>
               <input
                 type="text"
@@ -280,7 +284,8 @@ const getRecruiting = async () => {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>활동내용</span><span className={styles.required}>*</span>
+                <span>활동내용</span>
+                <span className={styles.required}>*</span>
               </div>
               <textarea
                 name="content"
@@ -294,7 +299,8 @@ const getRecruiting = async () => {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>지원자격</span><span className={styles.required}>*</span>
+                <span>지원자격</span>
+                <span className={styles.required}>*</span>
               </div>
               <textarea
                 name="eligibility"
@@ -308,7 +314,8 @@ const getRecruiting = async () => {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>면접안내</span><span className={styles.required}>*</span>
+                <span>면접안내</span>
+                <span className={styles.required}>*</span>
               </div>
               <textarea
                 name="notice"
@@ -322,7 +329,8 @@ const getRecruiting = async () => {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>문의</span><span className={styles.required}>*</span>
+                <span>문의</span>
+                <span className={styles.required}>*</span>
               </div>
               <input
                 className={styles.miniInput}
@@ -343,7 +351,8 @@ const getRecruiting = async () => {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>지원링크</span><span className={styles.required}>*</span>
+                <span>지원링크</span>
+                <span className={styles.required}>*</span>
               </div>
               <input
                 type="text"
@@ -355,7 +364,9 @@ const getRecruiting = async () => {
             </div>
 
             <div className={styles.row}>
-              <div className={styles.inputTitle}><span>관련링크</span></div>
+              <div className={styles.inputTitle}>
+                <span>관련링크</span>
+              </div>
               <div className={styles.linkContainer}>
                 <div className={styles.linkrow}>
                   <img src={insta} alt="Instagram" />
@@ -402,7 +413,8 @@ const getRecruiting = async () => {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span>소개글</span><span className={styles.required}>*</span>
+                <span>소개글</span>
+                <span className={styles.required}>*</span>
               </div>
               <textarea
                 name="introductionLetter"
@@ -427,14 +439,8 @@ const getRecruiting = async () => {
         open={notEnteredModalOpen}
         close={closeNotEnteredModal}
       />
-      <EditCheckModal
-        open={editCheckModalOpen}
-        close={closeEditCheckModal}
-      />
-      <PageOut
-        open={pageOutModalOpen}
-        close={closePageOutModal}
-      />
+      <EditCheckModal open={editCheckModalOpen} close={closeEditCheckModal} />
+      <PageOut open={pageOutModalOpen} close={closePageOutModal} />
     </>
   );
 }
