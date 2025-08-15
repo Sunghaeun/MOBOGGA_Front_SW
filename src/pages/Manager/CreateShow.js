@@ -229,14 +229,11 @@ function CreateShow() {
 
     try {
       const response = await axios.post(
-        `https://jinjigui.info:443/manager/entertain/create`,
+        `https://jinjigui.info:443/manager/show/create`,
         formData,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            // Content-Type는 FormData면 axios가 자동 처리
-          },
-          withCredentials: true, // 쿠키 기반 인증 필요 시
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
         }
       );
       console.log("저장 성공", response.data);
