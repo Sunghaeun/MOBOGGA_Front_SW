@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styles from "./styles/CreateEntertain.module.css";
 import axios from "axios";
 import INSTA from "../../assets/icons/instagram.svg";
@@ -29,8 +29,6 @@ function CreateEntertain() {
   const [noUrl, setNoUrl] = useState("");
   const [url, setUrl] = useState("");
 
-  const [content, setContent] = useState("");
-  const [count, setCount] = useState(1);
   const [previewURL, setPreviewURL] = useState(null);
 
   /* 사진 미리보기 기능 */
@@ -42,7 +40,9 @@ function CreateEntertain() {
     } else {
     }
   };
+  // eslint-disable-next-line
   const [auth, setAuth] = useState([]);
+  // eslint-disable-next-line
   const getAuth = async () => {
     try {
       const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
@@ -139,7 +139,7 @@ function CreateEntertain() {
       navigate(`/show/${detailId}`);
 
       console.log("저장 성공", response.data);
-      if (response.data.status == "ok") {
+      if (response.data.status === "ok") {
         // 문자열 "true"도 boolean true로 통과
         alert("저장이 완료되었습니다.");
         navigate("/");
@@ -175,7 +175,7 @@ function CreateEntertain() {
   // 공연 소개란 limit
   const handleContent = (e) => {
     if (e.target.value.length <= 300) {
-      setContent(e.target.value);
+      setEtcInfo(e.target.value);
     } else {
       alert("300자를 초과할 수 없습니다.");
     }
@@ -227,7 +227,7 @@ function CreateEntertain() {
                     <textarea
                       type="text"
                       placeholder={`즐길거리에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
-                      onChange={(e) => setIntroductionLetter(e.target.value)}
+                      onChange={handleIntro}
                       style={{ height: "6rem", width: "27rem" }}
                     />
                   </span>
@@ -292,6 +292,7 @@ function CreateEntertain() {
                     <input
                       type="text"
                       placeholder={`시간 입력`}
+                      onChange={(e) => setTimeList(e.target.value)}
                       style={{ width: "27rem" }}
                     />
                   </span>
