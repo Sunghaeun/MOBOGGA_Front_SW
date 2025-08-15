@@ -10,17 +10,24 @@ function CreateShow() {
   const [name, setName] = useState("");
   const [poster, setPoster] = useState(null);
   const [qrImage, setQrImage] = useState(null);
+  // eslint-disable-next-line
   const [clubName, setClubName] = useState("");
   const [location, setLocation] = useState("");
+  // eslint-disable-next-line
   const [startDate, setStartDate] = useState("");
+  // eslint-disable-next-line
   const [endDate, setEndDate] = useState("");
   const [runtime, setRunTime] = useState("");
+  // eslint-disable-next-line
   const [intro, setIntro] = useState("");
   const [content, setContent] = useState("");
+  // eslint-disable-next-line
   const [account, setAccount] = useState("");
+  // eslint-disable-next-line
   const [maxTickets, setMaxTickets] = useState("");
   const [category, setCategory] = useState("");
   const [count, setCount] = useState(1);
+  // eslint-disable-next-line
   const [schedule, setSchedule] = useState({
     order: 0,
     date: "",
@@ -67,8 +74,9 @@ function CreateShow() {
       setQrImage(null);
     }
   };
-
+  // eslint-disable-next-line
   const [auth, setAuth] = useState([]);
+  // eslint-disable-next-line
   const getAuth = async () => {
     try {
       const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
@@ -237,7 +245,7 @@ function CreateShow() {
         }
       );
       console.log("저장 성공", response.data);
-      if (response.data.status == "ok") {
+      if (response.data.status === "ok") {
         // 문자열 "true"도 boolean true로 통과
         alert("저장이 완료되었습니다.");
         navigate("/");
@@ -355,7 +363,7 @@ function CreateShow() {
                     <textarea
                       type="text"
                       placeholder={`공연에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
-                      onChange={(e) => setClubName(e.target.value)}
+                      onChange={handleIntro}
                       style={{ height: "6rem", width: "27rem" }}
                     />
                   </span>
