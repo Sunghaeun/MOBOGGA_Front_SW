@@ -13,11 +13,24 @@ function ManagerMypage() {
   const navigate = useNavigate();
   const token = localStorage.getItem("jwt");
 
+  // 초기 토큰 체크
   useEffect(() => {
+    console.log("=== MANAGER MYPAGE INIT ===");
+    console.log("Token exists:", !!token);
+
     if (!token) {
+      console.log("No token found - redirecting to 404");
       navigate("/404", { replace: true });
-      return null;
+      return;
     }
+
+    if (!isTokenValid()) {
+      console.log("Token expired - showing login modal");
+      handleTokenExpired();
+      return;
+    }
+
+    console.log("Token valid - proceeding to fetch data");
   }, [token, navigate]);
 
   const [formData, setFormData] = useState({
@@ -25,6 +38,7 @@ function ManagerMypage() {
     clubName: "",
     phoneNum: "",
     email: "",
+    clubPoster: "",
   });
 
   const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false); // 상태 추가
@@ -32,8 +46,47 @@ function ManagerMypage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 토큰 유효성 검증 함수
+  const isTokenValid = () => {
+    if (!token) return false;
+
+    try {
+      const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+      const currentTime = Date.now() / 1000;
+
+      console.log("Token validation:");
+      console.log("Current time:", new Date(currentTime * 1000));
+      console.log("Token expires:", new Date(tokenPayload.exp * 1000));
+      console.log("Token valid:", tokenPayload.exp > currentTime);
+
+      return tokenPayload.exp > currentTime;
+    } catch (e) {
+      console.error("Token parsing error:", e);
+      return false;
+    }
+  };
+
+  // 토큰 만료 처리 함수
+  const handleTokenExpired = () => {
+    console.log(
+      "Token expired - clearing localStorage and showing login modal"
+    );
+    localStorage.removeItem("jwt");
+    setIsLoginOverModalOpen(true);
+    setError("로그인이 만료되었습니다. 다시 로그인해주세요.");
+  };
+
   const fetchManagerProfile = async () => {
     try {
+      console.log("=== FETCH MANAGER PROFILE START ===");
+      console.log("Token exists:", !!token);
+      console.log("Token valid:", isTokenValid());
+
+      if (!isTokenValid()) {
+        handleTokenExpired();
+        return;
+      }
+
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/mypage/manager/profile`,
         {
@@ -44,8 +97,23 @@ function ManagerMypage() {
         }
       );
 
+      console.log("Manager profile response status:", response.status);
+
+      // 401/403 에러 명시적 처리
+      if (response.status === 401 || response.status === 403) {
+        console.log("Authentication/Authorization failed");
+        const errorText = await response.text();
+        console.log("Error response:", errorText);
+        handleTokenExpired();
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error("사용자 정보를 불러오는데 실패했습니다.");
+        const errorText = await response.text();
+        console.log("API Error response:", errorText);
+        throw new Error(
+          `서버 응답 오류 (${response.status}): 사용자 정보를 불러오는데 실패했습니다.`
+        );
       }
 
       const managerData = await response.json();
@@ -57,11 +125,17 @@ function ManagerMypage() {
         name: managerData.name || "",
         phoneNum: managerData.phoneNumber || "",
         email: managerData.email || "",
+        clubPoster: managerData.clubPoster || "",
       });
     } catch (error) {
-      setIsLoginOverModalOpen(true);
       console.error("Error fetching manager profile:", error);
-      setError(error.message);
+
+      // 네트워크 에러 vs 인증 에러 구분
+      if (error.message.includes("401") || error.message.includes("403")) {
+        handleTokenExpired();
+      } else {
+        setError(error.message);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -71,6 +145,13 @@ function ManagerMypage() {
     try {
       setIsLoading(true);
       setError(null);
+
+      console.log("=== FETCH RESERVATION CARDS START ===");
+
+      if (!isTokenValid()) {
+        handleTokenExpired();
+        return;
+      }
 
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/mypage/manager/show`,
@@ -83,8 +164,25 @@ function ManagerMypage() {
         }
       );
 
+      console.log("Reservation cards response status:", response.status);
+
+      // 401/403 에러 명시적 처리
+      if (response.status === 401 || response.status === 403) {
+        console.log(
+          "Authentication/Authorization failed for reservation cards"
+        );
+        const errorText = await response.text();
+        console.log("Error response:", errorText);
+        handleTokenExpired();
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error("공연 내역을 불러오는데 실패했습니다.");
+        const errorText = await response.text();
+        console.log("API Error response:", errorText);
+        throw new Error(
+          `서버 응답 오류 (${response.status}): 공연 내역을 불러오는데 실패했습니다.`
+        );
       }
 
       const data = await response.json();
@@ -97,8 +195,14 @@ function ManagerMypage() {
       console.log("공연 내역 데이터:", data.reservationList);
     } catch (err) {
       console.error("에러 발생:", err);
-      setError(err.message);
-      setReservManageCards([]);
+
+      // 네트워크 에러 vs 인증 에러 구분
+      if (err.message.includes("401") || err.message.includes("403")) {
+        handleTokenExpired();
+      } else {
+        setError(err.message);
+        setReservManageCards([]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -106,8 +210,10 @@ function ManagerMypage() {
 
   // 사용자 정보 조회
   useEffect(() => {
-    fetchManagerProfile();
-    getReservManageCards();
+    if (token && isTokenValid()) {
+      fetchManagerProfile();
+      getReservManageCards();
+    }
   }, []);
 
   if (isLoading) {
@@ -173,14 +279,21 @@ function ManagerMypage() {
           <div className={styles.content_list}>
             <div className={styles.content}>
               {isLoading && <div className="loading">로딩중...</div>}
-              {/* {error && (
-                <div className="error-message">
+              {error && !isLoginOverModalOpen && (
+                <div className={styles.error_message}>
                   에러: {error}
-                  <button onClick={getMyReservCards} className="retry-button">
+                  <button
+                    onClick={() => {
+                      setError(null);
+                      fetchManagerProfile();
+                      getReservManageCards();
+                    }}
+                    className={styles.retry_button}
+                  >
                     다시 시도
                   </button>
                 </div>
-              )} */}
+              )}
               {!isLoading && !error && reservManageCards.length === 0 && (
                 <div className={styles.no_show}>공연 내역이 없습니다.</div>
               )}

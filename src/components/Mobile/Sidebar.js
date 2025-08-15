@@ -16,6 +16,31 @@ function Sidebar({ isOpen, setIsOpen }) {
     closeSidebar();
   };
 
+  // 사용자 역할 확인 함수
+  const getUserRole = () => {
+    const token = localStorage.getItem("jwt");
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.role || null;
+    } catch (error) {
+      console.error("Token parsing error:", error);
+      return null;
+    }
+  };
+
+  // 마이페이지 이동 핸들러
+  const handleMyPageClick = () => {
+    const userRole = getUserRole();
+
+    if (userRole === "ROLE_CLUB") {
+      go("/manager/mypage");
+    } else {
+      go("/mypage");
+    }
+  };
+
   return (
     <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
       <div className={styles.closeButton} onClick={closeSidebar}>
@@ -124,7 +149,7 @@ function Sidebar({ isOpen, setIsOpen }) {
         {localStorage.getItem("jwt") ? (
           <>
             {/* 마이페이지 */}
-            <li onClick={() => go("/mypage")}>
+            <li onClick={handleMyPageClick}>
               <div className={styles.menuHeader}>마이페이지</div>
             </li>
           </>

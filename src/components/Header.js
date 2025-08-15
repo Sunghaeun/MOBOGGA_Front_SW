@@ -20,6 +20,31 @@ function Header() {
     setIsOpen(true);
   };
 
+  // 사용자 역할 확인 함수
+  const getUserRole = () => {
+    const token = localStorage.getItem("jwt");
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.role || null;
+    } catch (error) {
+      console.error("Token parsing error:", error);
+      return null;
+    }
+  };
+
+  // 프로필 버튼 클릭 핸들러
+  const handleProfileClick = () => {
+    const userRole = getUserRole();
+
+    if (userRole === "ROLE_CLUB") {
+      navigate("/manager/mypage");
+    } else {
+      navigate("/mypage");
+    }
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
@@ -120,10 +145,7 @@ function Header() {
         </div>
 
         {localStorage.getItem("jwt") ? (
-          <div
-            className={styles.manager_btn}
-            onClick={() => navigate("/mypage")}
-          >
+          <div className={styles.manager_btn} onClick={handleProfileClick}>
             <img src={profile_btn} alt="마이페이지" />
           </div>
         ) : (

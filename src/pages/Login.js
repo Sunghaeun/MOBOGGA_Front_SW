@@ -46,9 +46,15 @@ function Login() {
       const state = generateSecureRandom();
       const nonce = generateSecureRandom();
 
-      // state와 nonce 모두 저장
+      // state와 nonce 저장
       sessionStorage.setItem("oauth_state", state);
       sessionStorage.setItem("oauth_nonce", nonce);
+
+      console.log("Starting OAuth flow with direct Google API");
+      console.log(
+        "Redirect URI:",
+        process.env.REACT_APP_GOOGLE_AUTH_REDIRECT_URI
+      );
 
       const authUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
       authUrl.searchParams.append(
@@ -66,6 +72,7 @@ function Login() {
       authUrl.searchParams.append("prompt", "consent");
       authUrl.searchParams.append("state", state);
 
+      console.log("OAuth URL:", authUrl.toString());
       window.location.href = authUrl.toString();
     } catch (error) {
       console.error("OAuth 로그인 중 오류:", error);

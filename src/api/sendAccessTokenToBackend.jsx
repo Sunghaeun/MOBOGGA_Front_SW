@@ -13,23 +13,25 @@ const sendAccessTokenToBackend = async (idToken, navigate) => {
     const apiUrl = `${process.env.REACT_APP_API_URL}/api/oauth/google/session`;
     console.log("API URL:", process.env.REACT_APP_API_URL);
     console.log("Full request URL:", apiUrl);
+    console.log("Request payload:", {
+      credential: idToken?.substring(0, 50) + "...",
+    });
     console.log(
       "Sending request with idToken:",
       idToken?.substring(0, 50) + "..."
     );
 
-    // 서버 연결 테스트를 위한 간단한 요청 먼저 시도
-    try {
-      await axios.get(`${process.env.REACT_APP_API_URL}/health`, {
-        timeout: 5000,
-      });
-      console.log("Health check passed");
-    } catch (healthError) {
-      console.warn(
-        "Health check failed, but proceeding with main request:",
-        healthError.message
-      );
-    }
+    console.log("Starting main OAuth request...");
+    console.log("Request details:", {
+      url: apiUrl,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+      timeout: 10000,
+    });
+
+    // 요청 전 로그
+    console.log("About to send axios request...");
 
     const response = await axios.post(
       apiUrl,
@@ -39,9 +41,19 @@ const sendAccessTokenToBackend = async (idToken, navigate) => {
           "Content-Type": "application/json",
         },
         withCredentials: true,
-        timeout: 15000, // 15초 타임아웃으로 증가
+        timeout: 30000, // 30초로 타임아웃 늘림 (OAuth 토큰 검증은 시간이 걸릴 수 있음)
+        onUploadProgress: (progressEvent) => {
+          console.log("Upload progress:", progressEvent);
+        },
+        onDownloadProgress: (progressEvent) => {
+          console.log("Download progress:", progressEvent);
+        },
       }
     );
+
+    console.log("Response received!");
+    console.log("Response status:", response.status);
+    console.log("Response headers:", response.headers);
     console.log("Response from backend:", response.data);
 
     const jwt = response.data.token;
