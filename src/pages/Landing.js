@@ -17,30 +17,62 @@ function Landing() {
     setIsHovering(false);
   };
 
+  // 보안 강화된 랜덤 문자열 생성
+  const generateSecureRandom = () => {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    return Array.from(array, (byte) => byte.toString(36))
+      .join("")
+      .substring(0, 32);
+  };
+
   const onClickGoogleStartBtn = () => {
-    const state = Math.random().toString(36).substring(2);
-    sessionStorage.setItem("oauth_state", state);
+    // 환경변수 체크
+    if (
+      !process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID ||
+      !process.env.REACT_APP_GOOGLE_AUTH_REDIRECT_URI
+    ) {
+      console.error("Google OAuth 환경변수가 설정되지 않았습니다.");
+      alert("로그인 설정에 문제가 있습니다. 관리자에게 문의해주세요.");
+      return;
+    }
 
-    const nonce =
-      Math.random().toString(36).substring(2) + Date.now().toString(36);
+    try {
+      const state = generateSecureRandom();
+      const nonce = generateSecureRandom();
 
-    const authUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
-    authUrl.searchParams.append(
-      "client_id",
-      process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID
-    );
-    authUrl.searchParams.append(
-      "redirect_uri",
-      process.env.REACT_APP_GOOGLE_AUTH_REDIRECT_URI
-    );
-    authUrl.searchParams.append("response_type", "id_token");
-    authUrl.searchParams.append("scope", "email profile openid");
-    authUrl.searchParams.append("nonce", nonce);
-    authUrl.searchParams.append("access_type", "offline");
-    authUrl.searchParams.append("prompt", "consent");
-    authUrl.searchParams.append("state", state);
+      // state와 nonce 저장
+      sessionStorage.setItem("oauth_state", state);
+      sessionStorage.setItem("oauth_nonce", nonce);
 
-    window.location.href = authUrl.toString();
+      console.log("Starting OAuth flow from Landing page");
+      console.log(
+        "Redirect URI:",
+        process.env.REACT_APP_GOOGLE_AUTH_REDIRECT_URI
+      );
+
+      const authUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+      authUrl.searchParams.append(
+        "client_id",
+        process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID
+      );
+      authUrl.searchParams.append(
+        "redirect_uri",
+        process.env.REACT_APP_GOOGLE_AUTH_REDIRECT_URI
+      );
+      authUrl.searchParams.append("response_type", "id_token");
+      authUrl.searchParams.append("scope", "email profile openid");
+      authUrl.searchParams.append("nonce", nonce);
+      authUrl.searchParams.append("access_type", "offline");
+      authUrl.searchParams.append("prompt", "consent");
+      authUrl.searchParams.append("state", state);
+
+      console.log("OAuth URL:", authUrl.toString());
+      window.location.href = authUrl.toString();
+    } catch (error) {
+      console.error("OAuth 로그인 중 오류:", error);
+      alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
   };
 
   if (window.innerWidth < 768) {

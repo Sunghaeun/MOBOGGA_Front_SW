@@ -12,6 +12,7 @@ import LoginOverModal from "../components/Mypage/LoginOverModal";
 function Mypage() {
   const navigate = useNavigate();
   const token = localStorage.getItem("jwt");
+
   const [formData, setFormData] = useState({
     name: "",
     studentId: "",
@@ -34,8 +35,20 @@ function Mypage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const handleTokenExpired = () => {
+    console.log("=== TOKEN EXPIRED HANDLER CALLED ===");
+    console.log("Setting isLoginOverModalOpen to true");
+    setIsLoginOverModalOpen(true);
+    setError("토큰이 만료되었습니다.");
+    console.log("Modal state should be:", true);
+  };
+
   const fetchUserProfile = async () => {
     try {
+      console.log(
+        "Fetching user profile with token:",
+        token?.substring(0, 20) + "..."
+      );
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
         {
@@ -45,9 +58,20 @@ function Mypage() {
           },
         }
       );
+
+      console.log("Response status:", response.status);
+      console.log("Response ok:", response.ok);
+
+      if (response.status === 401 || response.status === 403) {
+        console.log("Token expired or forbidden - calling handleTokenExpired");
+        handleTokenExpired();
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("사용자 정보를 불러오는데 실패했습니다.");
       }
+
       const userData = await response.json();
       setFormData({
         name: userData.name || "",
@@ -57,8 +81,12 @@ function Mypage() {
       });
       console.log("userData:", userData);
     } catch (error) {
-      setIsLoginOverModalOpen(true);
-      setError(error.message);
+      console.log("Error in fetchUserProfile:", error);
+      if (error.name === "TypeError" && error.message.includes("fetch")) {
+        setError("네트워크 오류가 발생했습니다.");
+      } else {
+        setError(error.message);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -78,16 +106,27 @@ function Mypage() {
           credentials: "include",
         }
       );
+
+      if (response.status === 401 || response.status === 403) {
+        handleTokenExpired();
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("예매 내역을 불러오는데 실패했습니다.");
       }
+
       const data = await response.json();
       if (!data || !data.performanceList) {
         throw new Error("예매 내역 데이터 형식이 올바르지 않습니다.");
       }
       setMyReservCards(data.performanceList || []);
     } catch (err) {
-      setError(err.message);
+      if (err.name === "TypeError" && err.message.includes("fetch")) {
+        setError("네트워크 오류가 발생했습니다.");
+      } else {
+        setError(err.message);
+      }
       setMyReservCards([]);
     } finally {
       setIsLoading(false);
@@ -95,16 +134,23 @@ function Mypage() {
   };
 
   useEffect(() => {
+    if (!token) {
+      setIsLoginOverModalOpen(true);
+      return;
+    }
     fetchUserProfile();
     getMyReservCards();
   }, []);
 
-  if (!token) {
+  if (!token || isLoginOverModalOpen) {
     return (
-      <>
-        {navigate("/login")}
-        <LoginOverModal isOpen={true} />
-      </>
+      <LoginOverModal
+        isOpen={true}
+        onClose={() => {
+          localStorage.removeItem("jwt");
+          navigate("/login");
+        }}
+      />
     );
   }
 
@@ -197,6 +243,10 @@ function Mypage() {
           </div>
         </div>
       </div>
+      <LoginOverModal
+        isOpen={isLoginOverModalOpen}
+        onClose={() => setIsLoginOverModalOpen(false)}
+      />
     </>
   );
 }

@@ -34,6 +34,7 @@ import ManagerRecruitingpage from "./pages/Manager/ManagerRecruitingpage";
 
 import AddInfo from "./pages/AddInfo";
 import Loading from "./pages/Loading";
+import OAuthCallback from "./pages/OAuthCallback";
 import Error404 from "./pages/Error404";
 
 import CreateRecruiting from "./pages/CreateRecruiting";
@@ -42,6 +43,8 @@ import ManageClubDetail from "./pages/ManageClubDetail";
 
 import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
 import TossAppLauncher from "./components/Mypage/TossAppLauncher";
+
+import FAQ from "./pages/FAQ";
 import CreateShow from "./pages/Manager/CreateShow";
 
 import "./App.css";
@@ -52,8 +55,8 @@ function App() {
       <div className="App">
         <Header />
         <Routes>
-          <Route path="/" element={<Landing />} />
-          {/* <Route path="/*" element={<ComingSoon />} /> */}
+          {/* <Route path="/" element={<Landing />} /> */}
+          <Route path="/" element={<ComingSoon />} />
           <Route path="/main" element={<Main />} />
           <Route path="/show/:showId" element={<ShowDetail />} />
           <Route path="/entertain/:id" element={<EntertainDetail />} />
@@ -74,15 +77,20 @@ function App() {
             element={<ManagerUpdateProfile />}
           />
           <Route path="/manager/club/update" element={<ManagerUpdateClub />} />
-          <Route path="/manager/holder" element={<ManagerHolderList />} />
+          <Route
+            path="/manager/holder/:scheduleId"
+            element={<ManagerHolderList />}
+          />
           <Route path="/manager/show" element={<ManagerShowpage />} />
           <Route path="/manager/entertain" element={<ManagerEntertainpage />} />
           <Route
             path="/manager/recruiting"
             element={<ManagerRecruitingpage />}
           />
+
           <Route path="/add-info" element={<AddInfo />} />
           <Route path="/loading" element={<Loading />} />
+          <Route path="/login/oauth2/code/google" element={<OAuthCallback />} />
           <Route path="/404" element={<Error404 />} />
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
           <Route path="/edit/recruiting" element={<EditRecruiting />} />

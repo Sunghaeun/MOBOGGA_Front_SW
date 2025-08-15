@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerUpdateClub.module.css";
 import UpdateClubWord from "../../assets/UpdateClubWord.svg";
@@ -9,11 +8,15 @@ import instaIcon from "../../assets/icons/instagram.svg";
 import kakaoIcon from "../../assets/icons/kakao.svg";
 import youtubeIcon from "../../assets/icons/youtube.svg";
 import linktreeIcon from "../../assets/icons/linkicons.svg";
+import clubDefaultImage from "../../assets/manager/club_default.svg";
 
 function ManagerUpdateClub() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("jwt");
   const [isLoading, setIsLoading] = useState(true);
+  const fileInputRef = useRef(null);
+
+  // 토큰을 실시간으로 가져오는 함수
+  const getToken = useCallback(() => localStorage.getItem("jwt"), []);
 
   const [formData, setFormData] = useState({
     clubName: "",
@@ -28,87 +31,187 @@ function ManagerUpdateClub() {
     imageUrl: "",
   });
 
-  const [isHoveringCancelBtn, setIsHoveringCancelBtn] = useState(false);
-  const [isHoveringConfirmBtn, setIsHoveringConfirmBtn] = useState(false);
-
   // 모달 상태 관리
   const [isUpdateConfirmModalOpen, setIsUpdateConfirmModalOpen] =
     useState(false);
-  const [isUpdateCancelModalOpen, setIsUpdateCancelModalOpen] = useState(false);
   const [validationErrorModal, setValidationErrorModal] = useState({
     isOpen: false,
     message: "",
   });
+  const [validationSuccessModal, setValidationSuccessModal] = useState({
+    isOpen: false,
+    message: "",
+  });
+
+  // 토큰 유효성 검증 함수
+  const isTokenValid = useCallback(() => {
+    console.log("=== TOKEN VALIDATION START ===");
+
+    const token = getToken();
+    if (!token) {
+      console.log("Token validation failed: No token");
+      return false;
+    }
+
+    try {
+      const tokenParts = token.split(".");
+      console.log("Token parts length:", tokenParts.length);
+
+      if (tokenParts.length !== 3) {
+        console.log("Token validation failed: Invalid token format");
+        return false;
+      }
+
+      const tokenPayload = JSON.parse(atob(tokenParts[1]));
+      const currentTime = Date.now() / 1000;
+
+      console.log("Token validation in ManagerUpdateClub:");
+      console.log("Current time:", new Date(currentTime * 1000));
+      console.log("Token expires:", new Date(tokenPayload.exp * 1000));
+      console.log("Token payload:", tokenPayload);
+      console.log(
+        "Time difference:",
+        tokenPayload.exp - currentTime,
+        "seconds"
+      );
+      console.log("Token valid:", tokenPayload.exp > currentTime);
+
+      return tokenPayload.exp > currentTime;
+    } catch (e) {
+      console.error("Token parsing error:", e);
+      console.log("Token validation failed: Parsing error");
+      return false;
+    }
+  }, [getToken]);
+
+  // 토큰 만료 처리 함수
+  const handleTokenExpired = useCallback(() => {
+    console.log("Token expired in ManagerUpdateClub - redirecting to login");
+    localStorage.removeItem("jwt");
+    navigate("/login");
+  }, [navigate]);
 
   const closeValidationErrorModal = () => {
     setValidationErrorModal({ isOpen: false, message: "" });
   };
 
-  const onMouseOverCancelBtn = () => setIsHoveringCancelBtn(true);
-  const onMouseOutCancelBtn = () => setIsHoveringCancelBtn(false);
-  const onMouseOverConfirmBtn = () => setIsHoveringConfirmBtn(true);
-  const onMouseOutConfirmBtn = () => setIsHoveringConfirmBtn(false);
+  const closeValidationSuccessModal = () => {
+    setValidationSuccessModal({ isOpen: false, message: "" });
+  };
 
   const openUpdateConfirmModal = () => {
-    if (!formData.clubName?.trim()) {
+    console.log("=== OPEN UPDATE MODAL START ===");
+    const token = getToken();
+    console.log("Token exists:", !!token);
+    console.log("Token value:", token);
+    console.log("Token valid:", isTokenValid());
+
+    if (!token) {
+      console.log(
+        "No token found in openUpdateConfirmModal - redirecting to login"
+      );
       setValidationErrorModal({
         isOpen: true,
-        message: "동아리명을 입력해주세요.",
+        message: "로그인이 필요합니다. 다시 로그인해주세요.",
       });
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
       return;
     }
-    if (!formData.userName?.trim()) {
+
+    if (!isTokenValid()) {
+      console.log(
+        "Token invalid in openUpdateConfirmModal - redirecting to login"
+      );
       setValidationErrorModal({
         isOpen: true,
-        message: "담당자 이름을 입력해주세요.",
+        message: "세션이 만료되었습니다. 다시 로그인해주세요.",
       });
+      setTimeout(() => {
+        handleTokenExpired();
+      }, 1500);
       return;
     }
-    if (!formData.phoneNum?.trim()) {
-      setValidationErrorModal({
-        isOpen: true,
-        message: "전화번호를 입력해주세요.",
-      });
-      return;
-    }
-    if (!/^\d{3}-\d{4}-\d{4}$/.test(formData.phoneNum)) {
-      setValidationErrorModal({
-        isOpen: true,
-        message: "전화번호 입력 형식은 다음과 같습니다. 010-1234-5678",
-      });
-      return;
-    }
+
+    console.log("Token validation passed - opening modal");
     setIsUpdateConfirmModalOpen(true);
   };
 
   const closeUpdateConfirmModal = () => setIsUpdateConfirmModalOpen(false);
-  const openUpdateCancelModal = () => setIsUpdateCancelModalOpen(true);
-  const closeUpdateCancelModal = () => setIsUpdateCancelModalOpen(false);
 
   const handleUpdateConfirmCancel = () => closeUpdateConfirmModal();
-  const handleUpdateCancelCancel = () => closeUpdateCancelModal();
 
   const handleUpdateConfirmConfirm = async () => {
     try {
+      console.log("=== UPDATE CONFIRMATION START ===");
+      const token = getToken();
+      console.log("Token exists:", !!token);
+      console.log("Token valid:", isTokenValid());
+
+      if (!token) {
+        console.log("No token found - redirecting to login");
+        navigate("/login");
+        return;
+      }
+
+      if (!isTokenValid()) {
+        handleTokenExpired();
+        return;
+      }
+
       await saveProfile();
       closeUpdateConfirmModal();
-      navigate("/manager/mypage");
+      setValidationSuccessModal({
+        isOpen: true,
+        message: "동아리 정보가 성공적으로 수정되었습니다.",
+      });
+
+      // 성공 후 잠시 대기 후 페이지 이동 (토큰이 여전히 유효할 때만)
+      setTimeout(() => {
+        const currentToken = getToken();
+        if (currentToken && isTokenValid()) {
+          navigate("/manager/mypage");
+        }
+      }, 1500);
     } catch (error) {
       console.error("Error saving profile:", error);
-    }
-  };
+      closeUpdateConfirmModal();
 
-  const handleUpdateCancelConfirm = () => {
-    closeUpdateCancelModal();
-    navigate("/manager/mypage");
+      // 네트워크 에러 vs 인증 에러 구분
+      if (error.message.includes("401") || error.message.includes("403")) {
+        handleTokenExpired();
+      } else {
+        setValidationErrorModal({
+          isOpen: true,
+          message: `저장 중 오류가 발생했습니다: ${error.message}`,
+        });
+      }
+    }
   };
 
   // 사용자 정보 조회
   useEffect(() => {
-    const fetchManagerProfile = async () => {
+    const fetchClubProfile = async () => {
       try {
+        console.log("=== FETCH CLUB PROFILE START ===");
+        const token = getToken();
+        console.log("Token exists:", !!token);
+        console.log("Token valid:", isTokenValid());
+
+        if (!token) {
+          console.log("No token found - redirecting to login");
+          navigate("/login");
+          return;
+        }
+
+        if (!isTokenValid()) {
+          handleTokenExpired();
+          return;
+        }
+
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
+          `${process.env.REACT_APP_API_URL}/mypage/manager/club`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -116,70 +219,239 @@ function ManagerUpdateClub() {
             },
           }
         );
-        if (!response.ok)
-          throw new Error("사용자 정보를 불러오는데 실패했습니다.");
+
+        console.log("Club profile response status:", response.status);
+
+        // 401/403 에러 명시적 처리
+        if (response.status === 401 || response.status === 403) {
+          console.log("Authentication/Authorization failed for club profile");
+          const errorText = await response.text();
+          console.log("Error response:", errorText);
+          handleTokenExpired();
+          return;
+        }
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.log("API Error response:", errorText);
+          throw new Error(
+            `서버 응답 오류 (${response.status}): 사용자 정보를 불러오는데 실패했습니다.`
+          );
+        }
+
         const userData = await response.json();
+        console.log("Club Data:", userData);
+        console.log("URL fields:", {
+          instaUrl: userData.instaUrl,
+          youtubeUrl: userData.youtubeUrl,
+          notionUrl: userData.notionUrl,
+          url: userData.url,
+        });
         setFormData({
           clubName: userData.clubName || "",
-          userName:
-            userData.managerName || userData.userName || userData.name || "",
+          userName: userData.managerName || userData.userName || "",
           phoneNum: userData.phoneNumber || "",
-          description: userData.description || "",
-          instagram: userData.instagram || "",
-          kakao: userData.kakao || "",
-          youtube: userData.youtube || "",
-          linktree: userData.linktree || "",
-          semester: userData.semester || "",
-          imageUrl: userData.imageUrl || "",
+          description: userData.content || "",
+          instagram: userData.instaUrl || "",
+          kakao: userData.url || "",
+          youtube: userData.youtubeUrl || "",
+          linktree: userData.notionUrl || "",
+          semester:
+            userData.mandatorySemesters ||
+            userData.mandatorySemester ||
+            userData.semester ||
+            "",
+          imageUrl: userData.poster || userData.photo || "",
+        });
+        console.log("Form data set successfully:", {
+          instagram: userData.instaUrl,
+          kakao: userData.url,
+          youtube: userData.youtubeUrl,
+          linktree: userData.notionUrl,
         });
       } catch (error) {
         console.error("Error fetching user profile:", error);
+
+        // 네트워크 에러 vs 인증 에러 구분
+        if (error.message.includes("401") || error.message.includes("403")) {
+          handleTokenExpired();
+        } else {
+          setValidationErrorModal({
+            isOpen: true,
+            message: `오류가 발생했습니다: ${error.message}`,
+          });
+        }
       } finally {
         setIsLoading(false);
       }
     };
-    fetchManagerProfile();
-  }, [token, navigate]);
+    fetchClubProfile();
+  }, [navigate, handleTokenExpired, isTokenValid, getToken]);
+
+  // formData 변경 감지용 useEffect
+  useEffect(() => {
+    console.log("FormData updated:", formData);
+  }, [formData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    console.log("Input change:", name, "=", value);
+    setFormData((prev) => {
+      const newData = {
+        ...prev,
+        [name]: value,
+      };
+      console.log("Updated formData:", newData);
+      return newData;
+    });
+  };
+
+  // 이미지 변경 버튼 클릭 핸들러
+  const handleImageChangeClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  // 파일 선택 핸들러
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // 파일 타입 검증
+      if (!file.type.startsWith("image/")) {
+        setValidationErrorModal({
+          isOpen: true,
+          message: "이미지 파일만 업로드할 수 있습니다.",
+        });
+        return;
+      }
+
+      // 파일 크기 검증 (예: 5MB 제한)
+      if (file.size > 5 * 1024 * 1024) {
+        setValidationErrorModal({
+          isOpen: true,
+          message: "파일 크기는 5MB 이하여야 합니다.",
+        });
+        return;
+      }
+
+      // 미리보기를 위해 FileReader 사용
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFormData((prev) => ({
+          ...prev,
+          imageUrl: e.target.result,
+        }));
+      };
+      reader.readAsDataURL(file);
+
+      console.log("Selected file:", file.name, "Size:", file.size, "bytes");
+    }
   };
 
   const saveProfile = async () => {
     try {
+      console.log("=== SAVE PROFILE START ===");
+      const token = getToken();
+      console.log("Token exists:", !!token);
+      console.log("Token valid:", isTokenValid());
+
+      if (!token) {
+        console.log("No token found - redirecting to login");
+        navigate("/login");
+        return;
+      }
+
+      if (!isTokenValid()) {
+        handleTokenExpired();
+        return;
+      }
+
+      console.log("=== SAVE PROFILE DATA ===");
+      console.log("Request body:", {
+        clubName: formData.clubName,
+        content: formData.description,
+        instaUrl: formData.instagram,
+        url: formData.kakao,
+        youtubeUrl: formData.youtube,
+        notionUrl: formData.linktree,
+        poster: formData.imageUrl,
+        managerName: formData.userName,
+        phoneNumber: formData.phoneNum,
+        mandatorySemesters: formData.semester,
+      });
+
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
+        `${process.env.REACT_APP_API_URL}/mypage/manager/club`,
         {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
-            Accept: "application/json",
             "Content-Type": "application/json",
+            Accept: "application/json",
           },
           body: JSON.stringify({
             clubName: formData.clubName,
+            content: formData.description,
+            instaUrl: formData.instagram,
+            url: formData.kakao,
+            youtubeUrl: formData.youtube,
+            notionUrl: formData.linktree,
+            poster: formData.imageUrl,
             managerName: formData.userName,
             phoneNumber: formData.phoneNum,
-            description: formData.description,
-            instagram: formData.instagram,
-            kakao: formData.kakao,
-            youtube: formData.youtube,
-            linktree: formData.linktree,
-            semester: formData.semester,
-            imageUrl: formData.imageUrl,
+            mandatorySemesters: formData.semester,
           }),
         }
       );
+
+      console.log("Save response status:", response.status);
+
+      // 401/403 에러 명시적 처리
+      if (response.status === 401 || response.status === 403) {
+        console.log("Authentication/Authorization failed for save");
+        const errorText = await response.text();
+        console.log("Error response:", errorText);
+
+        // 401 에러 시 바로 로그인으로 리다이렉트하지 말고 에러 모달 표시
+        throw new Error("인증에 실패했습니다. 다시 로그인해주세요.");
+      }
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "저장에 실패했습니다.");
+        const errorText = await response.text();
+        console.log("Save API Error response:", errorText);
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch (e) {
+          errorData = { message: errorText };
+        }
+        throw new Error(
+          errorData.message ||
+            `서버 응답 오류 (${response.status}): 저장에 실패했습니다.`
+        );
       }
     } catch (error) {
-      throw error;
+      console.error("Error saving profile:", error);
+
+      // 401/403 인증 에러 처리
+      if (error.message.includes("인증에 실패했습니다")) {
+        setValidationErrorModal({
+          isOpen: true,
+          message: error.message,
+        });
+        // 3초 후 로그인 페이지로 리다이렉트
+        setTimeout(() => {
+          handleTokenExpired();
+        }, 3000);
+      } else {
+        // 네트워크 에러 vs 기타 에러 구분
+        if (error.message.includes("401") || error.message.includes("403")) {
+          handleTokenExpired();
+        } else {
+          throw error;
+        }
+      }
     }
   };
 
@@ -196,11 +468,24 @@ function ManagerUpdateClub() {
         <div className={styles.club_content}>
           <div className={styles.image_upload_box}>
             <img
-              src={formData.imageUrl || "https://via.placeholder.com/320x220"}
+              src={formData.imageUrl || clubDefaultImage}
               alt="동아리 이미지"
               className={styles.club_img}
             />
-            <button className={styles.img_change_btn}>이미지 변경</button>
+            <button
+              type="button"
+              className={styles.img_change_btn}
+              onClick={handleImageChangeClick}
+            >
+              이미지 변경
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              style={{ display: "none" }}
+            />
           </div>
         </div>
         <div className={styles.club_side}>
@@ -212,6 +497,15 @@ function ManagerUpdateClub() {
               value={formData.description}
               onChange={handleInputChange}
               rows={7}
+            />
+          </div>
+          <div className={styles.info}>
+            <div className={styles.info_head}>필수학기</div>
+            <input
+              name="semester"
+              placeholder="숫자로만 입력"
+              value={formData.semester}
+              onChange={handleInputChange}
             />
           </div>
           <div className={styles.info}>
@@ -255,23 +549,12 @@ function ManagerUpdateClub() {
               </div>
             </div>
           </div>
-          <div className={styles.info}>
-            <div className={styles.info_head}>필수학기</div>
-            <input
-              name="semester"
-              placeholder="숫자로만 입력"
-              value={formData.semester}
-              onChange={handleInputChange}
-            />
-          </div>
         </div>
       </div>
       <div className={styles.button_box}>
         <button
           className={styles.update_button}
           onClick={openUpdateConfirmModal}
-          onMouseOver={onMouseOverConfirmBtn}
-          onMouseOut={onMouseOutConfirmBtn}
         >
           수정하기
         </button>
@@ -300,28 +583,6 @@ function ManagerUpdateClub() {
           </div>
         </div>
       </Modal>
-      <Modal isOpen={isUpdateCancelModalOpen} onClose={closeUpdateCancelModal}>
-        <div className={styles.modal_content}>
-          <div className={styles.modal_top}>이 페이지에서 나가시겠습니까?</div>
-          <div className={styles.modal_con}>
-            작성 중인 내용은 저장되지 않습니다.
-          </div>
-          <div className={styles.modal_Btns}>
-            <button
-              onClick={handleUpdateCancelConfirm}
-              className={styles.modal_ok_Btn}
-            >
-              확인
-            </button>
-            <button
-              onClick={handleUpdateCancelCancel}
-              className={styles.modal_close_Btn}
-            >
-              취소
-            </button>
-          </div>
-        </div>
-      </Modal>
       <Modal
         isOpen={validationErrorModal.isOpen}
         onClose={closeValidationErrorModal}
@@ -331,6 +592,24 @@ function ManagerUpdateClub() {
           <div className={styles.modal_Btns}>
             <button
               onClick={closeValidationErrorModal}
+              className={styles.modal_ok_Btn}
+            >
+              확인
+            </button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={validationSuccessModal.isOpen}
+        onClose={closeValidationSuccessModal}
+      >
+        <div className={styles.modal_content}>
+          <div className={styles.modal_top}>
+            {validationSuccessModal.message}
+          </div>
+          <div className={styles.modal_Btns}>
+            <button
+              onClick={closeValidationSuccessModal}
               className={styles.modal_ok_Btn}
             >
               확인
