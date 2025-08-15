@@ -133,6 +133,9 @@ function CreateEntertain() {
           },
         }
       );
+      const { publicId, showId, id } = response.data || {};
+      const detailId = publicId ?? showId ?? id; // 공개 상세에서 쓰는 id 우선
+      navigate(`/show/${detailId}`);
 
       console.log("저장 성공", response.data);
       if (response.data.status == "ok") {
