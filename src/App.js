@@ -40,6 +40,7 @@ import Error404 from "./pages/Error404";
 import CreateRecruiting from "./pages/CreateRecruiting";
 import CreateEntertain from "./pages/Manager/CreateEntertain";
 import EditRecruiting from "./pages/EditRecruiting";
+import EditEntertain from "./pages/Manager/CreateEntertain";
 import ManageClubDetail from "./pages/ManageClubDetail";
 
 import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
@@ -95,7 +96,9 @@ function App() {
           <Route path="/404" element={<Error404 />} />
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
           <Route path="/create/entertain" element={<CreateEntertain />} />
+          <Route path="create/show" element={<CreateShow />} />
           <Route path="/edit/recruiting" element={<EditRecruiting />} />
+          <Route path="edit/entertain/:id" element={<EditEntertain />} />
           <Route path="/manager/club/1" element={<ManageClubDetail />} />
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
           <Route path="/tosslinktest" element={<TossAppLauncher />} />

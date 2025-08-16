@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./styles/CreateEntertain.module.css";
 import axios from "axios";
 import INSTA from "../../assets/icons/instagram.svg";
@@ -64,9 +64,49 @@ function CreateEntertain() {
     }
   };
 
+  const getEntertain = async () => {
+    try {
+      const { id } = useParams(); // URL에서 id 가져오기
+      const token = localStorage.getItem("jwt");
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/manager/entertain/update/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const src = res.data ?? {};
+      console.log("즐길거리 데이터 로드 성공", src);
+      const converted = {
+        name: src.name ?? "",
+        introductionLetter: src.introductionLetter ?? "",
+        category: src.category ?? "",
+        location: src.location ?? "",
+        startDate: src.startDate ?? "",
+        endDate: src.endDate ?? "",
+        manager: src.manager ?? "",
+        managerPhoneNumber: src.managerPhoneNumber ?? "",
+        inUrl: src.inUrl ?? "",
+        kakaUrl: src.kakaUrl ?? "",
+        youUrl: src.youUrl ?? "",
+        noUrl: src.noUrl ?? "",
+        url: src.url ?? "",
+        photo: src.photo ?? null,
+      };
+
+      setData((prev) => ({ ...prev, ...converted }));
+    } catch (err) {
+      console.error("즐길거리 데이터 로드 실패", err);
+    }
+  };
+
+  useEffect(() => {
+    getEntertain();
+  }, []);
+
   //모든 입력란을 받아야 submit 가능 + 빈칸이 어디인지 알려줌
-  const makeEntertain = async () => {
+  const updateEntertain = async () => {
+    const { id } = useParams(); // URL에서 id 가져오기
     const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
+    const url = `${process.env.REACT_APP_API_URL}/manager/entertain/update/${id}`;
     if (!token) {
       console.log("로그인 토큰이 없습니다");
       return;
@@ -121,10 +161,10 @@ function CreateEntertain() {
     }
 
     const urlCreate = `${API_BASE}/api/manager/entertain/create`;
-    console.log("POST URL:", urlCreate);
+    console.log("PUT URL:", urlCreate);
 
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         `https://jinjigui.info:443/manager/entertain/create`,
         formData,
         {
@@ -133,15 +173,11 @@ function CreateEntertain() {
           },
         }
       );
-      //새로 만든 즐길거리에 바로 입장가능하게 해줌
-      const { publicId, showId, id } = response.data || {};
-      const detailId = publicId ?? showId ?? id; // 공개 상세에서 쓰는 id 우선
-      navigate(`/entertain/${detailId}`);
-
-      console.log("저장 성공", response.data);
+      console.log("즐길거리 수정 완료", response.data);
       if (response.data.status === "ok") {
         // 문자열 "true"도 boolean true로 통과
-        alert("저장이 완료되었습니다.");
+        alert("즐길거리 수정 완료");
+        await getEntertain();
         navigate("/");
       } else {
         alert("저장은 되었지만, 문제가 발생했습니다.");
@@ -413,8 +449,11 @@ function CreateEntertain() {
           </div>
 
           <div>
-            <button className={styles.make_show_submit} onClick={makeEntertain}>
-              즐길거리 만들기
+            <button
+              className={styles.make_show_submit}
+              onClick={updateEntertain}
+            >
+              즐길거리 업데이트
             </button>
           </div>
         </div>
