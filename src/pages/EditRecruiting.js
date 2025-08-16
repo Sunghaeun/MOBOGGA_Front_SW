@@ -8,9 +8,9 @@ import { useParams } from "react-router-dom";
 
 import styles from "./styles/CreateRecruiting.module.css";
 
-import insta from "../assets/icons/snsicons.svg";
+import insta from "../assets/icons/instagram.svg";
 import kakao from "../assets/icons/kakao.svg";
-import youtube from "../assets/icons/youtubeicons.svg";
+import youtube from "../assets/icons/youtube.svg";
 import link from "../assets/icons/linkicons.svg";
 
 import NotEnteredModal from "../components/modal/NotEnteredModal";

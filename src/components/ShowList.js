@@ -24,6 +24,7 @@ function ShowList() {
           timeout: 10000, // 10초 타임아웃
         }
       );
+      console.log("📥 Raw response from /attraction/list:", res.data);
 
       const converted = res.data.entireList.map((item) => {
         const [startDate, endDate] = item.period.split(" - ");

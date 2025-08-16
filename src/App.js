@@ -45,6 +45,7 @@ import OAuthCallback from "./pages/OAuthCallback";
 import Error404 from "./pages/Error404";
 
 import CreateRecruiting from "./pages/CreateRecruiting";
+import CreateEntertain from "./pages/Manager/CreateEntertain";
 import EditRecruiting from "./pages/EditRecruiting";
 import ManageClubDetail from "./pages/ManageClubDetail";
 
@@ -52,6 +53,7 @@ import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
 import TossAppLauncher from "./components/Mypage/TossAppLauncher";
 
 import FAQ from "./pages/FAQ";
+import CreateShow from "./pages/Manager/CreateShow";
 
 import "./App.css";
 
@@ -81,25 +83,19 @@ function AppContent() {
           {/* <Route path="/" element={<Landing />} /> */}
           <Route path="/" element={<ComingSoon />} />
           <Route path="/main" element={<Main />} />
-
           <Route path="/show/:showId" element={<ShowDetail />} />
           <Route path="/entertain/:id" element={<EntertainDetail />} />
-
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
-
           <Route path="/clubs" element={<Clubs />} />
           <Route path="/clubs/:id" element={<ClubDetail />} />
-
           <Route path="/recruiting" element={<Recruiting />} />
           <Route
             path="/recruiting/:recruitingId"
             element={<RecruitingDetail />}
           />
-
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/mypage/update" element={<UpdateProfile />} />
-
           <Route path="/manager/mypage" element={<ManagerMypage />} />
           <Route
             path="/manager/mypage/update"
@@ -121,19 +117,15 @@ function AppContent() {
           <Route path="/loading" element={<Loading />} />
           <Route path="/login/oauth2/code/google" element={<OAuthCallback />} />
           <Route path="/404" element={<Error404 />} />
-
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
           <Route
             path="/edit/recruiting/:recruitingId"
             element={<EditRecruiting />}
           />
-
           <Route path="/manager/club/:id" element={<ManageClubDetail />} />
-
+          <Route path="/create/entertain" element={<CreateEntertain />} />    
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
           <Route path="/tosslinktest" element={<TossAppLauncher />} />
-
-          <Route path="/faq" element={<FAQ />} />
         </Routes>
         <Footer />
 

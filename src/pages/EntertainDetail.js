@@ -65,6 +65,29 @@ function EntertainDetail() {
     return <div>Loading...</div>;
   }
 
+  const getAuth = async () => {
+    try {
+      const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
+          },
+          withCredentials: true,
+        }
+      );
+
+      console.log("Response from backend:", response.data);
+
+      setAuth(response.data);
+    } catch (error) {
+      console.error("Login failed with error: ", error);
+      throw error;
+    }
+  };
+
   // const entertainList =
   //   {
   //     entertainId: 1,
@@ -121,7 +144,6 @@ function EntertainDetail() {
                   className={styles.club}
                   //onClick={() => navigate(`/clubs/${entertainList?.clubId}`)}
                   onClick={() => navigateToClubDetail(entertainList?.clubId)}
-
                 >
                   {entertainList?.clubName
                     ? `${entertainList?.clubName} >`
@@ -130,14 +152,14 @@ function EntertainDetail() {
 
                 <div className={styles.infos}>
                   <div className={styles.info_Box}>
-                    <div className={styles.textBox}> 
+                    <div className={styles.textBox}>
                       <span className={styles.fixed_Info1}>소개글</span>
                     </div>
 
                     <span className={styles.variable_Info}>
                       {entertainList?.introductionLetter || "소개글 정보 없음"}
                     </span>
-                  </div> 
+                  </div>
 
                   <div className={styles.info_Box}>
                     <span className={styles.fixed_Info}>카테고리</span>

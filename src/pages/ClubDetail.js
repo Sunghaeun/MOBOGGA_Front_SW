@@ -5,8 +5,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
-import insta from "../assets/icons/snsicons.svg";
-import youtube from "../assets/icons/youtubeicons.svg";
+import insta from "../assets/icons/instagram.svg";
+import youtube from "../assets/icons/youtube.svg";
 import kakao from "../assets/icons/kakao.svg";
 import link from "../assets/icons/linkicons.svg";
 
