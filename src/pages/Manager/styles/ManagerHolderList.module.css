@@ -15,6 +15,8 @@
   display: flex;
   gap: 8px;
   margin-bottom: 16px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .csvBtn {
@@ -25,6 +27,78 @@
   padding: 8px 18px;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.csvBtn:hover:not(:disabled) {
+  background: #e6350f;
+}
+
+.csvBtn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.batchActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f0f8ff;
+  border: 1px solid #d1e7ff;
+  border-radius: 6px;
+  margin-left: auto;
+}
+
+.selectedCount {
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-right: 8px;
+}
+
+.batchBtn {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.batchBtn:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+.batchDeleteBtn {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.batchDeleteBtn:hover {
+  background: #b91c1c;
+  transform: translateY(-1px);
 }
 
 .selectBtn,
@@ -57,6 +131,29 @@
   font-weight: 700;
 }
 
+.table th:first-child,
+.table td:first-child {
+  width: 40px;
+  text-align: center;
+}
+
+.table th:first-child input[type="checkbox"],
+.table td:first-child input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
+.table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.table tbody tr:has(input[type="checkbox"]:checked) {
+  background-color: #eff6ff;
+  border-left: 3px solid #3b82f6;
+}
+
 .statusPaid {
   color: #1ec800;
   font-weight: 700;
@@ -78,14 +175,183 @@
   cursor: pointer;
 }
 
+.paymentToggleBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.paymentToggleBtn:hover {
+  background-color: #f0f0f0;
+}
+
+.paymentIcon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  font-size: 1.2rem;
+  color: #666;
+  min-height: 200px;
+}
+
+.loadingSpinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ff3d12;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+.loadingText {
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.loadingSubtext {
+  font-size: 0.9rem;
+  color: #888;
+  opacity: 0.8;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loadingDots {
+  display: inline-block;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* 미니 스피너 (버튼 내부용) */
+.miniSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* 로딩 상태 버튼 */
+.loadingButton {
+  opacity: 0.7;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  color: #ff3d12;
+  font-size: 1.1rem;
+  min-height: 200px;
+  text-align: center;
+}
+
+.errorIcon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+.errorMessage {
+  margin-bottom: 20px;
+  line-height: 1.5;
+  max-width: 400px;
+}
+
+.retryBtn {
+  background: #ff3d12;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(255, 61, 18, 0.2);
+}
+
+.retryBtn:hover {
+  background: #e6350f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(255, 61, 18, 0.3);
+}
+
+.retryBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(255, 61, 18, 0.2);
+}
+
 @media (max-width: 900px) {
   .wrapper {
     max-width: 100vw;
     padding: 16px 0;
   }
+
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .batchActions {
+    justify-content: center;
+    margin-left: 0;
+  }
+
   .table th,
   .table td {
     font-size: 0.95rem;
     padding: 8px 4px;
+  }
+
+  .paymentIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .batchBtn,
+  .batchDeleteBtn {
+    padding: 4px 8px;
+    font-size: 0.8rem;
   }
 }

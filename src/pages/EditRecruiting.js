@@ -4,6 +4,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 import styles from "./styles/CreateRecruiting.module.css";
 
@@ -17,6 +18,9 @@ import EditCheckModal from "../components/modal/EditCheckModal";
 import PageOut from "../components/modal/PageOut";
 
 function CreateRecruiting() {
+  // URL 파라미터에서 recruitingId 가져오기
+  const { recruitingId } = useParams();
+
   // 1) 누락된 정보 확인 모달
   const [notEnteredModalOpen, setNotEnteredModalOpen] = useState(false);
   const openNotEnteredModal = () => setNotEnteredModalOpen(true);
@@ -71,7 +75,7 @@ function CreateRecruiting() {
     try {
       const token = localStorage.getItem("jwt");
       const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/manager/recruiting/update/2`,
+        `${process.env.REACT_APP_API_URL}/manager/recruiting/update/${recruitingId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const src = res.data ?? {};
@@ -109,13 +113,13 @@ function CreateRecruiting() {
 
   useEffect(() => {
     getRecruiting();
-  }, []);
+  }, [recruitingId]);
 
   // 7) 리쿠르팅 수정 put 요청
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem("jwt");
-      const url = `${process.env.REACT_APP_API_URL}/manager/recruiting/update/2`;
+      const url = `${process.env.REACT_APP_API_URL}/manager/recruiting/update/${recruitingId}`;
 
       // photo는 미리보기 전용이므로 서버 전송용 request에서는 제외
       const { photo, ...requestDto } = data;
@@ -175,7 +179,7 @@ function CreateRecruiting() {
     <>
       <div className={styles.main}>
         <div className={styles.title}>
-          <span>리쿠르팅 새로 만들기</span>
+          <span>리쿠르팅 수정하기</span>
         </div>
 
         <div className={styles.inputContainer}>
@@ -430,7 +434,7 @@ function CreateRecruiting() {
 
         <div className={styles.buttonContainer}>
           <div className={styles.createClub} onClick={handleSubmit}>
-            <span>리쿠르팅 만들기</span>
+            <span>리쿠르팅 수정하기</span>
           </div>
         </div>
       </div>
