@@ -8,6 +8,8 @@ import ManagerProfileUpdateBtn from "../../components/Mypage/ManagerProfileUpdat
 import ClubUpdateBtn from "../../components/Manager/ClubUpdateBtn";
 import EntertainCard from "../../components/Manager/EntertainCard";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
+import { generateCSV, downloadCSV } from "../../utils/csvExport";
+import { formatEntertainDataForCSV } from "../../utils/csvFormatters";
 
 function ManagerEntertainpage() {
   const navigate = useNavigate();
@@ -223,7 +225,53 @@ function ManagerEntertainpage() {
     console.log("로딩 중 화면 렌더링");
     return (
       <>
-        <div className={styles.loading}>로딩중...</div>
+        <div className={styles.body}>
+          <div className={styles.sidebar}>
+            <AccountInfoCard formData={formData} />
+            <ManagerProfileInfoCard formData={formData} />
+            <ManagerProfileUpdateBtn onClick={ManagerProfileUpdateBtn} />
+            <ClubUpdateBtn onClick={ClubUpdateBtn} />
+          </div>
+          <div className={styles.container}>
+            <div className={styles.category_box}>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/mypage")}
+              >
+                예매자 목록
+              </div>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/show")}
+              >
+                공연
+              </div>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/entertain")}
+                id={styles.highlight}
+              >
+                즐길거리
+              </div>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/recruiting")}
+              >
+                리크루팅
+              </div>
+            </div>
+            <div className={styles.content_list}>
+              <div className={styles.loading}>
+                <div className={styles.loadingSpinner}></div>
+                <div className={styles.loadingText}>
+                  즐길거리 목록을 불러오고 있습니다
+                  <span className={styles.loadingDots}>...</span>
+                </div>
+                <div className={styles.loadingSubtext}>잠시만 기다려주세요</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </>
     );
   }

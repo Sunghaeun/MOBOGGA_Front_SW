@@ -220,7 +220,53 @@ function ManagerMypage() {
     console.log("로딩 중 화면 렌더링");
     return (
       <>
-        <div className={styles.loading}>로딩중...</div>
+        <div className={styles.body}>
+          <div className={styles.sidebar}>
+            <AccountInfoCard formData={formData} />
+            <ManagerProfileInfoCard formData={formData} />
+            <ManagerProfileUpdateBtn onClick={ManagerProfileUpdateBtn} />
+            <ClubUpdateBtn onClick={ClubUpdateBtn} />
+          </div>
+          <div className={styles.container}>
+            <div className={styles.category_box}>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/mypage")}
+                id={styles.highlight}
+              >
+                예매자 목록
+              </div>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/show")}
+              >
+                공연
+              </div>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/entertain")}
+              >
+                즐길거리
+              </div>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/recruiting")}
+              >
+                리크루팅
+              </div>
+            </div>
+            <div className={styles.content_list}>
+              <div className={styles.loading}>
+                <div className={styles.loadingSpinner}></div>
+                <div className={styles.loadingText}>
+                  매니저 정보를 불러오고 있습니다
+                  <span className={styles.loadingDots}>...</span>
+                </div>
+                <div className={styles.loadingSubtext}>잠시만 기다려주세요</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </>
     );
   }
@@ -281,7 +327,8 @@ function ManagerMypage() {
               {isLoading && <div className="loading">로딩중...</div>}
               {error && !isLoginOverModalOpen && (
                 <div className={styles.error_message}>
-                  에러: {error}
+                  <div className={styles.errorIcon}>⚠️</div>
+                  <div className={styles.errorMessage}>{error}</div>
                   <button
                     onClick={() => {
                       setError(null);
@@ -290,7 +337,7 @@ function ManagerMypage() {
                     }}
                     className={styles.retry_button}
                   >
-                    다시 시도
+                    🔄 다시 시도
                   </button>
                 </div>
               )}

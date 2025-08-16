@@ -171,7 +171,16 @@ function ManagerUpdateProfile() {
   };
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return (
+      <div className={styles.loading}>
+        <div className={styles.loadingSpinner}></div>
+        <div className={styles.loadingText}>
+          프로필 정보를 불러오고 있습니다
+          <span className={styles.loadingDots}>...</span>
+        </div>
+        <div className={styles.loadingSubtext}>잠시만 기다려주세요</div>
+      </div>
+    );
   }
 
   return (

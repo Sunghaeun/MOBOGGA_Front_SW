@@ -14,6 +14,7 @@ function ManagerUpdateClub() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null); // 실제 파일 저장용
 
   // 토큰을 실시간으로 가져오는 함수
   const getToken = useCallback(() => localStorage.getItem("jwt"), []);
@@ -261,7 +262,8 @@ function ManagerUpdateClub() {
             userData.mandatorySemester ||
             userData.semester ||
             "",
-          imageUrl: userData.poster || userData.photo || "",
+          imageUrl:
+            userData.poster || userData.photo || userData.imageUrl || "",
         });
         console.log("Form data set successfully:", {
           instagram: userData.instaUrl,
@@ -345,6 +347,9 @@ function ManagerUpdateClub() {
       };
       reader.readAsDataURL(file);
 
+      // 실제 파일도 저장
+      setSelectedFile(file);
+
       console.log("Selected file:", file.name, "Size:", file.size, "bytes");
     }
   };
@@ -375,33 +380,78 @@ function ManagerUpdateClub() {
         url: formData.kakao,
         youtubeUrl: formData.youtube,
         notionUrl: formData.linktree,
-        poster: formData.imageUrl,
         managerName: formData.userName,
         phoneNumber: formData.phoneNum,
         mandatorySemesters: formData.semester,
       });
+      console.log(
+        "Selected file:",
+        selectedFile ? selectedFile.name : "No file"
+      );
+
+      // FormData 사용 (파일이 있는 경우)
+      let requestBody;
+      let headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      if (selectedFile) {
+        // 파일이 있으면 FormData 사용
+        console.log("Using FormData for file upload");
+        const formDataToSend = new FormData();
+
+        // JSON 데이터를 각각의 필드로 추가 (Blob 대신)
+        formDataToSend.append("clubName", formData.clubName);
+        formDataToSend.append("content", formData.description);
+        formDataToSend.append("instaUrl", formData.instagram);
+        formDataToSend.append("url", formData.kakao);
+        formDataToSend.append("youtubeUrl", formData.youtube);
+        formDataToSend.append("notionUrl", formData.linktree);
+        formDataToSend.append("managerName", formData.userName);
+        formDataToSend.append("phoneNumber", formData.phoneNum);
+        formDataToSend.append("mandatorySemesters", formData.semester);
+        formDataToSend.append("poster", selectedFile);
+
+        requestBody = formDataToSend;
+
+        // FormData 요청을 위한 추가 헤더
+        headers["Accept"] = "application/json";
+
+        console.log("FormData contents:");
+        for (let [key, value] of formDataToSend.entries()) {
+          console.log(key, value);
+        }
+      } else {
+        // 파일이 없으면 JSON으로 전송
+        console.log("Using JSON for update without file");
+        headers["Content-Type"] = "application/json";
+        headers["Accept"] = "application/json";
+        requestBody = JSON.stringify({
+          clubName: formData.clubName,
+          content: formData.description,
+          instaUrl: formData.instagram,
+          url: formData.kakao,
+          youtubeUrl: formData.youtube,
+          notionUrl: formData.linktree,
+          poster: formData.imageUrl, // 기존 이미지 URL 유지
+          managerName: formData.userName,
+          phoneNumber: formData.phoneNum,
+          mandatorySemesters: formData.semester,
+        });
+      }
+
+      console.log("Request headers:", headers);
+      console.log(
+        "Request body type:",
+        requestBody instanceof FormData ? "FormData" : "JSON"
+      );
 
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/mypage/manager/club`,
         {
           method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            clubName: formData.clubName,
-            content: formData.description,
-            instaUrl: formData.instagram,
-            url: formData.kakao,
-            youtubeUrl: formData.youtube,
-            notionUrl: formData.linktree,
-            poster: formData.imageUrl,
-            managerName: formData.userName,
-            phoneNumber: formData.phoneNum,
-            mandatorySemesters: formData.semester,
-          }),
+          headers: headers,
+          body: requestBody,
         }
       );
 
@@ -455,7 +505,17 @@ function ManagerUpdateClub() {
     }
   };
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading)
+    return (
+      <div className={styles.loading}>
+        <div className={styles.loadingSpinner}></div>
+        <div className={styles.loadingText}>
+          동아리 정보를 불러오고 있습니다
+          <span className={styles.loadingDots}>...</span>
+        </div>
+        <div className={styles.loadingSubtext}>잠시만 기다려주세요</div>
+      </div>
+    );
 
   return (
     <div className={styles.body}>

@@ -15,14 +15,14 @@ function RecruitingCard({ data }) {
         <img
           className={styles.card_img}
           src={poster}
-          onClick={() => navigate(`/manager/edit/${recruitingId}`)}
+          onClick={() => navigate(`/edit/recruiting/${recruitingId}`)}
           alt="리크루팅 이미지"
         />
       </div>
       <div className={styles.card_text_box}>
         <div
           className={styles.card_title}
-          onClick={() => navigate(`/manager/edit/${recruitingId}`)}
+          onClick={() => navigate(`/edit/recruiting/${recruitingId}`)}
         >
           {title || "리크루팅 제목 없음"}
         </div>
@@ -35,7 +35,7 @@ function RecruitingCard({ data }) {
               <img
                 className={styles.card_btn}
                 src={showEditBtn}
-                onClick={() => navigate(`/manager/edit/${recruitingId}`)}
+                onClick={() => navigate(`/edit/recruiting/${recruitingId}`)}
                 alt="리크루팅 수정"
               />
             </div>
@@ -43,7 +43,7 @@ function RecruitingCard({ data }) {
               <img
                 className={styles.card_btn}
                 src={showDeleteBtn}
-                onClick={() => navigate(`/manager/delete/${recruitingId}`)}
+                onClick={() => navigate(`/delete/recruiting/${recruitingId}`)}
                 alt="리크루팅 삭제"
               />
             </div>

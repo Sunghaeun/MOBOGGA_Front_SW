@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/Loading.module.css";
+import tokenManager from "../utils/tokenManager";
 
 const OAuthCallback = () => {
   const navigate = useNavigate();
@@ -56,9 +57,13 @@ const OAuthCallback = () => {
           throw new Error("JWT 토큰을 받지 못했습니다.");
         }
 
-        // JWT 저장
+        // JWT를 TokenManager를 통해 안전하게 저장
+        tokenManager.setToken(data.token);
+        console.log("JWT TokenManager에 안전하게 저장 완료");
+
+        // 기존 시스템과의 호환성을 위해 localStorage에도 저장 (임시)
         localStorage.setItem("jwt", data.token);
-        console.log("JWT 저장 완료");
+        console.log("기존 호환성을 위해 localStorage에도 저장");
 
         // 첫 로그인 여부에 따라 페이지 이동
         if (data.isFirst || data.first) {
