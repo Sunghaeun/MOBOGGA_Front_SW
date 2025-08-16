@@ -1,66 +1,45 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import styles from "../styles/CreateShow.module.css";
+import styles from "./styles/CreateShow.module.css";
 import axios from "axios";
-import DELETE from "../../assets/button_delete.svg";
+import DELETE from "../assets/button_delete.svg";
 
-function CreateShow() {
+function EditShow() {
   const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [name, setName] = useState("");
   const [poster, setPoster] = useState(null);
-  const [qr, setqr] = useState(null);
-  // eslint-disable-next-line
+  const [qr, setQr] = useState(null);
+
   const [location, setLocation] = useState("");
-  // eslint-disable-next-line
   const [startDate, setStartDate] = useState("");
-  // eslint-disable-next-line
   const [endDate, setEndDate] = useState("");
   const [runtime, setRunTime] = useState("");
   const [managerPhoneNumber, setManagerPhoneNumber] = useState("");
   const [manager, setManager] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
-  const [accouuntName, setAccountName] = useState(""); // 기존 변수명 유지 (오타 포함)
+  const [accountName, setAccountName] = useState("");
   const [accountBankName, setAccountBankName] = useState("");
   const [introductionLetter, setIntroductionLetter] = useState("");
   const [noticeLetter, setNoticeLetter] = useState("");
   const [earlyBird, setEarlyBird] = useState(false);
 
-  // eslint-disable-next-line
-  const [maxTickets, setMaxTickets] = useState("");
-  const [category, setCategory] = useState("");
-  const [count, setCount] = useState(1); // 유지
-  // eslint-disable-next-line
-  const [schedule, setSchedule] = useState({
-    order: 0,
-    date: "",
-    time: "",
-    cost: "",
-    maxTicket: "",
-  });
-  const [previewURL, setPreviewURL] = useState(null);
-  useEffect(() => {
-    setCount(1);
-  }, [schedule]);
+  const [posterUrl, setPosterUrl] = useState("");
+  const [qrUrl, setQrUrl] = useState("");
 
-  const Minus = () => {
-    if (count > 1) setCount(count - 1);
-  };
-  const Plus = () => {
-    if (count) setCount(count + 1);
-  };
+  const [posterPreview, setPosterPreview] = useState(null);
+  const [qrPreview, setQrPreview] = useState(null);
 
-  // 회차 배열
   const [shows, setShows] = useState([
     { id: Date.now(), order: 1, date: "", time: "", cost: "", maxTicket: 1 },
   ]);
 
-  // 회차 업데이트
-  const updateSchedule = (id, key, value) => {
+  const updateSchedule = (rowId, key, value) => {
     setShows((prevShows) =>
       prevShows.map((show, index) =>
-        show.id === id ? { ...show, [key]: value, order: index + 1 } : show
+        show.id === rowId ? { ...show, [key]: value, order: index + 1 } : show
       )
     );
   };
@@ -82,35 +61,104 @@ function CreateShow() {
     );
   };
 
-  /* 사진 미리보기 */
-  const handleImg = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPoster(file);
-      setPreviewURL(URL.createObjectURL(file));
-    } else {
-      setqr(null);
-    }
+  // 파일 변경 핸들러(포스터)
+  const handlePosterChange = (e) => {
+    const file = e.target.files?.[0] || null;
+    if (posterPreview?.startsWith("blob:")) URL.revokeObjectURL(posterPreview);
+
+    setPoster(file);
+    setPosterPreview(file ? URL.createObjectURL(file) : posterUrl || null);
   };
 
-  const handleqrChange = (e) => {
-    const file = e.target.files[0];
-    if (file) setqr(file);
-    else setqr(null);
+  // 파일 변경 핸들러(QR)
+  const handleQrChange = (e) => {
+    const file = e.target.files?.[0] || null;
+    if (qrPreview?.startsWith("blob:")) URL.revokeObjectURL(qrPreview);
+
+    setQr(file);
+    setQrPreview(file ? URL.createObjectURL(file) : qrUrl || null);
   };
 
-  // Bearer 토큰 정규화 (local ↔ session 둘 다 체크)
+  useEffect(() => {
+    return () => {
+      if (posterPreview?.startsWith("blob:"))
+        URL.revokeObjectURL(posterPreview);
+      if (qrPreview?.startsWith("blob:")) URL.revokeObjectURL(qrPreview);
+    };
+  }, [posterPreview, qrPreview]);
+
   const getAuthHeader = () => {
     const raw =
       localStorage.getItem("jwt") ||
       sessionStorage.getItem("jwt") ||
-      sessionStorage.getItem("idToken"); // 혹시 ID 토큰을 이렇게 저장했다면
+      sessionStorage.getItem("idToken");
     if (!raw) return null;
     return raw.startsWith("Bearer ") ? raw : `Bearer ${raw}`;
   };
 
-  const makeShow = async () => {
-    // 0) 필수값 검증
+  const getShow = async () => {
+    try {
+      const auth = getAuthHeader();
+      if (!auth) {
+        alert("로그인이 필요합니다.");
+        return;
+      }
+      const res = await axios.get(`${API_BASE}/manager/show/update/${id}`, {
+        headers: { Authorization: auth },
+      });
+      console.log(`[GET] /manager/show/update/${id} 성공`, {
+        status: res.status,
+        data: res.data,
+      });
+
+      const src = res.data ?? {};
+      setName(src.name ?? "");
+      setLocation(src.location ?? "");
+      setStartDate(src.startDate ?? "");
+      setEndDate(src.endDate ?? "");
+      setRunTime(src.runtime != null ? String(src.runtime) : "");
+      setManager(src.manager ?? "");
+      setManagerPhoneNumber(src.managerPhoneNumber ?? "");
+      setAccountNumber(src.accountNumber ?? "");
+      setAccountName(src.accountName ?? "");
+      setAccountBankName(src.accountBankName ?? "");
+      setIntroductionLetter(src.introductionLetter ?? "");
+      setNoticeLetter(src.noticeLetter ?? "");
+      setEarlyBird(src.earlyBird === true);
+
+      const list = Array.isArray(src.scheduleDtoList)
+        ? src.scheduleDtoList
+        : [];
+      setShows(
+        list.map((s, i) => ({
+          id: Date.now() + i,
+          order: s.orderIndex ?? i + 1,
+          date: s.date ?? "",
+          time: (s.time ?? "").slice(0, 5),
+          cost: s.cost != null ? String(s.cost) : "",
+          maxTicket: s.maxTicket != null ? Number(s.maxTicket) : 0,
+        }))
+      );
+
+      // 서버 이미지 URL 세팅 (선언 먼저!)
+      const serverPoster = src.photo || src.posterUrl || "";
+      const serverQr = src.qr || src.qrUrl || "";
+
+      setPosterUrl(serverPoster);
+      setQrUrl(serverQr);
+
+      setPosterPreview(serverPoster || null);
+      setQrPreview(serverQr || null);
+    } catch (err) {
+      console.error("공연 데이터 로드 실패", err);
+    }
+  };
+
+  useEffect(() => {
+    if (id) getShow();
+  }, [id]);
+
+  const updateShow = async () => {
     const authHeader = getAuthHeader();
     if (!authHeader) {
       alert("로그인 토큰이 없습니다. 다시 로그인 해주세요.");
@@ -118,10 +166,6 @@ function CreateShow() {
     }
 
     if (!name) return alert("제목을 입력해 주세요");
-    if (!poster || !(poster instanceof File))
-      return alert("공연 이미지를 선택해 주세요");
-    if (!qr || !(qr instanceof File))
-      return alert("송금 QR 이미지를 선택해 주세요"); // @RequestPart("qr")
     if (!location) return alert("장소를 입력해 주세요");
     if (!runtime || Number(runtime) <= 0)
       return alert("런타임을 입력해 주세요");
@@ -133,10 +177,8 @@ function CreateShow() {
         return alert(`${i + 1}공의 가격을 입력해 주세요`);
     }
 
-    // 1) 시간 HH:mm -> HH:mm:ss
     const toHms = (t) => (t && t.length === 5 ? `${t}:00` : t || "");
 
-    // 2) 서버 DTO (ShowCreateRequest)
     const requestData = {
       name,
       location,
@@ -146,7 +188,7 @@ function CreateShow() {
       manager,
       managerPhoneNumber,
       accountNumber,
-      accountName: accouuntName, // 키는 정상(accountName), 상태변수명은 그대로
+      accountName,
       accountBankName,
       introductionLetter,
       noticeLetter,
@@ -161,59 +203,45 @@ function CreateShow() {
       })),
     };
 
-    if (requestData.scheduleDtoList?.length > 0) {
-      const dates = requestData.scheduleDtoList.map((s) => new Date(s.date));
-
-      const minDate = new Date(Math.min(...dates));
-      const maxDate = new Date(Math.max(...dates));
-
-      const toDateStr = (d) => d.toISOString().split("T")[0];
-
-      requestData.startDate = toDateStr(minDate);
-      requestData.endDate = toDateStr(maxDate);
-    }
-
-    // 3) FormData (파트명 정확히: poster / request / qr)
     const formData = new FormData();
     formData.append(
       "request",
       new Blob([JSON.stringify(requestData)], { type: "application/json" })
     );
-    formData.append("poster", poster, "poster.jpg");
-    formData.append("qr", qr, "qr.jpg");
+    if (poster instanceof File) {
+      formData.append("poster", poster, poster.name || "poster.jpg");
+    }
+    if (qr instanceof File) {
+      formData.append("QR", qr, qr.name || "qr.jpg");
+    }
 
-    // 디버깅 로그
-    console.log("== 최종 전송 JSON ==");
-    console.log(JSON.stringify(requestData, null, 2));
-
+    const endpoint = `${API_BASE}/manager/show/update/${id}`;
+    console.log("== 최종 전송 JSON ==", JSON.stringify(requestData, null, 2));
     console.log("== FormData entries ==");
     for (const [k, v] of formData.entries()) {
       if (v instanceof File) {
         console.log(k, "-> File", { name: v.name, size: v.size, type: v.type });
+      } else if (k === "request" && v instanceof Blob) {
+        v.text().then((t) => console.log("request(json) ->", t));
       } else {
-        // request는 Blob이라 바로 못 봄. 서버가 받는 건 JSON 문자열이므로 확인용:
-        if (k === "request" && v instanceof Blob) {
-          v.text().then((t) => console.log("request(json) ->", t));
-        } else {
-          console.log(k, "->", v);
-        }
+        console.log(k, "->", v);
       }
     }
 
-    const urlCreate = `${API_BASE}/manager/show/create`; // /api 붙이지 않음
-    console.log("[DEBUG] POST URL:", urlCreate);
-
     try {
-      const resp = await axios.post(urlCreate, formData, {
-        headers: {
-          Authorization: authHeader, // ★ 반드시 Bearer 접두어 포함
-          // Content-Type: 지정 X (axios가 boundary 자동 설정)
-        },
+      const token = localStorage.getItem("jwt");
+      if (!token) {
+        alert("로그인 필요");
+        return;
+      }
+
+      const resp = await axios.put(endpoint, formData, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       console.log("저장 성공", resp.data);
-      const { publicId, showId, id } = resp.data || {};
-      const detailId = publicId ?? showId ?? id;
+      const { publicId, showId, id: respId } = resp.data || {};
+      const detailId = publicId ?? showId ?? id ?? respId;
       if (detailId) {
         navigate(`/show/${detailId}`);
       } else {
@@ -224,13 +252,11 @@ function CreateShow() {
       }
     } catch (error) {
       console.error("저장 오류", error);
-
       if (error?.response?.status === 401) {
         console.log(
           "[401] Authorization 헤더 유무/형식, 토큰 만료(exp)/aud/iss, 또는 권한(ROLE) 확인 필요"
         );
       }
-
       alert(
         `저장 실패: ${
           error.response?.data?.message || error.message || "알 수 없는 오류"
@@ -255,21 +281,26 @@ function CreateShow() {
   };
 
   const handleAddRow = () => {
-    setShows((prevShow) => [
-      ...prevShow,
-      {
-        id: Date.now(),
-        order: prevShow.length + 1,
-        date: "",
-        time: "",
-        cost: "",
-        maxTicket: 1,
-      },
-    ]);
+    setShows((prev) => {
+      const next = [
+        ...prev,
+        {
+          id: Date.now(),
+          order: prev.length + 1,
+          date: "",
+          time: "",
+          cost: "",
+          maxTicket: 1,
+        },
+      ];
+      return next.map((s, i) => ({ ...s, order: i + 1 }));
+    });
   };
 
-  const handleRemoveRow = (id) => {
-    setShows(shows.filter((show) => show.id !== id));
+  const handleRemoveRow = (rowId) => {
+    setShows((prev) =>
+      prev.filter((s) => s.id !== rowId).map((s, i) => ({ ...s, order: i + 1 }))
+    );
   };
 
   return (
@@ -278,26 +309,34 @@ function CreateShow() {
         <div className={styles.headText}>공연 새로 만들기</div>
         <div className={styles.Create_Container}>
           <div className={styles.Detail_Entire_Box}>
+            {/* 포스터 업로드 */}
             <div className={styles.SImage_Box_Entire}>
               <div className={styles.SImage_Box}>
-                <img src={previewURL} alt="미리보기" />
+                <img
+                  src={
+                    posterPreview ||
+                    "https://via.placeholder.com/300x400?text=Poster"
+                  }
+                  alt="포스터 미리보기"
+                />
               </div>
-              <label className={styles.inputFileLabel} htmlFor="inputFile">
+              <label className={styles.inputFileLabel} htmlFor="posterFile">
                 이미지 추가
                 <input
                   className={styles.inputFile}
                   type="file"
-                  id="inputFile"
+                  id="posterFile"
                   accept="image/*"
-                  onChange={handleImg}
+                  onChange={handlePosterChange}
                 />
               </label>
             </div>
 
             <div className={styles.entir_Boxs}>
-              <div className={styles.smallInfo}>
+              <div className={styles.smallInfo} style={{ color: "#D50024" }}>
                 *송금QR외 모든 정보는 필수입력사항입니다.
               </div>
+
               <div className={styles.infos}>
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
@@ -313,6 +352,7 @@ function CreateShow() {
                     />
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>소개글</span>
@@ -321,28 +361,36 @@ function CreateShow() {
                     <textarea
                       type="text"
                       placeholder={`공연에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
+                      value={introductionLetter}
                       onChange={handleIntro}
                       style={{ height: "6rem", width: "27rem" }}
                     />
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>카테고리</span>
                   </span>
                   <span className={styles.variable_Info}>
-                    <select onChange={(e) => setCategory(e.target.value)}>
-                      <option value="">선택</option>
-                      <option value="밴드">밴드</option>
-                      <option value="춤">춤</option>
-                      <option value="아카펠라">아카펠라</option>
-                      <option value="연극">연극</option>
-                      <option value="힙합">힙합</option>
-                      <option value="악기연주">악기연주</option>
-                      <option value="기타">기타</option>
-                    </select>
+                    <div className={styles.form_detail_date_2}>
+                      <input
+                        id={styles.form_detail_date}
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                      />{" "}
+                      ~{" "}
+                      <input
+                        id={styles.form_detail_date}
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                      />
+                    </div>
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>장소</span>
@@ -351,11 +399,13 @@ function CreateShow() {
                     <input
                       type="text"
                       placeholder="공연 장소"
+                      value={location}
                       onChange={(e) => setLocation(e.target.value)}
                       style={{ width: "10.75rem" }}
                     />
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>러닝타임</span>
@@ -364,12 +414,14 @@ function CreateShow() {
                     <input
                       type="number"
                       placeholder="000"
+                      value={runtime}
                       onChange={(e) => setRunTime(e.target.value)}
                       style={{ width: "3rem" }}
                     />
                   </span>
                   <span>분</span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>담당자</span>
@@ -379,18 +431,21 @@ function CreateShow() {
                       <input
                         type="text"
                         placeholder="이름"
+                        value={manager}
                         onChange={(e) => setManager(e.target.value)}
                         style={{ width: "4.75rem" }}
                       />
                       <input
                         type="text"
                         placeholder="연락처(전화번호 혹은 이메일)"
+                        value={managerPhoneNumber}
                         onChange={(e) => setManagerPhoneNumber(e.target.value)}
                         style={{ width: "21rem" }}
                       />
                     </div>
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>입금계좌</span>
@@ -399,6 +454,7 @@ function CreateShow() {
                     <div className={styles.bank}>
                       <select
                         onChange={(e) => setAccountBankName(e.target.value)}
+                        value={accountBankName}
                         style={{ width: "8rem" }}
                       >
                         <option value="">OO은행</option>
@@ -412,33 +468,64 @@ function CreateShow() {
                       <input
                         type="text"
                         placeholder="'-'없이 숫자만 입력"
+                        value={accountNumber}
                         onChange={(e) => setAccountNumber(e.target.value)}
                         style={{ width: "11.75rem" }}
                       />
                       <input
                         type="text"
                         placeholder="예금주"
+                        value={accountName}
                         onChange={(e) => setAccountName(e.target.value)}
                         style={{ width: "4.75rem" }}
                       />
                     </div>
                   </span>
                 </div>
+
+                {/* QR 업로드 + 미리보기 */}
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>송금QR</span>
                   </span>
                   <span className={styles.variable_Info}>
                     <div className={styles.qr}>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        id="handleQr"
-                        onChange={handleqrChange}
-                      />
+                      <label
+                        className={styles.inputQrFileLabel}
+                        htmlFor="qrFile"
+                      >
+                        파일 올리기
+                        <input
+                          className={styles.inputFile}
+                          type="file"
+                          id="qrFile"
+                          accept="image/*"
+                          onChange={handleQrChange}
+                        />
+                      </label>
+                      {/* QR 미리보기(선택) */}
+                      {qrPreview && (
+                        <div style={{ marginTop: "0.5rem" }}>
+                          <img
+                            src={qrPreview}
+                            alt="QR 미리보기"
+                            style={{
+                              width: 120,
+                              height: 120,
+                              objectFit: "cover",
+                              borderRadius: 8,
+                            }}
+                          />
+                        </div>
+                      )}
                     </div>
                   </span>
                 </div>
+
+                <div className={styles.smallInfo}>
+                  *송금QR이 필요한 경우 파일을 올려주세요
+                </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>공지</span>
@@ -447,15 +534,53 @@ function CreateShow() {
                     <textarea
                       type="text"
                       placeholder={`티켓 수령 장소, 환불 방법 및 기간, 에티켓 등 작성\n(공백 포함 최대 300백자까지 작성 가능합니다.)`}
+                      value={noticeLetter}
                       onChange={handleNotice}
                       style={{ width: "27rem", height: "16rem" }}
                     />
                   </span>
                 </div>
+
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>얼리버드</span>
+                  </span>
+                  <span className={styles.variable_Info}>
+                    <label className={styles.radio}>
+                      <input
+                        type="radio"
+                        name="earlyBird"
+                        value="true"
+                        checked={earlyBird === true}
+                        onChange={() => setEarlyBird(true)}
+                        className={styles.radioInput}
+                      />
+                      예
+                    </label>
+                    <label
+                      className={styles.radio}
+                      style={{ marginLeft: "1rem" }}
+                    >
+                      <input
+                        type="radio"
+                        name="earlyBird"
+                        value="false"
+                        checked={earlyBird === false}
+                        onChange={() => setEarlyBird(false)}
+                      />
+                      아니요
+                    </label>
+                  </span>
+                </div>
+
+                <div className={styles.smallInfo}>
+                  *얼리버드 티켓 할인 유무를 선택해주세요
+                </div>
               </div>
             </div>
           </div>
 
+          {/* 회차 테이블 */}
           <div className={styles.Each_show_All}>
             <div className={styles.Each_shows}>공연 회차 만들기</div>
 
@@ -468,19 +593,9 @@ function CreateShow() {
               <div>삭제</div>
             </div>
 
-            {shows.map((show) => (
+            {shows.map((show, idx) => (
               <div key={show.id} className={styles.Detail_show}>
-                <div className={styles.shows_line}>
-                  <input
-                    className={styles.form_detail_show}
-                    type="number"
-                    placeholder="0"
-                    onChange={(e) =>
-                      updateSchedule(show.id, "order", e.target.value)
-                    }
-                  />
-                  공
-                </div>
+                <div className={styles.shows_line}>{idx + 1}공</div>
                 <div className={styles.form_detail_date_2}>
                   <input
                     id={styles.form_detail_date}
@@ -529,7 +644,7 @@ function CreateShow() {
                 </div>
                 <div className={styles.delete_Btn}>
                   <button onClick={() => handleRemoveRow(show.id)}>
-                    <img src={DELETE} alt="delete"></img>
+                    <img src={DELETE} alt="delete" />
                   </button>
                 </div>
               </div>
@@ -541,8 +656,8 @@ function CreateShow() {
           </div>
 
           <div>
-            <button className={styles.make_show_submit} onClick={makeShow}>
-              공연 만들기
+            <button className={styles.make_show_submit} onClick={updateShow}>
+              공연 업데이트하기
             </button>
           </div>
         </div>
@@ -551,4 +666,4 @@ function CreateShow() {
   );
 }
 
-export default CreateShow;
+export default EditShow;

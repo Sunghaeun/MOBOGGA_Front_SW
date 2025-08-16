@@ -38,16 +38,17 @@ import OAuthCallback from "./pages/OAuthCallback";
 import Error404 from "./pages/Error404";
 
 import CreateRecruiting from "./pages/CreateRecruiting";
-import CreateEntertain from "./pages/Manager/CreateEntertain";
+import CreateEntertain from "./pages/CreateEntertain";
+import CreateShow from "./pages/CreateShow";
 import EditRecruiting from "./pages/EditRecruiting";
-import EditEntertain from "./pages/Manager/CreateEntertain";
+import EditEntertain from "./pages/EditEntertain";
+import EditShow from "./pages/EditShow";
 import ManageClubDetail from "./pages/ManageClubDetail";
 
 import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
 import TossAppLauncher from "./components/Mypage/TossAppLauncher";
 
 import FAQ from "./pages/FAQ";
-import CreateShow from "./pages/Manager/CreateShow";
 
 import "./App.css";
 
@@ -99,6 +100,7 @@ function App() {
           <Route path="create/show" element={<CreateShow />} />
           <Route path="/edit/recruiting" element={<EditRecruiting />} />
           <Route path="edit/entertain/:id" element={<EditEntertain />} />
+          <Route path="edit/show/:id" element={<EditShow />} />
           <Route path="/manager/club/1" element={<ManageClubDetail />} />
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
           <Route path="/tosslinktest" element={<TossAppLauncher />} />

@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import styles from "./styles/CreateEntertain.module.css";
 import axios from "axios";
-import INSTA from "../../assets/icons/instagram.svg";
-import KAKAO from "../../assets/icons/kakao.svg";
-import YOUTUBE from "../../assets/icons/youtube.svg";
-import NOTION from "../../assets/icons/notion.svg";
-import LINK from "../../assets/icons/linkicons.svg";
+import INSTA from "../assets/icons/instagram.svg";
+import KAKAO from "../assets/icons/kakao.svg";
+import YOUTUBE from "../assets/icons/youtube.svg";
+import NOTION from "../assets/icons/notion.svg";
+import LINK from "../assets/icons/linkicons.svg";
 function CreateEntertain() {
   const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
 

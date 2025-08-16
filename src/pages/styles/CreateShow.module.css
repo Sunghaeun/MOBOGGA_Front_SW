@@ -78,6 +78,18 @@ input[type="number"] {
   background: var(--gray-01-background, #fbfbfb);
   color: #ff3d12;
 }
+
+.inputQrFileLabel {
+  width: 7rem;
+  display: inline-flex;
+  padding: 0.25rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  border: 1px solid var(--gray-10-typo-color, #121212);
+  background: var(--gray-01-background, #fbfbfb);
+  color: var(--gray-10-typo-color, #121212);
+}
 .entir_Boxs {
   display: flex;
   flex-direction: column;
@@ -433,12 +445,20 @@ input[type="number"] {
 .smallInfo {
   display: flex;
   justify-items: left;
-  color: var(--Warning, #d50024);
+  color: var(--Success, #1aae00);
+
   /* Caption _ R */
   font-family: "Pretendard Variable";
   font-size: 0.6875rem;
   font-style: normal;
   font-weight: 400;
   line-height: 1.125rem; /* 163.636% */
-  margin-bottom: 18px;
+}
+
+.radio {
+  color: var(--gray-10-typo-color, #121212);
+}
+
+input[type="radio"] {
+  accent-color: black; /* 선택됐을 때 검은색으로 표시 */
 }
