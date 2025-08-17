@@ -34,13 +34,23 @@ function EditShow() {
   const [qrPreview, setQrPreview] = useState(null);
 
   const [shows, setShows] = useState([
-    { id: Date.now(), order: 1, date: "", time: "", cost: "", maxTicket: 1 },
+    {
+      id: Date.now(),
+      orderIndex: 1,
+      date: "",
+      time: "",
+      cost: "",
+      maxTicket: 1,
+      maxPeople: 100,
+    },
   ]);
 
   const updateSchedule = (rowId, key, value) => {
     setShows((prevShows) =>
       prevShows.map((show, index) =>
-        show.id === rowId ? { ...show, [key]: value, order: index + 1 } : show
+        show.id === rowId
+          ? { ...show, [key]: value, orderIndex: index + 1 }
+          : show
       )
     );
   };
@@ -120,7 +130,6 @@ function EditShow() {
       setRunTime(src.runtime != null ? String(src.runtime) : "");
       setManager(src.manager ?? "");
       setManagerPhoneNumber(src.managerPhoneNumber ?? "");
-      setMaxPeople(src.maxPeople != null ? String(src.maxPeople) : "");
       setAccountNumber(src.accountNumber ?? "");
       setAccountName(src.accountName ?? "");
       setAccountBankName(src.accountBankName ?? "");
@@ -135,12 +144,13 @@ function EditShow() {
       const mapped =
         list.length > 0
           ? list.map((s, i) => ({
-              id: id,
-              order: s.orderIndex ?? i + 1,
+              id: s.id ?? Date.now() + i,
+              orderIndex: s.orderIndex ?? i + 1,
               date: s.date ?? "",
               time: (s.time ?? "").slice(0, 5), // "HH:mm:ss" -> "HH:mm"
               cost: s.cost != null ? String(s.cost) : "",
               maxTicket: s.maxTicket != null ? Number(s.maxTicket) : 0,
+              maxPeople: s.maxPeople != null ? Number(s.maxPeople) : 0,
             }))
           : [
               {
@@ -150,6 +160,7 @@ function EditShow() {
                 time: "",
                 cost: "",
                 maxTicket: 1,
+                maxPeople: 100,
               },
             ];
 
@@ -205,7 +216,6 @@ function EditShow() {
       runtime: Number(runtime),
       manager,
       managerPhoneNumber,
-      maxPeople,
       accountNumber,
       accountName,
       accountBankName,
@@ -213,12 +223,13 @@ function EditShow() {
       noticeLetter,
       earlyBird: Boolean(earlyBird),
       scheduleDtoList: shows.map((s, i) => ({
-        id: Number(s.order) || i + 1,
+        id: Number(s.orderIndex) || i + 1,
         orderIndex: Number(s.order) || i + 1,
         date: s.date,
         time: toHms(s.time),
         cost: Number(s.cost),
         maxTicket: Number(s.maxTicket) || 0,
+        maxPeople: Number(s.maxPeople) || 100,
       })),
     };
 
@@ -306,20 +317,23 @@ function EditShow() {
         ...prev,
         {
           id: Date.now(),
-          order: prev.length + 1,
+          orderIndex: prev.length + 1,
           date: "",
           time: "",
           cost: "",
           maxTicket: 1,
+          maxPeople: 100,
         },
       ];
-      return next.map((s, i) => ({ ...s, order: i + 1 }));
+      return next.map((s, i) => ({ ...s, orderIndex: i + 1 }));
     });
   };
 
   const handleRemoveRow = (rowId) => {
     setShows((prev) =>
-      prev.filter((s) => s.id !== rowId).map((s, i) => ({ ...s, order: i + 1 }))
+      prev
+        .filter((s) => s.id !== rowId)
+        .map((s, i) => ({ ...s, orderIndex: i + 1 }))
     );
   };
 
@@ -616,7 +630,7 @@ function EditShow() {
             {shows.map((show, idx) => (
               <div key={show.id} className={styles.Detail_show}>
                 <div className={styles.shows_line}>
-                  {(show.order ?? idx + 1) + "공"}
+                  {(show.orderIndex ?? idx + 1) + "공"}
                 </div>
 
                 <div className={styles.form_detail_date_2}>

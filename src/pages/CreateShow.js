@@ -44,7 +44,15 @@ function CreateShow() {
 
   // 회차 배열
   const [shows, setShows] = useState([
-    { id: Date.now(), order: 1, date: "", time: "", cost: "", maxTicket: 1 },
+    {
+      id: Date.now(),
+      order: 1,
+      date: "",
+      time: "",
+      cost: "",
+      maxTicket: 1,
+      maxPeople: 100,
+    },
   ]);
 
   // 회차 업데이트
@@ -153,6 +161,7 @@ function CreateShow() {
         time: toHms(s.time),
         cost: Number(s.cost),
         maxTicket: Number(s.maxTicket) || 0,
+        maxPeople: Number(s.maxPeople) || 100,
       })),
     };
 
@@ -251,6 +260,7 @@ function CreateShow() {
           time: "",
           cost: "",
           maxTicket: 1,
+          maxPeople: 100,
         },
       ];
       // 혹시 모를 불일치 방지용 reindex

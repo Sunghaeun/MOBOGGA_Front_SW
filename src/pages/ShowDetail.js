@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react"; // useRef 추가
 import styles from "./styles/ShowDetail.module.css";
 import loadingStyles from "../styles/Loading.module.css";
 
@@ -21,6 +21,10 @@ function ShowDetail() {
   const [open, setOpen] = useState(false);
   const [secondModalOpen, setSecondModalOpen] = useState(false);
   const [failModalOpen, setFailModalOpen] = useState(false);
+  const [limitOpen, setLimitOpen] = useState(false);
+  const [selectSchOpen, setSelectSchOpen] = useState(false);
+  const limitOkRef = useRef(null);
+  const selectSchOkRef = useRef(null);
 
   const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
   const token = localStorage.getItem("jwt");
@@ -87,7 +91,6 @@ function ShowDetail() {
   const [auth, setAuth] = useState(null);
   const getAuth = async () => {
     try {
-
       if (!token) {
         console.log("토큰이 없어서 권한 체크 건너뜀");
         return;
@@ -122,12 +125,44 @@ function ShowDetail() {
     // eslint-disable-next-line
   }, [showId]);
 
+  useEffect(() => {
+    if (!limitOpen) return;
+    const onKey = (e) => {
+      if (e.isComposing) return;
+      if (e.key === "Enter") {
+        e.preventDefault();
+        limitOkRef.current?.click();
+      }
+      if (e.key === "Escape") {
+        setLimitOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [limitOpen]);
+
+  useEffect(() => {
+    if (!selectSchOpen) return;
+    const onKey = (e) => {
+      if (e.isComposing) return;
+      if (e.key === "Enter") {
+        e.preventDefault();
+        selectSchOkRef.current?.click();
+      }
+      if (e.key === "Escape") {
+        setSelectSchOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selectSchOpen]);
+
   const navigateToClubDetail = (clubId) => navigate(`/clubs/${clubId}`);
 
   // 예매 버튼 API
   const handleReser = async () => {
     if (!selectedSch) {
-      alert("공연 회차를 선택해주세요.");
+      setSelectSchOpen(true);
       return;
     }
     if (!token) {
@@ -181,14 +216,13 @@ function ShowDetail() {
     if (count > 1) setCount(count - 1);
   };
   const Plus = () => {
-    if (!selectedSch) return alert("공연 회차를 선택해주세요.");
+    if (!selectedSch) return setSelectSchOpen(true);
     const maxAvailable = Math.min(
       selectedSch.maxPeople - selectedSch.applyPeople,
       selectedSch.maxTickets
     );
     if (count < maxAvailable) setCount(count + 1);
-    else if (count === selectedSch.maxTickets)
-      alert(`인당 최대 ${selectedSch.maxTickets}매까지 예매가능합니다.`);
+    else if (count === selectedSch.maxTickets) setLimitOpen(true);
     else alert(`현재 ${count}매를 예매할 수 있습니다.`);
   };
 
@@ -326,7 +360,9 @@ function ShowDetail() {
                       <span className={styles.info_txt}>담당자</span>
                     </span>
                     <span className={styles.variable_Info}>
-                      {show?.managerInfo || "담당자 정보 없음"}
+                      {show?.managerPhoneNumber || "담당자 정보 없음"} {" ("}
+                      {show?.manager || " "}
+                      {") "}
                     </span>
                   </div>
 
@@ -422,7 +458,7 @@ function ShowDetail() {
                 }`}
                 onClick={() => {
                   if (isDisable) return;
-                  if (!selectedSch) return alert("공연 회차를 선택해주세요.");
+                  if (!selectedSch) return setSelectSchOpen(true);
                   setOpen(true);
                 }}
                 disabled={isDisable}
@@ -535,6 +571,48 @@ function ShowDetail() {
                       window.scrollTo(0, 0);
                       if (!token) navigate("/login");
                     }}
+                  >
+                    확인
+                  </button>
+                </div>
+              </Modal>
+              {/*구매제한 안내 모달*/}
+              <Modal
+                className={null}
+                isOpen={limitOpen}
+                onClose={() => setLimitOpen(false)}
+              >
+                <div className={styles.modal_con}>
+                  인당 {selectedSch?.maxTickets}매까지 구매 가능합니다
+                </div>
+                <div className={styles.modal_Btns}>
+                  <button
+                    type="button"
+                    ref={limitOkRef}
+                    autoFocus
+                    className={styles.modal_reserv_Btn}
+                    onClick={() => setLimitOpen(false)}
+                  >
+                    확인
+                  </button>
+                </div>
+              </Modal>
+              {/*회차선택 모달*/}
+              <Modal
+                className={null}
+                isOpen={selectSchOpen}
+                onClose={() => setSelectSchOpen(false)}
+              >
+                <div className={styles.modal_con}>
+                  공연 회차를 선택해주세요.
+                </div>
+                <div className={styles.modal_Btns}>
+                  <button
+                    type="button"
+                    ref={selectSchOkRef}
+                    autoFocus
+                    className={styles.modal_reserv_Btn}
+                    onClick={() => setSelectSchOpen(false)}
                   >
                     확인
                   </button>
