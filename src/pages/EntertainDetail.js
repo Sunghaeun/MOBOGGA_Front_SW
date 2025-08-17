@@ -15,38 +15,34 @@ function EntertainDetail() {
   };
 
   const { id } = useParams();
-  const [entertainList, setShow] = useState(null);
+  const [entertainList, setEntertain] = useState(null);
+
+  // API BASE & endpoint
+  const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
+  const endpoint = `${API_BASE}/entertain/detail/${id}`;
 
   useEffect(() => {
-    const fetchShow = async () => {
+    const fetchEntertain = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/entertain/detail/${id}`
-        );
-
+        const res = await axios.get(endpoint);
         console.log(res.data);
-
-        setShow(res.data);
+        setEntertain(res.data);
       } catch (err) {
         console.error("데이터 로드 실패:", err);
       }
     };
 
-    fetchShow();
-  }, [id]);
+    fetchEntertain();
+  }, [endpoint]);
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchShow = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/entertain/detail/${id}`
-        );
-
+        const res = await axios.get(endpoint);
         console.log(res.data);
-
-        setShow(res.data);
+        setEntertain(res.data);
         setLoading(false);
       } catch (err) {
         console.error("데이터 로드 실패:", err);
@@ -55,7 +51,7 @@ function EntertainDetail() {
     };
 
     fetchShow();
-  }, [id]);
+  }, [endpoint]);
 
   const navigateToClubDetail = (clubId) => {
     navigate(`/clubs/${clubId}`);
@@ -69,15 +65,12 @@ function EntertainDetail() {
     try {
       const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
 
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/auth/me`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
-          },
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get(`${API_BASE}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
+        },
+        withCredentials: true,
+      });
 
       console.log("Response from backend:", response.data);
 
@@ -87,36 +80,6 @@ function EntertainDetail() {
       throw error;
     }
   };
-
-  // const entertainList =
-  //   {
-  //     entertainId: 1,
-  //     entertainName: "MIC WORKSHOP",
-  //     clubName: "MIC",
-  //     photo: "https://your-image-url.com/mic-workshop.jpg", // 실제 이미지 주소로 교체하세요
-  //     introductionLetter: "MIC에서 워크샵을 진행합니다.\nMIC 워크샵이란? 다양한 동작들을 배워 춤을 직접 춰보는 시간입니다. 또한, 무료로 춤 수업을 받으실 수 있습니다!",
-  //     category: "체험",
-  //     location: "학관 지하 대형 연습실",
-  //     date: "2025.03.11 - 2025.03.13",
-  //     timeList: "3월 11일(화) 19:00-20:30, 3월 13일(목) 19:00-20:30",
-  //     etcInfo: `<1차>
-  // 일시: 3월 11일 화요일(주차: 화요일)
-  // 시간: 19:00-20:30
-  // 장소: 학관 지하 대형 연습실
-  // 신청마감: 3/10(월) 자정
-  // 🎵1차 노래: Trip - Ella Mai
-
-  // <2차>
-  // 일시: 3월 13일 목요일(주차: 목요일)
-  // 시간: 19:00-20:30
-  // 장소: 학관 지하 대형 연습실
-  // 🎵2차 노래: Light Show - Matt Corman
-
-  // 인스타 프로필 하단 링크트리에서도 확인하실 수 있습니다!`,
-  //     instaUrl: "https://www.instagram.com/", // 실제 인스타 URL로 교체
-  //     url: "https://your-linktree-url.com"    // 실제 링크트리나 기타 URL로 교체
-  //   }
-  // ;
 
   return (
     <div className={styles.wrap}>
@@ -142,7 +105,6 @@ function EntertainDetail() {
                 </div>
                 <div
                   className={styles.club}
-                  //onClick={() => navigate(`/clubs/${entertainList?.clubId}`)}
                   onClick={() => navigateToClubDetail(entertainList?.clubId)}
                 >
                   {entertainList?.clubName
@@ -188,7 +150,7 @@ function EntertainDetail() {
                   <div className={styles.info_Box}>
                     <span className={styles.fixed_Info}>담당자</span>
                     <span className={styles.variable_Info}>
-                      {entertainList?.managerInfo || "담당자 정보 없음"}
+                      {entertainList?.manager || "담당자 정보 없음"}
                     </span>
                   </div>
 

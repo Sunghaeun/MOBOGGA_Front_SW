@@ -1,19 +1,23 @@
-import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import styles from "./styles/CreateEntertain.module.css";
 import axios from "axios";
-import INSTA from "../../assets/icons/instagram.svg";
-import KAKAO from "../../assets/icons/kakao.svg";
-import YOUTUBE from "../../assets/icons/youtube.svg";
-import NOTION from "../../assets/icons/notion.svg";
-import LINK from "../../assets/icons/linkicons.svg";
-function CreateEntertain() {
-  const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
+import INSTA from "../assets/icons/instagram.svg";
+import KAKAO from "../assets/icons/kakao.svg";
+import YOUTUBE from "../assets/icons/youtube.svg";
+import NOTION from "../assets/icons/notion.svg";
+import LINK from "../assets/icons/linkicons.svg";
 
+function EditEntertain() {
+  const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [name, setName] = useState("");
-  const [poster, setPoster] = useState(null);
+  const [poster, setPoster] = useState(null); // 새로 업로드한 파일
+  const [posterUrl, setPosterUrl] = useState(""); // 서버에 저장된 이미지 URL
+  const [previewURL, setPreviewURL] = useState(null); // 실제 미리보기(파일 > 서버URL)
+
   const [location, setLocation] = useState("");
   const [introductionLetter, setIntroductionLetter] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -29,60 +33,93 @@ function CreateEntertain() {
   const [noUrl, setNoUrl] = useState("");
   const [url, setUrl] = useState("");
 
-  const [previewURL, setPreviewURL] = useState(null);
-
-  /* 사진 미리보기 기능 */
+  // 파일 미리보기
   const handleImg = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPoster(file);
-      setPreviewURL(URL.createObjectURL(file)); //미리 보기 url 생성
-    } else {
-    }
-  };
-  // eslint-disable-next-line
-  const [auth, setAuth] = useState([]);
-  // eslint-disable-next-line
-  const getAuth = async () => {
-    try {
-      const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
+    const file = e.target.files?.[0] || null;
 
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/auth/me`,
+    // 이전 blob URL 정리
+    if (previewURL?.startsWith("blob:")) URL.revokeObjectURL(previewURL);
+
+    setPoster(file);
+    // 새 파일 있으면 그걸로, 아니면 서버 URL 유지
+    setPreviewURL(file ? URL.createObjectURL(file) : posterUrl || null);
+  };
+
+  // 공통: 토큰 헤더 만들기
+  const getAuthHeader = () => {
+    const raw =
+      localStorage.getItem("jwt") ||
+      sessionStorage.getItem("jwt") ||
+      sessionStorage.getItem("idToken");
+    if (!raw) return null;
+    return raw.startsWith("Bearer ") ? raw : `Bearer ${raw}`;
+  };
+
+  const getEntertain = async () => {
+    try {
+      const auth = getAuthHeader();
+      if (!auth) {
+        alert("로그인 필요");
+        return;
+      }
+
+      const res = await axios.get(
+        `${API_BASE}/manager/entertain/update/${id}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,
+          headers: { Authorization: auth },
         }
       );
+      console.log("== 서버에서 받은 데이터 ==", res.data);
 
-      console.log("Response from backend:", response.data);
+      const src = res.data ?? {};
+      setName(src.name ?? "");
+      setIntroductionLetter(src.introductionLetter ?? "");
+      setCategory(src.category ?? "");
+      setLocation(src.location ?? "");
+      setStartDate(src.startDate ?? "");
+      setEndDate(src.endDate ?? "");
+      setManager(src.manager ?? "");
+      setManagerPhone(src.managerPhoneNumber ?? "");
+      setInUrl(src.inUrl ?? "");
+      setKakaUrl(src.kakaUrl ?? "");
+      setYouUrl(src.youUrl ?? "");
+      setNoUrl(src.noUrl ?? "");
+      setUrl(src.url ?? "");
+      setTimeList(src.timeList ?? "");
+      setEtcInfo(src.etcInfo ?? "");
 
-      setAuth(response.data);
-    } catch (error) {
-      console.error("Login failed with error: ", error);
-      throw error;
+      // 서버 이미지 URL 필드명에 맞춰 세팅 (photo/posterUrl 등)
+      const serverPoster = src.poster || src.posterUrl || "";
+      setPosterUrl(serverPoster);
+      setPreviewURL(serverPoster || null);
+    } catch (err) {
+      console.error("즐길거리 데이터 로드 실패", err);
+      alert("데이터 로드에 실패했습니다.");
     }
   };
 
-  //모든 입력란을 받아야 submit 가능 + 빈칸이 어디인지 알려줌
-  const makeEntertain = async () => {
-    const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
-    if (!token) {
-      console.log("로그인 토큰이 없습니다");
+  useEffect(() => {
+    if (id) getEntertain();
+    // 언마운트 시 blob URL 정리
+    return () => {
+      if (previewURL?.startsWith("blob:")) URL.revokeObjectURL(previewURL);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const updateEntertain = async () => {
+    const auth = getAuthHeader();
+    if (!auth) {
+      alert("로그인 필요");
       return;
     }
 
-    // 필수 입력 체크
+    // 필수값 체크 (포스터는 선택)
     if (!name) return alert("제목을 입력해 주세요");
-    if (!poster || !(poster instanceof File)) {
-      console.log("포스터 파일 확인:", poster);
-      return alert("즐길거리 이미지를 선택해 주세요");
-    }
     if (!location) return alert("장소를 입력해 주세요");
     if (!startDate) return alert("시작날짜를 입력해 주세요");
     if (!endDate) return alert("끝 날짜를 입력해 주세요");
 
-    // 서버로 보낼 데이터
     const requestData = {
       name,
       introductionLetter,
@@ -102,101 +139,81 @@ function CreateEntertain() {
     };
 
     const formData = new FormData();
-    formData.append("poster", poster); // 파일
+    // 서버가 "poster"라는 파트명을 기대한다고 가정 (필요시 변경)
+    if (poster instanceof File) {
+      formData.append("poster", poster, poster.name || "poster.jpg");
+    }
     formData.append(
       "request",
-      new Blob([JSON.stringify(requestData)], { type: "application/json" }) // JSON 데이터
+      new Blob([JSON.stringify(requestData)], { type: "application/json" })
     );
 
-    // 디버깅용 로그
-    console.log("폼 데이터 확인:");
-    for (let [key, value] of formData.entries()) {
-      if (key === "request") {
-        value.text().then((text) => console.log(`${key}:`, JSON.parse(text)));
-      } else if (value instanceof File) {
-        console.log(`${key}:`, value.name);
+    const endpoint = `${API_BASE}/manager/entertain/update/${id}`;
+
+    // 디버깅 로그
+    console.log("== 최종 전송 JSON ==", JSON.stringify(requestData, null, 2));
+    console.log("== FormData entries ==");
+    for (const [k, v] of formData.entries()) {
+      if (v instanceof File) {
+        console.log(k, "-> File", { name: v.name, size: v.size, type: v.type });
+      } else if (k === "request" && v instanceof Blob) {
+        v.text().then((t) => console.log("request(json) ->", t));
       } else {
-        console.log(`${key}:`, value);
+        console.log(k, "->", v);
       }
     }
 
-    const urlCreate = `${API_BASE}/api/manager/entertain/create`;
-    console.log("POST URL:", urlCreate);
-
     try {
-      const response = await axios.post(
-        `https://jinjigui.info:443/manager/entertain/create`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      //새로 만든 즐길거리에 바로 입장가능하게 해줌
-      const { publicId, showId, id } = response.data || {};
-      const detailId = publicId ?? showId ?? id; // 공개 상세에서 쓰는 id 우선
-      navigate(`/show/${detailId}`);
-
-      console.log("저장 성공", response.data);
-      if (response.data.status === "ok") {
-        // 문자열 "true"도 boolean true로 통과
-        alert("저장이 완료되었습니다.");
-        navigate("/");
-      } else {
-        alert("저장은 되었지만, 문제가 발생했습니다.");
-      }
+      await axios.put(endpoint, formData, {
+        headers: { Authorization: auth }, // Content-Type 생략: axios가 boundary 자동 지정
+      });
+      alert("즐길거리 수정 완료");
+      navigate(`/entertain/${id}`);
     } catch (error) {
       console.error("저장 오류", error);
-      alert(
-        "저장 실패",
-        `서버 오류:${error.response?.data?.message || "알 수 없는 오류"}`
-      );
+      alert(`저장 실패: ${error.response?.data?.message || "알 수 없는 오류"}`);
     }
   };
 
   //제목 글자 수 limit
   const handlename = (e) => {
-    if (e.target.value.length <= 30) {
-      setName(e.target.value);
-    } else {
-      alert("30글자를 초과할 수 없습니다.");
-    }
+    if (e.target.value.length <= 30) setName(e.target.value);
+    else alert("30글자를 초과할 수 없습니다.");
   };
 
   const handleIntro = (e) => {
-    if (e.target.value.length <= 100) {
-      setIntroductionLetter(e.target.value);
-    } else {
-      alert("100자를 초과할 수 없습니다.");
-    }
+    if (e.target.value.length <= 100) setIntroductionLetter(e.target.value);
+    else alert("100자를 초과할 수 없습니다.");
   };
 
-  // 공연 소개란 limit
   const handleContent = (e) => {
-    if (e.target.value.length <= 300) {
-      setEtcInfo(e.target.value);
-    } else {
-      alert("300자를 초과할 수 없습니다.");
-    }
+    if (e.target.value.length <= 300) setEtcInfo(e.target.value);
+    else alert("300자를 초과할 수 없습니다.");
   };
 
   return (
     <div>
       <div className={styles.CreateBody}>
-        <div className={styles.headText}>즐길거리 새로 만들기</div>
+        <div className={styles.headText}>즐길거리 수정하기</div>
         <div className={styles.Create_Container}>
           <div className={styles.Detail_Entire_Box}>
+            {/* 포스터 박스 */}
             <div className={styles.SImage_Box_Entire}>
               <div className={styles.SImage_Box}>
-                <img src={previewURL} alt="미리보기" />
+                <img
+                  src={
+                    previewURL ||
+                    "https://via.placeholder.com/300x400?text=Poster"
+                  }
+                  alt="미리보기"
+                />
               </div>
-              <label className={styles.inputFileLabel} htmlFor="inputFile">
+              <label className={styles.inputFileLabel} htmlFor="entPosterFile">
                 이미지 추가
                 <input
                   className={styles.inputFile}
                   type="file"
-                  id="inputFile"
+                  id="entPosterFile"
                   accept="image/*"
                   onChange={handleImg}
                 />
@@ -219,6 +236,7 @@ function CreateEntertain() {
                     />
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>소개글</span>
@@ -227,17 +245,22 @@ function CreateEntertain() {
                     <textarea
                       type="text"
                       placeholder={`즐길거리에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
+                      value={introductionLetter}
                       onChange={handleIntro}
                       style={{ height: "6rem", width: "27rem" }}
                     />
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>카테고리</span>
                   </span>
                   <span className={styles.variable_Info}>
-                    <select onChange={(e) => setCategory(e.target.value)}>
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                    >
                       <option value="">선택</option>
                       <option value="공연">공연</option>
                       <option value="체험">체험</option>
@@ -247,6 +270,7 @@ function CreateEntertain() {
                     </select>
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>장소</span>
@@ -261,6 +285,7 @@ function CreateEntertain() {
                     />
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>날짜</span>
@@ -270,12 +295,14 @@ function CreateEntertain() {
                       <input
                         id={styles.form_detail_date}
                         type="date"
+                        value={startDate}
                         onChange={(e) => setStartDate(e.target.value)}
                       />
                       ~
                       <input
                         id={styles.form_detail_date}
                         type="date"
+                        value={endDate}
                         onChange={(e) => setEndDate(e.target.value)}
                       />
                     </div>
@@ -284,6 +311,7 @@ function CreateEntertain() {
                     </div>
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>시간</span>
@@ -292,11 +320,13 @@ function CreateEntertain() {
                     <input
                       type="text"
                       placeholder={`시간 입력`}
+                      value={timeList}
                       onChange={(e) => setTimeList(e.target.value)}
                       style={{ width: "27rem" }}
                     />
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>담당자</span>
@@ -306,18 +336,21 @@ function CreateEntertain() {
                       <input
                         type="text"
                         placeholder="이름"
+                        value={manager}
                         style={{ width: "4.75rem" }}
                         onChange={(e) => setManager(e.target.value)}
                       />
                       <input
                         type="text"
                         placeholder="연락처(전화번호 혹은 이메일)"
+                        value={managerPhoneNumber}
                         style={{ width: "21rem" }}
                         onChange={(e) => setManagerPhone(e.target.value)}
                       />
                     </div>
                   </span>
                 </div>
+
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>기타정보</span>
@@ -326,11 +359,14 @@ function CreateEntertain() {
                     <textarea
                       type="text"
                       placeholder={`상세일정, 가격, 예약 방법 등 추가 정보 입력\n(공백 포함 최대 500자까지 입력 가능합니다.)`}
+                      value={etcInfo}
                       onChange={handleContent}
                       style={{ width: "27rem", height: "16rem" }}
                     />
                   </span>
                 </div>
+
+                {/* 링크들 */}
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>관련링크</span>
@@ -345,9 +381,10 @@ function CreateEntertain() {
                           type="text"
                           placeholder="인스타그램 링크 입력"
                           style={{ width: "22rem" }}
+                          value={inUrl}
                           className={styles.sns_link}
                           onChange={(e) => setInUrl(e.target.value)}
-                        ></input>
+                        />
                       </span>
                     </div>
                     <div className={styles.sns}>
@@ -359,9 +396,10 @@ function CreateEntertain() {
                           type="text"
                           placeholder="카카오톡 오픈채팅방 또는 채널 링크 입력"
                           style={{ width: "22rem" }}
+                          value={kakaUrl}
                           className={styles.sns_link}
                           onChange={(e) => setKakaUrl(e.target.value)}
-                        ></input>
+                        />
                       </span>
                     </div>
                     <div className={styles.sns}>
@@ -373,9 +411,10 @@ function CreateEntertain() {
                           type="text"
                           placeholder="유튜브 링크 입력"
                           style={{ width: "22rem" }}
+                          value={youUrl}
                           className={styles.sns_link}
                           onChange={(e) => setYouUrl(e.target.value)}
-                        ></input>
+                        />
                       </span>
                     </div>
                     <div className={styles.sns}>
@@ -387,9 +426,10 @@ function CreateEntertain() {
                           type="text"
                           placeholder="노션(Notion) 링크 입력"
                           style={{ width: "22rem" }}
+                          value={noUrl}
                           className={styles.sns_link}
                           onChange={(e) => setNoUrl(e.target.value)}
-                        ></input>
+                        />
                       </span>
                     </div>
                     <div className={styles.sns}>
@@ -401,9 +441,10 @@ function CreateEntertain() {
                           type="text"
                           placeholder="구글 폼, 페이스북 등의 링크 입력"
                           style={{ width: "22rem" }}
+                          value={url}
                           className={styles.sns_link}
                           onChange={(e) => setUrl(e.target.value)}
-                        ></input>
+                        />
                       </span>
                     </div>
                   </span>
@@ -413,8 +454,11 @@ function CreateEntertain() {
           </div>
 
           <div>
-            <button className={styles.make_show_submit} onClick={makeEntertain}>
-              즐길거리 만들기
+            <button
+              className={styles.make_show_submit}
+              onClick={updateEntertain}
+            >
+              즐길거리 업데이트
             </button>
           </div>
         </div>
@@ -423,4 +467,4 @@ function CreateEntertain() {
   );
 }
 
-export default CreateEntertain;
+export default EditEntertain;

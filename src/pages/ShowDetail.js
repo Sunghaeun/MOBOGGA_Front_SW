@@ -30,6 +30,7 @@ function ShowDetail() {
   // 상세 데이터 불러오기 (토큰 있으면 Authorization 헤더 추가)
   const fetchData = async () => {
     console.log("받은 showId:", showId, typeof showId);
+
     console.log("저장된 토큰:", token ? "있음" : "없음");
     const url = `${process.env.REACT_APP_API_URL}/show/detail/${showId}`;
     console.log("GET:", url);
@@ -86,6 +87,7 @@ function ShowDetail() {
   const [auth, setAuth] = useState(null);
   const getAuth = async () => {
     try {
+
       if (!token) {
         console.log("토큰이 없어서 권한 체크 건너뜀");
         return;
@@ -141,7 +143,7 @@ function ShowDetail() {
 
     try {
       console.log("예매 요청:", requestData);
-      const url = `${API_BASE}/api/show/detail/reservation`;
+      const url = `${API_BASE}/show/detail/reservation`;
       console.log("POST:", url);
 
       const res = await axios.post(url, requestData, {
