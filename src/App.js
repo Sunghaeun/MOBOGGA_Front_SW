@@ -119,14 +119,16 @@ function AppContent() {
           <Route path="/loading" element={<Loading />} />
           <Route path="/login/oauth2/code/google" element={<OAuthCallback />} />
           <Route path="/404" element={<Error404 />} />
-          <Route path="/create/recruiting" element={<CreateRecruiting />} />
-          <Route path="/create/entertain" element={<CreateEntertain />} />
-          <Route path="create/show" element={<CreateShow />} />
-          <Route path="/edit/recruiting" element={<EditRecruiting />} />
-          <Route path="edit/entertain/:id" element={<EditEntertain />} />
-          <Route path="edit/show/:id" element={<EditShow />} />
+
+          <Route path="/recruiting/create" element={<CreateRecruiting />} />
+          <Route path="/entertain/create" element={<CreateEntertain />} />
+          <Route path="/show/create" element={<CreateShow />} />
+
+          <Route
+            path="/edit/recruiting/:recruitingId"
+            element={<EditRecruiting />}
+          />
           <Route path="/manager/club/:id" element={<ManageClubDetail />} />
-          <Route path="/create/entertain" element={<CreateEntertain />} />    
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
           <Route path="/tosslinktest" element={<TossAppLauncher />} />
         </Routes>
