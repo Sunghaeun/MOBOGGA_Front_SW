@@ -20,16 +20,16 @@ function ComingSoon() {
         {/* 딤처리 오버레이 */}
         <div className={styles.overlay}>
           <div className={styles.overlayText}>
-            <p>
+            <div>
               <span className={styles.highlight}>8월 20일</span> 모보까 오픈
               예정 !<br />
-              <p className={styles.subText}>
+              <div className={styles.subText}>
                 공연 예매부터 동아리 리크루팅까지
                 <br />
                 한동의 모든 동아리 소식을{" "}
                 <span className={styles.highlight}>한 곳에서</span> 만나보세요
-              </p>
-            </p>
+              </div>
+            </div>
           </div>
         </div>
       </>
@@ -51,16 +51,16 @@ function ComingSoon() {
         {/* 딤처리 오버레이 */}
         <div className={styles.overlay}>
           <div className={styles.overlayText}>
-            <p>
+            <div>
               <span className={styles.highlight}>8월 20일</span> 모보까 오픈
               예정 !<br />
-              <p className={styles.subText}>
+              <div className={styles.subText}>
                 공연 예매부터 동아리 리크루팅까지
                 <br />
                 한동의 모든 동아리 소식을{" "}
                 <span className={styles.highlight}>한 곳에서</span> 만나보세요
-              </p>
-            </p>
+              </div>
+            </div>
           </div>
         </div>
       </>

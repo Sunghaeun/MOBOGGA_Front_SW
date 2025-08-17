@@ -1,6 +1,7 @@
 // src/pages/Login.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 import styles from "./styles/Login.module.css";
 import LoginLogo from "../assets/LoginLogo.svg";
 import GoogleLoginBtnDefault from "../assets/GoogleLoginBtn-Default.svg";
@@ -8,16 +9,16 @@ import GoogleLoginBtnHover from "../assets/GoogleLoginBtn-Hover.svg";
 
 function Login() {
   const navigate = useNavigate();
+  const { isLoggedIn, isLoading } = useAuth();
   const [isHovering, setIsHovering] = useState(false);
 
   // 이미 로그인된 사용자 체크
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    if (token) {
-      // 토큰이 있으면 메인 페이지로 이동
+    if (!isLoading && isLoggedIn) {
+      // 로그인되어 있으면 메인 페이지로 이동
       navigate("/main");
     }
-  }, [navigate]);
+  }, [navigate, isLoggedIn, isLoading]);
 
   const onMouseOver = () => setIsHovering(true);
   const onMouseOut = () => setIsHovering(false);

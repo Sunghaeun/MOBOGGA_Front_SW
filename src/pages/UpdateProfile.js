@@ -6,7 +6,7 @@ import Modal from "../components/Modal";
 
 function UpdateProfile() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("jwt");
+  const token = window.tempToken;
   const [isLoading, setIsLoading] = useState(true);
 
   const [formData, setFormData] = useState({

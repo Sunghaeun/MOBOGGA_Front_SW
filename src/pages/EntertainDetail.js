@@ -63,7 +63,7 @@ function EntertainDetail() {
 
   const getAuth = async () => {
     try {
-      const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
+      const token = window.tempToken; // 임시 토큰 사용
 
       const response = await axios.get(`${API_BASE}/auth/me`, {
         headers: {

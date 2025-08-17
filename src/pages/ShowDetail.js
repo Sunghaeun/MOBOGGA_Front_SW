@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./styles/ShowDetail.module.css";
 import loadingStyles from "../styles/Loading.module.css";
+import useAuth from "../hooks/useAuth";
 
 import BACK from "../assets/ShowBackButton.svg";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,6 +12,7 @@ import Modal from "../components/Modal";
 function ShowDetail() {
   const { showId } = useParams();
   const navigate = useNavigate();
+  const { auth, getToken } = useAuth();
 
   const [show, setShow] = useState({});
   const [count, setCount] = useState(1);
@@ -23,7 +25,6 @@ function ShowDetail() {
   const [failModalOpen, setFailModalOpen] = useState(false);
 
   const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
-  const token = localStorage.getItem("jwt");
 
   const navigateToPrepage = () => navigate(-1);
 
@@ -61,8 +62,7 @@ function ShowDetail() {
 
       if (err.response?.status === 401) {
         console.log("401 에러 - 인증 실패");
-        // 토큰이 만료되었거나 유효하지 않을 수 있음
-        localStorage.removeItem("jwt");
+        // 인증이 실패했을 경우
         setError(
           "로그인이 필요하거나 세션이 만료되었습니다. 다시 로그인해주세요."
         );
@@ -83,42 +83,8 @@ function ShowDetail() {
     }
   };
 
-  // 권한 체크 (옵션)
-  const [auth, setAuth] = useState(null);
-  const getAuth = async () => {
-    try {
-
-      if (!token) {
-        console.log("토큰이 없어서 권한 체크 건너뜀");
-        return;
-      }
-
-      console.log("권한 체크 시작...");
-      const res = await axios.get(`${API_BASE}/api/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-        timeout: 10000,
-      });
-      console.log("권한 체크 성공:", res.data);
-      setAuth(res.data);
-    } catch (e) {
-      console.error("권한 체크 실패:", e);
-      console.error("권한 체크 응답:", e.response);
-
-      if (e.response?.status === 401 || e.response?.status === 403) {
-        console.log("토큰이 유효하지 않음 - 제거");
-        localStorage.removeItem("jwt");
-        setAuth(null);
-      } else {
-        console.log("네트워크 에러 등으로 권한 체크 실패");
-        setAuth(null);
-      }
-    }
-  };
-
   useEffect(() => {
     fetchData();
-    getAuth();
     // eslint-disable-next-line
   }, [showId]);
 
@@ -130,6 +96,8 @@ function ShowDetail() {
       alert("공연 회차를 선택해주세요.");
       return;
     }
+
+    const token = getToken();
     if (!token) {
       setOpen(false);
       setFailModalOpen(true);

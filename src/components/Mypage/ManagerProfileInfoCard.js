@@ -1,7 +1,7 @@
 import styles from "./styles/ProfileInfoCard.module.css";
 import clubDefaultImage from "../../assets/manager/club_default.svg";
 
-function ManagerProfileInfoCard({ formData, type }) {
+function ManagerProfileInfoCard({ formData }) {
   return (
     <div className={styles.profileInfoCard}>
       <div className={styles.profile_info_box}>

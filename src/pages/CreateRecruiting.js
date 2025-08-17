@@ -64,7 +64,6 @@ function CreateRecruiting() {
   // 7) 리쿠르팅 생성 post
   const handleSubmit = async () => {
     try {
-      const token = localStorage.getItem("jwt");
       const url = `${process.env.REACT_APP_API_URL}/manager/recruiting/create`;
 
       // photo는 미리보기 전용이므로 서버 전송용 request에서는 제외
@@ -80,7 +79,6 @@ function CreateRecruiting() {
       }
 
       await axios.post(url, formData, {
-        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
 

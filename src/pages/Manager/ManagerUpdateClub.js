@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerUpdateClub.module.css";
 import UpdateClubWord from "../../assets/UpdateClubWord.svg";
 import Modal from "../../components/Modal";
+import useAuthStore from "../../stores/authStore";
+import apiClient from "../../utils/apiClient";
 
 import instaIcon from "../../assets/icons/instagram.svg";
 import kakaoIcon from "../../assets/icons/kakao.svg";
@@ -15,9 +17,22 @@ function ManagerUpdateClub() {
   const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null); // 실제 파일 저장용
+  const { user, isLoggedIn, isManager, token } = useAuthStore();
 
-  // 토큰을 실시간으로 가져오는 함수
-  const getToken = useCallback(() => localStorage.getItem("jwt"), []);
+  // 초기 권한 체크
+  useEffect(() => {
+    console.log("=== MANAGER UPDATE CLUB INIT ===");
+    console.log("로그인 상태:", isLoggedIn);
+    console.log("매니저 권한:", isManager());
+
+    if (!isLoggedIn || !isManager()) {
+      console.log("권한 없음 - 404로 리다이렉트");
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    console.log("권한 확인 완료 - 데이터 조회 시작");
+  }, [isLoggedIn, isManager, navigate]);
 
   const [formData, setFormData] = useState({
     clubName: "",
@@ -48,7 +63,6 @@ function ManagerUpdateClub() {
   const isTokenValid = useCallback(() => {
     console.log("=== TOKEN VALIDATION START ===");
 
-    const token = getToken();
     if (!token) {
       console.log("Token validation failed: No token");
       return false;
@@ -83,7 +97,7 @@ function ManagerUpdateClub() {
       console.log("Token validation failed: Parsing error");
       return false;
     }
-  }, [getToken]);
+  }, []);
 
   // 토큰 만료 처리 함수
   const handleTokenExpired = useCallback(() => {
@@ -102,12 +116,11 @@ function ManagerUpdateClub() {
 
   const openUpdateConfirmModal = () => {
     console.log("=== OPEN UPDATE MODAL START ===");
-    const token = getToken();
     console.log("Token exists:", !!token);
-    console.log("Token value:", token);
-    console.log("Token valid:", isTokenValid());
+    console.log("로그인 상태:", isLoggedIn);
+    console.log("매니저 권한:", isManager());
 
-    if (!token) {
+    if (!isLoggedIn || !isManager()) {
       console.log(
         "No token found in openUpdateConfirmModal - redirecting to login"
       );
@@ -121,7 +134,7 @@ function ManagerUpdateClub() {
       return;
     }
 
-    if (!isTokenValid()) {
+    if (!isLoggedIn && isManager()) {
       console.log(
         "Token invalid in openUpdateConfirmModal - redirecting to login"
       );
@@ -146,9 +159,9 @@ function ManagerUpdateClub() {
   const handleUpdateConfirmConfirm = async () => {
     try {
       console.log("=== UPDATE CONFIRMATION START ===");
-      const token = getToken();
+      // token은 Zustand에서 가져옴
       console.log("Token exists:", !!token);
-      console.log("Token valid:", isTokenValid());
+      console.log("Token valid:", isLoggedIn && isManager());
 
       if (!token) {
         console.log("No token found - redirecting to login");
@@ -156,7 +169,7 @@ function ManagerUpdateClub() {
         return;
       }
 
-      if (!isTokenValid()) {
+      if (!isLoggedIn && isManager()) {
         handleTokenExpired();
         return;
       }
@@ -170,8 +183,8 @@ function ManagerUpdateClub() {
 
       // 성공 후 잠시 대기 후 페이지 이동 (토큰이 여전히 유효할 때만)
       setTimeout(() => {
-        const currentToken = getToken();
-        if (currentToken && isTokenValid()) {
+        // token은 Zustand에서 가져옴 (token 사용)
+        if (token && isLoggedIn && isManager()) {
           navigate("/manager/mypage");
         }
       }, 1500);
@@ -196,9 +209,9 @@ function ManagerUpdateClub() {
     const fetchClubProfile = async () => {
       try {
         console.log("=== FETCH CLUB PROFILE START ===");
-        const token = getToken();
+        // token은 Zustand에서 가져옴
         console.log("Token exists:", !!token);
-        console.log("Token valid:", isTokenValid());
+        console.log("Token valid:", isLoggedIn && isManager());
 
         if (!token) {
           console.log("No token found - redirecting to login");
@@ -206,7 +219,7 @@ function ManagerUpdateClub() {
           return;
         }
 
-        if (!isTokenValid()) {
+        if (!isLoggedIn && isManager()) {
           handleTokenExpired();
           return;
         }
@@ -288,7 +301,7 @@ function ManagerUpdateClub() {
       }
     };
     fetchClubProfile();
-  }, [navigate, handleTokenExpired, isTokenValid, getToken]);
+  }, [navigate, handleTokenExpired, isTokenValid]);
 
   // formData 변경 감지용 useEffect
   useEffect(() => {
@@ -357,9 +370,9 @@ function ManagerUpdateClub() {
   const saveProfile = async () => {
     try {
       console.log("=== SAVE PROFILE START ===");
-      const token = getToken();
+      // token은 Zustand에서 가져옴
       console.log("Token exists:", !!token);
-      console.log("Token valid:", isTokenValid());
+      console.log("Token valid:", isLoggedIn && isManager());
 
       if (!token) {
         console.log("No token found - redirecting to login");
@@ -367,7 +380,7 @@ function ManagerUpdateClub() {
         return;
       }
 
-      if (!isTokenValid()) {
+      if (!isLoggedIn && isManager()) {
         handleTokenExpired();
         return;
       }

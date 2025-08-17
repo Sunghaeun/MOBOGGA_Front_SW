@@ -48,7 +48,7 @@ function EditEntertain() {
   // 공통: 토큰 헤더 만들기
   const getAuthHeader = () => {
     const raw =
-      localStorage.getItem("jwt") ||
+      window.tempToken ||
       sessionStorage.getItem("jwt") ||
       sessionStorage.getItem("idToken");
     if (!raw) return null;

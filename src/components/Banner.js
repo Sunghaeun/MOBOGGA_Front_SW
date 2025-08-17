@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles/Banner.module.css";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../utils/apiClient";
 
 function Banner() {
   const [show, setShow] = useState([]);
@@ -11,16 +11,8 @@ function Banner() {
 
   useEffect(() => {
     const getShow = async () => {
-      const token = localStorage.getItem("jwt");
       try {
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/attraction/list`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await apiClient.get("/attraction/list");
         console.log("rotatingPerformances 데이터 가져오기 성공");
         console.log(res.data.rotatingPerformances);
         console.log(res.data.rotatingPerformances[1]);

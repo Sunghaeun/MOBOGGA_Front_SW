@@ -3,16 +3,19 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/Mypage.module.css";
 import loadingStyles from "../styles/Loading.module.css";
+import useAuthStore from "../stores/authStore";
+import apiClient from "../utils/apiClient";
 import reload_btn from "../assets/temp/reload_btn.png";
 import AccountInfoCard from "../components/Mypage/AccountInfoCard";
 import ProfileInfoCard from "../components/Mypage/ProfileInfoCard";
 import ProfileUpdateBtn from "../components/Mypage/ProfileUpdateBtn";
 import MyReservCard from "../components/Mypage/MyReservCard";
 import LoginOverModal from "../components/Mypage/LoginOverModal";
+import ServerErrorModal from "../components/Mypage/ServerErrorModal";
 
 function Mypage() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("jwt");
+  const { user, isLoggedIn, isLoading: authLoading } = useAuthStore();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,11 +25,41 @@ function Mypage() {
   });
 
   const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false);
+  const [isServerErrorModalOpen, setIsServerErrorModalOpen] = useState(false);
+
+  const handleServerErrorModalClose = () => {
+    setIsServerErrorModalOpen(false);
+    setError("");
+  };
+
   const [myReservCards, setMyReservCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+
+  // 초기 권한 체크
+  useEffect(() => {
+    console.log("=== MYPAGE INIT ===");
+    console.log("Auth loading:", authLoading);
+    console.log("Is logged in:", isLoggedIn);
+
+    // 로딩 중이면 기다림
+    if (authLoading) {
+      console.log("인증 정보 로딩 중... 기다림");
+      return;
+    }
+
+    if (!isLoggedIn) {
+      console.log("로그인되지 않음 - 로그인 페이지로 리다이렉트");
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    console.log("권한 확인 완료 - 데이터 조회 시작");
+    fetchUserProfile();
+    fetchMyReservations();
+  }, [isLoggedIn, authLoading, navigate]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -36,119 +69,83 @@ function Mypage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleTokenExpired = () => {
-    console.log("=== TOKEN EXPIRED HANDLER CALLED ===");
-    console.log("Setting isLoginOverModalOpen to true");
-    setIsLoginOverModalOpen(true);
-    setError("토큰이 만료되었습니다.");
-    console.log("Modal state should be:", true);
-  };
-
   const fetchUserProfile = async () => {
     try {
-      console.log(
-        "Fetching user profile with token:",
-        token?.substring(0, 20) + "..."
-      );
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      console.log("=== FETCH USER PROFILE START ===");
 
-      console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
+      const response = await apiClient.get("/mypage/student/profile");
+      console.log("User profile response:", response.data);
 
-      if (response.status === 401 || response.status === 403) {
-        console.log("Token expired or forbidden - calling handleTokenExpired");
-        handleTokenExpired();
-        return;
-      }
+      const userData = response.data;
 
-      if (!response.ok) {
-        throw new Error("사용자 정보를 불러오는데 실패했습니다.");
-      }
-
-      const userData = await response.json();
+      // 서버에서 받은 데이터를 폼 데이터 형식에 맞게 변환
       setFormData({
         name: userData.name || "",
-        email: userData.email || "",
-        phoneNumber: userData.phoneNumber || "",
         studentId: userData.studentId || "",
+        phoneNumber: userData.phoneNumber || "",
+        email: userData.email || "",
       });
-      console.log("userData:", userData);
     } catch (error) {
-      console.log("Error in fetchUserProfile:", error);
-      if (error.name === "TypeError" && error.message.includes("fetch")) {
-        setError("네트워크 오류가 발생했습니다.");
+      console.error("User profile fetch error:", error);
+      if (
+        error.code === "ECONNABORTED" ||
+        error.name === "TypeError" ||
+        (error.message && error.message.includes("fetch"))
+      ) {
+        setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+        setIsServerErrorModalOpen(true);
       } else {
-        setError(error.message);
+        setError(error.message || "사용자 정보를 불러오는데 실패했습니다.");
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getMyReservCards = async () => {
+  const fetchMyReservations = async () => {
     try {
-      setIsLoading(true);
-      setError(null);
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/mypage/student/reservation`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        }
-      );
+      console.log("=== FETCH MY RESERVATIONS START ===");
 
-      if (response.status === 401 || response.status === 403) {
-        handleTokenExpired();
-        return;
-      }
+      const response = await apiClient.get("/mypage/student/myreservation");
+      console.log("My reservations response:", response.data);
 
-      if (!response.ok) {
-        throw new Error("예매 내역을 불러오는데 실패했습니다.");
-      }
-
-      const data = await response.json();
-      if (!data || !data.performanceList) {
-        throw new Error("예매 내역 데이터 형식이 올바르지 않습니다.");
-      }
-      setMyReservCards(data.performanceList || []);
-    } catch (err) {
-      if (err.name === "TypeError" && err.message.includes("fetch")) {
-        setError("네트워크 오류가 발생했습니다.");
+      setMyReservCards(response.data || []);
+    } catch (error) {
+      console.error("My reservations fetch error:", error);
+      if (
+        error.code === "ECONNABORTED" ||
+        error.name === "TypeError" ||
+        (error.message && error.message.includes("fetch"))
+      ) {
+        setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+        setIsServerErrorModalOpen(true);
       } else {
-        setError(err.message);
+        console.error("예약 정보를 불러오는데 실패했습니다:", error.message);
       }
-      setMyReservCards([]);
-    } finally {
-      setIsLoading(false);
     }
+  };
+
+  const reloadMyReservCards = () => {
+    fetchMyReservations();
   };
 
   useEffect(() => {
-    if (!token) {
+    if (!authLoading && !isLoggedIn) {
       setIsLoginOverModalOpen(true);
       return;
     }
-    fetchUserProfile();
-    getMyReservCards();
-  }, []);
 
-  if (!token || isLoginOverModalOpen) {
+    if (!authLoading && isLoggedIn) {
+      fetchUserProfile();
+      fetchMyReservations();
+    }
+  }, [authLoading, isLoggedIn]);
+
+  if (!isLoggedIn && !authLoading) {
     return (
       <LoginOverModal
         isOpen={true}
         onClose={() => {
-          localStorage.removeItem("jwt");
           navigate("/login");
         }}
       />
@@ -178,7 +175,7 @@ function Mypage() {
             src={reload_btn}
             alt="새로고침"
             className={styles.reload_icon}
-            onClick={getMyReservCards}
+            onClick={reloadMyReservCards}
           />
         </header>
         <div className={styles.mobile_section_title}>공연 예매 내역</div>
@@ -231,7 +228,7 @@ function Mypage() {
                 src={reload_btn}
                 alt="새로고침"
                 className={styles.reload_icon}
-                onClick={getMyReservCards}
+                onClick={reloadMyReservCards}
               />
             </div>
           </div>
@@ -270,6 +267,12 @@ function Mypage() {
         isOpen={isLoginOverModalOpen}
         onClose={() => setIsLoginOverModalOpen(false)}
       />
+      {isServerErrorModalOpen && (
+        <ServerErrorModal
+          isOpen={isServerErrorModalOpen}
+          onClose={handleServerErrorModalClose}
+        />
+      )}
     </>
   );
 }

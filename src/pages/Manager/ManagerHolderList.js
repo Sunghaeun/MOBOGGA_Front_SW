@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerHolderList.module.css";
 import TrashDefault from "../../assets/icons/trash_default.svg";
 import PaidIcon from "../../assets/icons/paid_icon.svg";
 import UnpaidIcon from "../../assets/icons/nopaid_icon.svg";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
-import tokenManager from "../../utils/tokenManager";
+import ServerErrorModal from "../../components/Mypage/ServerErrorModal";
+import useAuthStore from "../../stores/authStore";
+import apiClient from "../../utils/apiClient";
 import {
   generateCSV,
   downloadCSV,
@@ -14,6 +16,8 @@ import {
 
 function ManagerHolderList() {
   const { scheduleId } = useParams();
+  const navigate = useNavigate();
+  const { user, isLoggedIn, isManager, token } = useAuthStore();
   const [holderData, setHolderData] = useState({
     title: "",
     order: 0,
@@ -23,19 +27,38 @@ function ManagerHolderList() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false);
+  const [isServerErrorModalOpen, setIsServerErrorModalOpen] = useState(false);
+
+  const handleServerErrorModalClose = () => {
+    setIsServerErrorModalOpen(false);
+    setError("");
+  };
+
+  // 초기 권한 체크
+  useEffect(() => {
+    console.log("=== MANAGER HOLDER LIST INIT ===");
+    console.log("로그인 상태:", isLoggedIn);
+    console.log("매니저 권한:", isManager());
+
+    if (!isLoggedIn || !isManager()) {
+      console.log("권한 없음 - 404로 리다이렉트");
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    console.log("권한 확인 완료 - 데이터 조회 시작");
+  }, [isLoggedIn, isManager, navigate]);
 
   // 선택된 예매자들 관리
   const [selectedReservations, setSelectedReservations] = useState(new Set());
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [showBatchActions, setShowBatchActions] = useState(false);
 
-  const token = tokenManager.getToken();
-
   console.log("=== TOKEN DEBUG INFO ===");
   console.log("Current token:", token ? "존재함" : "없음");
   console.log("Token length:", token?.length);
   console.log("Token exists:", !!token);
-  console.log("Token valid:", token ? tokenManager.isTokenValid() : false);
+  console.log("Token valid:", token ? isLoggedIn && isManager() : false);
   console.log("scheduleId:", scheduleId);
   console.log("========================");
 
@@ -43,7 +66,7 @@ function ManagerHolderList() {
     console.log("=== MANAGER TOKEN EXPIRED HANDLER CALLED ===");
     console.log("Setting isLoginOverModalOpen to true");
 
-    const expiredToken = localStorage.getItem("jwt");
+    const expiredToken = window.tempToken;
     if (expiredToken) {
       try {
         const tokenPayload = JSON.parse(atob(expiredToken.split(".")[1]));
@@ -60,7 +83,7 @@ function ManagerHolderList() {
     }
 
     console.log("🚨 토큰 만료 처리: 토큰 삭제 및 로그인 모달 표시");
-    tokenManager.clearToken();
+    // 로그아웃은 Zustand에서 자동 처리
     setIsLoading(false);
     setIsLoginOverModalOpen(true);
     setError("토큰이 만료되었습니다. 다시 로그인해주세요.");
@@ -108,7 +131,7 @@ function ManagerHolderList() {
         const apiUrl = `${process.env.REACT_APP_API_URL}/mypage/manager/holder/${scheduleId}`;
         console.log("🔄 API 요청:", apiUrl);
 
-        let response = await tokenManager.safeFetch(apiUrl, {
+        let response = await apiClient.getInstance()(apiUrl, {
           credentials: "include",
         });
 
@@ -150,8 +173,10 @@ function ManagerHolderList() {
             err.message.includes("Failed to fetch"))
         ) {
           setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+          setIsServerErrorModalOpen(true);
         } else if (err.message.includes("timeout")) {
           setError("요청 시간이 초과되었습니다. 다시 시도해주세요.");
+          setIsServerErrorModalOpen(true);
         } else {
           setError(err.message);
         }
@@ -190,8 +215,8 @@ function ManagerHolderList() {
       console.log("🔐 입금상태 변경 요청 전 토큰 정보:", {
         token: token ? "존재함" : "없음",
         tokenLength: token?.length,
-        isValid: token ? tokenManager.isTokenValid() : false,
-        userRole: tokenManager.getUserRole(),
+        isValid: token ? isLoggedIn && isManager() : false,
+        userRole: user?.authority || "ROLE_USER",
       });
 
       const apiUrl = `${process.env.REACT_APP_API_URL}/mypage/manager/holder/${scheduleId}`;
@@ -207,7 +232,7 @@ function ManagerHolderList() {
         credentials: "include",
       });
 
-      const response = await tokenManager.safeFetch(apiUrl, {
+      const response = await apiClient.getInstance()(apiUrl, {
         method: "PUT",
         credentials: "include",
         body: JSON.stringify(requestData),
@@ -230,18 +255,18 @@ function ManagerHolderList() {
         console.log("현재 토큰 상태:", {
           exists: !!token,
           length: token?.length,
-          valid: token ? tokenManager.isTokenValid() : false,
+          valid: token ? isLoggedIn && isManager() : false,
         });
 
         // 토큰이 실제로 유효하지 않은 경우에만 만료 처리
-        if (!token || !tokenManager.isTokenValid()) {
+        if (!token || (!isLoggedIn && isManager())) {
           handleTokenExpired();
         } else {
           // 토큰이 유효한데 401이 발생한 경우 - 권한 문제일 가능성
           console.log(
             "🔍 입금상태 변경도 401 오류 - 권한 또는 API 문제 가능성"
           );
-          const userRole = tokenManager.getUserRole();
+          const userRole = user?.authority || "ROLE_USER";
           alert(
             `❌ 입금상태 변경 권한이 부족합니다.\n\n현재 역할: ${userRole}\n\n관리자에게 권한 승급을 요청하거나, 백엔드 팀에 문의해주세요.`
           );
@@ -298,8 +323,8 @@ function ManagerHolderList() {
       console.log("🔐 삭제 요청 전 토큰 정보:", {
         token: token ? "존재함" : "없음",
         tokenLength: token?.length,
-        isValid: token ? tokenManager.isTokenValid() : false,
-        userRole: tokenManager.getUserRole(),
+        isValid: token ? isLoggedIn && isManager() : false,
+        userRole: user?.authority || "ROLE_USER",
       });
 
       const apiUrl = `${process.env.REACT_APP_API_URL}/mypage/manager/holder/${scheduleId}`;
@@ -315,7 +340,7 @@ function ManagerHolderList() {
         credentials: "include",
       });
 
-      const response = await tokenManager.safeFetch(apiUrl, {
+      const response = await apiClient.getInstance()(apiUrl, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(requestData),
@@ -340,18 +365,18 @@ function ManagerHolderList() {
         console.log("현재 토큰 상태:", {
           exists: !!token,
           length: token?.length,
-          valid: token ? tokenManager.isTokenValid() : false,
+          valid: token ? isLoggedIn && isManager() : false,
         });
 
         // 토큰이 실제로 유효하지 않은 경우에만 만료 처리
-        if (!token || !tokenManager.isTokenValid()) {
+        if (!token || (!isLoggedIn && isManager())) {
           handleTokenExpired();
         } else {
           // 토큰이 유효한데 401이 발생한 경우 - 권한 문제일 가능성
           console.log(
             "🔍 토큰은 유효하지만 401 오류 - 권한 또는 API 문제 가능성"
           );
-          const userRole = tokenManager.getUserRole();
+          const userRole = user?.authority || "ROLE_USER";
           alert(
             `❌ 삭제 권한이 부족합니다.\n\n현재 역할: ${userRole}\n\n삭제 기능은 더 높은 권한이 필요할 수 있습니다.\n관리자에게 권한 승급을 요청하거나, 백엔드 팀에 문의해주세요.`
           );
@@ -497,7 +522,7 @@ function ManagerHolderList() {
       );
 
       const apiUrl = `${process.env.REACT_APP_API_URL}/mypage/manager/holder/${scheduleId}`;
-      const response = await tokenManager.safeFetch(apiUrl, {
+      const response = await apiClient.getInstance()(apiUrl, {
         method: "PUT",
         credentials: "include",
         body: JSON.stringify(requestData),
@@ -569,12 +594,12 @@ function ManagerHolderList() {
       console.log("🔐 일괄 삭제 요청 전 토큰 정보:", {
         token: token ? "존재함" : "없음",
         tokenLength: token?.length,
-        isValid: token ? tokenManager.isTokenValid() : false,
-        userRole: tokenManager.getUserRole(),
+        isValid: token ? isLoggedIn && isManager() : false,
+        userRole: user?.authority || "ROLE_USER",
       });
 
       const apiUrl = `${process.env.REACT_APP_API_URL}/mypage/manager/holder/${scheduleId}`;
-      const response = await tokenManager.safeFetch(apiUrl, {
+      const response = await apiClient.getInstance()(apiUrl, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify(requestData),
@@ -599,18 +624,18 @@ function ManagerHolderList() {
         console.log("현재 토큰 상태:", {
           exists: !!token,
           length: token?.length,
-          valid: token ? tokenManager.isTokenValid() : false,
+          valid: token ? isLoggedIn && isManager() : false,
         });
 
         // 토큰이 실제로 유효하지 않은 경우에만 만료 처리
-        if (!token || !tokenManager.isTokenValid()) {
+        if (!token || (!isLoggedIn && isManager())) {
           handleTokenExpired();
         } else {
           // 토큰이 유효한데 401이 발생한 경우 - 권한 문제일 가능성
           console.log(
             "🔍 토큰은 유효하지만 401 오류 - 권한 또는 API 문제 가능성"
           );
-          const userRole = tokenManager.getUserRole();
+          const userRole = user?.authority || "ROLE_USER";
           alert(
             `❌ 일괄 삭제 권한이 부족합니다.\n\n현재 역할: ${userRole}\n\n삭제 기능은 더 높은 권한이 필요할 수 있습니다.\n관리자에게 권한 승급을 요청하거나, 백엔드 팀에 문의해주세요.`
           );
@@ -886,6 +911,12 @@ function ManagerHolderList() {
             }}
           />
         </>
+      )}
+      {isServerErrorModalOpen && (
+        <ServerErrorModal
+          isOpen={isServerErrorModalOpen}
+          onClose={handleServerErrorModalClose}
+        />
       )}
     </>
   );
