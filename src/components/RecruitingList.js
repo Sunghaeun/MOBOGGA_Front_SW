@@ -5,6 +5,7 @@ import styles from "./styles/RecruitingList.module.css";
 import loadingStyles from "../styles/Loading.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from "../stores/authStore";
 
 import back from "../assets/icons/back.svg";
 
@@ -16,60 +17,15 @@ function RecruitingList() {
   const [error, setError] = useState(null);
 
 // 4) 관리자 권한 받아오기 - Hooks를 최상위로 이동
-  const [auth, setAuth] = useState([]);
-  
-  // 관리자 권한 체크 함수 - useEffect보다 먼저 선언
-  const isManager = () => {
-    return auth && auth.authority === "ROLE_CLUB";
-  };
+  const { isManager, initialize } = useAuthStore();
 
-  
-
-  // Auth 함수도 최상위로 이동
-  const getAuth = async () => {
-    try {
-      const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
-
-      // 토큰이 없으면 권한 체크를 건너뛰기
-      if (!token) {
-        console.log("No token found, skipping auth check");
-        return;
-      }
-
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/auth/me`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
-          },
-          withCredentials: true,
-          timeout: 10000, // 10초 타임아웃
-        }
-      );
-
-      console.log("Response from backend:", response.data);
-      setAuth(response.data);
-    } catch (error) {
-      console.error("Auth check failed:", error);
-
-      // 401/403 에러의 경우 토큰 제거
-      if (error.response?.status === 401 || error.response?.status === 403) {
-        localStorage.removeItem("jwt");
-        setAuth(null);
-      }
-
-      // 네트워크 에러는 조용히 처리 (에러를 던지지 않음)
-      if (error.code === "ERR_NETWORK" || error.message === "Network Error") {
-        console.log("Network error during auth check, continuing without auth");
-        setAuth(null);
-        return;
-      }
-    }
-  };
-
+  // 앱 진입 시 토큰이 있으면 사용자 정보 조회 (onRehydrateStorage에서도 호출되지만 안전하게 한 번 더)
   useEffect(() => {
-    getAuth();
+    initialize?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+
   
 
   // 1) recruiting 데이터 가져오기
@@ -156,7 +112,7 @@ function RecruitingList() {
           ))}
         </div>
 
-        {isManager() && (
+        {isManager?.() && (
           <div className={styles.createButton} onClick={() => navigate("/recruiting/create")}>
             <span>리쿠르팅 새로 만들기</span>
           </div>
