@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerUpdateClub.module.css";
 import UpdateClubWord from "../../assets/UpdateClubWord.svg";
 import Modal from "../../components/Modal";
+import ServerErrorModal from "../../components/Mypage/ServerErrorModal";
 import useAuthStore from "../../stores/authStore";
 import apiClient from "../../utils/apiClient";
 
@@ -17,22 +18,41 @@ function ManagerUpdateClub() {
   const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null); // 실제 파일 저장용
-  const { user, isLoggedIn, isManager, token } = useAuthStore();
+  const {
+    user,
+    isLoggedIn,
+    isLoading: authLoading,
+    isManager,
+    token,
+  } = useAuthStore();
+
+  // 매니저 권한 여부를 변수로 저장
+  const isManagerUser = isManager();
+  const userRole = user?.authority;
 
   // 초기 권한 체크
   useEffect(() => {
     console.log("=== MANAGER UPDATE CLUB INIT ===");
+    console.log("Auth loading:", authLoading);
     console.log("로그인 상태:", isLoggedIn);
-    console.log("매니저 권한:", isManager());
+    console.log("매니저 권한:", isManagerUser);
+    console.log("사용자 역할:", userRole);
 
-    if (!isLoggedIn || !isManager()) {
-      console.log("권한 없음 - 404로 리다이렉트");
+    // 로딩 중이면 기다림
+    if (authLoading) {
+      console.log("인증 정보 로딩 중... 기다림");
+      return;
+    }
+
+    if (!isLoggedIn || !isManagerUser) {
+      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
       navigate("/login", { replace: true });
       return;
     }
 
-    console.log("권한 확인 완료 - 데이터 조회 시작");
-  }, [isLoggedIn, isManager, navigate]);
+    console.log("권한 확인 완료");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn, isManagerUser, authLoading, navigate]);
 
   const [formData, setFormData] = useState({
     clubName: "",
@@ -50,6 +70,7 @@ function ManagerUpdateClub() {
   // 모달 상태 관리
   const [isUpdateConfirmModalOpen, setIsUpdateConfirmModalOpen] =
     useState(false);
+  const [isServerErrorModalOpen, setIsServerErrorModalOpen] = useState(false);
   const [validationErrorModal, setValidationErrorModal] = useState({
     isOpen: false,
     message: "",
@@ -58,53 +79,12 @@ function ManagerUpdateClub() {
     isOpen: false,
     message: "",
   });
+  const [error, setError] = useState(null);
 
-  // 토큰 유효성 검증 함수
-  const isTokenValid = useCallback(() => {
-    console.log("=== TOKEN VALIDATION START ===");
-
-    if (!token) {
-      console.log("Token validation failed: No token");
-      return false;
-    }
-
-    try {
-      const tokenParts = token.split(".");
-      console.log("Token parts length:", tokenParts.length);
-
-      if (tokenParts.length !== 3) {
-        console.log("Token validation failed: Invalid token format");
-        return false;
-      }
-
-      const tokenPayload = JSON.parse(atob(tokenParts[1]));
-      const currentTime = Date.now() / 1000;
-
-      console.log("Token validation in ManagerUpdateClub:");
-      console.log("Current time:", new Date(currentTime * 1000));
-      console.log("Token expires:", new Date(tokenPayload.exp * 1000));
-      console.log("Token payload:", tokenPayload);
-      console.log(
-        "Time difference:",
-        tokenPayload.exp - currentTime,
-        "seconds"
-      );
-      console.log("Token valid:", tokenPayload.exp > currentTime);
-
-      return tokenPayload.exp > currentTime;
-    } catch (e) {
-      console.error("Token parsing error:", e);
-      console.log("Token validation failed: Parsing error");
-      return false;
-    }
-  }, []);
-
-  // 토큰 만료 처리 함수
-  const handleTokenExpired = useCallback(() => {
-    console.log("Token expired in ManagerUpdateClub - redirecting to login");
-    localStorage.removeItem("jwt");
-    navigate("/login");
-  }, [navigate]);
+  const handleServerErrorModalClose = () => {
+    setIsServerErrorModalOpen(false);
+    setError("");
+  };
 
   const closeValidationErrorModal = () => {
     setValidationErrorModal({ isOpen: false, message: "" });
@@ -118,12 +98,10 @@ function ManagerUpdateClub() {
     console.log("=== OPEN UPDATE MODAL START ===");
     console.log("Token exists:", !!token);
     console.log("로그인 상태:", isLoggedIn);
-    console.log("매니저 권한:", isManager());
+    console.log("매니저 권한:", isManagerUser);
 
-    if (!isLoggedIn || !isManager()) {
-      console.log(
-        "No token found in openUpdateConfirmModal - redirecting to login"
-      );
+    if (!isLoggedIn || !isManagerUser) {
+      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
       setValidationErrorModal({
         isOpen: true,
         message: "로그인이 필요합니다. 다시 로그인해주세요.",
@@ -134,21 +112,7 @@ function ManagerUpdateClub() {
       return;
     }
 
-    if (!isLoggedIn && isManager()) {
-      console.log(
-        "Token invalid in openUpdateConfirmModal - redirecting to login"
-      );
-      setValidationErrorModal({
-        isOpen: true,
-        message: "세션이 만료되었습니다. 다시 로그인해주세요.",
-      });
-      setTimeout(() => {
-        handleTokenExpired();
-      }, 1500);
-      return;
-    }
-
-    console.log("Token validation passed - opening modal");
+    console.log("권한 확인 완료 - 모달 열기");
     setIsUpdateConfirmModalOpen(true);
   };
 
@@ -159,18 +123,13 @@ function ManagerUpdateClub() {
   const handleUpdateConfirmConfirm = async () => {
     try {
       console.log("=== UPDATE CONFIRMATION START ===");
-      // token은 Zustand에서 가져옴
       console.log("Token exists:", !!token);
-      console.log("Token valid:", isLoggedIn && isManager());
+      console.log("로그인 상태:", isLoggedIn);
+      console.log("매니저 권한:", isManagerUser);
 
-      if (!token) {
-        console.log("No token found - redirecting to login");
+      if (!isLoggedIn || !isManagerUser) {
+        console.log("권한 없음 - 로그인 페이지로 리다이렉트");
         navigate("/login");
-        return;
-      }
-
-      if (!isLoggedIn && isManager()) {
-        handleTokenExpired();
         return;
       }
 
@@ -181,10 +140,9 @@ function ManagerUpdateClub() {
         message: "동아리 정보가 성공적으로 수정되었습니다.",
       });
 
-      // 성공 후 잠시 대기 후 페이지 이동 (토큰이 여전히 유효할 때만)
+      // 성공 후 잠시 대기 후 페이지 이동
       setTimeout(() => {
-        // token은 Zustand에서 가져옴 (token 사용)
-        if (token && isLoggedIn && isManager()) {
+        if (isLoggedIn && isManagerUser) {
           navigate("/manager/mypage");
         }
       }, 1500);
@@ -192,9 +150,13 @@ function ManagerUpdateClub() {
       console.error("Error saving profile:", error);
       closeUpdateConfirmModal();
 
-      // 네트워크 에러 vs 인증 에러 구분
-      if (error.message.includes("401") || error.message.includes("403")) {
-        handleTokenExpired();
+      if (
+        error.code === "ECONNABORTED" ||
+        error.name === "TypeError" ||
+        (error.message && error.message.includes("fetch"))
+      ) {
+        setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+        setIsServerErrorModalOpen(true);
       } else {
         setValidationErrorModal({
           isOpen: true,
@@ -207,53 +169,20 @@ function ManagerUpdateClub() {
   // 사용자 정보 조회
   useEffect(() => {
     const fetchClubProfile = async () => {
+      // 인증 로딩 중이거나 권한이 없으면 실행하지 않음
+      if (authLoading || !isLoggedIn || !isManagerUser) {
+        return;
+      }
+
       try {
         console.log("=== FETCH CLUB PROFILE START ===");
-        // token은 Zustand에서 가져옴
-        console.log("Token exists:", !!token);
-        console.log("Token valid:", isLoggedIn && isManager());
+        console.log("현재 토큰 상태:", !!token);
+        console.log("현재 사용자 정보:", user);
 
-        if (!token) {
-          console.log("No token found - redirecting to login");
-          navigate("/login");
-          return;
-        }
+        const response = await apiClient.get("/mypage/manager/club");
+        console.log("Club profile response:", response.data);
 
-        if (!isLoggedIn && isManager()) {
-          handleTokenExpired();
-          return;
-        }
-
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/mypage/manager/club`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        console.log("Club profile response status:", response.status);
-
-        // 401/403 에러 명시적 처리
-        if (response.status === 401 || response.status === 403) {
-          console.log("Authentication/Authorization failed for club profile");
-          const errorText = await response.text();
-          console.log("Error response:", errorText);
-          handleTokenExpired();
-          return;
-        }
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.log("API Error response:", errorText);
-          throw new Error(
-            `서버 응답 오류 (${response.status}): 사용자 정보를 불러오는데 실패했습니다.`
-          );
-        }
-
-        const userData = await response.json();
+        const userData = response.data;
         console.log("Club Data:", userData);
         console.log("URL fields:", {
           instaUrl: userData.instaUrl,
@@ -285,11 +214,14 @@ function ManagerUpdateClub() {
           linktree: userData.notionUrl,
         });
       } catch (error) {
-        console.error("Error fetching user profile:", error);
-
-        // 네트워크 에러 vs 인증 에러 구분
-        if (error.message.includes("401") || error.message.includes("403")) {
-          handleTokenExpired();
+        console.error("Error fetching club profile:", error);
+        if (
+          error.code === "ECONNABORTED" ||
+          error.name === "TypeError" ||
+          (error.message && error.message.includes("fetch"))
+        ) {
+          setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+          setIsServerErrorModalOpen(true);
         } else {
           setValidationErrorModal({
             isOpen: true,
@@ -301,7 +233,7 @@ function ManagerUpdateClub() {
       }
     };
     fetchClubProfile();
-  }, [navigate, handleTokenExpired, isTokenValid]);
+  }, [authLoading, isLoggedIn, isManagerUser, token, user, navigate]);
 
   // formData 변경 감지용 useEffect
   useEffect(() => {
@@ -370,18 +302,12 @@ function ManagerUpdateClub() {
   const saveProfile = async () => {
     try {
       console.log("=== SAVE PROFILE START ===");
-      // token은 Zustand에서 가져옴
-      console.log("Token exists:", !!token);
-      console.log("Token valid:", isLoggedIn && isManager());
+      console.log("현재 토큰 상태:", !!token);
+      console.log("현재 사용자 정보:", user);
 
-      if (!token) {
-        console.log("No token found - redirecting to login");
+      if (!isLoggedIn || !isManagerUser) {
+        console.log("권한 없음 - 로그인 페이지로 리다이렉트");
         navigate("/login");
-        return;
-      }
-
-      if (!isLoggedIn && isManager()) {
-        handleTokenExpired();
         return;
       }
 
@@ -402,18 +328,12 @@ function ManagerUpdateClub() {
         selectedFile ? selectedFile.name : "No file"
       );
 
-      // FormData 사용 (파일이 있는 경우)
-      let requestBody;
-      let headers = {
-        Authorization: `Bearer ${token}`,
-      };
-
       if (selectedFile) {
         // 파일이 있으면 FormData 사용
         console.log("Using FormData for file upload");
         const formDataToSend = new FormData();
 
-        // JSON 데이터를 각각의 필드로 추가 (Blob 대신)
+        // JSON 데이터를 각각의 필드로 추가
         formDataToSend.append("clubName", formData.clubName);
         formDataToSend.append("content", formData.description);
         formDataToSend.append("instaUrl", formData.instagram);
@@ -425,21 +345,26 @@ function ManagerUpdateClub() {
         formDataToSend.append("mandatorySemesters", formData.semester);
         formDataToSend.append("poster", selectedFile);
 
-        requestBody = formDataToSend;
-
-        // FormData 요청을 위한 추가 헤더
-        headers["Accept"] = "application/json";
-
         console.log("FormData contents:");
         for (let [key, value] of formDataToSend.entries()) {
           console.log(key, value);
         }
+
+        // apiClient에서 FormData 지원
+        const response = await apiClient.put(
+          "/mypage/manager/club",
+          formDataToSend,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log("Save response with file:", response.data);
       } else {
         // 파일이 없으면 JSON으로 전송
         console.log("Using JSON for update without file");
-        headers["Content-Type"] = "application/json";
-        headers["Accept"] = "application/json";
-        requestBody = JSON.stringify({
+        const requestData = {
           clubName: formData.clubName,
           content: formData.description,
           instaUrl: formData.instagram,
@@ -450,71 +375,17 @@ function ManagerUpdateClub() {
           managerName: formData.userName,
           phoneNumber: formData.phoneNum,
           mandatorySemesters: formData.semester,
-        });
-      }
+        };
 
-      console.log("Request headers:", headers);
-      console.log(
-        "Request body type:",
-        requestBody instanceof FormData ? "FormData" : "JSON"
-      );
-
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/mypage/manager/club`,
-        {
-          method: "PUT",
-          headers: headers,
-          body: requestBody,
-        }
-      );
-
-      console.log("Save response status:", response.status);
-
-      // 401/403 에러 명시적 처리
-      if (response.status === 401 || response.status === 403) {
-        console.log("Authentication/Authorization failed for save");
-        const errorText = await response.text();
-        console.log("Error response:", errorText);
-
-        // 401 에러 시 바로 로그인으로 리다이렉트하지 말고 에러 모달 표시
-        throw new Error("인증에 실패했습니다. 다시 로그인해주세요.");
-      }
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.log("Save API Error response:", errorText);
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch (e) {
-          errorData = { message: errorText };
-        }
-        throw new Error(
-          errorData.message ||
-            `서버 응답 오류 (${response.status}): 저장에 실패했습니다.`
+        const response = await apiClient.put(
+          "/mypage/manager/club",
+          requestData
         );
+        console.log("Save response without file:", response.data);
       }
     } catch (error) {
       console.error("Error saving profile:", error);
-
-      // 401/403 인증 에러 처리
-      if (error.message.includes("인증에 실패했습니다")) {
-        setValidationErrorModal({
-          isOpen: true,
-          message: error.message,
-        });
-        // 3초 후 로그인 페이지로 리다이렉트
-        setTimeout(() => {
-          handleTokenExpired();
-        }, 3000);
-      } else {
-        // 네트워크 에러 vs 기타 에러 구분
-        if (error.message.includes("401") || error.message.includes("403")) {
-          handleTokenExpired();
-        } else {
-          throw error;
-        }
-      }
+      throw error; // 상위에서 처리하도록 다시 throw
     }
   };
 
@@ -690,6 +561,12 @@ function ManagerUpdateClub() {
           </div>
         </div>
       </Modal>
+      {isServerErrorModalOpen && (
+        <ServerErrorModal
+          onClose={handleServerErrorModalClose}
+          message={error || "서버 오류가 발생했습니다."}
+        />
+      )}
     </div>
   );
 }
