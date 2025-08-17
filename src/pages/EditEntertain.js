@@ -57,8 +57,8 @@ function EditEntertain() {
 
   const getEntertain = async () => {
     try {
-      const auth = getAuthHeader();
-      if (!auth) {
+      const token = localStorage.getItem("jwt");
+      if (!token) {
         alert("로그인 필요");
         return;
       }
@@ -66,7 +66,7 @@ function EditEntertain() {
       const res = await axios.get(
         `${API_BASE}/manager/entertain/update/${id}`,
         {
-          headers: { Authorization: auth },
+          headers: { Authorization: `Baereer ${token}` },
         }
       );
       console.log("== 서버에서 받은 데이터 ==", res.data);

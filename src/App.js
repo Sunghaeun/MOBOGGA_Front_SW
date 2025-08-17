@@ -123,13 +123,15 @@ function AppContent() {
           <Route path="/404" element={<Error404 />} />
 
           <Route path="/recruiting/create" element={<CreateRecruiting />} />
-          <Route path="/entertain/create" element={<CreateEntertain />} />
           <Route path="/show/create" element={<CreateShow />} />
+          <Route path="/entertain/create" element={<CreateEntertain />} />
 
           <Route
             path="/edit/recruiting/:recruitingId"
             element={<EditRecruiting />}
           />
+          <Route path="edit/entertain/:id" element={<EditEntertain />} />
+          <Route path="edit/show/:id" element={<EditShow />} />
           <Route path="/manager/club/:id" element={<ManageClubDetail />} />
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
           <Route path="/tosslinktest" element={<TossAppLauncher />} />
