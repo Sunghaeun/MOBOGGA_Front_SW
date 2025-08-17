@@ -15,9 +15,10 @@
   flex-direction: column;
   background: white;
   padding: 20px;
-  padding-bottom: 30px;
+  padding-bottom: 1.5rem;
   position: relative;
   width: 25.75rem;
+  min-height: 8rem;
   flex-shrink: 0;
   justify-content: center;
   align-items: center;
