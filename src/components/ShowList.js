@@ -69,7 +69,7 @@ function ShowList() {
       }
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/auth/me`,
+        `${process.env.REACT_APP_API_URL}/api/auth/me`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
