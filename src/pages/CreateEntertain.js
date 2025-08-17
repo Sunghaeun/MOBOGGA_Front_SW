@@ -45,14 +45,22 @@ function CreateEntertain() {
   // eslint-disable-next-line
   const getAuth = async () => {
     try {
-      const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
+      // 요청 설정 준비
+      const requestConfig = {
+        withCredentials: true,
+      };
+
+      // 쿠키가 없고 토큰이 있으면 Authorization 헤더 추가
+      const token = window.tempToken;
+      if (!document.cookie.includes("session") && token) {
+        requestConfig.headers = {
+          Authorization: `Bearer ${token}`,
+        };
+      }
 
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/auth/me`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,
-        }
+        requestConfig
       );
 
       console.log("Response from backend:", response.data);
@@ -66,8 +74,24 @@ function CreateEntertain() {
 
   //모든 입력란을 받아야 submit 가능 + 빈칸이 어디인지 알려줌
   const makeEntertain = async () => {
-    const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
-    if (!token) {
+    // 요청 설정 준비
+    const requestConfig = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    // 쿠키가 없고 토큰이 있으면 Authorization 헤더 추가
+    const token = window.tempToken;
+    if (!document.cookie.includes("session") && token) {
+      requestConfig.headers.Authorization = `Bearer ${token}`;
+    }
+
+    if (
+      !requestConfig.headers.Authorization &&
+      !document.cookie.includes("session")
+    ) {
       console.log("로그인 토큰이 없습니다");
       return;
     }

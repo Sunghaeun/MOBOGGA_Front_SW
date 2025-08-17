@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import sendAccessTokenToBackend from "../api/sendAccessTokenToBackend";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/Loading.module.css";
+import ServerErrorModal from "../components/Mypage/ServerErrorModal";
 
 const Loading = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   useEffect(() => {
     const handleOAuthCallback = async () => {
@@ -30,8 +32,7 @@ const Loading = () => {
         if (token) {
           console.log("백엔드에서 토큰 받음:", token.substring(0, 20) + "...");
 
-          // JWT 저장
-          localStorage.setItem("jwt", token);
+          // 쿠키 기반 인증으로 변경되어 JWT 저장 불필요
 
           // 첫 로그인 여부에 따라 페이지 이동
           if (isFirst === "true") {
@@ -80,6 +81,7 @@ const Loading = () => {
       } catch (error) {
         console.error("OAuth 콜백 처리 중 에러:", error);
         setError(error.message);
+        setIsErrorModalOpen(true);
       } finally {
         setIsLoading(false);
       }
@@ -87,6 +89,11 @@ const Loading = () => {
 
     handleOAuthCallback();
   }, [navigate]);
+
+  const handleErrorModalClose = () => {
+    setIsErrorModalOpen(false);
+    navigate("/login");
+  };
 
   return (
     <div id="loading">
@@ -100,6 +107,12 @@ const Loading = () => {
           </button>
         </div>
       )}
+
+      <ServerErrorModal
+        isOpen={isErrorModalOpen}
+        onClose={handleErrorModalClose}
+        errorMessage={error}
+      />
     </div>
   );
 };

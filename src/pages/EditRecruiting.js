@@ -73,10 +73,22 @@ function CreateRecruiting() {
   // 5) 리쿠르팅 정보 가져오기
   const getRecruiting = async () => {
     try {
-      const token = localStorage.getItem("jwt");
+      const token = window.tempToken;
+
+      // 요청 설정 준비
+      const requestConfig = {
+        withCredentials: true,
+      };
+
+      if (!document.cookie.includes("session") && token) {
+        requestConfig.headers = {
+          Authorization: `Bearer ${token}`,
+        };
+      }
+
       const res = await axios.get(
         `${process.env.REACT_APP_API_URL}/manager/recruiting/update/${recruitingId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        requestConfig
       );
       const src = res.data ?? {};
       console.log("리쿠르팅 데이터 로드 성공", src);
@@ -118,7 +130,7 @@ function CreateRecruiting() {
   // 7) 리쿠르팅 수정 put 요청
   const handleSubmit = async () => {
     try {
-      const token = localStorage.getItem("jwt");
+      const token = window.tempToken;
       const url = `${process.env.REACT_APP_API_URL}/manager/recruiting/update/${recruitingId}`;
 
       // photo는 미리보기 전용이므로 서버 전송용 request에서는 제외

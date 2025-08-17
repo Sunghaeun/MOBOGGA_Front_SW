@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+/*eslint-disable*/
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerRecruitingpage.module.css";
 import AccountInfoCard from "../../components/Mypage/AccountInfoCard";
@@ -7,47 +8,29 @@ import ManagerProfileUpdateBtn from "../../components/Mypage/ManagerProfileUpdat
 import ClubUpdateBtn from "../../components/Manager/ClubUpdateBtn";
 import RecruitingCard from "../../components/Manager/RecruitingCard";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
-import ServerErrorModal from "../../components/Mypage/ServerErrorModal";
+import { generateCSV, downloadCSV } from "../../utils/csvExport";
+import { formatRecruitingDataForCSV } from "../../utils/csvFormatters";
 import useAuthStore from "../../stores/authStore";
 import apiClient from "../../utils/apiClient";
 
 function ManagerRecruitingpage() {
   const navigate = useNavigate();
-  const {
-    user,
-    isLoggedIn,
-    isLoading: authLoading,
-    isManager,
-    token,
-  } = useAuthStore();
-
-  // 매니저 권한 여부를 변수로 저장
-  const isManagerUser = isManager();
-  const userRole = user?.authority;
+  const { user, isLoggedIn, isManager, token } = useAuthStore();
 
   // 초기 권한 체크
   useEffect(() => {
     console.log("=== MANAGER RECRUITING PAGE INIT ===");
-    console.log("Auth loading:", authLoading);
     console.log("로그인 상태:", isLoggedIn);
-    console.log("매니저 권한:", isManagerUser);
-    console.log("사용자 역할:", userRole);
+    console.log("매니저 권한:", isManager());
 
-    // 로딩 중이면 기다림
-    if (authLoading) {
-      console.log("인증 정보 로딩 중... 기다림");
+    if (!isLoggedIn || !isManager()) {
+      console.log("권한 없음 - 404로 리다이렉트");
+      navigate("/404", { replace: true });
       return;
     }
 
-    if (!isLoggedIn || !isManagerUser) {
-      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
-      navigate("/login", { replace: true });
-      return;
-    }
-
-    console.log("권한 확인 완료");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn, isManagerUser, authLoading, navigate]);
+    console.log("권한 확인 완료 - 데이터 조회 시작");
+  }, [isLoggedIn, isManager, navigate]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -58,26 +41,37 @@ function ManagerRecruitingpage() {
   });
 
   const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false);
-  const [isServerErrorModalOpen, setIsServerErrorModalOpen] = useState(false);
   const [recruitingCards, setRecruitingCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const handleServerErrorModalClose = () => {
-    setIsServerErrorModalOpen(false);
-    setError("");
-  };
-
-  const fetchManagerProfile = useCallback(async () => {
+  const fetchManagerProfile = async () => {
     try {
       console.log("=== FETCH MANAGER PROFILE START ===");
-      console.log("현재 토큰 상태:", !!token);
-      console.log("현재 사용자 정보:", user);
-
+      
       const response = await apiClient.get("/mypage/manager/profile");
-      console.log("Manager profile response:", response.data);
 
-      const managerData = response.data;
+      console.log("Manager profile response status:", response.status);
+
+      // 401/403 에러 명시적 처리
+      if (response.status === 401 || response.status === 403) {
+        console.log("Authentication/Authorization failed");
+        const errorText = await response.text();
+        console.log("Error response:", errorText);
+        handleTokenExpired();
+        return;
+      }
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log("API Error response:", errorText);
+        throw new Error(
+          `서버 응답 오류 (${response.status}): 사용자 정보를 불러오는데 실패했습니다.`
+        );
+      }
+
+      const managerData = await response.json();
+      console.log("manager Data:", managerData);
 
       // 서버에서 받은 데이터를 폼 데이터 형식에 맞게 변환
       setFormData({
@@ -88,33 +82,29 @@ function ManagerRecruitingpage() {
         clubPoster: managerData.clubPoster || "",
       });
     } catch (error) {
-      console.error("Manager profile fetch error:", error);
-      if (
-        error.code === "ECONNABORTED" ||
-        error.name === "TypeError" ||
-        (error.message && error.message.includes("fetch"))
-      ) {
-        setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
-        setIsServerErrorModalOpen(true);
+      console.error("Error fetching manager profile:", error);
+
+      // 네트워크 에러 vs 인증 에러 구분
+      if (error.message.includes("401") || error.message.includes("403")) {
+        handleTokenExpired();
       } else {
-        setError(error.message || "사용자 정보를 불러오는데 실패했습니다.");
+        setError(error.message);
       }
     } finally {
       setIsLoading(false);
     }
-  }, [token, user]);
+  };
 
-  const getRecruitingCards = useCallback(async () => {
+  const getRecruitingCards = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
       console.log("=== FETCH RECRUITING CARDS START ===");
-      console.log("현재 토큰 상태:", !!token);
-      console.log("현재 사용자 정보:", user);
 
-      const response = await apiClient.get("/mypage/manager/recruiting");
-      console.log("Recruiting cards response:", response.data);
+      const response = await apiClient.get("/mypage/manager/show");
+
+      console.log("Recruiting cards response status:", response.status);
 
       const data = response.data;
       console.log("Recruiting 전체 응답 데이터:", data);
@@ -129,48 +119,31 @@ function ManagerRecruitingpage() {
       setRecruitingCards(data.recruitingList || []);
       console.log("설정된 리크루팅 내역 데이터:", data.recruitingList);
     } catch (err) {
-      console.error("리크루팅 카드 조회 에러:", err);
-      if (
-        err.code === "ECONNABORTED" ||
-        err.name === "TypeError" ||
-        (err.message && err.message.includes("fetch"))
-      ) {
-        setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
-        setIsServerErrorModalOpen(true);
+      console.error("에러 발생:", err);
+
+      // recruiting API 에러는 토큰을 삭제하지 않음
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        setError("리크루팅 데이터에 접근할 권한이 없습니다.");
       } else {
-        setError(err.message || "리크루팅 목록을 불러오는데 실패했습니다.");
+        setError(err.message || "리크루팅 내역을 불러오는데 실패했습니다.");
       }
       setRecruitingCards([]);
     } finally {
       setIsLoading(false);
     }
-  }, [token, user]);
+  };
 
   // 사용자 정보 조회
   useEffect(() => {
     const fetchData = async () => {
-      if (!authLoading && isLoggedIn && isManagerUser) {
+      if (isLoggedIn && isManager()) {
         await fetchManagerProfile();
         await getRecruitingCards();
       }
     };
 
     fetchData();
-  }, [
-    authLoading,
-    isLoggedIn,
-    isManagerUser,
-    fetchManagerProfile,
-    getRecruitingCards,
-  ]);
-
-  const handleManagerProfileUpdate = () => {
-    navigate("/update-profile", { replace: false });
-  };
-
-  const handleClubUpdate = () => {
-    navigate("/manager/updateclub", { replace: false });
-  };
+  }, [isLoggedIn, isManager]);
 
   if (isLoading) {
     console.log("로딩 중 화면 렌더링");
@@ -180,8 +153,8 @@ function ManagerRecruitingpage() {
           <div className={styles.sidebar}>
             <AccountInfoCard formData={formData} />
             <ManagerProfileInfoCard formData={formData} />
-            <ManagerProfileUpdateBtn onClick={handleManagerProfileUpdate} />
-            <ClubUpdateBtn onClick={handleClubUpdate} />
+            <ManagerProfileUpdateBtn onClick={ManagerProfileUpdateBtn} />
+            <ClubUpdateBtn onClick={ClubUpdateBtn} />
           </div>
           <div className={styles.container}>
             <div className={styles.category_box}>
@@ -247,8 +220,8 @@ function ManagerRecruitingpage() {
         <div className={styles.sidebar}>
           <AccountInfoCard formData={formData} />
           <ManagerProfileInfoCard formData={formData} />
-          <ManagerProfileUpdateBtn onClick={handleManagerProfileUpdate} />
-          <ClubUpdateBtn onClick={handleClubUpdate} />
+          <ManagerProfileUpdateBtn onClick={ManagerProfileUpdateBtn} />
+          <ClubUpdateBtn onClick={ClubUpdateBtn} />
         </div>
         <div className={styles.container}>
           <div className={styles.category_box}>
@@ -310,12 +283,6 @@ function ManagerRecruitingpage() {
           <LoginOverModal
             isOpen={isLoginOverModalOpen}
             onClose={() => setIsLoginOverModalOpen(false)}
-          />
-        )}
-        {isServerErrorModalOpen && (
-          <ServerErrorModal
-            onClose={handleServerErrorModalClose}
-            message={error || "서버 오류가 발생했습니다."}
           />
         )}
       </div>

@@ -1,5 +1,6 @@
 // src/api/sendAccessTokenToBackend.js
-import axios from "axios";
+import apiClient from "../utils/apiClient";
+import useAuthStore from "../stores/authStore";
 
 const sendAccessTokenToBackend = async (idToken, navigate) => {
   try {
@@ -10,9 +11,7 @@ const sendAccessTokenToBackend = async (idToken, navigate) => {
       );
     }
 
-    const apiUrl = `${process.env.REACT_APP_API_URL}/api/oauth/google/session`;
     console.log("API URL:", process.env.REACT_APP_API_URL);
-    console.log("Full request URL:", apiUrl);
     console.log("Request payload:", {
       credential: idToken?.substring(0, 50) + "...",
     });
@@ -23,18 +22,19 @@ const sendAccessTokenToBackend = async (idToken, navigate) => {
 
     console.log("Starting main OAuth request...");
     console.log("Request details:", {
-      url: apiUrl,
+      url: "/api/oauth/google/session",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       withCredentials: true,
-      timeout: 10000,
+      timeout: 30000,
     });
 
     // 요청 전 로그
-    console.log("About to send axios request...");
+    console.log("About to send OAuth request...");
 
-    const response = await axios.post(
-      apiUrl,
+    // OAuth 요청은 토큰이 없는 상태이므로 직접 axios 인스턴스 사용
+    const response = await apiClient.getInstance().post(
+      "/api/oauth/google/session",
       { credential: idToken },
       {
         headers: {
@@ -56,16 +56,36 @@ const sendAccessTokenToBackend = async (idToken, navigate) => {
     console.log("Response headers:", response.headers);
     console.log("Response from backend:", response.data);
 
-    const jwt = response.data.token;
-    localStorage.setItem("jwt", jwt);
-    console.log("Login successful, JWT stored:", jwt?.substring(0, 20) + "...");
+    // 쿠키 설정 확인
+    console.log("Document cookies after login:", document.cookie);
+
+    console.log("Login successful, session created via cookie");
+
+    // Zustand 스토어에 토큰 저장
+    if (response.data.token) {
+      console.log("토큰 받음:", response.data.token.substring(0, 30) + "...");
+      const { setToken } = useAuthStore.getState();
+      setToken(response.data.token);
+      console.log("Zustand 스토어에 토큰 저장 완료");
+    } else {
+      console.warn("백엔드에서 토큰을 받지 못했습니다!");
+    }
+
+    // 전역 인증 상태 업데이트 이벤트 발생 (하위 호환성)
+    window.dispatchEvent(new CustomEvent("authStateChanged"));
 
     const isFirst = response.data.first;
     if (isFirst) {
-      navigate("/add-info");
+      // 로그인 완료 후 약간의 지연을 두어 상태 업데이트가 완료되도록 함
+      setTimeout(() => {
+        navigate("/add-info");
+      }, 100);
       return;
     } else {
-      navigate("/main");
+      // 로그인 완료 후 약간의 지연을 두어 상태 업데이트가 완료되도록 함
+      setTimeout(() => {
+        navigate("/main");
+      }, 100);
     }
   } catch (error) {
     console.error("Full error object:", error);

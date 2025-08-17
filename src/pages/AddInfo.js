@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 import styles from "./styles/AddInfo.module.css";
 import loadingStyles from "../styles/Loading.module.css";
 import LoginLogo from "../assets/LoginLogo.svg";
@@ -7,7 +8,7 @@ import Modal from "../components/Modal";
 
 function AddInfo() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("jwt");
+  const { isLoggedIn, isLoading: authLoading } = useAuth();
 
   const [isLoading, setIsLoading] = useState(true);
   const [feedbackModal, setFeedbackModal] = useState({
@@ -29,15 +30,17 @@ function AddInfo() {
   });
 
   useEffect(() => {
+    // 인증 확인
+    if (!authLoading && !isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+
     const fetchUserProfile = async () => {
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
             credentials: "include",
           }
         );
@@ -59,8 +62,10 @@ function AddInfo() {
       }
     };
 
-    fetchUserProfile();
-  }, [token]);
+    if (!authLoading && isLoggedIn) {
+      fetchUserProfile();
+    }
+  }, [authLoading, isLoggedIn, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -122,10 +127,10 @@ function AddInfo() {
         {
           method: "PUT",
           headers: {
-            Authorization: `Bearer ${token}`,
             Accept: "application/json",
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify(formData),
         }
       );

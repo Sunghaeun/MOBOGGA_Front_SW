@@ -10,7 +10,7 @@ import {
   ServerStatusProvider,
   useServerStatus,
 } from "./contexts/ServerStatusContext";
-import tokenManager from "./utils/tokenManager";
+import useAuthStore from "./stores/authStore";
 
 import Landing from "./pages/Landing";
 import ComingSoon from "./pages/ComingSoon"; // Assuming this is the correct path for the Coming Soon page
@@ -63,11 +63,13 @@ import "./App.css";
 function AppContent() {
   const { isServerDown, retryConnection, closeModal, handleServerError } =
     useServerStatus();
+  const { initialize } = useAuthStore();
 
-  // tokenManager에 서버 상태 핸들러 연결
+  // Zustand 스토어 초기화
   useEffect(() => {
-    tokenManager.setServerStatusHandler(handleServerError);
-  }, [handleServerError]);
+    console.log("🚀 앱 시작 - Zustand 스토어 초기화");
+    initialize();
+  }, [initialize]);
 
   const handleRetry = async () => {
     const success = await retryConnection();

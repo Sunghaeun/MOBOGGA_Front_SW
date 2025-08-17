@@ -95,7 +95,7 @@ function CreateShow() {
   // Bearer 토큰 정규화 (local ↔ session 둘 다 체크)
   const getAuthHeader = () => {
     const raw =
-      localStorage.getItem("jwt") ||
+      window.tempToken ||
       sessionStorage.getItem("jwt") ||
       sessionStorage.getItem("idToken"); // 혹시 ID 토큰을 이렇게 저장했다면
     if (!raw) return null;

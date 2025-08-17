@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import ShowCard from "./ShowCard";
 import styles from "./styles/ShowList.module.css";
 import loadingStyles from "../styles/Loading.module.css";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import apiClient from "../utils/apiClient";
 
 import image1 from "../assets/mainTest/1.png";
 
 function ShowList() {
   const navigate = useNavigate();
+  const { auth, isManager } = useAuth();
 
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [show, setShow] = useState([]);
@@ -18,26 +20,13 @@ function ShowList() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownValue, setDropdownValue] = useState("새로 만들기");
 
-  // 4) 관리자 권한 받아오기 - Hooks를 최상위로 이동
-  const [auth, setAuth] = useState([]);
-
-  // 관리자 권한 체크 함수 - useEffect보다 먼저 선언
-  const isManager = () => {
-    return auth && auth.authority === "ROLE_CLUB";
-  };
-
   // 1) show 데이터 가져오기
   const getShow = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/attraction/list`,
-        {
-          timeout: 10000, // 10초 타임아웃
-        }
-      );
+      const res = await apiClient.get("/attraction/list");
       console.log("📥 Raw response from /attraction/list:", res.data);
 
       const converted = res.data.entireList.map((item) => {
@@ -62,47 +51,7 @@ function ShowList() {
     }
   };
 
-  // Auth 함수도 최상위로 이동
-  const getAuth = async () => {
-    try {
-      const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
-
-      // 토큰이 없으면 권한 체크를 건너뛰기
-      if (!token) {
-        console.log("No token found, skipping auth check");
-        return;
-      }
-
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/auth/me`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
-          },
-          withCredentials: true,
-          timeout: 10000, // 10초 타임아웃
-        }
-      );
-
-      console.log("Response from backend:", response.data);
-      setAuth(response.data);
-    } catch (error) {
-      console.error("Auth check failed:", error);
-
-      // 401/403 에러의 경우 토큰 제거
-      if (error.response?.status === 401 || error.response?.status === 403) {
-        localStorage.removeItem("jwt");
-        setAuth(null);
-      }
-
-      // 네트워크 에러는 조용히 처리 (에러를 던지지 않음)
-      if (error.code === "ERR_NETWORK" || error.message === "Network Error") {
-        console.log("Network error during auth check, continuing without auth");
-        setAuth(null);
-        return;
-      }
-    }
-  };
+  // Auth 함수 제거 - useAuth 훅 사용
 
   // 2) 페이지 로드되면 show값 불러옴
   useEffect(() => {
@@ -113,12 +62,8 @@ function ShowList() {
     console.log("현재 로그인한 사용자 권한:", auth);
     console.log("사용자 역할:", auth?.role);
     console.log("사용자 권한:", auth?.authority);
-    console.log("관리자 여부:", auth && auth.authority === "ROLE_CLUB");
-  }, [auth]);
-
-  useEffect(() => {
-    getAuth();
-  }, []);
+    console.log("관리자 여부:", isManager());
+  }, [auth, isManager]);
 
   // 3) 가져온 데이터별 카테고리 별로 필터링
   const filteredList =
