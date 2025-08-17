@@ -65,7 +65,7 @@ function EntertainDetail() {
     try {
       const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
 
-      const response = await axios.get(`${API_BASE}/api/auth/me`, {
+      const response = await axios.get(`${API_BASE}/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
         },

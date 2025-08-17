@@ -48,7 +48,7 @@ function CreateEntertain() {
       const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/auth/me`,
+        `${process.env.REACT_APP_API_URL}/auth/me`,
         {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
@@ -120,7 +120,7 @@ function CreateEntertain() {
       }
     }
 
-    const urlCreate = `${API_BASE}/api/manager/entertain/create`;
+    const urlCreate = `${API_BASE}/manager/entertain/create`;
     console.log("POST URL:", urlCreate);
 
     try {
