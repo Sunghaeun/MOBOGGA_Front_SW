@@ -428,3 +428,8 @@
     cursor: pointer;
   }
 }
+
+@media (max-width: 768px) {
+  .show_Top {
+  }
+}

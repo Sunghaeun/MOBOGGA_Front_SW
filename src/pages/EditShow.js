@@ -18,6 +18,7 @@ function EditShow() {
   const [endDate, setEndDate] = useState("");
   const [runtime, setRunTime] = useState("");
   const [managerPhoneNumber, setManagerPhoneNumber] = useState("");
+  const [maxPeople, setMaxPeople] = useState(100);
   const [manager, setManager] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [accountName, setAccountName] = useState("");
@@ -119,6 +120,7 @@ function EditShow() {
       setRunTime(src.runtime != null ? String(src.runtime) : "");
       setManager(src.manager ?? "");
       setManagerPhoneNumber(src.managerPhoneNumber ?? "");
+      setMaxPeople(src.maxPeople != null ? String(src.maxPeople) : "");
       setAccountNumber(src.accountNumber ?? "");
       setAccountName(src.accountName ?? "");
       setAccountBankName(src.accountBankName ?? "");
@@ -133,7 +135,7 @@ function EditShow() {
       const mapped =
         list.length > 0
           ? list.map((s, i) => ({
-              id: Date.now() + i,
+              id: id,
               order: s.orderIndex ?? i + 1,
               date: s.date ?? "",
               time: (s.time ?? "").slice(0, 5), // "HH:mm:ss" -> "HH:mm"
@@ -143,7 +145,7 @@ function EditShow() {
           : [
               {
                 id: Date.now(),
-                order: 1,
+                orderIndex: 1,
                 date: "",
                 time: "",
                 cost: "",
@@ -203,6 +205,7 @@ function EditShow() {
       runtime: Number(runtime),
       manager,
       managerPhoneNumber,
+      maxPeople,
       accountNumber,
       accountName,
       accountBankName,
