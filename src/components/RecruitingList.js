@@ -17,7 +17,7 @@ function RecruitingList() {
   const [error, setError] = useState(null);
 
 // 4) 관리자 권한 받아오기 - Hooks를 최상위로 이동
-  const { user, isManager, initialize } = useAuthStore();
+  const { isManager, initialize } = useAuthStore();
 
   // 앱 진입 시 토큰이 있으면 사용자 정보 조회 (onRehydrateStorage에서도 호출되지만 안전하게 한 번 더)
   useEffect(() => {
