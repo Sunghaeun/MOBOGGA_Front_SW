@@ -11,15 +11,9 @@ function Banner() {
 
   useEffect(() => {
     const getShow = async () => {
-      const token = localStorage.getItem("jwt");
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/attraction/list`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          `${process.env.REACT_APP_API_URL}/attraction/list`
         );
         console.log("rotatingPerformances 데이터 가져오기 성공");
         console.log(res.data.rotatingPerformances);
