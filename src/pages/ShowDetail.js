@@ -29,7 +29,7 @@ function ShowDetail() {
   // 상세 데이터 불러오기 (토큰 있으면 Authorization 헤더 추가)
   const fetchData = async () => {
     console.log("받은 showId:", showId, typeof showId);
-    const url = `${API_BASE}/api/show/detail/${showId}`;
+    const url = `${API_BASE}/show/detail/${showId}`;
     console.log("GET:", url);
 
     try {
@@ -60,7 +60,7 @@ function ShowDetail() {
   const getAuth = async () => {
     try {
       if (!token) return;
-      const res = await axios.get(`${API_BASE}/api/auth/me`, {
+      const res = await axios.get(`${API_BASE}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
         timeout: 10000,
@@ -103,7 +103,7 @@ function ShowDetail() {
 
     try {
       console.log("예매 요청:", requestData);
-      const url = `${API_BASE}/api/show/detail/reservation`;
+      const url = `${API_BASE}/show/detail/reservation`;
       console.log("POST:", url);
 
       const res = await axios.post(url, requestData, {
