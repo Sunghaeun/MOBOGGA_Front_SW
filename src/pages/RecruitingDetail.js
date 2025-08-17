@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
 import styles from "./styles/RecruitingDetail.module.css";
+import loadingStyles from "../styles/Loading.module.css";
 
 import BACK from "../assets/ShowBackButton.svg";
 import INSTA from "../assets/recruitingDetail/instagram.svg";
@@ -14,6 +15,9 @@ function RecruitingDetail() {
   const { recruitingId } = useParams();
 
   const [recruiting, setRecruiting] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const navigate = useNavigate();
   const navigateToPrepage = () => {
     navigate(-1); // 이전 페이지로 이동
@@ -48,6 +52,9 @@ function RecruitingDetail() {
 
   const fetchData = async () => {
     try {
+      setIsLoading(true);
+      setError(null);
+
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/recruiting/detail/${recruitingId}`
       );
@@ -58,6 +65,7 @@ function RecruitingDetail() {
       } else {
         console.error("API에 recruiting 데이터가 없습니다.");
         setRecruiting(null);
+        setError("리크루팅 정보를 찾을 수 없습니다.");
       }
     } catch (error) {
       console.error("Fetch Error:");
@@ -69,12 +77,40 @@ function RecruitingDetail() {
         console.error("Error message:", error.message);
       }
       setRecruiting(null);
+      setError("리크루팅 정보를 불러오는데 실패했습니다.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className={loadingStyles.loading}>
+        <div className={loadingStyles.loadingSpinner}></div>
+        <div className={loadingStyles.loadingText}>
+          리크루팅 정보를 불러오고 있습니다
+          <span className={loadingStyles.loadingDots}>...</span>
+        </div>
+        <div className={loadingStyles.loadingSubtext}>잠시만 기다려주세요</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={loadingStyles.error}>
+        <div className={loadingStyles.errorIcon}>⚠️</div>
+        <div className={loadingStyles.errorMessage}>{error}</div>
+        <button onClick={() => fetchData()} className={loadingStyles.retryBtn}>
+          🔄 다시 시도
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.wrap}>
@@ -85,7 +121,7 @@ function RecruitingDetail() {
       </div>
       <div className={styles.recruite_con}>
         <div className={styles.recruite_Intro}>
-          <div className={styles.intro_Info} >
+          <div className={styles.intro_Info}>
             <div className={styles.recruite_Top}>리크루팅 정보</div>
             <div className={styles.intro_con}>
               <div className={styles.intro_con_left}>
@@ -141,7 +177,10 @@ function RecruitingDetail() {
               </div>
 
               <div className={styles.recruite_Info}>
-                <div className={styles.club} onClick={() => navigateToClubDetail(recruiting?.clubId)}>
+                <div
+                  className={styles.club}
+                  onClick={() => navigateToClubDetail(recruiting?.clubId)}
+                >
                   {recruiting?.clubName || "동아리 정보 없음"}
                 </div>
                 <div className={styles.title}>
@@ -188,7 +227,10 @@ function RecruitingDetail() {
               </div>
             </div>
             <div className={styles.recruite_apply}>
-              <button className={styles.apply_Btn} onClick={navigateToApplypage}>
+              <button
+                className={styles.apply_Btn}
+                onClick={navigateToApplypage}
+              >
                 지원하러 가기
               </button>
             </div>

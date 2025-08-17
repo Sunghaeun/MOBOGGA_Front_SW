@@ -1,9 +1,16 @@
 /* eslint-disable */
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ServerDownModal from "./components/modal/ServerDownModal";
+
+import {
+  ServerStatusProvider,
+  useServerStatus,
+} from "./contexts/ServerStatusContext";
+import tokenManager from "./utils/tokenManager";
 
 import Landing from "./pages/Landing";
 import ComingSoon from "./pages/ComingSoon"; // Assuming this is the correct path for the Coming Soon page
@@ -52,7 +59,24 @@ import FAQ from "./pages/FAQ";
 
 import "./App.css";
 
-function App() {
+// 메인 앱 컴포넌트 (ServerStatusProvider 내부)
+function AppContent() {
+  const { isServerDown, retryConnection, closeModal, handleServerError } =
+    useServerStatus();
+
+  // tokenManager에 서버 상태 핸들러 연결
+  useEffect(() => {
+    tokenManager.setServerStatusHandler(handleServerError);
+  }, [handleServerError]);
+
+  const handleRetry = async () => {
+    const success = await retryConnection();
+    if (success) {
+      // 연결 성공 시 현재 페이지 새로고침
+      window.location.reload();
+    }
+  };
+
   return (
     <BrowserRouter>
       <div className="App">
@@ -101,13 +125,29 @@ function App() {
           <Route path="/edit/recruiting" element={<EditRecruiting />} />
           <Route path="edit/entertain/:id" element={<EditEntertain />} />
           <Route path="edit/show/:id" element={<EditShow />} />
-          <Route path="/manager/club/1" element={<ManageClubDetail />} />
+          <Route path="/manager/club/:id" element={<ManageClubDetail />} />
+          <Route path="/create/entertain" element={<CreateEntertain />} />    
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
           <Route path="/tosslinktest" element={<TossAppLauncher />} />
         </Routes>
         <Footer />
+
+        {/* 서버 다운 모달 */}
+        <ServerDownModal
+          isOpen={isServerDown}
+          onRetry={handleRetry}
+          onClose={closeModal}
+        />
       </div>
     </BrowserRouter>
+  );
+}
+
+function App() {
+  return (
+    <ServerStatusProvider>
+      <AppContent />
+    </ServerStatusProvider>
   );
 }
 

@@ -2,20 +2,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerShowpage.module.css";
+import loadingStyles from "../../styles/Loading.module.css";
 import AccountInfoCard from "../../components/Mypage/AccountInfoCard";
 import ManagerProfileInfoCard from "../../components/Mypage/ManagerProfileInfoCard";
 import ManagerProfileUpdateBtn from "../../components/Mypage/ManagerProfileUpdateBtn";
 import ClubUpdateBtn from "../../components/Manager/ClubUpdateBtn";
 import ShowManageCard from "../../components/Manager/ShowManageCard";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
+import tokenManager from "../../utils/tokenManager";
 
 function ManagerShowpage() {
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("jwt");
-  const type = localStorage.getItem("type");
-
-  localStorage.setItem("type", "manager");
+  // TokenManager 사용으로 변경
+  const token = tokenManager.getToken();
+  const userRole = tokenManager.getUserRole();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -31,18 +32,19 @@ function ManagerShowpage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!token || !type || type !== "manager") {
+    // 토큰과 역할 확인
+    if (!token || !tokenManager.isTokenValid() || userRole !== "ROLE_CLUB") {
       navigate("/404", { replace: true });
       return;
     }
-  }, [token, type, navigate]);
+  }, [token, userRole, navigate]);
 
   const handleTokenExpired = () => {
     console.log("=== MANAGER TOKEN EXPIRED HANDLER CALLED ===");
     console.log("Setting isLoginOverModalOpen to true");
 
-    // 만료된 토큰 즉시 제거
-    localStorage.removeItem("jwt");
+    // TokenManager를 통해 토큰 제거
+    tokenManager.clearToken();
 
     setIsLoginOverModalOpen(true);
     setError("토큰이 만료되었습니다. 다시 로그인해주세요.");
@@ -63,13 +65,9 @@ function ManagerShowpage() {
 
       console.log("API URL:", process.env.REACT_APP_API_URL);
 
-      const response = await fetch(
+      const response = await tokenManager.safeFetch(
         `${process.env.REACT_APP_API_URL}/mypage/manager/profile`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
           timeout: 10000, // 10초 타임아웃
         }
       );
@@ -128,13 +126,9 @@ function ManagerShowpage() {
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch(
+      const response = await tokenManager.safeFetch(
         `${process.env.REACT_APP_API_URL}/mypage/manager/show`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
           credentials: "include",
           timeout: 10000, // 10초 타임아웃
         }
@@ -203,19 +197,28 @@ function ManagerShowpage() {
   // 사용자 정보 조회
   useEffect(() => {
     console.log("ManagerShowpage 컴포넌트 마운트됨");
+    console.log("Token exists:", !!token);
+    console.log("User role:", userRole);
 
     if (!token) {
-      console.log("토큰이 없습니다.");
-      setError("로그인이 필요합니다.");
+      console.log("토큰이 없습니다. 로그인이 필요합니다.");
+      // 토큰이 없으면 404 페이지로 리다이렉트
+      navigate("/404", { replace: true });
+      return;
+    }
+
+    if (!tokenManager.isTokenValid()) {
+      console.log("토큰이 만료되었습니다.");
+      handleTokenExpired();
       return;
     }
 
     fetchManagerProfile();
     getShowManageCards();
-  }, [token]);
+  }, [token, navigate]);
 
   // 토큰 또는 타입이 유효하지 않은 경우 렌더링 중단
-  if (!token || !type || type !== "manager") {
+  if (!token || !tokenManager.isTokenValid() || userRole !== "ROLE_CLUB") {
     return null;
   }
 
@@ -223,7 +226,53 @@ function ManagerShowpage() {
     console.log("로딩 중 화면 렌더링");
     return (
       <>
-        <div className={styles.loading}>로딩중...</div>
+        <div className={styles.body}>
+          <div className={styles.sidebar}>
+            <AccountInfoCard formData={formData} />
+            <ManagerProfileInfoCard formData={formData} />
+            <ManagerProfileUpdateBtn onClick={ManagerProfileUpdateBtn} />
+            <ClubUpdateBtn onClick={ClubUpdateBtn} />
+          </div>
+          <div className={styles.container}>
+            <div className={styles.category_box}>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/mypage")}
+              >
+                예매자 목록
+              </div>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/show")}
+                id={styles.highlight}
+              >
+                공연
+              </div>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/entertain")}
+              >
+                즐길거리
+              </div>
+              <div
+                className={styles.category_list}
+                onClick={() => navigate("/manager/recruiting")}
+              >
+                리크루팅
+              </div>
+            </div>
+            <div className={styles.content_list}>
+              <div className={styles.loading}>
+                <div className={styles.loadingSpinner}></div>
+                <div className={styles.loadingText}>
+                  공연 목록을 불러오고 있습니다
+                  <span className={styles.loadingDots}>...</span>
+                </div>
+                <div className={styles.loadingSubtext}>잠시만 기다려주세요</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </>
     );
   }
@@ -281,7 +330,18 @@ function ManagerShowpage() {
           </div>
           <div className={styles.content_list}>
             <div className={styles.content}>
-              {isLoading && <div className="loading">로딩중...</div>}
+              {isLoading && (
+                <div className={loadingStyles.loading}>
+                  <div className={loadingStyles.loadingSpinner}></div>
+                  <div className={loadingStyles.loadingText}>
+                    공연 목록을 불러오고 있습니다
+                    <span className={loadingStyles.loadingDots}>...</span>
+                  </div>
+                  <div className={loadingStyles.loadingSubtext}>
+                    잠시만 기다려주세요
+                  </div>
+                </div>
+              )}
               {/* {error && (
                 <div className="error-message">
                   에러: {error}

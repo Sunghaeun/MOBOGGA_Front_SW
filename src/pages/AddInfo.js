@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/AddInfo.module.css";
+import loadingStyles from "../styles/Loading.module.css";
 import LoginLogo from "../assets/LoginLogo.svg";
 import Modal from "../components/Modal";
 
@@ -149,7 +150,18 @@ function AddInfo() {
     if (validateFields()) saveProfile();
   };
 
-  if (isLoading) return <div className={styles.loading}>로딩 중...</div>;
+  if (isLoading) {
+    return (
+      <div className={loadingStyles.loading}>
+        <div className={loadingStyles.loadingSpinner}></div>
+        <div className={loadingStyles.loadingText}>
+          사용자 정보를 불러오고 있습니다
+          <span className={loadingStyles.loadingDots}>...</span>
+        </div>
+        <div className={loadingStyles.loadingSubtext}>잠시만 기다려주세요</div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.body}>

@@ -54,6 +54,124 @@
   padding-bottom: 10%;
 }
 
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  font-size: 1.2rem;
+  color: #666;
+  min-height: 200px;
+  width: 100%;
+}
+
+.loadingSpinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ff3d12;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+.loadingText {
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.loadingSubtext {
+  font-size: 0.9rem;
+  color: #888;
+  opacity: 0.8;
+}
+
+.loadingDots {
+  display: inline-block;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.error_message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  color: #ff3d12;
+  font-size: 1.1rem;
+  min-height: 200px;
+  text-align: center;
+  width: 100%;
+}
+
+.errorIcon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+.errorMessage {
+  margin-bottom: 20px;
+  line-height: 1.5;
+  max-width: 400px;
+}
+
+.retry_button {
+  background: #ff3d12;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(255, 61, 18, 0.2);
+  margin-top: 16px;
+}
+
+.retry_button:hover {
+  background: #e6350f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(255, 61, 18, 0.3);
+}
+
+.no_show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  color: #888;
+  font-size: 1.1rem;
+  text-align: center;
+  width: 100%;
+  min-height: 200px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 #highlight {
   background: var(--BLACK);
   color: var(--WHITE);
