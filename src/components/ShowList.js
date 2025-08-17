@@ -21,6 +21,11 @@ function ShowList() {
   // 4) 관리자 권한 받아오기 - Hooks를 최상위로 이동
   const [auth, setAuth] = useState([]);
 
+  // 관리자 권한 체크 함수 - useEffect보다 먼저 선언
+  const isManager = () => {
+    return auth && auth.authority === "ROLE_CLUB";
+  };
+
   // 1) show 데이터 가져오기
   const getShow = async () => {
     try {
@@ -107,7 +112,8 @@ function ShowList() {
   useEffect(() => {
     console.log("현재 로그인한 사용자 권한:", auth);
     console.log("사용자 역할:", auth?.role);
-    console.log("관리자 여부:", isManager());
+    console.log("사용자 권한:", auth?.authority);
+    console.log("관리자 여부:", auth && auth.authority === "ROLE_CLUB");
   }, [auth]);
 
   useEffect(() => {
@@ -119,11 +125,6 @@ function ShowList() {
     selectedCategory === "전체"
       ? show
       : show.filter((item) => item.category === selectedCategory);
-
-  // 관리자 권한 체크 함수
-  const isManager = () => {
-    return auth && auth.authority === "ROLE_CLUB";
-  };
 
   if (isLoading) {
     return (
@@ -247,16 +248,6 @@ function ShowList() {
             </div>
           </>
         )}
-      </div>
-
-      <div className={styles.showlist}>
-        {filteredList.map((item, index) => (
-          <ShowCard
-            key={`${item.title}-${item.clubID}-${index}`}
-            show={item}
-            className={styles.showCard}
-          />
-        ))}
       </div>
 
       <div className={styles.showlist}>
