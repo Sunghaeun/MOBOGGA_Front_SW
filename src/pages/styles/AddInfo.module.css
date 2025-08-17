@@ -21,6 +21,14 @@
   text-align: left;
 }
 
+.mobile_header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 16px;
+}
+
 .words_box {
   margin-bottom: 56px;
 }
@@ -36,16 +44,21 @@
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 12px;
+  gap: 12px;
 }
 
 .info_head {
-  margin-right: auto;
+  width: 100px;
+  text-align: left;
 }
 
 .info_body input {
   height: 1.5em;
   border: 1px solid #ccc;
   padding: 0.5em;
+  width: 100%;
+  font-size: 16px;
+  border-radius: 4px;
 }
 
 .caution {
@@ -303,10 +316,11 @@
   .info {
     flex-direction: column;
     align-items: flex-start;
+    margin-right: 20px;
+    gap: 8px;
   }
 
   .info_head {
-    margin-bottom: 4px;
     font-size: 14px;
   }
 

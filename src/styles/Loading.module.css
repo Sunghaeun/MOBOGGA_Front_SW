@@ -1,0 +1,261 @@
+/* 공통 로딩 스피너 스타일 */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  font-size: 1.2rem;
+  color: #666;
+  min-height: 200px;
+  width: 100%;
+}
+
+.loadingSpinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #ff3d12;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+.loadingText {
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.loadingSubtext {
+  font-size: 0.9rem;
+  color: #888;
+  opacity: 0.8;
+  text-align: center;
+}
+
+.loadingDots {
+  display: inline-block;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* 미니 스피너 (버튼 내부용) */
+.miniSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* 로딩 상태 버튼 */
+.loadingButton {
+  opacity: 0.7;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* 풀스크린 로딩 */
+.fullscreenLoading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.fullscreenLoading .loadingSpinner {
+  width: 60px;
+  height: 60px;
+  border-width: 5px;
+}
+
+.fullscreenLoading .loadingText {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+
+/* 에러 상태 스타일 */
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  color: #ff3d12;
+  font-size: 1.1rem;
+  min-height: 200px;
+  text-align: center;
+  width: 100%;
+}
+
+.errorIcon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+.errorMessage {
+  margin-bottom: 20px;
+  line-height: 1.5;
+  max-width: 400px;
+}
+
+.retryBtn {
+  background: #ff3d12;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(255, 61, 18, 0.2);
+}
+
+.retryBtn:hover {
+  background: #e6350f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(255, 61, 18, 0.3);
+}
+
+.retryBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(255, 61, 18, 0.2);
+}
+
+/* 에러 상태 추가 버튼들 */
+.errorActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.backBtn {
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.backBtn:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+.loginBtn {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.loginBtn:hover {
+  background: #218838;
+  transform: translateY(-1px);
+}
+
+/* 애니메이션 키프레임 */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loading,
+.error {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .loading,
+  .error {
+    padding: 40px 20px;
+    min-height: 150px;
+  }
+
+  .loadingSpinner {
+    width: 40px;
+    height: 40px;
+  }
+
+  .loadingText {
+    font-size: 1.1rem;
+  }
+
+  .fullscreenLoading .loadingSpinner {
+    width: 50px;
+    height: 50px;
+  }
+
+  .fullscreenLoading .loadingText {
+    font-size: 1.2rem;
+  }
+
+  .errorIcon {
+    font-size: 2.5rem;
+  }
+
+  .retryBtn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ShowCard from "./ShowCard";
 import styles from "./styles/ShowList.module.css";
+import loadingStyles from "../styles/Loading.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -11,13 +12,21 @@ function ShowList() {
 
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [show, setShow] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownValue, setDropdownValue] = useState("새로 만들기");
 
+  // 4) 관리자 권한 받아오기 - Hooks를 최상위로 이동
+  const [auth, setAuth] = useState([]);
+
   // 1) show 데이터 가져오기
   const getShow = async () => {
     try {
+      setIsLoading(true);
+      setError(null);
+
       const res = await axios.get(
         `${process.env.REACT_APP_API_URL}/attraction/list`,
         {
@@ -42,22 +51,13 @@ function ShowList() {
       setShow(converted);
     } catch (err) {
       console.log("데이터 가져오기 실패:", err);
+      setError("공연 목록을 불러오는데 실패했습니다.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // 2) 페이지 로드되면 show값 불러옴
-  useEffect(() => {
-    getShow();
-  }, []);
-
-  // 3) 가져온 데이터별 카테고리 별로 필터링
-  const filteredList =
-    selectedCategory === "전체"
-      ? show
-      : show.filter((item) => item.category === selectedCategory);
-
-  // 4) 관리자 권한 받아오기
-  const [auth, setAuth] = useState([]);
+  // Auth 함수도 최상위로 이동
   const getAuth = async () => {
     try {
       const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
@@ -99,6 +99,11 @@ function ShowList() {
     }
   };
 
+  // 2) 페이지 로드되면 show값 불러옴
+  useEffect(() => {
+    getShow();
+  }, []);
+
   useEffect(() => {
     console.log("현재 로그인한 사용자 권한:", auth);
   }, [auth]);
@@ -106,6 +111,37 @@ function ShowList() {
   useEffect(() => {
     getAuth();
   }, []);
+
+  // 3) 가져온 데이터별 카테고리 별로 필터링
+  const filteredList =
+    selectedCategory === "전체"
+      ? show
+      : show.filter((item) => item.category === selectedCategory);
+
+  if (isLoading) {
+    return (
+      <div className={loadingStyles.loading}>
+        <div className={loadingStyles.loadingSpinner}></div>
+        <div className={loadingStyles.loadingText}>
+          공연 목록을 불러오고 있습니다
+          <span className={loadingStyles.loadingDots}>...</span>
+        </div>
+        <div className={loadingStyles.loadingSubtext}>잠시만 기다려주세요</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={loadingStyles.error}>
+        <div className={loadingStyles.errorIcon}>⚠️</div>
+        <div className={loadingStyles.errorMessage}>{error}</div>
+        <button onClick={() => getShow()} className={loadingStyles.retryBtn}>
+          🔄 다시 시도
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.column}>
