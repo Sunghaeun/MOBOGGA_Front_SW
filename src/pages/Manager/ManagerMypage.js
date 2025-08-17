@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerMypage.module.css";
+import loadingStyles from "../../styles/Loading.module.css";
 import AccountInfoCard from "../../components/Mypage/AccountInfoCard";
 import ManagerProfileInfoCard from "../../components/Mypage/ManagerProfileInfoCard";
 import ManagerProfileUpdateBtn from "../../components/Mypage/ManagerProfileUpdateBtn";
@@ -324,7 +325,18 @@ function ManagerMypage() {
           </div>
           <div className={styles.content_list}>
             <div className={styles.content}>
-              {isLoading && <div className="loading">로딩중...</div>}
+              {isLoading && (
+                <div className={loadingStyles.loading}>
+                  <div className={loadingStyles.loadingSpinner}></div>
+                  <div className={loadingStyles.loadingText}>
+                    예매자 목록을 불러오고 있습니다
+                    <span className={loadingStyles.loadingDots}>...</span>
+                  </div>
+                  <div className={loadingStyles.loadingSubtext}>
+                    잠시만 기다려주세요
+                  </div>
+                </div>
+              )}
               {error && !isLoginOverModalOpen && (
                 <div className={styles.error_message}>
                   <div className={styles.errorIcon}>⚠️</div>

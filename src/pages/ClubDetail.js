@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import styles from "./styles/ClubDetail.module.css";
+import loadingStyles from "../styles/Loading.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -23,9 +24,14 @@ function ClubDetail() {
   const [progressingEventList, setProgressingEventList] = useState([]);
   const [lastRecruitingList, setLastRecruitingList] = useState([]);
   const [lastEventList, setLastEventList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const getClub = async () => {
     try {
+      setIsLoading(true);
+      setError(null);
+      
       const res = await axios.get(
         `${process.env.REACT_APP_API_URL}/club/detail/${id}`
       );
@@ -84,6 +90,31 @@ function ClubDetail() {
   useEffect(() => {
     getClub();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className={loadingStyles.loading}>
+        <div className={loadingStyles.loadingSpinner}></div>
+        <div className={loadingStyles.loadingText}>
+          동아리 정보를 불러오고 있습니다
+          <span className={loadingStyles.loadingDots}>...</span>
+        </div>
+        <div className={loadingStyles.loadingSubtext}>잠시만 기다려주세요</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={loadingStyles.error}>
+        <div className={loadingStyles.errorIcon}>⚠️</div>
+        <div className={loadingStyles.errorMessage}>{error}</div>
+        <button onClick={() => getClub()} className={loadingStyles.retryBtn}>
+          🔄 다시 시도
+        </button>
+      </div>
+    );
+  }
 
   return (
     <>

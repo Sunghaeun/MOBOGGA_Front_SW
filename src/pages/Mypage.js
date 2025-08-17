@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/Mypage.module.css";
+import loadingStyles from "../styles/Loading.module.css";
 import reload_btn from "../assets/temp/reload_btn.png";
 import AccountInfoCard from "../components/Mypage/AccountInfoCard";
 import ProfileInfoCard from "../components/Mypage/ProfileInfoCard";
@@ -182,7 +183,18 @@ function Mypage() {
         </header>
         <div className={styles.mobile_section_title}>공연 예매 내역</div>
         <div className={styles.mobile_reservlist}>
-          {isLoading && <div className={styles.loading}>로딩중...</div>}
+          {isLoading && (
+            <div className={loadingStyles.loading}>
+              <div className={loadingStyles.loadingSpinner}></div>
+              <div className={loadingStyles.loadingText}>
+                예매 내역을 불러오고 있습니다
+                <span className={loadingStyles.loadingDots}>...</span>
+              </div>
+              <div className={loadingStyles.loadingSubtext}>
+                잠시만 기다려주세요
+              </div>
+            </div>
+          )}
           {!isLoading && !error && myReservCards.length === 0 && (
             <div className={styles.no_reserv}>예매 내역이 없습니다.</div>
           )}
@@ -225,7 +237,18 @@ function Mypage() {
           </div>
           <div className={styles.reservlist_content}>
             <div className={styles.reservlist_content}>
-              {isLoading && <div className="loading">로딩중...</div>}
+              {isLoading && (
+                <div className={loadingStyles.loading}>
+                  <div className={loadingStyles.loadingSpinner}></div>
+                  <div className={loadingStyles.loadingText}>
+                    예매 내역을 불러오고 있습니다
+                    <span className={loadingStyles.loadingDots}>...</span>
+                  </div>
+                  <div className={loadingStyles.loadingSubtext}>
+                    잠시만 기다려주세요
+                  </div>
+                </div>
+              )}
               {!isLoading && !error && myReservCards.length === 0 && (
                 <div className={styles.no_reserv}>예매 내역이 없습니다.</div>
               )}

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import styles from "./styles/ShowDetail.module.css";
+import loadingStyles from "../styles/Loading.module.css";
 
 import BACK from "../assets/ShowBackButton.svg";
 import { useNavigate, useParams } from "react-router-dom";
@@ -29,27 +30,53 @@ function ShowDetail() {
   // 상세 데이터 불러오기 (토큰 있으면 Authorization 헤더 추가)
   const fetchData = async () => {
     console.log("받은 showId:", showId, typeof showId);
-    const url = `${API_BASE}/api/show/detail/${showId}`;
+    console.log("저장된 토큰:", token ? "있음" : "없음");
+    const url = `${process.env.REACT_APP_API_URL}/show/detail/${showId}`;
     console.log("GET:", url);
 
     try {
+      setLoading(true);
+      setError(null);
+
+      const headers = {};
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+        console.log("Authorization 헤더 추가됨");
+      }
+
       const res = await axios.get(url, {
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        headers,
         timeout: 10000,
       });
+      console.log("API 응답 성공:", res.status);
       console.log("API 응답 데이터:", res.data);
       setShow(res.data || {});
       setError(null);
     } catch (err) {
       console.error("Error fetching data:", err);
+      console.error("Error response:", err.response);
+      console.error("Error status:", err.response?.status);
+      console.error("Error data:", err.response?.data);
+
       if (err.response?.status === 401) {
-        alert("이 공연은 권한이 필요합니다. 로그인 후 다시 시도하세요.");
-        // 필요 시 자동 이동:
-        // localStorage.removeItem("jwt");
+        console.log("401 에러 - 인증 실패");
+        // 토큰이 만료되었거나 유효하지 않을 수 있음
+        localStorage.removeItem("jwt");
+        setError(
+          "로그인이 필요하거나 세션이 만료되었습니다. 다시 로그인해주세요."
+        );
+        // alert("로그인이 필요하거나 세션이 만료되었습니다. 다시 로그인해주세요.");
         // navigate("/login");
+      } else if (err.response?.status === 403) {
+        console.log("403 에러 - 권한 없음");
+        setError("이 공연에 접근할 권한이 없습니다.");
+      } else if (err.response?.status === 404) {
+        console.log("404 에러 - 공연을 찾을 수 없음");
+        setError("요청하신 공연을 찾을 수 없습니다.");
+      } else {
+        setError("데이터를 불러오는 중 오류가 발생했습니다.");
       }
       setShow(null);
-      setError("데이터를 불러오는 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
@@ -59,18 +86,29 @@ function ShowDetail() {
   const [auth, setAuth] = useState(null);
   const getAuth = async () => {
     try {
-      if (!token) return;
+      if (!token) {
+        console.log("토큰이 없어서 권한 체크 건너뜀");
+        return;
+      }
+
+      console.log("권한 체크 시작...");
       const res = await axios.get(`${API_BASE}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
         timeout: 10000,
       });
-      console.log("Response from backend:", res.data);
+      console.log("권한 체크 성공:", res.data);
       setAuth(res.data);
     } catch (e) {
-      console.error("Auth check failed:", e);
+      console.error("권한 체크 실패:", e);
+      console.error("권한 체크 응답:", e.response);
+
       if (e.response?.status === 401 || e.response?.status === 403) {
+        console.log("토큰이 유효하지 않음 - 제거");
         localStorage.removeItem("jwt");
+        setAuth(null);
+      } else {
+        console.log("네트워크 에러 등으로 권한 체크 실패");
         setAuth(null);
       }
     }
@@ -167,8 +205,13 @@ function ShowDetail() {
   // 로딩
   if (loading) {
     return (
-      <div className={styles.wrap}>
-        <div>로딩 중...</div>
+      <div className={loadingStyles.loading}>
+        <div className={loadingStyles.loadingSpinner}></div>
+        <div className={loadingStyles.loadingText}>
+          공연 정보를 불러오고 있습니다
+          <span className={loadingStyles.loadingDots}>...</span>
+        </div>
+        <div className={loadingStyles.loadingSubtext}>잠시만 기다려주세요</div>
       </div>
     );
   }
@@ -176,13 +219,28 @@ function ShowDetail() {
   // 에러
   if (error) {
     return (
-      <div className={styles.wrap}>
-        <div className={styles.back_Div}>
-          <button className={styles.back_Btn} onClick={navigateToPrepage}>
-            <img src={BACK} className={styles.move_Back} alt="back" />
+      <div className={loadingStyles.error}>
+        <div className={loadingStyles.errorIcon}>⚠️</div>
+        <div className={loadingStyles.errorMessage}>{error}</div>
+        <div className={loadingStyles.errorActions}>
+          <button
+            onClick={() => fetchData()}
+            className={loadingStyles.retryBtn}
+          >
+            🔄 다시 시도
           </button>
+          <button onClick={navigateToPrepage} className={loadingStyles.backBtn}>
+            ← 이전 페이지
+          </button>
+          {error.includes("로그인") && (
+            <button
+              onClick={() => navigate("/login")}
+              className={loadingStyles.loginBtn}
+            >
+              🔑 로그인하러 가기
+            </button>
+          )}
         </div>
-        <div>오류: {error}</div>
       </div>
     );
   }
