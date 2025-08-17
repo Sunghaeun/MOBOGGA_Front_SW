@@ -45,15 +45,17 @@ import OAuthCallback from "./pages/OAuthCallback";
 import Error404 from "./pages/Error404";
 
 import CreateRecruiting from "./pages/CreateRecruiting";
-import CreateEntertain from "./pages/Manager/CreateEntertain";
+import CreateEntertain from "./pages/CreateEntertain";
+import CreateShow from "./pages/CreateShow";
 import EditRecruiting from "./pages/EditRecruiting";
+import EditEntertain from "./pages/EditEntertain";
+import EditShow from "./pages/EditShow";
 import ManageClubDetail from "./pages/ManageClubDetail";
 
 import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
 import TossAppLauncher from "./components/Mypage/TossAppLauncher";
 
 import FAQ from "./pages/FAQ";
-import CreateShow from "./pages/Manager/CreateShow";
 
 import "./App.css";
 
@@ -118,10 +120,11 @@ function AppContent() {
           <Route path="/login/oauth2/code/google" element={<OAuthCallback />} />
           <Route path="/404" element={<Error404 />} />
           <Route path="/create/recruiting" element={<CreateRecruiting />} />
-          <Route
-            path="/edit/recruiting/:recruitingId"
-            element={<EditRecruiting />}
-          />
+          <Route path="/create/entertain" element={<CreateEntertain />} />
+          <Route path="create/show" element={<CreateShow />} />
+          <Route path="/edit/recruiting" element={<EditRecruiting />} />
+          <Route path="edit/entertain/:id" element={<EditEntertain />} />
+          <Route path="edit/show/:id" element={<EditShow />} />
           <Route path="/manager/club/:id" element={<ManageClubDetail />} />
           <Route path="/create/entertain" element={<CreateEntertain />} />    
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
