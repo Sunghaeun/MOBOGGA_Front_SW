@@ -530,6 +530,7 @@ function CreateShow() {
                   <input
                     id={styles.form_detail_date}
                     type="date"
+                    value={show.date || ""}
                     onChange={(e) =>
                       updateSchedule(show.id, "date", e.target.value)
                     }
@@ -539,6 +540,7 @@ function CreateShow() {
                   <input
                     id={styles.form_detail_time}
                     type="time"
+                    value={show.time || ""}
                     onChange={(e) =>
                       updateSchedule(show.id, "time", e.target.value)
                     }
@@ -565,6 +567,7 @@ function CreateShow() {
                   <input
                     className={styles.form_detail_price}
                     type="number"
+                    value={show.cost || ""}
                     placeholder="0000"
                     onChange={(e) =>
                       updateSchedule(show.id, "cost", e.target.value)

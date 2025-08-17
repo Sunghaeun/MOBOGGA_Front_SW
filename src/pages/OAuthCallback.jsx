@@ -33,7 +33,7 @@ const OAuthCallback = () => {
 
         // 백엔드 API로 토큰 교환 요청
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/oauth/google/token`,
+          `${process.env.REACT_APP_API_URL}/api/oauth/google/token`,
           {
             method: "POST",
             headers: {
