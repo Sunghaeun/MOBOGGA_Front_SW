@@ -171,6 +171,7 @@ function EditShow() {
 
   useEffect(() => {
     if (id) getShow();
+    // eslint-disable-next-line
   }, [id]);
 
   const updateShow = async () => {

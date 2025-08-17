@@ -31,6 +31,7 @@ function CreateShow() {
 
   // eslint-disable-next-line
   const [maxTickets, setMaxTickets] = useState("");
+  // eslint-disable-next-line
   const [previewURL, setPreviewURL] = useState(null);
 
   // const Minus = () => {
@@ -170,7 +171,10 @@ function CreateShow() {
     for (const [k, v] of formData.entries()) {
       if (v instanceof File) {
         console.log(k, "-> File", { name: v.name, size: v.size, type: v.type });
+        // eslint-disable-next-line
       } else {
+        // eslint-disable-next-line
+
         // request는 Blob이라 바로 못 봄. 서버가 받는 건 JSON 문자열이므로 확인용:
         if (k === "request" && v instanceof Blob) {
           v.text().then((t) => console.log("request(json) ->", t));
