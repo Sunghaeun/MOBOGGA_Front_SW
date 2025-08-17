@@ -15,6 +15,63 @@ function RecruitingList() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+// 4) 관리자 권한 받아오기 - Hooks를 최상위로 이동
+  const [auth, setAuth] = useState([]);
+  
+  // 관리자 권한 체크 함수 - useEffect보다 먼저 선언
+  const isManager = () => {
+    return auth && auth.authority === "ROLE_CLUB";
+  };
+
+  
+
+  // Auth 함수도 최상위로 이동
+  const getAuth = async () => {
+    try {
+      const token = localStorage.getItem("jwt"); // 저장된 토큰 불러오기
+
+      // 토큰이 없으면 권한 체크를 건너뛰기
+      if (!token) {
+        console.log("No token found, skipping auth check");
+        return;
+      }
+
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
+          },
+          withCredentials: true,
+          timeout: 10000, // 10초 타임아웃
+        }
+      );
+
+      console.log("Response from backend:", response.data);
+      setAuth(response.data);
+    } catch (error) {
+      console.error("Auth check failed:", error);
+
+      // 401/403 에러의 경우 토큰 제거
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        localStorage.removeItem("jwt");
+        setAuth(null);
+      }
+
+      // 네트워크 에러는 조용히 처리 (에러를 던지지 않음)
+      if (error.code === "ERR_NETWORK" || error.message === "Network Error") {
+        console.log("Network error during auth check, continuing without auth");
+        setAuth(null);
+        return;
+      }
+    }
+  };
+
+  useEffect(() => {
+    getAuth();
+  }, []);
+  
+
   // 1) recruiting 데이터 가져오기
   const [recruiting, setRecruiting] = useState([]);
   const getRecruiting = async () => {
@@ -75,6 +132,7 @@ function RecruitingList() {
     );
   }
 
+
   return (
     <div className={styles.column}>
       <div className={styles.categoryHeader}>
@@ -98,9 +156,11 @@ function RecruitingList() {
           ))}
         </div>
 
-        <div className={styles.createButton}>
-          <span>리쿠르팅 새로 만들기</span>
-        </div>
+        {isManager() && (
+          <div className={styles.createButton} onClick={() => navigate("/recruiting/create")}>
+            <span>리쿠르팅 새로 만들기</span>
+          </div>
+        )}
       </div>
 
       <div className={styles.recruitingList}>
