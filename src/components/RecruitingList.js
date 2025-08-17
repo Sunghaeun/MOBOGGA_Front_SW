@@ -157,7 +157,7 @@ function RecruitingList() {
         </div>
 
         {isManager() && (
-          <div className={styles.createButton}>
+          <div className={styles.createButton} onClick={() => navigate("/recruiting/create")}>
             <span>리쿠르팅 새로 만들기</span>
           </div>
         )}
