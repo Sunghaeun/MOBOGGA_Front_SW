@@ -3,17 +3,21 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/LoginOverModal.module.css";
 import Modal from "../Modal";
+import useAuthStore from "../../stores/authStore";
 
 const LoginOverModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
 
-  const handleLoginOverConfirm = () => {
-    // 모든 인증 관련 데이터 정리
-    localStorage.removeItem("jwt");
+  const handleLoginOverConfirm = async () => {
+    // Zustand 스토어를 통한 완전한 로그아웃
+    await logout();
+
+    // OAuth 관련 세션 데이터 정리
     sessionStorage.removeItem("oauth_state");
     sessionStorage.removeItem("oauth_nonce");
 
-    console.log("Navigating to login page after token expiration");
+    console.log("로그아웃 완료 - 로그인 페이지로 이동");
     navigate(`/login`);
   };
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 import styles from "./styles/Header.module.css";
 
 import moboggaLogo from "../assets/Logo.svg";
@@ -14,37 +15,43 @@ import Sidebar from "./Mobile/Sidebar"; // Assuming Sidebar is a component that 
 function Header() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { auth, isLoggedIn, isLoading, isManager } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
+
   const toggleSide = () => {
     setIsOpen(true);
   };
 
-  // 사용자 역할 확인 함수
-  const getUserRole = () => {
-    const token = localStorage.getItem("jwt");
-    if (!token) return null;
-
-    try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      return payload.role || null;
-    } catch (error) {
-      console.error("Token parsing error:", error);
-      return null;
-    }
-  };
+  // 디버깅을 위한 로그 추가
+  const isManagerUser = isManager();
+  console.log("Header - auth:", auth);
+  console.log("Header - isLoggedIn:", isLoggedIn);
+  console.log("Header - isLoading:", isLoading);
+  console.log("Header - isManagerUser:", isManagerUser);
 
   // 프로필 버튼 클릭 핸들러
   const handleProfileClick = () => {
-    const userRole = getUserRole();
+    console.log("=== PROFILE CLICK DEBUG ===");
+    console.log("auth:", auth);
+    console.log("isLoggedIn:", isLoggedIn);
+    console.log("isManagerUser:", isManagerUser);
 
-    if (userRole === "ROLE_CLUB") {
+    if (!auth) {
+      console.log("권한 정보가 없음");
+      return;
+    }
+
+    console.log("사용자 권한:", auth.authority);
+
+    if (isManagerUser) {
+      console.log("매니저로 인식 - /manager/mypage로 이동");
       navigate("/manager/mypage");
     } else {
+      console.log("일반 사용자로 인식 - /mypage로 이동");
       navigate("/mypage");
     }
   };
-
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
@@ -144,7 +151,11 @@ function Header() {
           </span>
         </div>
 
-        {localStorage.getItem("jwt") ? (
+        {isLoading ? (
+          <div className={styles.login}>
+            <span>로딩중...</span>
+          </div>
+        ) : isLoggedIn && auth ? (
           <div className={styles.manager_btn} onClick={handleProfileClick}>
             <img src={profile_btn} alt="마이페이지" />
           </div>
@@ -158,7 +169,14 @@ function Header() {
         <img src={sidebar} alt="사이드바" />
       </div>
 
-      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+      <Sidebar
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        auth={auth}
+        isLoggedIn={isLoggedIn}
+        isLoading={isLoading}
+        isManager={isManager}
+      />
     </header>
   );
 }

@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import styles from "./styles/Sidebar.module.css";
 import { useNavigate } from "react-router-dom";
 
-function Sidebar({ isOpen, setIsOpen }) {
+function Sidebar({
+  isOpen,
+  setIsOpen,
+  auth,
+  isLoggedIn,
+  isLoading,
+  isManager,
+}) {
   const navigate = useNavigate();
   const [openDropdown, setOpenDropdown] = useState(null);
 
@@ -16,31 +23,21 @@ function Sidebar({ isOpen, setIsOpen }) {
     closeSidebar();
   };
 
-  // 사용자 역할 확인 함수
-  const getUserRole = () => {
-    const token = localStorage.getItem("jwt");
-    if (!token) return null;
-
-    try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      return payload.role || null;
-    } catch (error) {
-      console.error("Token parsing error:", error);
-      return null;
-    }
-  };
-
   // 마이페이지 이동 핸들러
   const handleMyPageClick = () => {
-    const userRole = getUserRole();
+    if (!auth) {
+      console.log("권한 정보가 없음");
+      return;
+    }
 
-    if (userRole === "ROLE_CLUB") {
+    console.log("Sidebar - 사용자 권한:", auth.authority);
+
+    if (isManager()) {
       go("/manager/mypage");
     } else {
       go("/mypage");
     }
   };
-
   return (
     <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
       <div className={styles.closeButton} onClick={closeSidebar}>
@@ -146,7 +143,11 @@ function Sidebar({ isOpen, setIsOpen }) {
             </div>
           )}
         </li>
-        {localStorage.getItem("jwt") ? (
+        {isLoading ? (
+          <li>
+            <div className={styles.menuHeader}>로딩중...</div>
+          </li>
+        ) : isLoggedIn ? (
           <>
             {/* 마이페이지 */}
             <li onClick={handleMyPageClick}>

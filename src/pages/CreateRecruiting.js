@@ -14,6 +14,35 @@ import EditCheckModal from "../components/modal/EditCheckModal";
 import PageOut from "../components/modal/PageOut";
 
 function CreateRecruiting() {
+
+// 9) 시작날짜 끝날짜
+  const [data, setData] = useState({
+    name: "",
+    category: "",
+    startDate: "",   // 이 필드에 바로 넣을 거예요
+    endDate: "",     // 여기에도
+    mandatorySemesters: "",
+    meetingTime: "",
+    content: "",
+    eligibility: "",
+    notice: "",
+    manager: "",
+    managerPhoneNumber: "",
+    introductionLetter: "",
+    inUrl: "",
+    kakaUrl: "",
+    youUrl: "",
+    noUrl: "",
+    url: "",
+    applyUrl: "",
+    photo: "",
+  });
+
+  const onChangeInput = (e) => {
+    const { name, value } = e.target;
+    setData((prev) => ({ ...prev, [name]: value }));
+  };
+
   // 1) 누락된 정보 확인 모달
   const [notEnteredModalOpen, setNotEnteredModalOpen] = useState(false);
   const openNotEnteredModal = () => setNotEnteredModalOpen(true);
@@ -39,32 +68,11 @@ function CreateRecruiting() {
   };
 
   // 4) 저장할 데이터 배열에 미리 저장해두기
-  const [data, setData] = useState({
-    name: "",
-    category: "",
-    startDate: "",
-    endDate: "",
-    mandatorySemesters: "",
-    meetingTime: "",
-    content: "",
-    eligibility: "",
-    notice: "",
-    manager: "",
-    managerPhoneNumber: "",
-    introductionLetter: "",
-    inUrl: "",
-    kakaUrl: "",
-    youUrl: "",
-    noUrl: "",
-    url: "",
-    applyUrl: "",
-    photo: "",
-  });
+  // 위로 옮김 !!
 
   // 7) 리쿠르팅 생성 post
   const handleSubmit = async () => {
     try {
-      const token = localStorage.getItem("jwt");
       const url = `${process.env.REACT_APP_API_URL}/manager/recruiting/create`;
 
       // photo는 미리보기 전용이므로 서버 전송용 request에서는 제외
@@ -80,7 +88,6 @@ function CreateRecruiting() {
       }
 
       await axios.post(url, formData, {
-        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
 
@@ -95,9 +102,6 @@ function CreateRecruiting() {
   const [photoFile, setPhotoFile] = useState(null);
   const fileInputRef = useRef(null);
 
-  const onChangeInput = (e) => {
-    setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
 
   const handleFileButtonClick = () => fileInputRef.current?.click();
 
@@ -121,17 +125,20 @@ function CreateRecruiting() {
   return (
     <>
       <div className={styles.main}>
-        <div className={styles.title}>
+        <div className={styles.title} onClick={() => openNotEnteredModal()}>
           <span>리쿠르팅 새로 만들기</span>
         </div>
 
         <div className={styles.inputContainer}>
           <div className={styles.leftInput}>
-            <div className={styles.photoInput}></div>
-            <div
-              className={styles.photobutton}
-              onClick={() => openNotEnteredModal()}
-            >
+            <div className={styles.photoInput}>
+              <img
+                src={data.photo}
+                alt={data.name}
+                className={styles.recruitinImg}
+              />
+            </div>
+            <div className={styles.photobutton} onClick={handleFileButtonClick}>
               <span>이미지 추가</span>
             </div>
             <input
@@ -178,10 +185,24 @@ function CreateRecruiting() {
                 <span>모집기간</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input
+              {/* <input
                 placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
                 type="text"
-              ></input>
+              ></input> */}
+
+              <div className={styles.dateInput}>
+                <input
+                  className={styles.dateInput_1}
+                  type="date"
+                  name="startDate" value={data.startDate} onChange={onChangeInput}
+                />
+                <span>~</span>
+                <input
+                  className={styles.dateInput_1}
+                  type="date"
+                  name="endDate" value={data.endDate} onChange={onChangeInput}
+                />
+              </div>
             </div>
 
             <div className={styles.row}>

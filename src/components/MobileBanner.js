@@ -1,67 +1,61 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles/MobileBanner.module.css";
-import axios from "axios";
-import { useNavigate} from "react-router-dom";
-
-
-
+import { useNavigate } from "react-router-dom";
+import apiClient from "../utils/apiClient";
 
 function MobileBanner() {
-
   const [show, setShow] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const getShow = async () => {
+      try {
+        const res = await apiClient.get("/attraction/list");
+        console.log("rotatingPerformances 데이터 가져오기 성공");
+        console.log(res.data.rotatingPerformances);
+        console.log(res.data.rotatingPerformances[1]);
+        const converted = res.data.rotatingPerformances.map((item) => ({
+          id: item.id,
+          name: item.title,
+          clubID: item.club,
+          period: item.period,
+          category: item.category,
+          photo: item.img?.trim() || "", // 이미지 없을 때 대비
+        }));
+        setShow(converted);
+      } catch (err) {
+        console.error("API 불러오기 실패", err);
+      }
+    };
+    getShow();
+  }, []);
 
-useEffect(() => {
-  const getShow = async () => {
-    try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/attraction/list`);
-      console.log("rotatingPerformances 데이터 가져오기 성공");
-      console.log(res.data.rotatingPerformances);
-      console.log(res.data.rotatingPerformances[1]);
-      const converted = res.data.rotatingPerformances.map((item) => ({
-        id: item.id,
-        name: item.title,
-        clubID: item.club,
-        period: item.period,
-        category: item.category,
-        photo: item.img?.trim() || "", // 이미지 없을 때 대비
-      }));
-      setShow(converted);
-    } catch (err) {
-      console.error("API 불러오기 실패", err);
-    }
-  };
-  getShow();
-}, []);
+  useEffect(() => {
+    if (show.length === 0) return;
 
-useEffect(() => {
-  if (show.length === 0) return;
+    const interval = setInterval(() => {
+      setFade(false);
+      setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % show.length);
+        setFade(true);
+      }, 1000);
+    }, 10000);
 
-  const interval = setInterval(() => {
-    setFade(false);
-    setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % show.length);
-      setFade(true);
-    }, 1000);
-  }, 10000);
+    return () => clearInterval(interval);
+  }, [show]);
 
-  return () => clearInterval(interval);
-}, [show]);
+  if (show.length === 0) {
+    return <div className={styles.banner}>Loading...</div>;
+  }
 
-if (show.length === 0) {
-  return <div className={styles.banner}>Loading...</div>;
-}
-
-const len = show.length;
-const prev2 = show[(currentIndex - 2 + len) % len];
-const prev1 = show[(currentIndex - 1 + len) % len];
-const next1 = show[(currentIndex + 1) % len];
-const next2 = show[(currentIndex + 2) % len];
-const current = show[currentIndex];
-
+  const len = show.length;
+  const prev2 = show[(currentIndex - 2 + len) % len];
+  const prev1 = show[(currentIndex - 1 + len) % len];
+  const next1 = show[(currentIndex + 1) % len];
+  const next2 = show[(currentIndex + 2) % len];
+  const current = show[currentIndex];
 
   return (
     <div className={styles.banner}>
@@ -98,21 +92,23 @@ const current = show[currentIndex];
           />
         </div>
 
-       <div className={styles.MainImg}>
+        <div className={styles.MainImg}>
           <div className={styles.overlay}></div> {/* ✅ 그라데이션 오버레이 */}
           <img
             src={current.photo}
             alt={current.name}
             className={`${styles.fade} ${fade ? styles.show : ""}`}
-            onClick={() => navigate(
-              current.category === "공연" ? `/show/${current.id}` : `/entertain/${current.id}`
-            )}
+            onClick={() =>
+              navigate(
+                current.category === "공연"
+                  ? `/show/${current.id}`
+                  : `/entertain/${current.id}`
+              )
+            }
           />
-
           <span className={styles.name}>{current.name}</span>
           <span className={styles.date}>{current.period}</span>
           <span className={styles.clubName}>{current.clubID}</span>
-
         </div>
 
         <div className={`${styles.imgBox3} ${styles.imgBox}`}>
@@ -144,7 +140,6 @@ const current = show[currentIndex];
         </div>
       </div>
     </div>
-
   );
 }
 

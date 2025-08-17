@@ -98,25 +98,36 @@ function EditShow() {
     };
   }, [posterPreview, qrPreview]);
 
-  const getAuthHeader = () => {
-    const raw =
-      localStorage.getItem("jwt") ||
-      sessionStorage.getItem("jwt") ||
-      sessionStorage.getItem("idToken");
-    if (!raw) return null;
-    return raw.startsWith("Bearer ") ? raw : `Bearer ${raw}`;
-  };
+  // 더 이상 사용하지 않는 함수 (쿠키 + 임시 토큰 방식으로 대체)
+  // const getAuthHeader = () => {
+  //   const token = window.tempToken;
+  //   if (!token) return null;
+  //   return token.startsWith("Bearer ") ? token : `Bearer ${token}`;
+  // };
 
   const getShow = async () => {
     try {
-      const auth = getAuthHeader();
-      if (!auth) {
+      // 요청 설정 준비
+      const requestConfig = {
+        withCredentials: true,
+      };
+
+      // 쿠키가 없고 토큰이 있으면 Authorization 헤더 추가
+      const token = window.tempToken;
+      if (!document.cookie.includes("session") && token) {
+        requestConfig.headers = {
+          Authorization: `Bearer ${token}`,
+        };
+      }
+
+      if (!requestConfig.headers && !document.cookie.includes("session")) {
         alert("로그인이 필요합니다.");
         return;
       }
-      const res = await axios.get(`${API_BASE}/manager/show/update/${id}`, {
-        headers: { Authorization: auth },
-      });
+      const res = await axios.get(
+        `${API_BASE}/manager/show/update/${id}`,
+        requestConfig
+      );
       console.log(`[GET] /manager/show/update/${id} 성공`, {
         status: res.status,
         data: res.data,
@@ -188,8 +199,24 @@ function EditShow() {
   }, [id]);
 
   const updateShow = async () => {
-    const authHeader = getAuthHeader();
-    if (!authHeader) {
+    // 요청 설정 준비
+    const requestConfig = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    // 쿠키가 없고 토큰이 있으면 Authorization 헤더 추가
+    const token = window.tempToken;
+    if (!document.cookie.includes("session") && token) {
+      requestConfig.headers.Authorization = `Bearer ${token}`;
+    }
+
+    if (
+      !requestConfig.headers.Authorization &&
+      !document.cookie.includes("session")
+    ) {
       alert("로그인 토큰이 없습니다. 다시 로그인 해주세요.");
       return;
     }
@@ -260,15 +287,29 @@ function EditShow() {
     }
 
     try {
-      const token = localStorage.getItem("jwt");
-      if (!token) {
+      // 요청 설정 준비
+      const requestConfig = {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      // 쿠키가 없고 토큰이 있으면 Authorization 헤더 추가
+      const token = window.tempToken;
+      if (!document.cookie.includes("session") && token) {
+        requestConfig.headers.Authorization = `Bearer ${token}`;
+      }
+
+      if (
+        !requestConfig.headers.Authorization &&
+        !document.cookie.includes("session")
+      ) {
         alert("로그인 필요");
         return;
       }
 
-      const resp = await axios.put(endpoint, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const resp = await axios.put(endpoint, formData, requestConfig);
 
       console.log("저장 성공", resp.data);
       const { publicId, showId, id: respId } = resp.data || {};

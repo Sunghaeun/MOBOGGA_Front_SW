@@ -5,6 +5,7 @@ import styles from "./styles/RecruitingList.module.css";
 import loadingStyles from "../styles/Loading.module.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from "../stores/authStore";
 
 import back from "../assets/icons/back.svg";
 
@@ -14,6 +15,18 @@ function RecruitingList() {
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+// 4) 관리자 권한 받아오기 - Hooks를 최상위로 이동
+  const { isManager, initialize } = useAuthStore();
+
+  // 앱 진입 시 토큰이 있으면 사용자 정보 조회 (onRehydrateStorage에서도 호출되지만 안전하게 한 번 더)
+  useEffect(() => {
+    initialize?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+
+  
 
   // 1) recruiting 데이터 가져오기
   const [recruiting, setRecruiting] = useState([]);
@@ -75,6 +88,7 @@ function RecruitingList() {
     );
   }
 
+
   return (
     <div className={styles.column}>
       <div className={styles.categoryHeader}>
@@ -98,9 +112,11 @@ function RecruitingList() {
           ))}
         </div>
 
-        <div className={styles.createButton}>
-          <span>리쿠르팅 새로 만들기</span>
-        </div>
+        {isManager?.() && (
+          <div className={styles.createButton} onClick={() => navigate("/recruiting/create")}>
+            <span>리쿠르팅 새로 만들기</span>
+          </div>
+        )}
       </div>
 
       <div className={styles.recruitingList}>

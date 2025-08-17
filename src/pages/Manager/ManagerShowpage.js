@@ -1,5 +1,4 @@
-/*eslint-disable*/
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerShowpage.module.css";
 import loadingStyles from "../../styles/Loading.module.css";
@@ -9,14 +8,47 @@ import ManagerProfileUpdateBtn from "../../components/Mypage/ManagerProfileUpdat
 import ClubUpdateBtn from "../../components/Manager/ClubUpdateBtn";
 import ShowManageCard from "../../components/Manager/ShowManageCard";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
-import tokenManager from "../../utils/tokenManager";
+import ServerErrorModal from "../../components/Mypage/ServerErrorModal";
+import useAuthStore from "../../stores/authStore";
+import apiClient from "../../utils/apiClient";
 
 function ManagerShowpage() {
   const navigate = useNavigate();
+  const {
+    user,
+    isLoggedIn,
+    isLoading: authLoading,
+    isManager,
+    token,
+  } = useAuthStore();
 
-  // TokenManager 사용으로 변경
-  const token = tokenManager.getToken();
-  const userRole = tokenManager.getUserRole();
+  // 매니저 권한 여부를 변수로 저장
+  const isManagerUser = isManager();
+  const userRole = user?.authority;
+
+  // 초기 권한 체크
+  useEffect(() => {
+    console.log("=== MANAGER SHOW PAGE INIT ===");
+    console.log("Auth loading:", authLoading);
+    console.log("로그인 상태:", isLoggedIn);
+    console.log("매니저 권한:", isManagerUser);
+    console.log("사용자 역할:", userRole);
+
+    // 로딩 중이면 기다림
+    if (authLoading) {
+      console.log("인증 정보 로딩 중... 기다림");
+      return;
+    }
+
+    if (!isLoggedIn || !isManagerUser) {
+      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    console.log("권한 확인 완료");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn, isManagerUser, authLoading, navigate]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -26,32 +58,33 @@ function ManagerShowpage() {
     clubPoster: "",
   });
 
-  const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false); // 상태 추가
+  const [isLoginOverModalOpen, setIsLoginOverModalOpen] = useState(false);
+  const [isServerErrorModalOpen, setIsServerErrorModalOpen] = useState(false);
   const [showManageCards, setShowManageCards] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     // 토큰과 역할 확인
-    if (!token || !tokenManager.isTokenValid() || userRole !== "ROLE_CLUB") {
-      navigate("/404", { replace: true });
+    if (!token || (!isLoggedIn && isManagerUser) || userRole !== "ROLE_CLUB") {
+      navigate("/login", { replace: true });
       return;
     }
-  }, [token, userRole, navigate]);
+  }, [token, userRole, navigate, isLoggedIn, isManagerUser]);
 
   const handleTokenExpired = () => {
     console.log("=== MANAGER TOKEN EXPIRED HANDLER CALLED ===");
     console.log("Setting isLoginOverModalOpen to true");
 
-    // TokenManager를 통해 토큰 제거
-    tokenManager.clearToken();
+    // Zustand에서 자동 처리
+    // 로그아웃은 Zustand에서 자동 처리
 
     setIsLoginOverModalOpen(true);
     setError("토큰이 만료되었습니다. 다시 로그인해주세요.");
     console.log("Modal state should be:", true);
   };
 
-  const fetchManagerProfile = async () => {
+  const fetchManagerProfile = useCallback(async () => {
     try {
       console.log(
         "Fetching manager profile with token:",
@@ -65,7 +98,7 @@ function ManagerShowpage() {
 
       console.log("API URL:", process.env.REACT_APP_API_URL);
 
-      const response = await tokenManager.safeFetch(
+      const response = await apiClient.getInstance()(
         `${process.env.REACT_APP_API_URL}/mypage/manager/profile`,
         {
           timeout: 10000, // 10초 타임아웃
@@ -111,22 +144,24 @@ function ManagerShowpage() {
           error.message.includes("Failed to fetch"))
       ) {
         setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+        setIsServerErrorModalOpen(true);
       } else if (error.message.includes("timeout")) {
         setError("요청 시간이 초과되었습니다. 다시 시도해주세요.");
+        setIsServerErrorModalOpen(true);
       } else {
         setError(error.message);
       }
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [token]);
 
-  const getShowManageCards = async () => {
+  const getShowManageCards = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      const response = await tokenManager.safeFetch(
+      const response = await apiClient.getInstance()(
         `${process.env.REACT_APP_API_URL}/mypage/manager/show`,
         {
           credentials: "include",
@@ -183,8 +218,10 @@ function ManagerShowpage() {
           err.message.includes("Failed to fetch"))
       ) {
         setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
+        setIsServerErrorModalOpen(true);
       } else if (err.message.includes("timeout")) {
         setError("요청 시간이 초과되었습니다. 다시 시도해주세요.");
+        setIsServerErrorModalOpen(true);
       } else {
         setError(err.message);
       }
@@ -192,33 +229,24 @@ function ManagerShowpage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   // 사용자 정보 조회
   useEffect(() => {
-    console.log("ManagerShowpage 컴포넌트 마운트됨");
-    console.log("Token exists:", !!token);
-    console.log("User role:", userRole);
-
-    if (!token) {
-      console.log("토큰이 없습니다. 로그인이 필요합니다.");
-      // 토큰이 없으면 404 페이지로 리다이렉트
-      navigate("/404", { replace: true });
-      return;
+    if (!authLoading && isLoggedIn && isManagerUser) {
+      fetchManagerProfile();
+      getShowManageCards();
     }
-
-    if (!tokenManager.isTokenValid()) {
-      console.log("토큰이 만료되었습니다.");
-      handleTokenExpired();
-      return;
-    }
-
-    fetchManagerProfile();
-    getShowManageCards();
-  }, [token, navigate]);
+  }, [
+    authLoading,
+    isLoggedIn,
+    isManagerUser,
+    fetchManagerProfile,
+    getShowManageCards,
+  ]);
 
   // 토큰 또는 타입이 유효하지 않은 경우 렌더링 중단
-  if (!token || !tokenManager.isTokenValid() || userRole !== "ROLE_CLUB") {
+  if (!token || (!isLoggedIn && isManagerUser) || userRole !== "ROLE_CLUB") {
     return null;
   }
 
@@ -373,6 +401,12 @@ function ManagerShowpage() {
             onClose={() => setIsLoginOverModalOpen(false)}
           />
         )}
+
+        <ServerErrorModal
+          isOpen={isServerErrorModalOpen}
+          onClose={() => setIsServerErrorModalOpen(false)}
+          errorMessage={error}
+        />
       </div>
     </>
   );
