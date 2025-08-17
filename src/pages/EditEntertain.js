@@ -69,6 +69,7 @@ function EditEntertain() {
           headers: { Authorization: auth },
         }
       );
+      console.log("== 서버에서 받은 데이터 ==", res.data);
 
       const src = res.data ?? {};
       setName(src.name ?? "");
@@ -88,7 +89,7 @@ function EditEntertain() {
       setEtcInfo(src.etcInfo ?? "");
 
       // 서버 이미지 URL 필드명에 맞춰 세팅 (photo/posterUrl 등)
-      const serverPoster = src.photo || src.posterUrl || "";
+      const serverPoster = src.poster || src.posterUrl || "";
       setPosterUrl(serverPoster);
       setPreviewURL(serverPoster || null);
     } catch (err) {

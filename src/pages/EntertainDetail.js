@@ -15,24 +15,24 @@ function EntertainDetail() {
   };
 
   const { id } = useParams();
-  const [entertainList, setShow] = useState(null);
+  const [entertainList, setEntertain] = useState(null);
 
   // API BASE & endpoint
   const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
   const endpoint = `${API_BASE}/entertain/detail/${id}`;
 
   useEffect(() => {
-    const fetchShow = async () => {
+    const fetchEntertain = async () => {
       try {
         const res = await axios.get(endpoint);
         console.log(res.data);
-        setShow(res.data);
+        setEntertain(res.data);
       } catch (err) {
         console.error("데이터 로드 실패:", err);
       }
     };
 
-    fetchShow();
+    fetchEntertain();
   }, [endpoint]);
 
   const [loading, setLoading] = useState(true);
@@ -42,7 +42,7 @@ function EntertainDetail() {
       try {
         const res = await axios.get(endpoint);
         console.log(res.data);
-        setShow(res.data);
+        setEntertain(res.data);
         setLoading(false);
       } catch (err) {
         console.error("데이터 로드 실패:", err);
@@ -150,7 +150,7 @@ function EntertainDetail() {
                   <div className={styles.info_Box}>
                     <span className={styles.fixed_Info}>담당자</span>
                     <span className={styles.variable_Info}>
-                      {entertainList?.managerInfo || "담당자 정보 없음"}
+                      {entertainList?.manager || "담당자 정보 없음"}
                     </span>
                   </div>
 
