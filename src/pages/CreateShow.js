@@ -271,7 +271,7 @@ function CreateShow() {
               <label className={styles.inputFileLabel} htmlFor="inputFile">
                 이미지 추가
                 <input
-                  className={styles.inputFileLabel}
+                  className={styles.inputFile}
                   type="file"
                   id="inputFile"
                   accept="image/*"
@@ -314,7 +314,7 @@ function CreateShow() {
                 </div>
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
-                    <span className={styles.info_txt}>카테고리</span>
+                    <span className={styles.info_txt}>날짜</span>
                   </span>
                   <span className={styles.variable_Info}>
                     <div className={styles.form_detail_date_2}>
@@ -322,8 +322,8 @@ function CreateShow() {
                         id={styles.form_detail_date}
                         type="date"
                         onChange={(e) => setStartDate(e.target.value)}
-                      />{" "}
-                      ~{" "}
+                      />
+                      {"     "}~{"     "}
                       <input
                         id={styles.form_detail_date}
                         type="date"
@@ -331,6 +331,9 @@ function CreateShow() {
                       />
                     </div>
                   </span>
+                </div>
+                <div className={styles.smallInfo}>
+                  *하루만 진행할 경우 같은 날짜로 선택해주세요
                 </div>
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
@@ -354,7 +357,7 @@ function CreateShow() {
                       type="number"
                       placeholder="000"
                       onChange={(e) => setRunTime(e.target.value)}
-                      style={{ width: "3rem" }}
+                      style={{ width: "4rem" }}
                     />
                   </span>
                   <span>분</span>
@@ -512,6 +515,7 @@ function CreateShow() {
               <div>시간</div>
               <div>구매제한매수</div>
               <div>가격</div>
+              <div>회차추가</div>
               <div>삭제</div>
             </div>
 
@@ -564,6 +568,9 @@ function CreateShow() {
                   />
                   원
                 </div>
+                <div className={styles.add_show} onClick={handleAddRow}>
+                  추가
+                </div>
                 <div className={styles.delete_Btn}>
                   <button onClick={() => handleRemoveRow(show.id)}>
                     <img src={DELETE} alt="delete"></img>
@@ -571,10 +578,6 @@ function CreateShow() {
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className={styles.add_show} onClick={handleAddRow}>
-            추가
           </div>
 
           <div>

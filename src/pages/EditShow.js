@@ -129,26 +129,41 @@ function EditShow() {
       const list = Array.isArray(src.scheduleDtoList)
         ? src.scheduleDtoList
         : [];
-      setShows(
-        list.map((s, i) => ({
-          id: Date.now() + i,
-          order: s.orderIndex ?? i + 1,
-          date: s.date ?? "",
-          time: (s.time ?? "").slice(0, 5),
-          cost: s.cost != null ? String(s.cost) : "",
-          maxTicket: s.maxTicket != null ? Number(s.maxTicket) : 0,
-        }))
-      );
 
-      // 서버 이미지 URL 세팅 (선언 먼저!)
+      const mapped =
+        list.length > 0
+          ? list.map((s, i) => ({
+              id: Date.now() + i,
+              order: s.orderIndex ?? i + 1,
+              date: s.date ?? "",
+              time: (s.time ?? "").slice(0, 5), // "HH:mm:ss" -> "HH:mm"
+              cost: s.cost != null ? String(s.cost) : "",
+              maxTicket: s.maxTicket != null ? Number(s.maxTicket) : 0,
+            }))
+          : [
+              {
+                id: Date.now(),
+                order: 1,
+                date: "",
+                time: "",
+                cost: "",
+                maxTicket: 1,
+              },
+            ];
+
+      setShows(mapped);
+
+      // 이미지 URL
       const serverPoster = src.photo || src.posterUrl || "";
       const serverQr = src.qr || src.qrUrl || "";
-
       setPosterUrl(serverPoster);
       setQrUrl(serverQr);
-
       setPosterPreview(serverPoster || null);
       setQrPreview(serverQr || null);
+
+      // 디버깅: 받은 회차 출력
+      console.log("받은 scheduleDtoList:", list);
+      console.log("화면에 세팅될 shows:", mapped);
     } catch (err) {
       console.error("공연 데이터 로드 실패", err);
     }
@@ -212,6 +227,7 @@ function EditShow() {
       formData.append("poster", poster, poster.name || "poster.jpg");
     }
     if (qr instanceof File) {
+      // 서버가 대문자 "QR"을 기대한다고 했으니 그대로 보냅니다.
       formData.append("QR", qr, qr.name || "qr.jpg");
     }
 
@@ -503,7 +519,6 @@ function EditShow() {
                           onChange={handleQrChange}
                         />
                       </label>
-                      {/* QR 미리보기(선택) */}
                       {qrPreview && (
                         <div style={{ marginTop: "0.5rem" }}>
                           <img
@@ -590,30 +605,38 @@ function EditShow() {
               <div>시간</div>
               <div>구매제한매수</div>
               <div>가격</div>
+              <div>회차 추가</div>
               <div>삭제</div>
             </div>
 
             {shows.map((show, idx) => (
               <div key={show.id} className={styles.Detail_show}>
-                <div className={styles.shows_line}>{idx + 1}공</div>
+                <div className={styles.shows_line}>
+                  {(show.order ?? idx + 1) + "공"}
+                </div>
+
                 <div className={styles.form_detail_date_2}>
                   <input
                     id={styles.form_detail_date}
                     type="date"
+                    value={show.date || ""}
                     onChange={(e) =>
                       updateSchedule(show.id, "date", e.target.value)
                     }
                   />
                 </div>
+
                 <div className={styles.form_detail_time_2}>
                   <input
                     id={styles.form_detail_time}
                     type="time"
+                    value={show.time || ""}
                     onChange={(e) =>
                       updateSchedule(show.id, "time", e.target.value)
                     }
                   />
                 </div>
+
                 <div className={styles.form_detail_number}>
                   <button
                     className={styles.ticket_Btn}
@@ -631,17 +654,23 @@ function EditShow() {
                     +
                   </button>
                 </div>
+
                 <div className={styles.form_detail_price_2}>
                   <input
                     className={styles.form_detail_price}
                     type="number"
                     placeholder="0000"
+                    value={show.cost || ""}
                     onChange={(e) =>
                       updateSchedule(show.id, "cost", e.target.value)
                     }
                   />
                   원
                 </div>
+                <div className={styles.add_show} onClick={handleAddRow}>
+                  추가
+                </div>
+
                 <div className={styles.delete_Btn}>
                   <button onClick={() => handleRemoveRow(show.id)}>
                     <img src={DELETE} alt="delete" />
@@ -649,10 +678,6 @@ function EditShow() {
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className={styles.add_show} onClick={handleAddRow}>
-            추가
           </div>
 
           <div>
