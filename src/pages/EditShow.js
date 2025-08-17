@@ -18,6 +18,7 @@ function EditShow() {
   const [endDate, setEndDate] = useState("");
   const [runtime, setRunTime] = useState("");
   const [managerPhoneNumber, setManagerPhoneNumber] = useState("");
+  // eslint-disable-next-line
   const [maxPeople, setMaxPeople] = useState(100);
   const [manager, setManager] = useState("");
   const [accountNumber, setAccountNumber] = useState("");

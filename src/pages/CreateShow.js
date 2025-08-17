@@ -22,6 +22,7 @@ function CreateShow() {
   const [runtime, setRunTime] = useState("");
   const [managerPhoneNumber, setManagerPhoneNumber] = useState("");
   const [manager, setManager] = useState("");
+  // eslint-disable-next-line
   const [maxPeople, setMaxPeople] = useState(100);
   const [accountNumber, setAccountNumber] = useState("");
   const [accouuntName, setAccountName] = useState(""); // 기존 변수명 유지 (오타 포함)
