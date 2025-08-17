@@ -95,6 +95,26 @@
   color: var(--gray-10-typo-color, #121212);
 }
 
+.dateInput{
+  width: 100%;
+  height: 36px;
+  border: 1px solid var(--gray-01-border, #ccc);
+  color: var(--gray-10-typo-color, #121212);
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.dateInput span{
+  padding-left: 20px;
+  padding-right:20px;
+}
+
+.dateInput_1{
+  width: 180px !important;
+}
+
 .row input:focus{
   outline: none;
   border-color: var(--main-02, #FF3D12);
