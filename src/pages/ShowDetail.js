@@ -10,6 +10,7 @@ import Modal from "../components/Modal";
 function ShowDetail() {
   const { showId } = useParams();
   const navigate = useNavigate();
+  // eslint-disable-next-line
   const { user, isLoggedIn, token, authLoading } = useAuthStore();
 
   const [show, setShow] = useState({});
@@ -46,7 +47,9 @@ function ShowDetail() {
       console.error("Error fetching data:", err);
 
       if (err.response?.status === 401) {
-        setError("로그인이 필요하거나 세션이 만료되었습니다. 다시 로그인해주세요.");
+        setError(
+          "로그인이 필요하거나 세션이 만료되었습니다. 다시 로그인해주세요."
+        );
       } else if (err.response?.status === 403) {
         setError("이 공연에 접근할 권한이 없습니다.");
       } else if (err.response?.status === 404) {
