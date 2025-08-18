@@ -24,7 +24,7 @@
 .name{
   color: var(--main-02, #FF3D12);
   text-align: center;
-  font:var(--BODY01_B);
+  font:var(--BODY01_SB);
 
   margin-top: 12px;
   margin-bottom: 4px;
@@ -53,6 +53,40 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+
+.top {
+  position: absolute;
+  width: 60px;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+  pointer-events: none; /* hover 깜빡임 방지 */
+  z-index: 100;
+}
+
+/* 카드에 hover될 때만 나타남 */
+.showCard:hover .top {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(5%, -20%);
+  transition: opacity .25s ease, transform .25s ease, visibility 0s;
+}
+
+/* 카드 hover 시 이미지 그림자도 같이 */
+.showCard:hover .mainImg {
+  box-shadow: 4px 4px 12px rgba(0,0,0,.25);
+}
+
+.showCard:hover .name {
+  font: var(--BODY01_B) !important;
+}
+
+/* 접근성: 모션 최소화 설정 존중 */
+@media (prefers-reduced-motion: reduce) {
+  .top { transition: none; transform: none; }
 }
 
 @media (max-width: 440px) {
