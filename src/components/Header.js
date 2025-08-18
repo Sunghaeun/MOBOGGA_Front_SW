@@ -54,13 +54,20 @@ function Header() {
   };
   return (
     <header className={styles.header}>
-      <div className={styles.logo}>
-        <img
-          src={moboggaLogo}
-          alt="MoboggaLogo"
-          className="logoImg"
-          onClick={() => navigate("/main")}
-        />
+      <div className={styles.left_section}>
+        <div className={styles.logo}>
+          <img
+            src={moboggaLogo}
+            alt="MoboggaLogo"
+            className="logoImg"
+            onClick={() => navigate("/main")}
+          />
+        </div>
+        {isManagerUser && (
+          <div className={styles.manager_caution}>
+            <span>동아리 계정</span>
+          </div>
+        )}
       </div>
 
       <div className={styles.right}>
@@ -151,19 +158,15 @@ function Header() {
           </span>
         </div>
 
-        {isLoading ? (
-          <div className={styles.login}>
-            <span>로딩중...</span>
-          </div>
-        ) : isLoggedIn && auth ? (
+        {isLoggedIn && auth ? (
           <div className={styles.manager_btn} onClick={handleProfileClick}>
             <img src={profile_btn} alt="마이페이지" />
           </div>
-        ) : (
+        ) : location.pathname !== "/login" ? (
           <div className={styles.login} onClick={() => navigate("/login")}>
             <span>로그인</span>
           </div>
-        )}
+        ) : null}
       </div>
       <div className={styles.sidebar} onClick={toggleSide}>
         <img src={sidebar} alt="사이드바" />

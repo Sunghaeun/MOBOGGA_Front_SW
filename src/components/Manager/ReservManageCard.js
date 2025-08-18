@@ -5,12 +5,11 @@ import showEditBtn from "../../assets/manager/show_edit_btn.svg";
 import showDeleteBtn from "../../assets/manager/show_delete_btn.svg";
 import apiClient from "../../utils/apiClient";
 
-function ReservManageCard({ data }) {
+function ReservManageCard({ data, onDeleted }) {
   const navigate = useNavigate();
   if (!data) return null;
 
-  const { id, scheduleId, poster, title, order, applyPeople, maxPeople } =
-    data;
+  const { id, scheduleId, poster, title, order, applyPeople, maxPeople } = data;
 
   const handleHolderList = () => {
     navigate(`/manager/holder/${scheduleId}`);
@@ -41,10 +40,20 @@ function ReservManageCard({ data }) {
 
       alert("공연이 성공적으로 삭제되었습니다.");
 
-      // 페이지 새로고침하여 목록 업데이트
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
+      // 부모 콜백이 제공되면 부모에서 목록 갱신을 수행하도록 유도
+      // (부모가 onDeleted를 제공하지 않으면 콘솔에 경고만 남김)
+      if (typeof onDeleted === "function") {
+        try {
+          onDeleted(id);
+          return;
+        } catch (cbErr) {
+          console.error("onDeleted callback error:", cbErr);
+        }
+      } else {
+        console.warn(
+          "ReservManageCard: onDeleted not provided — 목록 갱신을 부모에서 처리해주세요."
+        );
+      }
     } catch (error) {
       console.error("공연 삭제 실패:", error);
       console.error("에러 상세:", {
@@ -82,7 +91,9 @@ function ReservManageCard({ data }) {
         </div>
         <div className={styles.card_info_box}>
           <div className={styles.card_info} id={styles.order_box}>
-            <div className={styles.card_order}>{order || "공연 정보 없음"}</div>
+            <div className={styles.card_order}>
+              {order || "공연 정보 없음"}공
+            </div>
             <div className={styles.card_applyPeople}>
               현황: {applyPeople}/{maxPeople}
             </div>

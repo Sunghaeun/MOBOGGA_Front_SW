@@ -113,22 +113,62 @@ const sendAccessTokenToBackend = async (idToken, navigate) => {
     // HTTP 에러 처리
     if (error.response) {
       const status = error.response.status;
+      // 백엔드가 제공한 message 또는 error 필드 우선 사용
+      let backendMessage = null;
+      const respData = error.response.data;
+      if (respData) {
+        if (typeof respData === "string") {
+          const trimmed = respData.trim();
+          if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+            try {
+              const parsed = JSON.parse(trimmed);
+              backendMessage = parsed?.message || parsed?.error || null;
+            } catch (e) {
+              // JSON 파싱 실패하면 문자열 전체를 사용
+              backendMessage = trimmed || null;
+            }
+          } else {
+            backendMessage = trimmed || null;
+          }
+        } else if (typeof respData === "object") {
+          backendMessage = respData?.message || respData?.error || null;
+        }
+      }
+
       switch (status) {
         case 400:
+          if (backendMessage) {
+            throw new Error(backendMessage);
+          }
           throw new Error("잘못된 요청입니다. 다시 로그인해주세요.");
         case 401:
+          if (backendMessage) {
+            throw new Error(backendMessage);
+          }
           throw new Error("인증에 실패했습니다. 다시 로그인해주세요.");
         case 403:
+          if (backendMessage) {
+            throw new Error(backendMessage);
+          }
           throw new Error("접근 권한이 없습니다.");
         case 404:
+          if (backendMessage) {
+            throw new Error(backendMessage);
+          }
           throw new Error(
             "API 엔드포인트를 찾을 수 없습니다. 서버 설정을 확인해주세요."
           );
         case 500:
+          if (backendMessage) {
+            throw new Error(backendMessage);
+          }
           throw new Error(
             "서버 내부 오류가 발생했습니다. 관리자에게 문의해주세요."
           );
         default:
+          if (backendMessage) {
+            throw new Error(backendMessage);
+          }
           throw new Error(
             `서버 오류 (${status}): ${
               error.response.data?.message || "관리자에게 문의해주세요."
