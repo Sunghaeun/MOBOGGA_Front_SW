@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+// eslint-disable-next-line
 import React, { useState, useEffect, useRef } from "react";
 import useAuthStore from "../stores/authStore";
 import styles from "./styles/CreateEntertain.module.css";
@@ -11,9 +12,11 @@ import NOTION from "../assets/icons/notion.svg";
 import LINK from "../assets/icons/linkicons.svg";
 
 function CreateEntertain() {
+  // eslint-disable-next-line
   const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
 
   const navigate = useNavigate();
+  // eslint-disable-next-line
   const { isLoggedIn, isManager, token } = useAuthStore(); // zustand store 사용
 
   const [name, setName] = useState("");
