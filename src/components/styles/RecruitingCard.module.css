@@ -71,7 +71,7 @@
 .showCard:hover .top {
   opacity: 1;
   visibility: visible;
-  transform: translate(5%, -20%);
+  transform: translate(5%, -25%);
   transition: opacity .25s ease, transform .25s ease, visibility 0s;
 }
 

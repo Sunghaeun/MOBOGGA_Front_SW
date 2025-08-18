@@ -13,7 +13,7 @@ function RecruitingCard({ show, onClick }) {
       <span className={styles.name}>{show.clubName}</span>
       {/* 여기에 정기/추가모집/상시모집 넣어야해유~ */}
       <div className={styles.secondline}>
-        <span className={styles.recruitingType}>{/*{show.recruitingType}*/}정기모집</span>
+        <span className={styles.recruitingType}>{show.category}</span>
         <span className={styles.separator}>|</span>
         <span className={styles.title}>{show.recruitingTitle}</span>
       </div>
