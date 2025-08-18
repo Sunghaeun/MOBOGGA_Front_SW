@@ -129,9 +129,9 @@ function ManagerEntertainpage() {
       }
 
       setEntertainCards(data.entertainList || []);
-      console.log("설정된 즐길거리 내역 데이터:", data.entertainList);
+      console.log("설정된 행사 내역 데이터:", data.entertainList);
     } catch (err) {
-      console.error("즐길거리 카드 조회 에러:", err);
+      console.error("행사 카드 조회 에러:", err);
       if (
         err.code === "ECONNABORTED" ||
         err.name === "TypeError" ||
@@ -140,7 +140,7 @@ function ManagerEntertainpage() {
         setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
         setIsServerErrorModalOpen(true);
       } else {
-        setError(err.message || "즐길거리 목록을 불러오는데 실패했습니다.");
+        setError(err.message || "god 목록을 불러오는데 실패했습니다.");
       }
       setEntertainCards([]);
     } finally {
@@ -204,7 +204,7 @@ function ManagerEntertainpage() {
                 onClick={() => navigate("/manager/entertain")}
                 id={styles.highlight}
               >
-                즐길거리
+                행사
               </div>
               <div
                 className={styles.category_list}
@@ -217,7 +217,7 @@ function ManagerEntertainpage() {
               <div className={styles.loading}>
                 <div className={styles.loadingSpinner}></div>
                 <div className={styles.loadingText}>
-                  즐길거리 목록을 불러오고 있습니다
+                  행사 목록을 불러오고 있습니다
                   <span className={styles.loadingDots}>...</span>
                 </div>
                 <div className={styles.loadingSubtext}>잠시만 기다려주세요</div>
@@ -257,7 +257,7 @@ function ManagerEntertainpage() {
               onClick={() => navigate("/manager/entertain")}
               id={styles.highlight}
             >
-              즐길거리
+              행사
             </div>
             <div
               className={styles.category_list}
@@ -276,10 +276,10 @@ function ManagerEntertainpage() {
             ) : (
               <div className={styles.empty_state}>
                 <div className={styles.empty_message}>
-                  등록된 즐길거리가 없습니다.
+                  등록된 행사가 없습니다.
                 </div>
                 <div className={styles.empty_submessage}>
-                  새로운 즐길거리를 등록해보세요.
+                  새로운 행사를 등록해보세요.
                 </div>
               </div>
             )}

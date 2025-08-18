@@ -1,4 +1,4 @@
-.clubCard{
+.clubCard {
   width: 236px;
   height: 284px;
   flex-shrink: 0;
@@ -9,22 +9,34 @@
 
   margin-bottom: 40px;
   cursor: pointer;
+
+  transition: box-shadow 0.2s ease;
+}
+.clubCard :hover {
+  box-shadow: 4px 4px 12px 0 rgba(0, 0, 0, 0.25);
+  font: var(--BODY01_B);
+  color: var(--main-02, #ff3d12);
 }
 
-.clubImg{
+.clubCard:hover .name {
+  font: var(--BODY01_B);
+  color: var(--main-02, #ff3d12);
+}
+
+.clubImg {
   width: 236px;
   height: 236px;
 
   background-color: rgb(67, 67, 67);
 }
 
-.mainImg{
+.mainImg {
   width: 236px;
   height: 236px;
   object-fit: cover;
 }
 
-.name{
+.name {
   color: var(--gray-10-typo-color, #121212);
   text-align: center;
 

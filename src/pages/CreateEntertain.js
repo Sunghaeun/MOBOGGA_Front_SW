@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import styles from "./styles/CreateEntertain.module.css";
 import axios from "axios";
+import Modal from "../components/Modal";
 import INSTA from "../assets/icons/instagram.svg";
 import KAKAO from "../assets/icons/kakao.svg";
 import YOUTUBE from "../assets/icons/youtube.svg";
@@ -100,7 +101,7 @@ function CreateEntertain() {
     if (!name) return alert("제목을 입력해 주세요");
     if (!poster || !(poster instanceof File)) {
       console.log("포스터 파일 확인:", poster);
-      return alert("즐길거리 이미지를 선택해 주세요");
+      return alert("행사 이미지를 선택해 주세요");
     }
     if (!location) return alert("장소를 입력해 주세요");
     if (!startDate) return alert("시작날짜를 입력해 주세요");
@@ -157,7 +158,7 @@ function CreateEntertain() {
           },
         }
       );
-      //새로 만든 즐길거리에 바로 입장가능하게 해줌
+      //새로 만든 행사에 바로 입장가능하게 해줌
       const { publicId, showId, id } = response.data || {};
       const detailId = publicId ?? showId ?? id; // 공개 상세에서 쓰는 id 우선
       navigate(`/entertain/${detailId}`);
@@ -208,7 +209,7 @@ function CreateEntertain() {
   return (
     <div>
       <div className={styles.CreateBody}>
-        <div className={styles.headText}>즐길거리 새로 만들기</div>
+        <div className={styles.headText}>행사 새로 만들기</div>
         <div className={styles.Create_Container}>
           <div className={styles.Detail_Entire_Box}>
             <div className={styles.SImage_Box_Entire}>
@@ -236,7 +237,7 @@ function CreateEntertain() {
                   <span className={styles.variable_Info}>
                     <input
                       type="text"
-                      placeholder="즐길거리 이름(공백포함 최대 30자까지 작성 가능합니다.)"
+                      placeholder="행사 이름(공백포함 최대 30자까지 작성 가능합니다.)"
                       value={name}
                       onChange={handlename}
                       style={{ width: "27rem" }}
@@ -250,7 +251,7 @@ function CreateEntertain() {
                   <span className={styles.variable_Info}>
                     <textarea
                       type="text"
-                      placeholder={`즐길거리에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
+                      placeholder={`행사에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
                       onChange={handleIntro}
                       style={{ height: "6rem", width: "27rem" }}
                     />
@@ -438,10 +439,35 @@ function CreateEntertain() {
 
           <div>
             <button className={styles.make_show_submit} onClick={makeEntertain}>
-              즐길거리 만들기
+              행사 만들기
             </button>
           </div>
         </div>
+        {/* 제목 미입력 모달
+        <Modal
+          className={null}
+          isOpen={titleModalOpen}
+          onClose={() => settitleModalOpen(false)}
+        >
+          <div className={styles.modal_top}>
+            <p>예매에 실패하였습니다.</p>
+          </div>
+          <div className={styles.modal_con}>
+            {!token ? "로그인 후 다시 이용해 주세요" : "다시 시도해주세요."}
+          </div>
+          <div className={styles.modal_Btns}>
+            <button
+              className={styles.modal_ok_Btn}
+              onClick={() => {
+                settitleModalOpen(false);
+                window.scrollTo(0, 0);
+                if (!token) navigate("/login");
+              }}
+            >
+              확인
+            </button>
+          </div>
+        </Modal> */}
       </div>
     </div>
   );
