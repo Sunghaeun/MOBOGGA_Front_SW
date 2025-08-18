@@ -198,8 +198,10 @@
 
 .button_box {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   margin-top: 32px;
+  gap: 16px;
 }
 
 .update_button {
@@ -208,13 +210,11 @@
   background: var(--ORANGE);
   border: none;
   margin-top: 94px;
-  margin-bottom: 160px;
   padding: 4px 94px;
   cursor: pointer;
   transition: background-color 0.2s ease;
 
   /* Body 01 _ R */
-  font-family: "Pretendard Variable";
   font-size: 20px;
   font-style: normal;
   font-weight: 400;
@@ -229,6 +229,27 @@
 
 .update_button:active {
   background: #a91e00;
+}
+
+.cancel_button {
+  color: var(--ORANGE);
+  text-align: center;
+  background: var(--WHITE);
+  border: 1px solid var(--ORANGE);
+  margin-bottom: 160px;
+  padding: 4px 94px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  /* Body 01 _ R */
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 33px; /* 165% */
+}
+.cancel_button:hover {
+  background: var(--HOVER);
+  color: var(--ORANGE);
 }
 
 /* 모달 CSS */
