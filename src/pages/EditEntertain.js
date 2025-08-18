@@ -1,7 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import styles from "./styles/CreateEntertain.module.css";
-import axios from "axios";
+import useAuthStore from "../stores/authStore";
+import apiClient from "../utils/apiClient";
 import INSTA from "../assets/icons/instagram.svg";
 import KAKAO from "../assets/icons/kakao.svg";
 import YOUTUBE from "../assets/icons/youtube.svg";
@@ -9,9 +10,25 @@ import NOTION from "../assets/icons/notion.svg";
 import LINK from "../assets/icons/linkicons.svg";
 
 function EditEntertain() {
-  const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
   const navigate = useNavigate();
   const { id } = useParams();
+  const { isLoggedIn, user, token } = useAuthStore();
+
+  // 권한 체크
+  useEffect(() => {
+    if (!isLoggedIn || !token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
+
+    // 매니저 권한 체크 (필요시)
+    if (user && user.authority !== "ROLE_CLUB") {
+      alert("매니저 권한이 필요합니다.");
+      navigate("/");
+      return;
+    }
+  }, [isLoggedIn, token, user, navigate]);
 
   const [name, setName] = useState("");
   const [poster, setPoster] = useState(null); // 새로 업로드한 파일
@@ -45,30 +62,15 @@ function EditEntertain() {
     setPreviewURL(file ? URL.createObjectURL(file) : posterUrl || null);
   };
 
-  // 공통: 토큰 헤더 만들기
-  const getAuthHeader = () => {
-    const raw =
-      window.tempToken ||
-      sessionStorage.getItem("jwt") ||
-      sessionStorage.getItem("idToken");
-    if (!raw) return null;
-    return raw.startsWith("Bearer ") ? raw : `Bearer ${raw}`;
-  };
-
   const getEntertain = async () => {
-    try {
-      const token = localStorage.getItem("jwt");
-      if (!token) {
-        alert("로그인 필요");
-        return;
-      }
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
 
-      const res = await axios.get(
-        `${API_BASE}/manager/entertain/update/${id}`,
-        {
-          headers: { Authorization: `Baereer ${token}` },
-        }
-      );
+    try {
+      const res = await apiClient.get(`/manager/entertain/update/${id}`);
       console.log("== 서버에서 받은 데이터 ==", res.data);
 
       const src = res.data ?? {};
@@ -94,7 +96,15 @@ function EditEntertain() {
       setPreviewURL(serverPoster || null);
     } catch (err) {
       console.error("즐길거리 데이터 로드 실패", err);
-      alert("데이터 로드에 실패했습니다.");
+      if (err.response?.status === 401) {
+        alert("인증이 만료되었습니다. 다시 로그인해주세요.");
+        navigate("/login");
+      } else if (err.response?.status === 403) {
+        alert("권한이 없습니다.");
+        navigate("/");
+      } else {
+        alert("데이터 로드에 실패했습니다.");
+      }
     }
   };
 
@@ -108,9 +118,9 @@ function EditEntertain() {
   }, [id]);
 
   const updateEntertain = async () => {
-    const auth = getAuthHeader();
-    if (!auth) {
-      alert("로그인 필요");
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
       return;
     }
 
@@ -148,8 +158,6 @@ function EditEntertain() {
       new Blob([JSON.stringify(requestData)], { type: "application/json" })
     );
 
-    const endpoint = `${API_BASE}/manager/entertain/update/${id}`;
-
     // 디버깅 로그
     console.log("== 최종 전송 JSON ==", JSON.stringify(requestData, null, 2));
     console.log("== FormData entries ==");
@@ -164,14 +172,26 @@ function EditEntertain() {
     }
 
     try {
-      await axios.put(endpoint, formData, {
-        headers: { Authorization: auth }, // Content-Type 생략: axios가 boundary 자동 지정
+      await apiClient.put(`/manager/entertain/update/${id}`, formData, {
+        headers: {
+          // Content-Type을 설정하지 않음: axios가 FormData boundary 자동 지정
+        },
       });
       alert("즐길거리 수정 완료");
       navigate(`/entertain/${id}`);
     } catch (error) {
       console.error("저장 오류", error);
-      alert(`저장 실패: ${error.response?.data?.message || "알 수 없는 오류"}`);
+
+      if (error.response?.status === 401) {
+        alert("인증이 만료되었습니다. 다시 로그인해주세요.");
+        navigate("/login");
+      } else if (error.response?.status === 403) {
+        alert("권한이 없습니다.");
+      } else {
+        const errorMsg =
+          error.response?.data?.message || error.message || "알 수 없는 오류";
+        alert(`저장 실패: ${errorMsg}`);
+      }
     }
   };
 
@@ -458,7 +478,7 @@ function EditEntertain() {
               className={styles.make_show_submit}
               onClick={updateEntertain}
             >
-              즐길거리 업데이트
+              수정하기
             </button>
           </div>
         </div>
