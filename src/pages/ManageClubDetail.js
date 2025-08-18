@@ -161,7 +161,7 @@ function ClubDetail() {
 
                 if (category === "공연") {
                   navigate(`/show/${id}`);
-                } else if (category === "즐길거리") {
+                } else if (category === "행사") {
                   navigate(`/entertain/${id}`);
                 }
               }}
@@ -192,7 +192,7 @@ function ClubDetail() {
 
                 if (category === "공연") {
                   navigate(`/show/${id}`);
-                } else if (category === "즐길거리") {
+                } else if (category === "행사") {
                   navigate(`/entertain/${id}`);
                 }
               }}

@@ -93,7 +93,7 @@ function EditEntertain() {
       setPosterUrl(serverPoster);
       setPreviewURL(serverPoster || null);
     } catch (err) {
-      console.error("즐길거리 데이터 로드 실패", err);
+      console.error("행사 데이터 로드 실패", err);
       alert("데이터 로드에 실패했습니다.");
     }
   };
@@ -167,7 +167,7 @@ function EditEntertain() {
       await axios.put(endpoint, formData, {
         headers: { Authorization: auth }, // Content-Type 생략: axios가 boundary 자동 지정
       });
-      alert("즐길거리 수정 완료");
+      alert("행사 수정 완료");
       navigate(`/entertain/${id}`);
     } catch (error) {
       console.error("저장 오류", error);
@@ -194,7 +194,7 @@ function EditEntertain() {
   return (
     <div>
       <div className={styles.CreateBody}>
-        <div className={styles.headText}>즐길거리 수정하기</div>
+        <div className={styles.headText}>행사 수정하기</div>
         <div className={styles.Create_Container}>
           <div className={styles.Detail_Entire_Box}>
             {/* 포스터 박스 */}
@@ -229,7 +229,7 @@ function EditEntertain() {
                   <span className={styles.variable_Info}>
                     <input
                       type="text"
-                      placeholder="즐길거리 이름(공백포함 최대 30자까지 작성 가능합니다.)"
+                      placeholder="행사 이름(공백포함 최대 30자까지 작성 가능합니다.)"
                       value={name}
                       onChange={handlename}
                       style={{ width: "27rem" }}
@@ -244,7 +244,7 @@ function EditEntertain() {
                   <span className={styles.variable_Info}>
                     <textarea
                       type="text"
-                      placeholder={`즐길거리에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
+                      placeholder={`행사에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
                       value={introductionLetter}
                       onChange={handleIntro}
                       style={{ height: "6rem", width: "27rem" }}
@@ -458,7 +458,7 @@ function EditEntertain() {
               className={styles.make_show_submit}
               onClick={updateEntertain}
             >
-              즐길거리 업데이트
+              행사 업데이트
             </button>
           </div>
         </div>
