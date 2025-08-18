@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./styles/ShowDetail.module.css";
 import loadingStyles from "../styles/Loading.module.css";
 import useAuthStore from "../stores/authStore";
-
 import BACK from "../assets/ShowBackButton.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import apiClient from "../utils/apiClient";
@@ -11,7 +10,6 @@ import Modal from "../components/Modal";
 function ShowDetail() {
   const { showId } = useParams();
   const navigate = useNavigate();
-  // eslint-disable-next-line no-unused-vars
   const { user, isLoggedIn, token, authLoading } = useAuthStore();
 
   const [show, setShow] = useState({});
@@ -21,15 +19,20 @@ function ShowDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
+
   const [secondModalOpen, setSecondModalOpen] = useState(false);
   const [failModalOpen, setFailModalOpen] = useState(false);
+  const [limitOpen, setLimitOpen] = useState(false);
+  const [selectSchOpen, setSelectSchOpen] = useState(false);
+  const limitOkRef = useRef(null);
+  const selectSchOkRef = useRef(null);
 
   const navigateToPrepage = () => navigate(-1);
 
   // 상세 데이터 불러오기
   const fetchData = async () => {
-    console.log("받은 showId:", showId, typeof showId);
-    console.log("저장된 토큰:", token ? "있음" : "없음");
+    console.log("받은 showId:", showId);
+    console.log("인증 상태:", isLoggedIn ? "로그인됨" : "로그인안됨");
 
     try {
       setLoading(true);
@@ -37,22 +40,16 @@ function ShowDetail() {
 
       const res = await apiClient.get(`/show/detail/${showId}`);
       console.log("API 응답 성공:", res.status);
-      console.log("API 응답 데이터:", res.data);
       setShow(res.data || {});
       setError(null);
     } catch (err) {
       console.error("Error fetching data:", err);
 
       if (err.response?.status === 401) {
-        console.log("401 에러 - 인증 실패");
-        setError(
-          "로그인이 필요하거나 세션이 만료되었습니다. 다시 로그인해주세요."
-        );
+        setError("로그인이 필요하거나 세션이 만료되었습니다. 다시 로그인해주세요.");
       } else if (err.response?.status === 403) {
-        console.log("403 에러 - 권한 없음");
         setError("이 공연에 접근할 권한이 없습니다.");
       } else if (err.response?.status === 404) {
-        console.log("404 에러 - 공연을 찾을 수 없음");
         setError("요청하신 공연을 찾을 수 없습니다.");
       } else {
         setError("데이터를 불러오는 중 오류가 발생했습니다.");
@@ -62,6 +59,38 @@ function ShowDetail() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!limitOpen) return;
+    const onKey = (e) => {
+      if (e.isComposing) return;
+      if (e.key === "Enter") {
+        e.preventDefault();
+        limitOkRef.current?.click();
+      }
+      if (e.key === "Escape") {
+        setLimitOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [limitOpen]);
+
+  useEffect(() => {
+    if (!selectSchOpen) return;
+    const onKey = (e) => {
+      if (e.isComposing) return;
+      if (e.key === "Enter") {
+        e.preventDefault();
+        selectSchOkRef.current?.click();
+      }
+      if (e.key === "Escape") {
+        setSelectSchOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selectSchOpen]);
 
   useEffect(() => {
     if (authLoading) {
@@ -81,7 +110,7 @@ function ShowDetail() {
       return;
     }
 
-    if (!token || !isLoggedIn) {
+    if (!isLoggedIn) {
       setOpen(false);
       setFailModalOpen(true);
       return;
@@ -93,8 +122,6 @@ function ShowDetail() {
     };
 
     try {
-      console.log("예매 요청:", requestData);
-
       const res = await apiClient.post("/show/detail/reservation", requestData);
       console.log("예매 성공:", res.data);
 
@@ -102,12 +129,7 @@ function ShowDetail() {
       setSecondModalOpen(true);
       setIsDisable(true);
     } catch (err) {
-      console.log("예매 실패:", err);
-      if (err.response) {
-        console.error("서버 응답 데이터:", err.response.data);
-      } else {
-        console.log("서버 응답 없음(네트워크 문제)");
-      }
+      console.error("예매 실패:", err);
       setOpen(false);
       setFailModalOpen(true);
     }
@@ -127,14 +149,14 @@ function ShowDetail() {
     if (count > 1) setCount(count - 1);
   };
   const Plus = () => {
-    if (!selectedSch) return alert("공연 회차를 선택해주세요.");
+    if (!selectedSch) return setSelectSchOpen(true);
+
     const maxAvailable = Math.min(
       selectedSch.maxPeople - selectedSch.applyPeople,
       selectedSch.maxTickets
     );
     if (count < maxAvailable) setCount(count + 1);
-    else if (count === selectedSch.maxTickets)
-      alert(`인당 최대 ${selectedSch.maxTickets}매까지 예매가능합니다.`);
+    else if (count === selectedSch.maxTickets) setLimitOpen(true);
     else alert(`현재 ${count}매를 예매할 수 있습니다.`);
   };
 
@@ -272,7 +294,9 @@ function ShowDetail() {
                       <span className={styles.info_txt}>담당자</span>
                     </span>
                     <span className={styles.variable_Info}>
-                      {show?.managerInfo || "담당자 정보 없음"}
+                      {show?.managerPhoneNumber || "담당자 정보 없음"} {" ("}
+                      {show?.manager || " "}
+                      {") "}
                     </span>
                   </div>
 
@@ -368,7 +392,7 @@ function ShowDetail() {
                 }`}
                 onClick={() => {
                   if (isDisable) return;
-                  if (!selectedSch) return alert("공연 회차를 선택해주세요.");
+                  if (!selectedSch) return setSelectSchOpen(true);
                   setOpen(true);
                 }}
                 disabled={isDisable}
@@ -481,6 +505,48 @@ function ShowDetail() {
                       window.scrollTo(0, 0);
                       if (!token) navigate("/login");
                     }}
+                  >
+                    확인
+                  </button>
+                </div>
+              </Modal>
+              {/*구매제한 안내 모달*/}
+              <Modal
+                className={null}
+                isOpen={limitOpen}
+                onClose={() => setLimitOpen(false)}
+              >
+                <div className={styles.modal_con}>
+                  인당 {selectedSch?.maxTickets}매까지 구매 가능합니다
+                </div>
+                <div className={styles.modal_Btns}>
+                  <button
+                    type="button"
+                    ref={limitOkRef}
+                    autoFocus
+                    className={styles.modal_reserv_Btn}
+                    onClick={() => setLimitOpen(false)}
+                  >
+                    확인
+                  </button>
+                </div>
+              </Modal>
+              {/*회차선택 모달*/}
+              <Modal
+                className={null}
+                isOpen={selectSchOpen}
+                onClose={() => setSelectSchOpen(false)}
+              >
+                <div className={styles.modal_con}>
+                  공연 회차를 선택해주세요.
+                </div>
+                <div className={styles.modal_Btns}>
+                  <button
+                    type="button"
+                    ref={selectSchOkRef}
+                    autoFocus
+                    className={styles.modal_reserv_Btn}
+                    onClick={() => setSelectSchOpen(false)}
                   >
                     확인
                   </button>

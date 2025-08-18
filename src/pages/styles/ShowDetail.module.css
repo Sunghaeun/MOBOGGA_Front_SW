@@ -25,6 +25,8 @@
   width: 95%;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
+  width: 95%;
 }
 
 .intro_con {
