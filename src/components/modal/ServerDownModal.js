@@ -30,7 +30,7 @@ function ServerDownModal({ isOpen, onRetry, onClose, errorMessage }) {
 
   // 메시지 정규화 (소문자화, 구두점 제거)
   const normalized = (rawMessage || "")
-    .replace(/[\.,!?()\[\]{}"'·…]/g, " ")
+    .replace(/[.,!?()[\]{}"'·…]/g, " ")
     .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();

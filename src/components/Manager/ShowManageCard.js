@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ShowManageCard.module.css";
-import showHolderBtn from "../../assets/manager/show_holder_btn.svg";
 import showEditBtn from "../../assets/manager/show_edit_btn.svg";
 import showDeleteBtn from "../../assets/manager/show_delete_btn.svg";
 import apiClient from "../../utils/apiClient";
