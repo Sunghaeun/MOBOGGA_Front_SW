@@ -22,6 +22,8 @@ function CreateShow() {
   const [runtime, setRunTime] = useState("");
   const [managerPhoneNumber, setManagerPhoneNumber] = useState("");
   const [manager, setManager] = useState("");
+  // eslint-disable-next-line
+  const [maxPeople, setMaxPeople] = useState(100);
   const [accountNumber, setAccountNumber] = useState("");
   const [accouuntName, setAccountName] = useState(""); // 기존 변수명 유지 (오타 포함)
   const [accountBankName, setAccountBankName] = useState("");
@@ -43,7 +45,15 @@ function CreateShow() {
 
   // 회차 배열
   const [shows, setShows] = useState([
-    { id: Date.now(), order: 1, date: "", time: "", cost: "", maxTicket: 1 },
+    {
+      id: Date.now(),
+      order: 1,
+      date: "",
+      time: "",
+      cost: "",
+      maxTicket: 1,
+      maxPeople: 100,
+    },
   ]);
 
   // 회차 업데이트
@@ -138,6 +148,7 @@ function CreateShow() {
       runtime: Number(runtime),
       manager,
       managerPhoneNumber,
+      maxPeople,
       accountNumber,
       accountName: accouuntName, // 키는 정상(accountName), 상태변수명은 그대로
       accountBankName,
@@ -151,6 +162,7 @@ function CreateShow() {
         time: toHms(s.time),
         cost: Number(s.cost),
         maxTicket: Number(s.maxTicket) || 0,
+        maxPeople: Number(s.maxPeople) || 100,
       })),
     };
 
@@ -249,6 +261,7 @@ function CreateShow() {
           time: "",
           cost: "",
           maxTicket: 1,
+          maxPeople: 100,
         },
       ];
       // 혹시 모를 불일치 방지용 reindex

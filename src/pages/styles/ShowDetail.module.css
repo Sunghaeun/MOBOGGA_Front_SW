@@ -17,10 +17,12 @@
 .show_Intro {
   display: flex;
   padding-left: 20px;
+  justify-content: center;
 }
 
 .intro_Info {
   display: flex;
+  width: 95%;
   flex-direction: column;
   align-items: flex-start;
 }
@@ -36,8 +38,7 @@
 }
 
 .show_Pic {
-  width: 28.5625rem;
-  height: 40.375rem;
+  height: 35rem;
   flex-shrink: 0;
   object-fit: contain;
   box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.25);
@@ -76,21 +77,19 @@
 
 .show_Info {
   width: 650px;
-  margin-left: 64px;
+  margin-left: 4rem;
   text-align: left;
 }
 
 .title {
-  font-size: 48px;
-  font-weight: bold;
+  font: var(--TITLE02_B);
   margin-bottom: 5px;
 }
 
 .club {
-  font-size: 24px;
-  font-weight: bold;
+  font: var(--TITLE06);
   color: #ff3d12;
-  margin-bottom: 20px;
+  margin-bottom: 2.56rem;
   width: 40%;
 
   &:hover {
@@ -101,7 +100,7 @@
 .infos {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1.25rem;
 }
 
 .info_Box {
@@ -115,6 +114,7 @@
   width: 60px;
   flex-shrink: 0;
   font-weight: bold;
+  font: var(--BODY03_B);
   color: #8e3dff;
 }
 .info_txt {
@@ -125,6 +125,7 @@
 .variable_Info {
   color: #333;
   white-space: pre-wrap; /* 줄바꿈 유지 */
+  font: var(--BODY03);
 }
 
 /* 공연 회차 선택 등 */
@@ -149,10 +150,7 @@
 
 .selected_Label {
   color: var(--gray-10-typo-color, #121212);
-  /* Body 03 _ M */
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: bolder;
+  font: var(--BODY03_M);
   line-height: 1.6875rem; /* 168.75% */
   letter-spacing: 0.01rem;
   &:hover {
@@ -179,9 +177,18 @@
 .sch_Item {
   display: flex;
   width: 100%;
+  height: 2rem;
+  align-items: center;
+}
+
+.sch_Item > input[type="radio"] {
+  align-self: center; /* 혹시 모를 상속/중첩 깨짐 대비 */
+  margin: 0; /* 브라우저 기본 여백 제거 */
+  margin-right: 0.75rem;
 }
 
 .ticket_Radio {
+  display: flex;
   accent-color: #121212;
   margin-bottom: 24px;
   letter-spacing: 0.01rem;
@@ -344,6 +351,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font: var(--BODY01_SB);
 }
 
 .modal_con img {
@@ -356,7 +364,6 @@
 .modal_Btns {
   display: flex;
   padding-top: 1rem;
-  margin-bottom: 1.25rem;
   gap: 0.5rem;
   justify-content: center;
   align-items: center;
@@ -372,11 +379,7 @@
   border: 1px solid var(--main-02, #ff3d12);
   background: var(--gray-01-background, #fbfbfb);
   color: var(--main-02, #ff3d12);
-  /* Body 04 _ R */
-  font-family: "IBM Plex Sans KR";
-  font-size: 0.875rem;
-  font-style: normal;
-  font-weight: 400;
+  font: var(--BODY04);
   line-height: 1.5rem; /* 171.429% */
   letter-spacing: 0.00875rem;
   &:hover {
@@ -426,5 +429,11 @@
   letter-spacing: 0.00875rem;
   &:hover {
     cursor: pointer;
+  }
+}
+
+@media (max-width: 480px) {
+  .show_Top {
+    width: 100vw - 20px;
   }
 }

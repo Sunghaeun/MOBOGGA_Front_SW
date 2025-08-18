@@ -21,6 +21,7 @@ const Modal = ({ isOpen, onClose, children, className }) => {
       <div
         onClick={(e) => e.stopPropagation()}
         className={`${styles.modal} ${className || ""}`}
+        tabIndex={0}
       >
         {renderWithLineBreaks(children)}
       </div>
