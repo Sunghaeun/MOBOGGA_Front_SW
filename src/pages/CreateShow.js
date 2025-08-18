@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import styles from "./styles/CreateShow.module.css";
-import axios from "axios";
 import DELETE from "../assets/button_delete.svg";
+import useAuthStore from "../stores/authStore";
+import apiClient from "../utils/apiClient";
 
 function CreateShow() {
-  const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
   const navigate = useNavigate();
+  const { isLoggedIn, isManager } = useAuthStore();
 
   const [name, setName] = useState("");
   const [poster, setPoster] = useState(null);
@@ -102,21 +103,11 @@ function CreateShow() {
     setQrPreview(file ? URL.createObjectURL(file) : null);
   };
 
-  // Bearer 토큰 정규화 (local ↔ session 둘 다 체크)
-  const getAuthHeader = () => {
-    const raw =
-      window.tempToken ||
-      sessionStorage.getItem("jwt") ||
-      sessionStorage.getItem("idToken"); // 혹시 ID 토큰을 이렇게 저장했다면
-    if (!raw) return null;
-    return raw.startsWith("Bearer ") ? raw : `Bearer ${raw}`;
-  };
-
   const makeShow = async () => {
     // 0) 필수값 검증
-    const authHeader = getAuthHeader();
-    if (!authHeader) {
-      alert("로그인 토큰이 없습니다. 다시 로그인 해주세요.");
+    if (!isLoggedIn || !isManager()) {
+      alert("로그인이 필요하거나 권한이 없습니다.");
+      navigate("/login");
       return;
     }
 
@@ -196,14 +187,10 @@ function CreateShow() {
       }
     }
 
-    const urlCreate = `${API_BASE}/manager/show/create`; // /api 붙이지 않음
-    console.log("[DEBUG] POST URL:", urlCreate);
-
     try {
-      const resp = await axios.post(urlCreate, formData, {
+      const resp = await apiClient.post("/manager/show/create", formData, {
         headers: {
-          Authorization: authHeader, // ★ 반드시 Bearer 접두어 포함
-          // Content-Type: 지정 X (axios가 boundary 자동 설정)
+          "Content-Type": "multipart/form-data",
         },
       });
 
