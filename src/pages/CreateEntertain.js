@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
 import useAuthStore from "../stores/authStore";
 import styles from "./styles/CreateEntertain.module.css";
-import apiClient from "../utils/apiClient"; // axios 대신 apiClient 사용
+import apiClient from "../utils/apiClient"; // axios 대신 apiClient 사용// eslint-disable-next-line
+
+import axios from "axios";
+// eslint-disable-next-line
 import Modal from "../components/Modal";
 import INSTA from "../assets/icons/instagram.svg";
 import KAKAO from "../assets/icons/kakao.svg";

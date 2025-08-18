@@ -107,6 +107,13 @@ function Login() {
           onMouseOut={onMouseOut}
           onClick={onClickGoogleLoginBtn}
         />
+        <div className={styles.login_caution}>
+          <p>로그인 시 주의사항</p>
+          <ul>
+            <li>• 한동대학교 이메일 계정으로 로그인해야 합니다.</li>
+            <li>• 비밀번호를 잊으셨나요? 구글 계정 복구 페이지를 이용하세요.</li>
+          </ul>
+        </div>
       </div>
     </div>
   );
