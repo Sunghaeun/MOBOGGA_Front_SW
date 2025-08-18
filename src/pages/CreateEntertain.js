@@ -30,6 +30,17 @@ function CreateEntertain() {
   const [noUrl, setNoUrl] = useState("");
   const [url, setUrl] = useState("");
 
+  const [nameModalOpen, setNameModalOpen] = useState("");
+  const [imgModalOpen, setImgModalOpen] = useState("");
+  const [locationModalOpen, setLocationModalOpen] = useState("");
+  const [startDateModalOpen, setStartDateModalOpen] = useState("");
+  const [endDateModalOpen, setEndDateModalOpen] = useState("");
+  const [saveModalOpen, setSaveModalOpen] = useState("");
+  const [failedModalOpen, setFailedModalOpen] = useState("");
+  const [nameLimitModalOpen, setNameLimitModalOpen] = useState("");
+  const [introLimitModalOpen, setIntroLimitModalOpen] = useState("");
+  const [contentLimitModalOpen, setContentLimitModalOpen] = useState("");
+
   const [previewURL, setPreviewURL] = useState(null);
 
   /* 사진 미리보기 기능 */
@@ -443,11 +454,11 @@ function CreateEntertain() {
             </button>
           </div>
         </div>
-        {/* 제목 미입력 모달
+        {/* 제목 모달 */}
         <Modal
           className={null}
-          isOpen={titleModalOpen}
-          onClose={() => settitleModalOpen(false)}
+          isOpen={nameModalOpen}
+          onClose={() => setNameModalOpen(false)}
         >
           <div className={styles.modal_top}>
             <p>예매에 실패하였습니다.</p>
@@ -459,7 +470,7 @@ function CreateEntertain() {
             <button
               className={styles.modal_ok_Btn}
               onClick={() => {
-                settitleModalOpen(false);
+                setNameModalOpen(false);
                 window.scrollTo(0, 0);
                 if (!token) navigate("/login");
               }}
@@ -467,7 +478,32 @@ function CreateEntertain() {
               확인
             </button>
           </div>
-        </Modal> */}
+        </Modal>
+        {/* img 모달 */}
+        <Modal
+          className={null}
+          isOpen={nameModalOpen}
+          onClose={() => setNameModalOpen(false)}
+        >
+          <div className={styles.modal_top}>
+            <p>예매에 실패하였습니다.</p>
+          </div>
+          <div className={styles.modal_con}>
+            {!token ? "로그인 후 다시 이용해 주세요" : "다시 시도해주세요."}
+          </div>
+          <div className={styles.modal_Btns}>
+            <button
+              className={styles.modal_ok_Btn}
+              onClick={() => {
+                setNameModalOpen(false);
+                window.scrollTo(0, 0);
+                if (!token) navigate("/login");
+              }}
+            >
+              확인
+            </button>
+          </div>
+        </Modal>
       </div>
     </div>
   );
