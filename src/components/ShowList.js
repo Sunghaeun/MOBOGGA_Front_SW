@@ -172,25 +172,23 @@ function ShowList() {
                 className={styles.optionList}
                 style={{ maxHeight: dropdownOpen ? "500px" : "0px" }}
               >
-                {["공연 새로 만들기", "즐길거리 새로 만들기"].map(
-                  (option, idx) => (
-                    <li
-                      key={idx}
-                      className={styles.optionItem}
-                      onClick={() => {
-                        setDropdownValue(option);
-                        setDropdownOpen(false);
-                        if (option === "공연 새로 만들기") {
-                          navigate("/show/create");
-                        } else if (option === "즐길거리 새로 만들기") {
-                          navigate("/entertain/create");
-                        }
-                      }}
-                    >
-                      {option}
-                    </li>
-                  )
-                )}
+                {["공연 새로 만들기", "행사 새로 만들기"].map((option, idx) => (
+                  <li
+                    key={idx}
+                    className={styles.optionItem}
+                    onClick={() => {
+                      setDropdownValue(option);
+                      setDropdownOpen(false);
+                      if (option === "공연 새로 만들기") {
+                        navigate("/show/create");
+                      } else if (option === "행사 새로 만들기") {
+                        navigate("/entertain/create");
+                      }
+                    }}
+                  >
+                    {option}
+                  </li>
+                ))}
               </ul>
             </div>
           </>

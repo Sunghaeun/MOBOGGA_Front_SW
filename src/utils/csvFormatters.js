@@ -77,7 +77,7 @@ export const formatRecruitingDataForCSV = (
 // 즐길거리 데이터용 CSV 포맷터
 export const formatEntertainDataForCSV = (
   entertainList,
-  title = "즐길거리 목록"
+  title = "행사 목록"
 ) => {
   const csvData = entertainList.map((item, index) => {
     return {
