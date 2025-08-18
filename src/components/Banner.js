@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "./styles/Banner.module.css";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../utils/apiClient";
@@ -7,22 +7,21 @@ function Banner() {
   const [show, setShow] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
+  const [isPaused, setIsPaused] = useState(false); // 자동 전환 일시정지
   const navigate = useNavigate();
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     const getShow = async () => {
       try {
         const res = await apiClient.get("/attraction/list");
-        console.log("rotatingPerformances 데이터 가져오기 성공");
-        console.log(res.data.rotatingPerformances);
-        console.log(res.data.rotatingPerformances[1]);
-        const converted = res.data.rotatingPerformances.map((item) => ({
+        const converted = (res?.data?.rotatingPerformances || []).map((item) => ({
           id: item.id,
           name: item.title,
           clubID: item.club,
           period: item.period,
           category: item.category,
-          photo: item.img?.trim() || "", // 이미지 없을 때 대비
+          photo: item.img?.trim() || "",
         }));
         setShow(converted);
       } catch (err) {
@@ -32,19 +31,50 @@ function Banner() {
     getShow();
   }, []);
 
+  // 자동 로테이션
   useEffect(() => {
     if (show.length === 0) return;
 
-    const interval = setInterval(() => {
+    // 기존 타이머 정리
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    // 일시정지 상태면 타이머 만들지 않음
+    if (isPaused) return;
+
+    intervalRef.current = setInterval(() => {
       setFade(false);
       setTimeout(() => {
         setCurrentIndex((prev) => (prev + 1) % show.length);
         setFade(true);
-      }, 1000);
-    }, 10000);
+      }, 250); // 페이드 전환 딜레이 약간 줄임
+    }, 8000);
 
-    return () => clearInterval(interval);
-  }, [show]);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [show, isPaused]);
+
+  const safeShow = (i) => show[i] ?? {};
+
+  // 썸네일에 마우스 올렸을 때 해당 인덱스로 즉시 변경
+  const handleThumbEnter = (i) => {
+    if (!show[i]) return;
+    setIsPaused(true);    // 자동 전환 멈춤
+    setFade(false);
+    setTimeout(() => {
+      setCurrentIndex(i);
+      setFade(true);
+    }, 120);
+  };
+
+  // 썸네일에서 마우스가 빠지면 자동 전환 재개
+  const handleThumbLeave = () => {
+    setIsPaused(false);
+  };
+
+  // 키보드 접근성(탭 포커스)도 고려
+  const handleThumbFocus = (i) => handleThumbEnter(i);
+  const handleThumbBlur = handleThumbLeave;
 
   if (show.length === 0) {
     return <div className={styles.banner}>Loading...</div>;
@@ -52,26 +82,25 @@ function Banner() {
 
   const current = show[currentIndex];
 
+  const goDetail = (item) => {
+    if (!item) return;
+    navigate(item.category === "공연" ? `/show/${item.id}` : `/entertain/${item.id}`);
+  };
+
   return (
     <div className={styles.banner}>
       <div className={styles.text}>
         <span>오늘의 추천</span>
       </div>
+
       <div className={styles.container}>
         <div className={styles.leftImg}>
           <img
             src={current.photo}
             alt={current.name}
             className={`${styles.fade} ${fade ? styles.show : ""}`}
-            onClick={() =>
-              navigate(
-                `${
-                  current.category === "공연"
-                    ? `/show/${current.id}`
-                    : `/entertain/${current.id}`
-                }`
-              )
-            }
+            onClick={() => goDetail(current)}
+            draggable="false"
           />
         </div>
 
@@ -82,84 +111,39 @@ function Banner() {
             }`}
           >
             <span className={styles.clubName}>{current.clubID}</span>
-            <span
-              className={styles.name}
-              onClick={() =>
-                navigate(
-                  `${
-                    current.category === "공연"
-                      ? `/show/${current.id}`
-                      : `/entertain/${current.id}`
-                  }`
-                )
-              }
-            >
+            <span className={styles.name} onClick={() => goDetail(current)}>
               {current.name}
             </span>
             <span className={styles.date}>{current.period}</span>
           </div>
 
           <div className={styles.imgContainer}>
-            <div className={styles.imgBox}>
-              <img
-                src={show[0].photo}
-                alt="banner1"
-                onClick={() =>
-                  navigate(
-                    `${
-                      show[0].category === "공연"
-                        ? `/show/${show[0].id}`
-                        : `/entertain/${show[0].id}`
-                    }`
-                  )
-                }
-              />
-            </div>
-            <div className={styles.imgBox}>
-              <img
-                src={show[1].photo}
-                alt="banner2"
-                onClick={() =>
-                  navigate(
-                    `${
-                      show[1].category === "공연"
-                        ? `/show/${show[1].id}`
-                        : `/entertain/${show[1].id}`
-                    }`
-                  )
-                }
-              />
-            </div>
-            <div className={styles.imgBox}>
-              <img
-                src={show[2].photo}
-                alt="banner3"
-                onClick={() =>
-                  navigate(
-                    `${
-                      show[2].category === "공연"
-                        ? `/show/${show[2].id}`
-                        : `/entertain/${show[2].id}`
-                    }`
-                  )
-                }
-              />
-            </div>
-            <div className={styles.imgBox}>
-              <img
-                src={show[3].photo}
-                alt="banner4"
-                onClick={() =>
-                  navigate(
-                    `${
-                      show[3].category === "공연"
-                        ? `/show/${show[3].id}`
-                        : `/entertain/${show[3].id}`
-                    }`
-                  )
-                }
-              />
-            </div>
+            {[0, 1, 2, 3].map((i) => {
+              const item = safeShow(i);
+              if (!item.photo) return null; // 안전장치
+              return (
+                <div
+                  key={i}
+                  className={`${styles.imgBox} ${
+                    currentIndex === i ? styles.activeThumb : ""
+                  }`}
+                  onMouseEnter={() => handleThumbEnter(i)}
+                  onMouseLeave={handleThumbLeave}
+                  onFocus={() => handleThumbFocus(i)}
+                  onBlur={handleThumbBlur}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${item.name} 미리보기`}
+                >
+                  <img
+                    src={item.photo}
+                    alt={`banner${i + 1}`}
+                    onClick={() => goDetail(item)}
+                    draggable="false"
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
