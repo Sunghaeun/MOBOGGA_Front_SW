@@ -140,7 +140,7 @@ function ManagerEntertainpage() {
         setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
         setIsServerErrorModalOpen(true);
       } else {
-        setError(err.message || "즐길거리 목록을 불러오는데 실패했습니다.");
+        setError(err.message || "god 목록을 불러오는데 실패했습니다.");
       }
       setEntertainCards([]);
     } finally {
