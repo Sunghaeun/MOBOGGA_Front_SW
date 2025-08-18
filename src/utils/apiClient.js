@@ -17,9 +17,36 @@ class ApiClient {
     this.client.interceptors.request.use(
       (config) => {
         const { token } = useAuthStore.getState();
+        console.log("🔍 API 요청 인터셉터 실행:", {
+          url: config.url,
+          method: config.method,
+          tokenExists: !!token,
+          tokenLength: token?.length,
+          tokenPreview: token ? `${token.substring(0, 20)}...` : "없음",
+        });
+
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
+          console.log(
+            "✅ Authorization 헤더 설정됨:",
+            `Bearer ${token.substring(0, 20)}...`
+          );
+
+          // 디버깅을 위해 전체 토큰도 로깅 (보안상 주의)
+          console.log(
+            "🔍 전체 Authorization 헤더:",
+            config.headers.Authorization
+          );
+        } else {
+          console.log("❌ 토큰이 없어서 Authorization 헤더 설정 안됨");
         }
+
+        console.log("📤 최종 요청 헤더:", {
+          ...config.headers,
+          Authorization: config.headers.Authorization
+            ? `Bearer ${config.headers.Authorization.substring(7, 27)}...`
+            : undefined,
+        });
         return config;
       },
       (error) => Promise.reject(error)

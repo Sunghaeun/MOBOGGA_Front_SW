@@ -3,14 +3,15 @@ import ShowCard from "./ShowCard";
 import styles from "./styles/ShowList.module.css";
 import loadingStyles from "../styles/Loading.module.css";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import useAuthStore from "../stores/authStore";
 import apiClient from "../utils/apiClient";
 
 import image1 from "../assets/mainTest/1.png";
 
 function ShowList() {
   const navigate = useNavigate();
-  const { auth, isManager } = useAuth();
+  // eslint-disable-next-line no-unused-vars
+  const { user, isLoggedIn, isManager, authLoading } = useAuthStore();
 
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [show, setShow] = useState([]);
@@ -59,11 +60,12 @@ function ShowList() {
   }, []);
 
   useEffect(() => {
-    console.log("현재 로그인한 사용자 권한:", auth);
-    console.log("사용자 역할:", auth?.role);
-    console.log("사용자 권한:", auth?.authority);
+    console.log("현재 로그인한 사용자:", user);
+    console.log("사용자 역할:", user?.role);
+    console.log("사용자 권한:", user?.authority);
     console.log("관리자 여부:", isManager());
-  }, [auth, isManager]);
+    console.log("인증 로딩 상태:", authLoading);
+  }, [user, isManager, authLoading]);
 
   // 3) 가져온 데이터별 카테고리 별로 필터링
   const filteredList =
@@ -71,12 +73,12 @@ function ShowList() {
       ? show
       : show.filter((item) => item.category === selectedCategory);
 
-  if (isLoading) {
+  if (authLoading || isLoading) {
     return (
       <div className={loadingStyles.loading}>
         <div className={loadingStyles.loadingSpinner}></div>
         <div className={loadingStyles.loadingText}>
-          공연 목록을 불러오고 있습니다
+          {authLoading ? "인증 상태 확인 중" : "공연 목록을 불러오고 있습니다"}
           <span className={loadingStyles.loadingDots}>...</span>
         </div>
         <div className={loadingStyles.loadingSubtext}>잠시만 기다려주세요</div>

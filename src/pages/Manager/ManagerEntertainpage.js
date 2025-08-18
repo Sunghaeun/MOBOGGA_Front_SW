@@ -167,11 +167,11 @@ function ManagerEntertainpage() {
   ]);
 
   const handleManagerProfileUpdate = () => {
-    navigate("/update-profile", { replace: false });
+    navigate("/manager/mypage/update", { replace: false });
   };
 
   const handleClubUpdate = () => {
-    navigate("/manager/updateclub", { replace: false });
+    navigate("/manager/club/update", { replace: false });
   };
 
   if (isLoading) {

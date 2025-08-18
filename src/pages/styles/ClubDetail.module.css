@@ -57,23 +57,6 @@
   margin-top: 20px;
 }
 
-.clubDeatiltitleDiv {
-  width: 60px;
-  flex-shrink: 0;
-
-  margin-right: 20px;
-}
-
-.clubDeatiltitle {
-  color: var(--Gray-08, #3e3e3e);
-  display: inline-block;
-  width: 100%;
-
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
-}
-
 .clubDeatilRight {
   width: 100%;
 
@@ -108,6 +91,28 @@
 .content {
   margin-top: 28px;
   text-align: left;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 27px; /* 168.75% */
+}
+
+.clubDeatiltitleDiv {
+  width: 60px;
+  flex-shrink: 0;
+
+  margin-right: 20px;
+}
+
+.clubDeatiltitle {
+  color: var(--Point-03, #8e3dff);
+
+  /* Body 03 _ EB */
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 800;
+  display: inline-block;
+  width: 100%;
 }
 
 .clubDeatiltextDiv {
@@ -125,7 +130,7 @@
 .EventCardContainer {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   justify-items: center;
 
@@ -140,7 +145,7 @@
   justify-items: center;
 }
 
-.setcenter{
+.setcenter {
   width: 100%;
 
   display: flex;
@@ -148,8 +153,8 @@
   align-items: center;
 }
 
-.modifyClub{
-  width:70px;
+.modifyClub {
+  width: 70px;
   height: 33px;
 
   display: inline-flex;
@@ -157,11 +162,11 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border: 1px solid var(--main-02, #FF3D12);
-  background: var(--main-02, #FF3D12);
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--main-02, #ff3d12);
 }
 
-.modifyClub span{
+.modifyClub span {
   font: var(--BODY01);
-  color: var(--gray-01-background, #FBFBFB);
+  color: var(--gray-01-background, #fbfbfb);
 }

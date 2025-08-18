@@ -165,11 +165,11 @@ function ManagerRecruitingpage() {
   ]);
 
   const handleManagerProfileUpdate = () => {
-    navigate("/update-profile", { replace: false });
+    navigate("/manager/mypage/update", { replace: false });
   };
 
   const handleClubUpdate = () => {
-    navigate("/manager/updateclub", { replace: false });
+    navigate("/manager/club/update", { replace: false });
   };
 
   if (isLoading) {
@@ -227,20 +227,6 @@ function ManagerRecruitingpage() {
     );
   }
 
-  // if (error) {
-  //   console.log("에러 화면 렌더링:", error);
-  //   return (
-  //     <>
-  //       <div className={styles.error_message}>
-  //         error: {error}
-  //         <button onClick={getMyReservCards} className={styles.retry_button}>
-  //           다시 시도
-  //         </button>
-  //       </div>
-  //     </>
-  //   );
-  // }
-
   return (
     <>
       <div className={styles.body}>
@@ -281,14 +267,6 @@ function ManagerRecruitingpage() {
           <div className={styles.content_list}>
             <div className={styles.content}>
               {isLoading && <div className="loading">로딩중...</div>}
-              {/* {error && (
-                <div className="error-message">
-                  에러: {error}
-                  <button onClick={getMyReservCards} className="retry-button">
-                    다시 시도
-                  </button>
-                </div>
-              )} */}
               {!isLoading && !error && recruitingCards.length === 0 && (
                 <div className={styles.no_show}>리크루팅 내역이 없습니다.</div>
               )}

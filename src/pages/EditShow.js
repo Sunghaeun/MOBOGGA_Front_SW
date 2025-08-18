@@ -1,17 +1,26 @@
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import styles from "./styles/CreateShow.module.css";
-import axios from "axios";
+import useAuthStore from "../stores/authStore";
+import apiClient from "../utils/apiClient";
 import DELETE from "../assets/button_delete.svg";
 
 function EditShow() {
-  const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
   const navigate = useNavigate();
   const { id } = useParams();
+  const {
+    user,
+    isLoggedIn,
+    isManager,
+    token,
+    isLoading: authLoading,
+  } = useAuthStore();
 
   const [name, setName] = useState("");
   const [poster, setPoster] = useState(null);
   const [qr, setQr] = useState(null);
+  const [dataLoading, setDataLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -99,6 +108,39 @@ function EditShow() {
     };
   }, [posterPreview, qrPreview]);
 
+  // 권한 체크
+  useEffect(() => {
+    console.log("=== EDIT SHOW INIT ===");
+    console.log("로그인 상태:", isLoggedIn);
+    console.log("매니저 권한:", isManager());
+    console.log("인증 로딩 상태:", authLoading);
+    console.log("사용자 정보:", user);
+    console.log("토큰 존재:", !!token);
+
+    // authLoading이 undefined이면 false로 처리
+    const loading = authLoading === undefined ? false : authLoading;
+
+    if (loading) {
+      console.log("인증 상태 로딩 중...");
+      return;
+    }
+
+    if (!isLoggedIn || !isManager()) {
+      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
+      console.log("상세 권한 정보:", {
+        isLoggedIn,
+        isManagerResult: isManager(),
+        userAuthority: user?.authority,
+        userRole: user?.role,
+      });
+      alert("로그인이 필요하거나 매니저 권한이 없습니다.");
+      navigate("/login", { replace: true });
+      return;
+    }
+
+    console.log("권한 확인 완료");
+  }, [isLoggedIn, isManager, navigate, authLoading, user, token]);
+
   // 더 이상 사용하지 않는 함수 (쿠키 + 임시 토큰 방식으로 대체)
   // const getAuthHeader = () => {
   //   const token = window.tempToken;
@@ -107,28 +149,59 @@ function EditShow() {
   // };
 
   const getShow = async () => {
+    // authLoading이 undefined이면 false로 처리
+    const loading = authLoading === undefined ? false : authLoading;
+
+    if (loading) {
+      console.log("인증 상태 로딩 중이므로 데이터 조회 대기");
+      return;
+    }
+
+    if (!isLoggedIn || !isManager()) {
+      console.log("권한 없음 - 데이터 조회 불가");
+      return;
+    }
+
     try {
-      // 요청 설정 준비
-      const requestConfig = {
-        withCredentials: true,
-      };
+      setDataLoading(true);
+      setError(null);
+      console.log(`공연 데이터 로드 시작: ID ${id}`);
+      console.log("API 요청 전 토큰 상태:", {
+        tokenExists: !!token,
+        tokenLength: token?.length,
+        isLoggedIn,
+        isManager: isManager(),
+        userAuthority: user?.authority,
+      });
 
-      // 쿠키가 없고 토큰이 있으면 Authorization 헤더 추가
-      const token = window.tempToken;
-      if (!document.cookie.includes("session") && token) {
-        requestConfig.headers = {
-          Authorization: `Bearer ${token}`,
-        };
+      // JWT 토큰 디코딩해서 확인
+      if (token) {
+        try {
+          const tokenParts = token.split(".");
+          if (tokenParts.length === 3) {
+            const payload = JSON.parse(atob(tokenParts[1]));
+            console.log("🔍 JWT 토큰 페이로드:", {
+              sub: payload.sub,
+              role: payload.role,
+              exp: payload.exp,
+              expDate: new Date(payload.exp * 1000),
+              currentTime: new Date(),
+              isExpired: payload.exp * 1000 < Date.now(),
+            });
+          } else {
+            console.log(
+              "❌ JWT 토큰 형식이 올바르지 않음 - parts:",
+              tokenParts.length
+            );
+          }
+        } catch (e) {
+          console.log("❌ JWT 토큰 파싱 에러:", e);
+        }
       }
 
-      if (!requestConfig.headers && !document.cookie.includes("session")) {
-        alert("로그인이 필요합니다.");
-        return;
-      }
-      const res = await axios.get(
-        `${API_BASE}/manager/show/update/${id}`,
-        requestConfig
-      );
+      // API 요청
+      const res = await apiClient.get(`/manager/show/update/${id}`);
+
       console.log(`[GET] /manager/show/update/${id} 성공`, {
         status: res.status,
         data: res.data,
@@ -191,34 +264,56 @@ function EditShow() {
       console.log("화면에 세팅될 shows:", mapped);
     } catch (err) {
       console.error("공연 데이터 로드 실패", err);
+      console.error("에러 상세 정보:", {
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data,
+        message: err.message,
+      });
+
+      if (err.response?.status === 401) {
+        console.log("401 오류 - 인증 문제");
+        console.log("현재 인증 상태:", {
+          token: !!token,
+          tokenLength: token?.length,
+          isLoggedIn,
+          isManager: isManager(),
+          userInfo: user,
+        });
+        setError("인증에 문제가 있습니다. 다시 로그인해주세요.");
+      } else {
+        setError("공연 데이터를 불러오는데 실패했습니다.");
+      }
+    } finally {
+      setDataLoading(false);
     }
   };
 
   useEffect(() => {
-    if (id) getShow();
-    // eslint-disable-next-line
-  }, [id]);
+    console.log("=== getShow useEffect 실행 ===");
+    console.log("조건 체크:", {
+      id: !!id,
+      authLoading,
+      isLoggedIn,
+      isManager: isManager(),
+      token: !!token,
+    });
+
+    // authLoading이 undefined이면 false로 처리
+    const loading = authLoading === undefined ? false : authLoading;
+
+    if (id && !loading && isLoggedIn && isManager()) {
+      console.log("조건 만족 - getShow 실행");
+      getShow();
+    } else {
+      console.log("조건 불만족 - getShow 실행하지 않음");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, authLoading, isLoggedIn, isManager, token]);
 
   const updateShow = async () => {
-    // 요청 설정 준비
-    const requestConfig = {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    };
-
-    // 쿠키가 없고 토큰이 있으면 Authorization 헤더 추가
-    const token = window.tempToken;
-    if (!document.cookie.includes("session") && token) {
-      requestConfig.headers.Authorization = `Bearer ${token}`;
-    }
-
-    if (
-      !requestConfig.headers.Authorization &&
-      !document.cookie.includes("session")
-    ) {
-      alert("로그인 토큰이 없습니다. 다시 로그인 해주세요.");
+    if (!isLoggedIn || !isManager()) {
+      alert("로그인이 필요하거나 매니저 권한이 없습니다.");
       return;
     }
 
@@ -274,7 +369,6 @@ function EditShow() {
       formData.append("QR", qr, qr.name || "qr.jpg");
     }
 
-    const endpoint = `${API_BASE}/manager/show/update/${id}`;
     console.log("== 최종 전송 JSON ==", JSON.stringify(requestData, null, 2));
     console.log("== FormData entries ==");
     for (const [k, v] of formData.entries()) {
@@ -288,29 +382,11 @@ function EditShow() {
     }
 
     try {
-      // 요청 설정 준비
-      const requestConfig = {
-        withCredentials: true,
+      const resp = await apiClient.put(`/manager/show/update/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      };
-
-      // 쿠키가 없고 토큰이 있으면 Authorization 헤더 추가
-      const token = window.tempToken;
-      if (!document.cookie.includes("session") && token) {
-        requestConfig.headers.Authorization = `Bearer ${token}`;
-      }
-
-      if (
-        !requestConfig.headers.Authorization &&
-        !document.cookie.includes("session")
-      ) {
-        alert("로그인 필요");
-        return;
-      }
-
-      const resp = await axios.put(endpoint, formData, requestConfig);
+      });
 
       console.log("저장 성공", resp.data);
       const { publicId, showId, id: respId } = resp.data || {};
@@ -378,6 +454,35 @@ function EditShow() {
         .map((s, i) => ({ ...s, orderIndex: i + 1 }))
     );
   };
+
+  // 로딩 상태
+  // authLoading이 undefined이면 false로 처리
+  const loading = authLoading === undefined ? false : authLoading;
+
+  if (loading || dataLoading) {
+    return (
+      <div className={styles.CreateBody}>
+        <div style={{ textAlign: "center", padding: "2rem" }}>
+          <div>
+            {loading ? "인증 상태 확인 중" : "공연 정보를 불러오고 있습니다"}
+            ...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 에러 상태
+  if (error) {
+    return (
+      <div className={styles.CreateBody}>
+        <div style={{ textAlign: "center", padding: "2rem" }}>
+          <div style={{ color: "red", marginBottom: "1rem" }}>{error}</div>
+          <button onClick={() => getShow()}>다시 시도</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

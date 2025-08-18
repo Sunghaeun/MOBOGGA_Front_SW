@@ -1,10 +1,10 @@
-/* eslint-disable */
 // 사진 아무것도 선택하지 않았을 때
 // 사진을 선택하지 않았을 때는 기존 사진을 유지하고 있음 잘하는건가??
 
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
+import apiClient from "../utils/apiClient";
+import useAuthStore from "../stores/authStore";
 
 import styles from "./styles/CreateRecruiting.module.css";
 
@@ -21,16 +21,21 @@ function CreateRecruiting() {
   // URL 파라미터에서 recruitingId 가져오기
   const { recruitingId } = useParams();
 
+  // Zustand 스토어에서 인증 정보 가져오기
+  const { isLoggedIn, isManager, user, token } = useAuthStore();
+
   // 1) 누락된 정보 확인 모달
   const [notEnteredModalOpen, setNotEnteredModalOpen] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const openNotEnteredModal = () => setNotEnteredModalOpen(true);
   const closeNotEnteredModal = () => {
     setNotEnteredModalOpen(false);
     document.body.style.removeProperty("overflow");
   };
 
-  // 2) 리쿠르팅 생성 확인 모달
+  // 2) 리크루팅 생성 확인 모달
   const [editCheckModalOpen, setEditCheckModalOpen] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const openEditCheckModal = () => setEditCheckModalOpen(true);
   const closeEditCheckModal = () => {
     setEditCheckModalOpen(false);
@@ -39,6 +44,7 @@ function CreateRecruiting() {
 
   // 3) 페이지 나가기 모달
   const [pageOutModalOpen, setPageOutModalOpen] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const openPageOutModal = () => setPageOutModalOpen(true);
   const closePageOutModal = () => {
     setPageOutModalOpen(false);
@@ -70,28 +76,30 @@ function CreateRecruiting() {
 
   // 일반 필드 변경
 
-  // 5) 리쿠르팅 정보 가져오기
+  // 5) 리크루팅 정보 가져오기
   const getRecruiting = async () => {
+    if (!isLoggedIn || !isManager()) {
+      console.log("권한 없음 - 리크루팅 데이터 조회 불가");
+      return;
+    }
+
     try {
-      const token = window.tempToken;
+      console.log(`리크루팅 데이터 로드 시작: ID ${recruitingId}`);
+      console.log("API 요청 전 인증 상태:", {
+        tokenExists: !!token,
+        tokenLength: token?.length,
+        isLoggedIn,
+        isManager: isManager(),
+        userAuthority: user?.authority,
+      });
 
-      // 요청 설정 준비
-      const requestConfig = {
-        withCredentials: true,
-      };
-
-      if (!document.cookie.includes("session") && token) {
-        requestConfig.headers = {
-          Authorization: `Bearer ${token}`,
-        };
-      }
-
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/manager/recruiting/update/${recruitingId}`,
-        requestConfig
+      const res = await apiClient.get(
+        `/manager/recruiting/update/${recruitingId}`
       );
+
       const src = res.data ?? {};
-      console.log("리쿠르팅 데이터 로드 성공", src);
+      console.log("리크루팅 데이터 로드 성공", src);
+
       const converted = {
         name: src.name ?? "",
         category: src.category ?? "",
@@ -117,21 +125,42 @@ function CreateRecruiting() {
 
       setData((prev) => ({ ...prev, ...converted }));
     } catch (err) {
-      console.error("리쿠르팅 데이터 로드 실패", err);
+      console.error("리크루팅 데이터 로드 실패", err);
+      console.error("에러 상세 정보:", {
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data,
+        message: err.message,
+      });
+
+      if (err.response?.status === 401) {
+        alert("권한이 없습니다. 다시 로그인해주세요.");
+      } else if (err.response?.status === 403) {
+        alert("이 리크루팅을 수정할 권한이 없습니다.");
+      } else if (err.response?.status === 404) {
+        alert("수정할 리크루팅을 찾을 수 없습니다.");
+      } else {
+        alert("리크루팅 정보를 불러오는데 실패했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
-  // 6) 리쿠르팅 정보 불러오기
+  // 6) 리크루팅 정보 불러오기
 
   useEffect(() => {
     getRecruiting();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recruitingId]);
 
-  // 7) 리쿠르팅 수정 put 요청
+  // 7) 리크루팅 수정 put 요청
   const handleSubmit = async () => {
+    if (!isLoggedIn || !isManager()) {
+      alert("로그인이 필요하거나 매니저 권한이 없습니다.");
+      return;
+    }
+
     try {
-      const token = window.tempToken;
-      const url = `${process.env.REACT_APP_API_URL}/manager/recruiting/update/${recruitingId}`;
+      console.log("리크루팅 수정 요청 시작:", recruitingId);
 
       // photo는 미리보기 전용이므로 서버 전송용 request에서는 제외
       const { photo, ...requestDto } = data;
@@ -145,18 +174,55 @@ function CreateRecruiting() {
         formData.append("poster", photoFile); // 원본 파일 그대로 전송
       }
 
-      await axios.put(url, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      });
+      console.log("== 최종 전송 JSON ==", JSON.stringify(requestDto, null, 2));
+      console.log("== FormData entries ==");
+      for (const [k, v] of formData.entries()) {
+        if (v instanceof File) {
+          console.log(k, "-> File", {
+            name: v.name,
+            size: v.size,
+            type: v.type,
+          });
+        } else if (k === "request" && v instanceof Blob) {
+          v.text().then((t) => console.log("request(json) ->", t));
+        } else {
+          console.log(k, "->", v);
+        }
+      }
 
-      alert("리쿠르팅 수정 완료"); //이제 이게 모달이 되어야겠지?
+      const response = await apiClient.put(
+        `/manager/recruiting/update/${recruitingId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("리크루팅 수정 성공:", response.data);
+      alert("리크루팅 수정 완료");
 
       // 수정 후 최신 데이터 재조회
       await getRecruiting();
     } catch (err) {
-      console.error("리쿠르팅 수정 실패", err);
-      alert("요청 중 오류가 발생했습니다.");
+      console.error("리크루팅 팅 수정 실패", err);
+      console.error("에러 상세 정보:", {
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data,
+        message: err.message,
+      });
+
+      if (err.response?.status === 401) {
+        alert("권한이 없습니다. 다시 로그인해주세요.");
+      } else if (err.response?.status === 403) {
+        alert("이 리크루팅을 수정할 권한이 없습니다.");
+      } else if (err.response?.status === 404) {
+        alert("수정할 리크루팅을 찾을 수 없습니다.");
+      } else {
+        alert("리크루팅 수정 중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
@@ -185,13 +251,14 @@ function CreateRecruiting() {
         URL.revokeObjectURL(data.photo);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [photoFile]);
 
   return (
     <>
       <div className={styles.main}>
         <div className={styles.title}>
-          <span>리쿠르팅 수정하기</span>
+          <span>리크루팅 수정하기</span>
         </div>
 
         <div className={styles.inputContainer}>
@@ -446,7 +513,7 @@ function CreateRecruiting() {
 
         <div className={styles.buttonContainer}>
           <div className={styles.createClub} onClick={handleSubmit}>
-            <span>리쿠르팅 수정하기</span>
+            리크루팅 수정하기
           </div>
         </div>
       </div>

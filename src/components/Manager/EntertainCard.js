@@ -15,14 +15,14 @@ function EntertainCard({ data }) {
         <img
           className={styles.card_img}
           src={poster}
-          onClick={() => navigate(`/manager/edit/${entertainId}`)}
+          onClick={() => navigate(`/edit/entertain/${entertainId}`)}
           alt="즐길거리 이미지"
         />
       </div>
       <div className={styles.card_text_box}>
         <div
           className={styles.card_title}
-          onClick={() => navigate(`/manager/edit/${entertainId}`)}
+          onClick={() => navigate(`/edit/entertain/${entertainId}`)}
         >
           {title || "즐길거리 제목 없음"}
         </div>
@@ -35,7 +35,7 @@ function EntertainCard({ data }) {
               <img
                 className={styles.card_btn}
                 src={showEditBtn}
-                onClick={() => navigate(`/manager/edit/${entertainId}`)}
+                onClick={() => navigate(`/edit/entertain/${entertainId}`)}
                 alt="즐길거리 수정"
               />
             </div>
@@ -43,7 +43,7 @@ function EntertainCard({ data }) {
               <img
                 className={styles.card_btn}
                 src={showDeleteBtn}
-                onClick={() => navigate(`/manager/delete/${entertainId}`)}
+                onClick={() => navigate(`/delete/entertain/${entertainId}`)}
                 alt="즐길거리 삭제"
               />
             </div>
