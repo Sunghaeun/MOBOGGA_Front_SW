@@ -443,11 +443,11 @@ function CreateEntertain() {
             </button>
           </div>
         </div>
-        {/* 실패 모달 */}
+        {/* 제목 미입력 모달
         <Modal
           className={null}
-          isOpen={failModalOpen}
-          onClose={() => setFailModalOpen(false)}
+          isOpen={titleModalOpen}
+          onClose={() => settitleModalOpen(false)}
         >
           <div className={styles.modal_top}>
             <p>예매에 실패하였습니다.</p>
@@ -459,7 +459,7 @@ function CreateEntertain() {
             <button
               className={styles.modal_ok_Btn}
               onClick={() => {
-                setFailModalOpen(false);
+                settitleModalOpen(false);
                 window.scrollTo(0, 0);
                 if (!token) navigate("/login");
               }}
@@ -467,7 +467,7 @@ function CreateEntertain() {
               확인
             </button>
           </div>
-        </Modal>
+        </Modal> */}
       </div>
     </div>
   );
