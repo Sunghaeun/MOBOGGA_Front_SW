@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import styles from "./styles/CreateEntertain.module.css";
 import axios from "axios";
+// eslint-disable-next-line
 import Modal from "../components/Modal";
 import INSTA from "../assets/icons/instagram.svg";
 import KAKAO from "../assets/icons/kakao.svg";
