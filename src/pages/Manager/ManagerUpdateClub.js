@@ -10,7 +10,7 @@ import apiClient from "../../utils/apiClient";
 import instaIcon from "../../assets/icons/instagram.svg";
 import kakaoIcon from "../../assets/icons/kakao.svg";
 import youtubeIcon from "../../assets/icons/youtube.svg";
-import linktreeIcon from "../../assets/icons/linkicons.svg";
+import urlIcon from "../../assets/icons/linkicons.svg";
 import clubDefaultImage from "../../assets/manager/club_default.svg";
 
 function ManagerUpdateClub() {
@@ -62,7 +62,7 @@ function ManagerUpdateClub() {
     instagram: "",
     kakao: "",
     youtube: "",
-    linktree: "",
+    url: "",
     semester: "",
     imageUrl: "",
   });
@@ -80,6 +80,7 @@ function ManagerUpdateClub() {
     message: "",
   });
   const [error, setError] = useState(null);
+  const [isUpdateCancelModalOpen, setIsUpdateCancelModalOpen] = useState(false);
 
   const handleServerErrorModalClose = () => {
     setIsServerErrorModalOpen(false);
@@ -198,7 +199,7 @@ function ManagerUpdateClub() {
           instagram: userData.instaUrl || "",
           kakao: userData.url || "",
           youtube: userData.youtubeUrl || "",
-          linktree: userData.notionUrl || "",
+          url: userData.notionUrl || "",
           semester:
             userData.mandatorySemesters ||
             userData.mandatorySemester ||
@@ -211,7 +212,7 @@ function ManagerUpdateClub() {
           instagram: userData.instaUrl,
           kakao: userData.url,
           youtube: userData.youtubeUrl,
-          linktree: userData.notionUrl,
+          url: userData.notionUrl,
         });
       } catch (error) {
         console.error("Error fetching club profile:", error);
@@ -318,7 +319,7 @@ function ManagerUpdateClub() {
         instaUrl: formData.instagram,
         url: formData.kakao,
         youtubeUrl: formData.youtube,
-        notionUrl: formData.linktree,
+        notionUrl: formData.url,
         managerName: formData.userName,
         phoneNumber: formData.phoneNum,
         mandatorySemesters: formData.semester,
@@ -339,7 +340,7 @@ function ManagerUpdateClub() {
         formDataToSend.append("instaUrl", formData.instagram);
         formDataToSend.append("url", formData.kakao);
         formDataToSend.append("youtubeUrl", formData.youtube);
-        formDataToSend.append("notionUrl", formData.linktree);
+        formDataToSend.append("notionUrl", formData.url);
         formDataToSend.append("managerName", formData.userName);
         formDataToSend.append("phoneNumber", formData.phoneNum);
         formDataToSend.append("mandatorySemesters", formData.semester);
@@ -370,7 +371,7 @@ function ManagerUpdateClub() {
           instaUrl: formData.instagram,
           url: formData.kakao,
           youtubeUrl: formData.youtube,
-          notionUrl: formData.linktree,
+          notionUrl: formData.url,
           poster: formData.imageUrl, // 기존 이미지 URL 유지
           managerName: formData.userName,
           phoneNumber: formData.phoneNum,
@@ -387,6 +388,18 @@ function ManagerUpdateClub() {
       console.error("Error saving profile:", error);
       throw error; // 상위에서 처리하도록 다시 throw
     }
+  };
+
+  const openUpdateCancelModal = () => setIsUpdateCancelModalOpen(true);
+  const closeUpdateCancelModal = () => setIsUpdateCancelModalOpen(false);
+
+  const handleUpdateCancelConfirm = () => {
+    closeUpdateCancelModal();
+    navigate("/manager/mypage");
+  };
+
+  const handleUpdateCancelCancel = () => {
+    closeUpdateCancelModal();
   };
 
   if (isLoading)
@@ -483,11 +496,11 @@ function ManagerUpdateClub() {
                 />
               </div>
               <div className={styles.link}>
-                <img src={linktreeIcon} alt="Linktree" />
+                <img src={urlIcon} alt="url" />
                 <input
-                  name="linktree"
-                  placeholder="https://linktr.ee/..."
-                  value={formData.linktree}
+                  name="url"
+                  placeholder="https://example.com/..."
+                  value={formData.url}
                   onChange={handleInputChange}
                 />
               </div>
@@ -501,6 +514,12 @@ function ManagerUpdateClub() {
           onClick={openUpdateConfirmModal}
         >
           수정하기
+        </button>
+        <button
+          className={styles.cancel_button}
+          onClick={openUpdateCancelModal}
+        >
+          취소하기
         </button>
       </div>
       <Modal
@@ -557,6 +576,28 @@ function ManagerUpdateClub() {
               className={styles.modal_ok_Btn}
             >
               확인
+            </button>
+          </div>
+        </div>
+      </Modal>
+      <Modal isOpen={isUpdateCancelModalOpen} onClose={closeUpdateCancelModal}>
+        <div className={styles.modal_content}>
+          <div className={styles.modal_top}>이 페이지에서 나가시겠습니까?</div>
+          <div className={styles.modal_con}>
+            작성 중인 내용은 저장되지 않습니다.
+          </div>
+          <div className={styles.modal_Btns}>
+            <button
+              onClick={handleUpdateCancelConfirm}
+              className={styles.modal_ok_Btn}
+            >
+              확인
+            </button>
+            <button
+              onClick={handleUpdateCancelCancel}
+              className={styles.modal_close_Btn}
+            >
+              취소
             </button>
           </div>
         </div>

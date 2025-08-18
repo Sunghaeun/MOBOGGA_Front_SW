@@ -1,8 +1,6 @@
-/*eslint-disable*/
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerEntertainpage.module.css";
-import loadingStyles from "../../styles/Loading.module.css";
 import AccountInfoCard from "../../components/Mypage/AccountInfoCard";
 import ManagerProfileInfoCard from "../../components/Mypage/ManagerProfileInfoCard";
 import ManagerProfileUpdateBtn from "../../components/Mypage/ManagerProfileUpdateBtn";
@@ -268,7 +266,7 @@ function ManagerEntertainpage() {
           </div>
           <div className={styles.content_list}>
             {entertainCards && entertainCards.length > 0 ? (
-              <div className={styles.content_list}>
+              <div className={styles.content}>
                 {entertainCards.map((card, index) => (
                   <EntertainCard key={index} data={card} />
                 ))}
