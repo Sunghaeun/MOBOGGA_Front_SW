@@ -5,6 +5,10 @@ import apiClient from "../utils/apiClient";
 
 import top from "../assets/main/topTape.svg";
 import defaultImg from "../assets/main/default.svg";
+import left from "../assets/main/left.svg";
+import leftHover from "../assets/main/leftHover.svg";
+import right from "../assets/main/right.svg";
+import rightHover from "../assets/main/rightHover.svg";
 
 function Banner() {
   const [show, setShow] = useState([]);
@@ -98,10 +102,12 @@ function Banner() {
 
       <div className={styles.container}>
         <div className={styles.leftImg}>
+          <img src={left} alt="" className={styles.left} />
+          <img src={right} alt="" className={styles.right} />
           <img
             src={current.photo}
             alt={current.name}
-            className={`${styles.fade} ${fade ? styles.show : ""}`}
+            className={`${styles.fade} ${fade ? styles.show : ""} ${styles.leftMainImg}`}
             onClick={() => goDetail(current)}
             draggable="false"
           />
