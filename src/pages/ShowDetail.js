@@ -1,18 +1,18 @@
-/* eslint-disable */
 import React, { useState, useEffect } from "react";
 import styles from "./styles/ShowDetail.module.css";
 import loadingStyles from "../styles/Loading.module.css";
-import useAuth from "../hooks/useAuth";
+import useAuthStore from "../stores/authStore";
 
 import BACK from "../assets/ShowBackButton.svg";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import apiClient from "../utils/apiClient";
 import Modal from "../components/Modal";
 
 function ShowDetail() {
   const { showId } = useParams();
   const navigate = useNavigate();
-  const { auth, getToken } = useAuth();
+  // eslint-disable-next-line no-unused-vars
+  const { user, isLoggedIn, token, authLoading } = useAuthStore();
 
   const [show, setShow] = useState({});
   const [count, setCount] = useState(1);
@@ -24,50 +24,30 @@ function ShowDetail() {
   const [secondModalOpen, setSecondModalOpen] = useState(false);
   const [failModalOpen, setFailModalOpen] = useState(false);
 
-  const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
-
   const navigateToPrepage = () => navigate(-1);
 
-  // 상세 데이터 불러오기 (토큰 있으면 Authorization 헤더 추가)
+  // 상세 데이터 불러오기
   const fetchData = async () => {
     console.log("받은 showId:", showId, typeof showId);
-
     console.log("저장된 토큰:", token ? "있음" : "없음");
-    const url = `${process.env.REACT_APP_API_URL}/show/detail/${showId}`;
-    console.log("GET:", url);
 
     try {
       setLoading(true);
       setError(null);
 
-      const headers = {};
-      if (token) {
-        headers.Authorization = `Bearer ${token}`;
-        console.log("Authorization 헤더 추가됨");
-      }
-
-      const res = await axios.get(url, {
-        headers,
-        timeout: 10000,
-      });
+      const res = await apiClient.get(`/show/detail/${showId}`);
       console.log("API 응답 성공:", res.status);
       console.log("API 응답 데이터:", res.data);
       setShow(res.data || {});
       setError(null);
     } catch (err) {
       console.error("Error fetching data:", err);
-      console.error("Error response:", err.response);
-      console.error("Error status:", err.response?.status);
-      console.error("Error data:", err.response?.data);
 
       if (err.response?.status === 401) {
         console.log("401 에러 - 인증 실패");
-        // 인증이 실패했을 경우
         setError(
           "로그인이 필요하거나 세션이 만료되었습니다. 다시 로그인해주세요."
         );
-        // alert("로그인이 필요하거나 세션이 만료되었습니다. 다시 로그인해주세요.");
-        // navigate("/login");
       } else if (err.response?.status === 403) {
         console.log("403 에러 - 권한 없음");
         setError("이 공연에 접근할 권한이 없습니다.");
@@ -84,9 +64,13 @@ function ShowDetail() {
   };
 
   useEffect(() => {
+    if (authLoading) {
+      console.log("인증 상태 로딩 중이므로 데이터 조회 대기");
+      return;
+    }
     fetchData();
-    // eslint-disable-next-line
-  }, [showId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showId, authLoading]);
 
   const navigateToClubDetail = (clubId) => navigate(`/clubs/${clubId}`);
 
@@ -97,8 +81,7 @@ function ShowDetail() {
       return;
     }
 
-    const token = getToken();
-    if (!token) {
+    if (!token || !isLoggedIn) {
       setOpen(false);
       setFailModalOpen(true);
       return;
@@ -111,13 +94,8 @@ function ShowDetail() {
 
     try {
       console.log("예매 요청:", requestData);
-      const url = `${API_BASE}/show/detail/reservation`;
-      console.log("POST:", url);
 
-      const res = await axios.post(url, requestData, {
-        headers: { Authorization: `Bearer ${token}` },
-        timeout: 10000,
-      });
+      const res = await apiClient.post("/show/detail/reservation", requestData);
       console.log("예매 성공:", res.data);
 
       setOpen(false);
@@ -173,12 +151,12 @@ function ShowDetail() {
   };
 
   // 로딩
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className={loadingStyles.loading}>
         <div className={loadingStyles.loadingSpinner}></div>
         <div className={loadingStyles.loadingText}>
-          공연 정보를 불러오고 있습니다
+          {authLoading ? "인증 상태 확인 중" : "공연 정보를 불러오고 있습니다"}
           <span className={loadingStyles.loadingDots}>...</span>
         </div>
         <div className={loadingStyles.loadingSubtext}>잠시만 기다려주세요</div>

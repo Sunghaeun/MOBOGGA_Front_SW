@@ -31,7 +31,7 @@ function ClubDetail() {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const res = await axios.get(
         `${process.env.REACT_APP_API_URL}/club/detail/${id}`
       );
@@ -45,7 +45,7 @@ function ClubDetail() {
           return {
             categoryOfEvent: item.categoryOfEvent,
             id: item.id,
-            photo: item.photo,
+            poster: item.poster,
             startDate: item.startDate,
             endDate: item.endDate,
             title: item.title,
@@ -60,7 +60,7 @@ function ClubDetail() {
             title: item.title,
             startDate: item.startDate,
             endDate: item.endDate,
-            photo: item.photo,
+            poster: item.poster,
           };
         }) || [];
 
@@ -69,7 +69,7 @@ function ClubDetail() {
           return {
             recruitingId: item.recruitingId,
             period: item.period,
-            photo: item.photo,
+            poster: item.poster,
           };
         }) || [];
 
@@ -82,7 +82,10 @@ function ClubDetail() {
       console.log("지난 볼거리:", list2);
       console.log("지난 리크루팅:", list3);
     } catch (err) {
-      console.error(err);
+      console.error("동아리 정보 로드 실패:", err);
+      setError("동아리 정보를 불러오는데 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
     }
   };
   // 2) 페이지 로드되면 club 정보값 불러옴
@@ -122,7 +125,11 @@ function ClubDetail() {
         <span className={styles.titleName}> 동아리 정보 </span>
         <div className={styles.clubDeatilContainer}>
           <div className={styles.clubDeatilLeft}>
-            <img src={clubList.photo} alt="" className={styles.ClubImg} />
+            <img
+              src={clubList.photo}
+              alt="동아리 사진"
+              className={styles.ClubImg}
+            />
 
             <div className={styles.clubDeatilText1}>
               <div className={styles.clubDeatiltitleDiv}>
@@ -130,24 +137,8 @@ function ClubDetail() {
               </div>
               <div className={styles.clubDeatiltextDiv}>
                 <span className={styles.clubDeatiltext}>
-                  {clubList.mandatorySemesters}
+                  {clubList.mandatorySemesters}학기
                 </span>
-              </div>
-            </div>
-
-            <div className={styles.clubDeatilText1}>
-              <div className={styles.clubDeatiltitleDiv}>
-                <span className={styles.clubDeatiltitle}>활동일정</span>
-              </div>
-              <div className={styles.clubDeatiltextDiv}>
-                {/* <span className={styles.clubDeatiltext}>
-                  {clubList.activitySchedule.split("\n").map((line, index) => (
-                    <React.Fragment key={index}>
-                      {line}
-                      <br />
-                    </React.Fragment>
-                  ))}
-                </span> */}
               </div>
             </div>
           </div>
@@ -169,59 +160,105 @@ function ClubDetail() {
                 <img src={link} alt="" className={styles.iconImg} />
               </a>
             </div>
-            <span className={styles.content}>{clubList.content}</span>
+            <span className={styles.content}>
+              {clubList.content?.split("\n").map((line, index) => (
+                <React.Fragment key={index}>
+                  {line}
+                  {index < clubList.content.split("\n").length - 1 && <br />}
+                </React.Fragment>
+              ))}
+            </span>
           </div>
         </div>
 
         <span className={styles.titleName}> 진행 중인 이벤트 </span>
         <div className={styles.EventCardContainer}>
-          {progressingEventList.map((item, index) => (
-            <EventCard
-              key={index}
-              show={item}
-              onClick={() => {
-                const category = item.categoryOfEvent;
-                const id = item.id;
+          {progressingEventList.length > 0 ? (
+            progressingEventList.map((item, index) => (
+              <EventCard
+                key={index}
+                show={item}
+                onClick={() => {
+                  const category = item.categoryOfEvent;
+                  const id = item.id;
 
-                if (category === "공연") {
-                  navigate(`/show/${id}`);
-                } else if (category === "즐길거리") {
-                  navigate(`/entertain/${id}`);
-                }
+                  if (category === "공연") {
+                    navigate(`/show/${id}`);
+                  } else if (category === "즐길거리") {
+                    navigate(`/entertain/${id}`);
+                  }
+                }}
+              />
+            ))
+          ) : (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "40px 20px",
+                color: "#666",
+                fontSize: "16px",
               }}
-            />
-          ))}
+            >
+              해당 내역이 없습니다.
+            </div>
+          )}
         </div>
 
         <span className={styles.titleName}> 지난 리크루팅 </span>
         <div className={styles.LastRecruitingCardContainer}>
-          {lastRecruitingList.map((item, index) => (
-            <LastRecruitingCard
-              key={index}
-              show={item}
-              onClick={() => navigate(`/recruiting/${item.recruitingId}`)}
-            />
-          ))}
+          {lastRecruitingList.length > 0 ? (
+            lastRecruitingList.map((item, index) => (
+              <LastRecruitingCard
+                key={index}
+                show={item}
+                onClick={() => navigate(`/recruiting/${item.recruitingId}`)}
+              />
+            ))
+          ) : (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "40px 20px",
+                color: "#666",
+                fontSize: "16px",
+              }}
+            >
+              해당 내역이 없습니다.
+            </div>
+          )}
         </div>
 
         <span className={styles.titleName}> 지난 볼거리 </span>
         <div className={styles.LastRecruitingCardContainer}>
-          {lastEventList.map((item, index) => (
-            <LastEventCard
-              key={index}
-              show={item}
-              onClick={() => {
-                const category = item.showOrEntertain;
-                const id = item.id;
+          {lastEventList.length > 0 ? (
+            lastEventList.map((item, index) => (
+              <LastEventCard
+                key={index}
+                show={item}
+                onClick={() => {
+                  const category = item.showOrEntertain;
+                  const id = item.id;
 
-                if (category === "공연") {
-                  navigate(`/show/${id}`);
-                } else if (category === "즐길거리") {
-                  navigate(`/entertain/${id}`);
-                }
+                  if (category === "공연") {
+                    navigate(`/show/${id}`);
+                  } else if (category === "즐길거리") {
+                    navigate(`/entertain/${id}`);
+                  }
+                }}
+              />
+            ))
+          ) : (
+            <div
+              style={{
+                textAlign: "center",
+                padding: "40px 20px",
+                color: "#666",
+                fontSize: "16px",
               }}
-            />
-          ))}
+            >
+              해당 내역이 없습니다.
+            </div>
+          )}
         </div>
       </div>
     </>

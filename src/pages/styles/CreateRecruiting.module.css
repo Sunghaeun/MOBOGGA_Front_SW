@@ -1,107 +1,105 @@
-.main{
+.main {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding: 16px 128px 160px 128px;
 }
 
-.title span{
+.title span {
   font: var(--TITLE06);
   color: var(--gray-10-typo-color, #121212);
 }
 
-.inputContainer{
+.inputContainer {
   /* border: 1px solid var(--gray-01-border, #353333); */
   display: flex;
   flex-direction: row;
-  width:calc(100vw - 256px);
+  width: calc(100vw - 256px);
 
   margin-top: 30px;
 }
 
-.photoInput{
+.photoInput {
   width: 359.708px;
   height: 508px;
   flex-shrink: 0;
   /* aspect-ratio: 359.71/508.00; 반응형 만들기 위해 사용해야함 ! 그치만 밖에 잇는 크기 설정 미리 해줘야함 */
 
-  border: 8px solid var(--gray-01-background, #FBFBFB);
-  background:lightgray 50% / cover no-repeat;
+  border: 8px solid var(--gray-01-background, #fbfbfb);
+  background: lightgray 50% / cover no-repeat;
 
   /* Shadow 02 */
   box-shadow: 8px 8px 20px 0px rgba(0, 0, 0, 0.25);
 }
 
-.photobutton{
+.photobutton {
   display: inline-flex;
   padding: 4px 24px;
   justify-content: center;
   align-items: center;
   gap: 10px;
 
-  border: 1px solid var(--main-02, #FF3D12);
-  background: var(--gray-01-background, #FBFBFB);
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--gray-01-background, #fbfbfb);
 
   margin-top: 28px;
   cursor: pointer;
 }
 
-.photobutton span{
+.photobutton span {
   font: var(--BODY04_M);
-  color: var(--main-02, #FF3D12);
+  color: var(--main-02, #ff3d12);
 }
 
-.rightInput{
+.rightInput {
   margin-left: 70px;
-  width:100vw;
+  width: 100vw;
 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-.announcement{
-  color: var(--Warning, #D50024);
+.announcement {
+  color: var(--Warning, #d50024);
   font: var(--CAPTION);
 }
 
-.row{
+.row {
   display: flex;
   flex-direction: row;
-  width:100%;
+  width: 100%;
 
   margin-top: 24px;
 }
 
-.inputTitle{
-  width:90px;
-  height:36px;
+.inputTitle {
+  width: 90px;
+  height: 36px;
   display: flex;
   align-items: center;
   /* border:1px solid black; */
-
 }
 
-.inputTitle span{
-  color: var(--Point-03, #8E3DFF);
-  font:var(--BODY03_B);
+.inputTitle span {
+  color: var(--Point-03, #8e3dff);
+  font: var(--BODY03_B);
 }
 
-.row input{
-  width:100%;
-  height:36px;
+.row input {
+  width: 100%;
+  height: 36px;
   padding-left: 8px;
   border: 1px solid var(--gray-01-border, #ccc);
   color: var(--gray-10-typo-color, #121212);
 }
 
-.row input:focus{
+.row input:focus {
   outline: none;
-  border-color: var(--main-02, #FF3D12);
+  border-color: var(--main-02, #ff3d12);
 }
 
-
-.buttonContainer{
+.buttonContainer {
   width: 100%;
 
   display: flex;
@@ -111,37 +109,37 @@
   margin-top: 94px;
 }
 
-.createClub{
-  width:127px;
+.createClub {
   height: 33px;
+  font-size: 18px;
+  cursor: pointer;
 
   display: inline-flex;
-  padding: 4px 94px;
+  padding: 4px 90px;
   justify-content: center;
   align-items: center;
   gap: 10px;
-  border: 1px solid var(--main-02, #FF3D12);
-  background: var(--main-02, #FF3D12);
+  background: var(--main-02, #ff3d12);
+  color: var(--WHITE, #ffffff);
+
+  &:hover {
+    background: var(--DEEPORANGE, #e63d00);
+  }
 }
 
-.createClub span{
-  font: var(--BODY01);
-  color: var(--gray-01-background, #FBFBFB);
-}
-
-.miniInput{
+.miniInput {
   width: 96px !important;
   margin-left: 17px;
   margin-right: 20px;
 }
 
-.linkContainer{
+.linkContainer {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.linkContainer img{
+.linkContainer img {
   margin-right: 6px;
   width: 24px;
   height: 24px;
@@ -149,13 +147,13 @@
   aspect-ratio: 1/1;
 }
 
-.linkrow{
+.linkrow {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-.linkrow1{
+.linkrow1 {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -171,19 +169,19 @@
   line-height: 1.5;
 }
 
-.textarea:focus{
+.textarea:focus {
   outline: none;
-  border-color: var(--main-02, #FF3D12);
+  border-color: var(--main-02, #ff3d12);
 }
 
-.required{
-  color: var(--Warning, #D50024) !important;
+.required {
+  color: var(--Warning, #d50024) !important;
   font: var(--CAPTION_M) !important;
   margin-left: 2px;
   margin-bottom: 10px;
 }
 
-.recruitinImg{
+.recruitinImg {
   width: 100%;
   height: 100%;
   object-fit: cover;

@@ -2,10 +2,6 @@
   width: 140.201px;
   height: 283px;
   flex-shrink: 0;
-  &:hover {
-    transition: all 0.3s ease-in-out;
-    transform: translateY(3px); /* 위로 3px 이동 */
-  }
 }
 
 .card_img_box {

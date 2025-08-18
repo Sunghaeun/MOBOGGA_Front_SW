@@ -7,6 +7,8 @@ import apiClient from "../../utils/apiClient";
 import AccountInfoCard from "../../components/Mypage/AccountInfoCard";
 import ManagerProfileInfoCard from "../../components/Mypage/ManagerProfileInfoCard";
 import ManagerProfileUpdateBtn from "../../components/Mypage/ManagerProfileUpdateBtn";
+import ClubUpdateBtn from "../../components/Manager/ClubUpdateBtn";
+import ReservManageCard from "../../components/Manager/ReservManageCard";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
 import ServerErrorModal from "../../components/Mypage/ServerErrorModal";
 
@@ -121,24 +123,24 @@ function ManagerMypage() {
       console.log("현재 토큰 상태:", !!useAuthStore.getState().token);
       console.log("현재 사용자 정보:", useAuthStore.getState().user);
 
-      const response = await apiClient.get("/mypage/manager/show");
+      const response = await apiClient.get("/mypage/manager/holder/list");
       console.log("Reservation cards response:", response.data);
 
       const data = response.data;
       console.log("=== RAW RESERVATION DATA ===");
       console.log("Full response data:", data);
       console.log("Data keys:", Object.keys(data));
-      console.log("Has showList:", "showList" in data);
-      console.log("showList value:", data.showList);
+      console.log("Has reservationList:", "reservationList" in data);
+      console.log("reservationList value:", data.reservationList);
 
-      if (!data || !data.showList) {
+      if (!data || !data.reservationList) {
         console.log("Data structure issue - trying alternative keys");
         console.log("Available keys:", Object.keys(data || {}));
         throw new Error("공연 내역 데이터 형식이 올바르지 않습니다.");
       }
 
-      setReservManageCards(data.showList || []);
-      console.log("공연 내역 데이터:", data.showList);
+      setReservManageCards(data.reservationList || []);
+      console.log("공연 내역 데이터:", data.reservationList);
     } catch (err) {
       console.error("에러 발생:", err);
       console.log("에러 상세:", {
@@ -176,20 +178,13 @@ function ManagerMypage() {
     getReservManageCards,
   ]);
 
-  // ClubUpdateBtn 컴포넌트 정의 (임시)
-  const ClubUpdateBtn = ({ onClick }) => (
-    <button onClick={onClick} className={styles.club_update_btn}>
-      클럽 정보 수정
-    </button>
-  );
+  const handleManagerProfileUpdate = () => {
+    navigate("/manager/mypage/update", { replace: false });
+  };
 
-  // ReservManageCard 컴포넌트 정의 (임시)
-  const ReservManageCard = ({ data }) => (
-    <div className={styles.reserv_manage_card}>
-      <div>Schedule ID: {data.scheduleId}</div>
-      <div>Data: {JSON.stringify(data)}</div>
-    </div>
-  );
+  const handleClubUpdate = () => {
+    navigate("/manager/club/update", { replace: false });
+  };
 
   if (isLoading) {
     console.log("로딩 중 화면 렌더링");
@@ -199,10 +194,8 @@ function ManagerMypage() {
           <div className={styles.sidebar}>
             <AccountInfoCard formData={formData} />
             <ManagerProfileInfoCard formData={formData} />
-            <ManagerProfileUpdateBtn
-              onClick={() => console.log("Profile update")}
-            />
-            <ClubUpdateBtn onClick={() => console.log("Club update")} />
+            <ManagerProfileUpdateBtn onClick={handleManagerProfileUpdate} />
+            <ClubUpdateBtn onClick={handleClubUpdate} />
           </div>
           <div className={styles.container}>
             <div className={styles.category_box}>
@@ -247,17 +240,15 @@ function ManagerMypage() {
       </>
     );
   }
-  
+
   return (
     <>
       <div className={styles.body}>
         <div className={styles.sidebar}>
           <AccountInfoCard formData={formData} />
           <ManagerProfileInfoCard formData={formData} />
-          <ManagerProfileUpdateBtn
-            onClick={() => console.log("Profile update")}
-          />
-          <ClubUpdateBtn onClick={() => console.log("Club update")} />
+          <ManagerProfileUpdateBtn onClick={handleManagerProfileUpdate} />
+          <ClubUpdateBtn onClick={handleClubUpdate} />
         </div>
         <div className={styles.container}>
           <div className={styles.category_box}>

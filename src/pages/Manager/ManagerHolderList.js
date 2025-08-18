@@ -17,7 +17,7 @@ import {
 function ManagerHolderList() {
   const { scheduleId } = useParams();
   const navigate = useNavigate();
-  const { user, isLoggedIn, isManager, token } = useAuthStore();
+  const { user, isLoggedIn, isManager, token, authLoading } = useAuthStore();
   const [holderData, setHolderData] = useState({
     title: "",
     order: 0,
@@ -39,15 +39,21 @@ function ManagerHolderList() {
     console.log("=== MANAGER HOLDER LIST INIT ===");
     console.log("로그인 상태:", isLoggedIn);
     console.log("매니저 권한:", isManager());
+    console.log("인증 로딩 상태:", authLoading);
+
+    if (authLoading) {
+      console.log("인증 상태 로딩 중...");
+      return;
+    }
 
     if (!isLoggedIn || !isManager()) {
-      console.log("권한 없음 - 404로 리다이렉트");
+      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
       navigate("/login", { replace: true });
       return;
     }
 
     console.log("권한 확인 완료 - 데이터 조회 시작");
-  }, [isLoggedIn, isManager, navigate]);
+  }, [isLoggedIn, isManager, navigate, authLoading]);
 
   // 선택된 예매자들 관리
   const [selectedReservations, setSelectedReservations] = useState(new Set());
@@ -65,22 +71,6 @@ function ManagerHolderList() {
   const handleTokenExpired = () => {
     console.log("=== MANAGER TOKEN EXPIRED HANDLER CALLED ===");
     console.log("Setting isLoginOverModalOpen to true");
-
-    const expiredToken = window.tempToken;
-    if (expiredToken) {
-      try {
-        const tokenPayload = JSON.parse(atob(expiredToken.split(".")[1]));
-        console.log("Expired token payload:", tokenPayload);
-        console.log("Token exp:", new Date(tokenPayload.exp * 1000));
-        console.log("Current time:", new Date());
-        console.log(
-          "Token actually expired:",
-          new Date(tokenPayload.exp * 1000) <= new Date()
-        );
-      } catch (e) {
-        console.log("Token parsing error:", e);
-      }
-    }
 
     console.log("🚨 토큰 만료 처리: 토큰 삭제 및 로그인 모달 표시");
     // 로그아웃은 Zustand에서 자동 처리
@@ -128,33 +118,14 @@ function ManagerHolderList() {
           }
         }
 
-        const apiUrl = `${process.env.REACT_APP_API_URL}/mypage/manager/holder/${scheduleId}`;
+        const apiUrl = `/mypage/manager/holder/${scheduleId}`;
         console.log("🔄 API 요청:", apiUrl);
 
-        let response = await apiClient.getInstance()(apiUrl, {
-          credentials: "include",
-        });
+        let response = await apiClient.get(apiUrl);
 
         console.log("📡 응답 상태:", response.status);
 
-        if (response.status === 401 || response.status === 403) {
-          if (response.status === 401) {
-            console.log("토큰 만료 또는 인증 실패 - handleTokenExpired 호출");
-            handleTokenExpired();
-            return;
-          } else {
-            setError(`접근이 금지되었습니다. (상태: ${response.status})`);
-          }
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error(
-            `서버 응답 오류 (${response.status}): 예매자 목록을 불러오는데 실패했습니다.`
-          );
-        }
-
-        const data = await response.json();
+        const data = response.data;
         console.log("Holder list data:", data);
 
         setHolderData({
@@ -185,12 +156,17 @@ function ManagerHolderList() {
       }
     };
 
-    if (scheduleId) {
+    if (authLoading) {
+      console.log("인증 상태 로딩 중이므로 데이터 조회 대기");
+      return;
+    }
+
+    if (scheduleId && token) {
       fetchHolderList();
     } else {
       setIsLoading(false);
     }
-  }, [scheduleId, token]);
+  }, [scheduleId, token, authLoading]);
 
   // 입금 상태 토글 함수
   const handlePaymentToggle = async (reservationId, currentStatus) => {
@@ -232,11 +208,7 @@ function ManagerHolderList() {
         credentials: "include",
       });
 
-      const response = await apiClient.getInstance()(apiUrl, {
-        method: "PUT",
-        credentials: "include",
-        body: JSON.stringify(requestData),
-      });
+      const response = await apiClient.put(apiUrl, requestData);
 
       console.log("📡 개별 입금상태 변경 응답:", {
         status: response.status,
@@ -272,10 +244,6 @@ function ManagerHolderList() {
           );
         }
         return;
-      }
-
-      if (!response.ok) {
-        throw new Error(`입금 상태 업데이트 실패 (${response.status})`);
       }
 
       setHolderData((prevData) => ({
@@ -340,11 +308,7 @@ function ManagerHolderList() {
         credentials: "include",
       });
 
-      const response = await apiClient.getInstance()(apiUrl, {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify(requestData),
-      });
+      const response = await apiClient.post(apiUrl, requestData);
 
       // 응답 헤더도 확인
       const responseHeaders = {};
@@ -384,18 +348,8 @@ function ManagerHolderList() {
         return;
       }
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.log("❌ 개별 삭제 실패 상세:", {
-          status: response.status,
-          statusText: response.statusText,
-          errorText: errorText,
-        });
-        throw new Error(`예매 삭제 실패 (${response.status}): ${errorText}`);
-      }
-
       // 응답 본문 확인
-      const responseData = await response.json().catch(() => ({}));
+      const responseData = response.data || {};
       console.log("✅ 개별 삭제 성공 응답:", responseData);
 
       // 백엔드 응답에서 실제 성공 여부 확인
@@ -522,19 +476,11 @@ function ManagerHolderList() {
       );
 
       const apiUrl = `${process.env.REACT_APP_API_URL}/mypage/manager/holder/${scheduleId}`;
-      const response = await apiClient.getInstance()(apiUrl, {
-        method: "PUT",
-        credentials: "include",
-        body: JSON.stringify(requestData),
-      });
+      const response = await apiClient.put(apiUrl, requestData);
 
       if (response.status === 401) {
         handleTokenExpired();
         return;
-      }
-
-      if (!response.ok) {
-        throw new Error(`일괄 입금상태 업데이트 실패 (${response.status})`);
       }
 
       setHolderData((prevData) => ({
@@ -599,11 +545,7 @@ function ManagerHolderList() {
       });
 
       const apiUrl = `${process.env.REACT_APP_API_URL}/mypage/manager/holder/${scheduleId}`;
-      const response = await apiClient.getInstance()(apiUrl, {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify(requestData),
-      });
+      const response = await apiClient.post(apiUrl, requestData);
 
       // 응답 헤더도 확인
       const responseHeaders = {};
@@ -643,18 +585,8 @@ function ManagerHolderList() {
         return;
       }
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.log("❌ 일괄 삭제 실패 상세:", {
-          status: response.status,
-          statusText: response.statusText,
-          errorText: errorText,
-        });
-        throw new Error(`일괄 삭제 실패 (${response.status}): ${errorText}`);
-      }
-
       // 응답 본문 확인
-      const responseData = await response.json().catch(() => ({}));
+      const responseData = response.data || {};
       console.log("✅ 일괄 삭제 성공 응답:", responseData);
 
       // 백엔드 응답에서 실제 성공 여부 확인
@@ -719,13 +651,15 @@ function ManagerHolderList() {
     }));
   };
 
-  if (isLoading) {
+  if (authLoading || isLoading) {
     return (
       <div className={styles.wrapper}>
         <div className={styles.loading}>
           <div className={styles.loadingSpinner}></div>
           <div className={styles.loadingText}>
-            예매자 목록을 불러오고 있습니다
+            {authLoading
+              ? "인증 상태 확인 중"
+              : "예매자 목록을 불러오고 있습니다"}
             <span className={styles.loadingDots}>...</span>
           </div>
           <div className={styles.loadingSubtext}>잠시만 기다려주세요</div>

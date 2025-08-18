@@ -7,7 +7,7 @@ function EventCard({ show ,onClick }) {
   return (
     <div className={styles.showCard}  onClick={onClick}>
       <div className={styles.card}>
-        <img src={show.photo} alt={show.name} className={`${styles.mainImg} ${styles.imgdetail}`} />
+        <img src={show.poster} alt={show.name} className={`${styles.mainImg} ${styles.imgdetail}`} />
       </div>
       <span className={styles.name}>{show.title}</span>
       <div className={styles.clubDate}>
