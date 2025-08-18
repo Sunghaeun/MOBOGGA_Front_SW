@@ -216,7 +216,7 @@ function ManagerMypage() {
                 className={styles.category_list}
                 onClick={() => navigate("/manager/entertain")}
               >
-                즐길거리
+                행사
               </div>
               <div
                 className={styles.category_list}
@@ -269,7 +269,7 @@ function ManagerMypage() {
               className={styles.category_list}
               onClick={() => navigate("/manager/entertain")}
             >
-              즐길거리
+              행사
             </div>
             <div
               className={styles.category_list}

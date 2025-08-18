@@ -91,7 +91,7 @@ function EntertainDetail() {
       <div className={styles.show_con}>
         <div className={styles.show_Intro}>
           <div className={styles.intro_Info}>
-            <div className={styles.show_Top}>즐길거리 정보</div>
+            <div className={styles.show_Top}>행사 정보</div>
             <div className={styles.intro_con}>
               <img
                 src={entertainList?.photo || "https://via.placeholder.com/150"}
