@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styles from "./styles/Banner.module.css";
+import loadingStyles from "../styles/Loading.module.css";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../utils/apiClient";
 
@@ -15,24 +16,33 @@ function Banner() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
   const [isPaused, setIsPaused] = useState(false); // 자동 전환 일시정지
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const intervalRef = useRef(null);
 
   useEffect(() => {
     const getShow = async () => {
       try {
+        setIsLoading(true);
+        setError(null);
         const res = await apiClient.get("/attraction/list");
-        const converted = (res?.data?.rotatingPerformances || []).map((item) => ({
-          id: item.id,
-          name: item.title,
-          clubID: item.club,
-          period: item.period,
-          category: item.category,
-          photo: item.img?.trim() || "",
-        }));
+        const converted = (res?.data?.rotatingPerformances || []).map(
+          (item) => ({
+            id: item.id,
+            name: item.title,
+            clubID: item.club,
+            period: item.period,
+            category: item.category,
+            photo: item.img?.trim() || "",
+          })
+        );
         setShow(converted);
       } catch (err) {
         console.error("API 불러오기 실패", err);
+        setError("배너 정보를 불러오는데 실패했습니다.");
+      } finally {
+        setIsLoading(false);
       }
     };
     getShow();
@@ -66,7 +76,7 @@ function Banner() {
   // 썸네일에 마우스 올렸을 때 해당 인덱스로 즉시 변경
   const handleThumbEnter = (i) => {
     if (!show[i]) return;
-    setIsPaused(true);    // 자동 전환 멈춤
+    setIsPaused(true); // 자동 전환 멈춤
     setFade(false);
     setTimeout(() => {
       setCurrentIndex(i);
@@ -83,15 +93,53 @@ function Banner() {
   const handleThumbFocus = (i) => handleThumbEnter(i);
   const handleThumbBlur = handleThumbLeave;
 
+  if (isLoading) {
+    return (
+      <div className={styles.banner}>
+        <div className={loadingStyles.loading}>
+          <div className={loadingStyles.loadingSpinner}></div>
+          <div className={loadingStyles.loadingText}>
+            배너 정보를 불러오고 있습니다
+            <span className={loadingStyles.loadingDots}>...</span>
+          </div>
+          <div className={loadingStyles.loadingSubtext}>
+            잠시만 기다려주세요
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.banner}>
+        <div className={loadingStyles.error}>
+          <div className={loadingStyles.errorIcon}>⚠️</div>
+          <div className={loadingStyles.errorMessage}>{error}</div>
+        </div>
+      </div>
+    );
+  }
+
   if (show.length === 0) {
-    return <div className={styles.banner}>Loading...</div>;
+    return (
+      <div className={styles.banner}>
+        <div className={loadingStyles.error}>
+          <div className={loadingStyles.errorMessage}>
+            표시할 배너가 없습니다.
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const current = show[currentIndex];
 
   const goDetail = (item) => {
     if (!item) return;
-    navigate(item.category === "공연" ? `/show/${item.id}` : `/entertain/${item.id}`);
+    navigate(
+      item.category === "공연" ? `/show/${item.id}` : `/entertain/${item.id}`
+    );
   };
 
   return (
@@ -107,7 +155,9 @@ function Banner() {
           <img
             src={current.photo}
             alt={current.name}
-            className={`${styles.fade} ${fade ? styles.show : ""} ${styles.leftMainImg}`}
+            className={`${styles.fade} ${fade ? styles.show : ""} ${
+              styles.leftMainImg
+            }`}
             onClick={() => goDetail(current)}
             draggable="false"
           />
