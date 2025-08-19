@@ -3,6 +3,13 @@ import styles from "./styles/Banner.module.css";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../utils/apiClient";
 
+import top from "../assets/main/topTape.svg";
+import defaultImg from "../assets/main/default.svg";
+import left from "../assets/main/left.svg";
+import leftHover from "../assets/main/leftHover.svg";
+import right from "../assets/main/right.svg";
+import rightHover from "../assets/main/rightHover.svg";
+
 function Banner() {
   const [show, setShow] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -95,10 +102,12 @@ function Banner() {
 
       <div className={styles.container}>
         <div className={styles.leftImg}>
+          <img src={left} alt="" className={styles.left} />
+          <img src={right} alt="" className={styles.right} />
           <img
             src={current.photo}
             alt={current.name}
-            className={`${styles.fade} ${fade ? styles.show : ""}`}
+            className={`${styles.fade} ${fade ? styles.show : ""} ${styles.leftMainImg}`}
             onClick={() => goDetail(current)}
             draggable="false"
           />
@@ -135,9 +144,12 @@ function Banner() {
                   tabIndex={0}
                   aria-label={`${item.name} 미리보기`}
                 >
+                  <img src={defaultImg} alt="" className={styles.default} />
+                  <img src={top} alt="" className={styles.top} />
                   <img
                     src={item.photo}
                     alt={`banner${i + 1}`}
+                    className={styles.thumb}
                     onClick={() => goDetail(item)}
                     draggable="false"
                   />

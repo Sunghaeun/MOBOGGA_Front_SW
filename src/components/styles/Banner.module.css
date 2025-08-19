@@ -54,9 +54,29 @@
 
   /* Shadow 02 */
   box-shadow: 8px 8px 20px 0px rgba(0, 0, 0, 0.25);
+
+  position: relative;
 }
 
-.leftImg img {
+.left{
+  position: absolute;
+  top: -6%;
+  left: -30px;
+  width: 110px;
+
+  transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+}
+
+.right{
+  position: absolute;
+  top: 92%;
+  right: -40px;
+  width: 120px;
+
+  transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+}
+
+.leftMainImg {
   width: 322px;
   height: 436px;
 }
@@ -120,25 +140,81 @@
 }
 
 .imgBox {
+  position: relative;
+  isolation: isolate;     
+  overflow: visible; 
   width: 84.286px;
   height: 118px;
 
   margin-left: 36px;
 
-  border: 4px solid var(--gray-01-background, #fbfbfb);
+  border: 2px solid var(--gray-01-background, #fbfbfb);
   background: lightgray 50% / cover no-repeat;
+
+  z-index: 1;
 
   /* Shadow 02 */
   box-shadow: 8px 8px 20px 0px rgba(0, 0, 0, 0.25);
   &:hover {
     cursor: pointer;
   }
+  
 }
 
-.imgBox img {
-  width: 84.286px;
-  height: 118px;
-  &:hover {
-    cursor: pointer;
-  }
+.thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: relative;
+  z-index: 1;        /* 테이프보다 낮게 */
+}
+
+
+.top {
+  position: absolute;
+  width: 32px;     
+
+  top: -5px; 
+  left: -14px;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+  pointer-events: none; /* hover 깜빡임 방지 */
+  z-index: 1000000;
+}
+
+/* 카드에 hover될 때만 나타남 */
+.imgBox:hover .top {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(135%, -20%);
+  transition: opacity .25s ease, transform .25s ease, visibility 0s;
+}
+
+/*  카드 hover 시 이미지 그림자도 같이 */
+.imgBox:hover .imgBox {
+  box-shadow: 4px 4px 12px rgba(0,0,0,.25);
+}
+
+/* 접근성: 모션 최소화 설정 존중 */
+@media (prefers-reduced-motion: reduce) {
+  .top { transition: none; transform: none; }
+}
+
+.default{
+  position: absolute;
+  top: -2%;
+  left: -2%;
+  width: 104%; 
+  height: 104%;
+
+  pointer-events: none;
+  z-index: 5;
+}
+
+.imgBox:hover .default{
+  opacity: 0;
+  visibility: hidden;
 }
