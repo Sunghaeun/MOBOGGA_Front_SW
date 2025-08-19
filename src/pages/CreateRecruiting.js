@@ -161,7 +161,7 @@ function CreateRecruiting() {
   return (
     <>
       <div className={styles.main}>
-        <div className={styles.title} onClick={openNotEnteredModal}>
+        <div className={styles.title}>
           <span>리크루팅 새로 만들기</span>
         </div>
 
@@ -183,13 +183,13 @@ function CreateRecruiting() {
           </div>
 
           <div className={styles.rightInput}>
-            <span className={styles.announcement} onClick={openNotEnteredModal}>
+            <span className={styles.announcement}>
               *관련 링크 외 모든 정보는 필수입력사항입니다
             </span>
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span onClick={openEditCheckModal}>제목</span>
+                <span >제목</span>
                 <span className={styles.required}>*</span>
               </div>
               <input
@@ -203,7 +203,7 @@ function CreateRecruiting() {
 
             <div className={styles.row}>
               <div className={styles.inputTitle}>
-                <span onClick={openPageOutModal}>카테고리</span>
+                <span>카테고리</span>
                 <span className={styles.required}>*</span>
               </div>
               <input
