@@ -5,6 +5,7 @@ import insta from "../assets/icons/instagram.svg";
 import kakao from "../assets/icons/kakao.svg";
 import youtube from "../assets/icons/youtube.svg";
 import link from "../assets/icons/linkicons.svg";
+import defaultImg from "../assets/defaultImg.jpg";
 
 import NotEnteredModal from "../components/modal/NotEnteredModal";
 import EditCheckModal from "../components/modal/EditCheckModal";
@@ -79,7 +80,7 @@ function CreateRecruiting() {
     youUrl: "",
     url: "",
     applicationUrl: "",
-    photo: "", // 미리보기 URL (서버 전송 X)
+    photo: defaultImg, // 미리보기 URL (서버 전송 X)
   });
 
 // 공통 인풋 핸들러
@@ -107,6 +108,7 @@ function CreateRecruiting() {
 
   // ===== 이미지 업로드 & 미리보기 =====
   const [photoFile, setPhotoFile] = useState(null);
+  const [posterReady, setPosterReady] = useState(false);
   const fileInputRef = useRef(null);
   const fieldRefs = useRef({}); // 각 input ref 저장
 
@@ -122,8 +124,32 @@ function CreateRecruiting() {
     if (f) {
       const preview = URL.createObjectURL(f);
       setData((prev) => ({ ...prev, photo: preview }));
+    } else {
+      setData((prev) => ({ ...prev, photo: defaultImg })); 
     }
   };
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const resp = await fetch(defaultImg);
+        const blob = await resp.blob();
+        const ext = blob.type?.split("/")[1] ?? "jpg";
+        const file = new File([blob], `default.${ext}`, {
+          type: blob.type || "image/jpeg",
+        });
+        if (!cancelled) setPhotoFile(file);
+      } catch (e) {
+        console.error("default poster preload failed", e);
+      } finally {
+        if (!cancelled) setPosterReady(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // blob URL 정리
   useEffect(() => {
