@@ -16,12 +16,12 @@ input[type="number"] {
   height: auto;
   color: #000;
   padding-bottom: 200px;
+  padding: 16px 128px 160px 128px;
 }
 
 .headText {
   display: flex;
   align-self: flex-start;
-  margin-left: 10rem;
   margin-bottom: 2rem;
 
   color: var(--gray-10-typo-color, #121212);
@@ -35,7 +35,6 @@ input[type="number"] {
 
 .Create_Container {
   border: 1px solid white;
-  margin-left: 10rem;
 }
 
 .show_content_Entire p {
@@ -44,6 +43,7 @@ input[type="number"] {
 
 .Detail_Entire_Box {
   display: flex;
+  width: 100%;
 }
 
 .SImage_Box {
@@ -83,6 +83,8 @@ input[type="number"] {
   flex-direction: column;
   justify-content: flex-start;
   margin: 0px 0px 10px 6.1rem;
+
+  width: 100%;
 }
 
 .input_Boxs {
@@ -95,7 +97,7 @@ input[type="number"] {
 .input_Boxs input,
 .input_Boxs select,
 .Start_To_End input {
-  padding: 15px;
+  padding: 0.25rem 0.5rem;
   margin: 7px;
   color: #000;
   font-size: 15px;
@@ -164,9 +166,18 @@ input[type="number"] {
   border-bottom: 1px solid #eee;
 }
 
+.form_detail_date_2 {
+  display: flex;
+  justify-content: left;
+  color: var(--gray-10-typo-color, #121212);
+  gap: 1.87rem;
+}
+
 #form_detail_date {
   outline: none;
-  width: 150px;
+  width: 45%;
+  height: 2.25rem;
+  border: 1px solid var(--gray-10-typo-color, #121212);
 }
 
 #form_detail_time {
@@ -356,17 +367,22 @@ input[type="number"] {
 }
 
 .info_Box {
-  display: flex;
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
   gap: 20px;
   font-size: 1rem;
   line-height: 1.6;
-  align-items: left;
-  justify-items: left;
+  justify-items: start;
   margin-bottom: 1.25rem;
+  justify-items: stretch; /* ← 두 번째 칸이 늘어나게 */
+  align-items: center;
 }
 
 .fixed_Info {
-  width: 4rem;
+  display: flex;
+  align-items: center;
+  width: 5rem;
+  height: 2.75rem;
   flex-shrink: 0;
   font-weight: bold;
   color: var(--Point-03, #8e3dff);
@@ -376,11 +392,17 @@ input[type="number"] {
   font-style: normal;
   font-weight: 500;
   line-height: 1.875rem; /* 166.667% */
-  padding-top: 2px;
 }
 .info_txt {
   display: flex;
-  width: 100%;
+  width: 120%;
+}
+
+.required {
+  font: var(--CAPTION);
+  color: var(--Warning, #d50024);
+  margin-left: 0.2rem;
+  padding-top: -20px;
 }
 
 .variable_Info {
@@ -392,12 +414,19 @@ input[type="number"] {
   font-weight: 400;
   line-height: 1.6875rem; /* 168.75% */
   white-space: pre-wrap; /* 줄바꿈 유지 */
+
+  /* display: flex;
+  flex-direction: column;
+  justify-content: left; */
+  width: 100%;
+  min-width: 0;
 }
 .variable_Info > input,
 .variable_Info > textarea,
 .bank > input,
 .manager > input {
-  padding: 0rem 0.75rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
   font-size: 16px;
   line-height: 1.5;
   font-family: inherit;
@@ -425,8 +454,10 @@ input[type="number"] {
 }
 
 .variable_Info select {
-  padding: 15px;
-  margin: 7px;
+  height: 2.75rem;
+  display: flex;
+  justify-content: left;
+  padding: 0.25rem 0.5rem;
   font-size: 15px;
 }
 
@@ -447,10 +478,11 @@ input[type="number"] {
   font-style: normal;
   font-weight: 400;
   line-height: 1.125rem; /* 163.636% */
-  margin-bottom: 18px;
 }
 
 .sns {
+  display: flex;
+  width: 98% !important;
   margin-left: 2.5rem;
   margin-bottom: 1rem;
 }
@@ -460,5 +492,61 @@ input[type="number"] {
 }
 
 .sns_link {
-  margin-left: 1rem;
+  width: 90% !important;
+  margin-left: 0.2rem;
+}
+
+.modal {
+  flex-direction: row !important;
+  justify-content: center;
+  align-items: center;
+}
+.modal_con {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font: var(--BODY01_SB);
+}
+
+.modal_con img {
+  width: 9rem;
+  height: 9rem;
+  flex-shrink: 0;
+}
+
+.modal_Btns {
+  display: flex;
+  padding-top: 2rem;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_reserv_Btn {
+  display: inline-flex;
+  padding: 0.25rem 1.5rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.625rem;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--main-02, #ff3d12);
+
+  color: var(--gray-01-background, #fbfbfb);
+  /* Body 04 _ R */
+  font-family: "IBM Plex Sans KR";
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5rem; /* 171.429% */
+  letter-spacing: 0.00875rem;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 480px) {
+  .show_Top {
+    width: 100vw - 20px;
+  }
 }

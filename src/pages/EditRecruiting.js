@@ -24,6 +24,26 @@ function CreateRecruiting() {
   // Zustand 스토어에서 인증 정보 가져오기
   const { isLoggedIn, isManager, user, token } = useAuthStore();
 
+// 0)  필수 입력 필드 목록
+    const REQUIRED_FIELDS = [
+      { key: "name", label: "제목" },
+      { key: "category", label: "카테고리" },
+      { key: "startDate", label: "모집 시작" },
+      { key: "endDate", label: "모집 종료" },
+      { key: "mandatorySemesters", label: "필수학기" },
+      { key: "meetingTime", label: "정모시간" },
+      { key: "content", label: "활동내용" },
+      { key: "eligibility", label: "지원자격" },
+      { key: "notice", label: "면접안내" },
+      { key: "manager", label: "문의 이름" },
+      { key: "managerPhoneNumber", label: "문의 연락처" },
+      { key: "applicationUrl", label: "지원링크" },  
+      { key: "introductionLetter", label: "소개글" },
+    ];
+  
+  // 미입력 필드 추적 (error 스타일용)
+    const [missing, setMissing] = useState(new Set());
+
   // 1) 누락된 정보 확인 모달
   const [notEnteredModalOpen, setNotEnteredModalOpen] = useState(false);
   // eslint-disable-next-line no-unused-vars
@@ -70,11 +90,31 @@ function CreateRecruiting() {
     youUrl: "",
     noUrl: "",
     url: "",
-    applyUrl: "",
+    applicationUrl: "",
     photo: null,
   });
 
-  // 일반 필드 변경
+  // 공통 인풋 핸들러
+  const onChangeInput = (e) => {
+    const { name, value } = e.target;
+    setData((prev) => ({ ...prev, [name]: value }));
+    setMissing((prev) => {
+      if (!prev.has(name)) return prev;
+      const next = new Set(prev);
+      next.delete(name);
+      return next;
+    });
+  };
+  // 유효성 검사
+  const validateRequired = () => {
+    const newMissing = new Set();
+    REQUIRED_FIELDS.forEach(({ key }) => {
+      const v = (data[key] ?? "").toString().trim();
+      if (!v) newMissing.add(key);
+    });
+    setMissing(newMissing);
+    return newMissing;
+  };
 
   // 5) 리크루팅 정보 가져오기
   const getRecruiting = async () => {
@@ -119,7 +159,7 @@ function CreateRecruiting() {
         youUrl: src.youUrl ?? "",
         noUrl: src.noUrl ?? "",
         url: src.url ?? "",
-        applyUrl: src.applyUrl ?? "",
+        applicationUrl: src.applyUrl ?? src.applicationUrl ?? "", // ← applyUrl 대응
         photo: src.photo ?? null,
       };
 
@@ -156,6 +196,19 @@ function CreateRecruiting() {
   const handleSubmit = async () => {
     if (!isLoggedIn || !isManager()) {
       alert("로그인이 필요하거나 매니저 권한이 없습니다.");
+      return;
+    }
+
+    const notFilled = validateRequired();
+    if (notFilled.size > 0) {
+      // 첫 번째 미입력 필드로 이동 + 모달 오픈
+      const firstKey = [...notFilled][0];
+      const el = fieldRefs.current[firstKey];
+      if (el?.focus) el.focus();
+      if (el?.scrollIntoView) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      openNotEnteredModal();
       return;
     }
 
@@ -201,7 +254,6 @@ function CreateRecruiting() {
       );
 
       console.log("리크루팅 수정 성공:", response.data);
-      alert("리크루팅 수정 완료");
 
       // 수정 후 최신 데이터 재조회
       await getRecruiting();
@@ -226,12 +278,39 @@ function CreateRecruiting() {
     }
   };
 
+  
+  const requestSubmit = () => {
+    if (!isLoggedIn || !isManager()) {
+      alert("로그인이 필요하거나 매니저 권한이 없습니다.");
+      return;
+    }
+
+    const notFilled = validateRequired();
+    if (notFilled.size > 0) {
+      const firstKey = [...notFilled][0];
+      const el = fieldRefs.current[firstKey];
+      el?.focus?.();
+      el?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+      openNotEnteredModal();
+      return;
+    }
+
+    // 모든 필수값 OK → 확인 모달 오픈
+    openEditCheckModal();
+  };
+
+  const confirmSubmit = async () => {
+    closeEditCheckModal();
+    await handleSubmit(); // 기존 로직 그대로 사용
+  };
+
   // 8) 이미지 업로드
   const [photoFile, setPhotoFile] = useState(null);
   const fileInputRef = useRef(null);
+  const fieldRefs = useRef({}); 
 
-  const onChangeInput = (e) => {
-    setData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const setFieldRef = (name) => (el) => {
+    if (el) fieldRefs.current[name] = el;
   };
 
   const handleFileButtonClick = () => fileInputRef.current?.click();
@@ -293,8 +372,10 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <input
+                ref={setFieldRef("name")}
                 type="text"
                 name="name"
+                className={missing.has("name") ? styles.invalid : ""}
                 placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
                 value={data.name}
                 onChange={onChangeInput}
@@ -307,8 +388,10 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <input
+                ref={setFieldRef("category")}
                 type="text"
                 name="category"
+                className={missing.has("category") ? styles.invalid : ""}
                 placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
                 value={data.category}
                 onChange={onChangeInput}
@@ -320,21 +403,26 @@ function CreateRecruiting() {
                 <span>모집기간</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input
-                type="text" /* 필요시 date 두 개로 분리 */
-                name="startDate"
-                placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
-                value={data.startDate}
-                onChange={onChangeInput}
-              />
-              {/* endDate 필드를 쓰려면 아래도 노출 */}
-              {/* <input
-                type="text"
-                name="endDate"
-                placeholder="종료일"
-                value={data.endDate}
-                onChange={onChangeInput}
-              /> */}
+              {/* 생성 코드와 동일: start/end date 두 칸 + invalid 적용 */}
+              <div className={styles.dateInput}>
+                <input
+                  ref={setFieldRef("startDate")}
+                  className={`${styles.dateInput_1} ${missing.has("startDate") ? styles.invalid : ""}`}
+                  type="date"
+                  name="startDate"
+                  value={data.startDate}
+                  onChange={onChangeInput}
+                />
+                <span>~</span>
+                <input
+                  ref={setFieldRef("endDate")}
+                  className={`${styles.dateInput_1} ${missing.has("endDate") ? styles.invalid : ""}`}
+                  type="date"
+                  name="endDate"
+                  value={data.endDate}
+                  onChange={onChangeInput}
+                />
+              </div>
             </div>
 
             <div className={styles.row}>
@@ -343,8 +431,10 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <input
+                ref={setFieldRef("mandatorySemesters")}
                 type="text"
                 name="mandatorySemesters"
+                className={missing.has("mandatorySemesters") ? styles.invalid : ""}
                 placeholder="필수학기(없는 경우, “없음”이라고 입력해주세요.)"
                 value={data.mandatorySemesters}
                 onChange={onChangeInput}
@@ -357,8 +447,10 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <input
+                ref={setFieldRef("meetingTime")}
                 type="text"
                 name="meetingTime"
+                className={missing.has("meetingTime") ? styles.invalid : ""}
                 placeholder="정모시간(없는 경우, “없음”이라고 입력해주세요.)"
                 value={data.meetingTime}
                 onChange={onChangeInput}
@@ -371,9 +463,10 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <textarea
+                ref={setFieldRef("content")}
                 name="content"
                 rows={4}
-                className={styles.textarea}
+                className={`${styles.textarea} ${missing.has("content") ? styles.invalid : ""}`}
                 placeholder={`활동내용(주요 활동, 모집 분야 등 100자 내로 간략하게 작성해주세요.`}
                 value={data.content}
                 onChange={onChangeInput}
@@ -386,9 +479,10 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <textarea
+                ref={setFieldRef("eligibility")}
                 name="eligibility"
                 rows={4}
-                className={styles.textarea}
+                className={`${styles.textarea} ${missing.has("eligibility") ? styles.invalid : ""}`}
                 placeholder={`지원자격(모집대상 및 지원자격을 200자 내로 작성해주세요.)`}
                 value={data.eligibility}
                 onChange={onChangeInput}
@@ -401,9 +495,10 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <textarea
+                ref={setFieldRef("notice")}
                 name="notice"
                 rows={4}
-                className={styles.textarea}
+                className={`${styles.textarea} ${missing.has("notice") ? styles.invalid : ""}`}
                 placeholder={`면접안내(면접 일정, 장소, 내용 등 200자 내로 작성해주세요.)`}
                 value={data.notice}
                 onChange={onChangeInput}
@@ -416,7 +511,8 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <input
-                className={styles.miniInput}
+                ref={setFieldRef("manager")}
+                className={`${styles.miniInput} ${missing.has("manager") ? styles.invalid : ""}`}
                 type="text"
                 name="manager"
                 placeholder="이름"
@@ -424,6 +520,8 @@ function CreateRecruiting() {
                 onChange={onChangeInput}
               />
               <input
+                ref={setFieldRef("managerPhoneNumber")}
+                className={missing.has("managerPhoneNumber") ? styles.invalid : ""}
                 type="text"
                 name="managerPhoneNumber"
                 placeholder="연락처(전화번호 혹은 메일)"
@@ -438,10 +536,12 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <input
+                ref={setFieldRef("applicationUrl")}
                 type="text"
-                name="applyUrl"
-                placeholder="Goolge forms, Walla 등 리크루팅 링크 입력"
-                value={data.applyUrl}
+                name="applicationUrl"
+                className={missing.has("applicationUrl") ? styles.invalid : ""}
+                placeholder="Google forms, Walla 등 리크루팅 링크 입력"
+                value={data.applicationUrl}
                 onChange={onChangeInput}
               />
             </div>
@@ -500,9 +600,10 @@ function CreateRecruiting() {
                 <span className={styles.required}>*</span>
               </div>
               <textarea
+                ref={setFieldRef("introductionLetter")}
                 name="introductionLetter"
                 rows={4}
-                className={styles.textarea}
+                className={`${styles.textarea} ${missing.has("introductionLetter") ? styles.invalid : ""}`}
                 placeholder={`리크루팅에 대한 간략한 소개\n(공백 포함 최대 300자까지 작성 가능합니다.)`}
                 value={data.introductionLetter}
                 onChange={onChangeInput}
@@ -512,7 +613,7 @@ function CreateRecruiting() {
         </div>
 
         <div className={styles.buttonContainer}>
-          <div className={styles.createClub} onClick={handleSubmit}>
+          <div className={styles.createClub} onClick={requestSubmit}>
             리크루팅 수정하기
           </div>
         </div>
@@ -522,7 +623,7 @@ function CreateRecruiting() {
         open={notEnteredModalOpen}
         close={closeNotEnteredModal}
       />
-      <EditCheckModal open={editCheckModalOpen} close={closeEditCheckModal} />
+      <EditCheckModal open={editCheckModalOpen} close={closeEditCheckModal} onConfirm={confirmSubmit} />
       <PageOut open={pageOutModalOpen} close={closePageOutModal} />
     </>
   );
