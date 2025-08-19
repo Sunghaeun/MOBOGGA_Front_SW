@@ -150,7 +150,7 @@ function RecruitingDetail() {
                           <br />
                         </React.Fragment>
                       ))} */}
-                      {recruiting.content}
+                      {recruiting.introductionLetter}
                     </span>
                   }
                 </div>
