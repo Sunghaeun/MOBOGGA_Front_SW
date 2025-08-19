@@ -10,16 +10,16 @@ function ShowManageCard({ data, onDeleted }) {
   const [isDeleting, setIsDeleting] = useState(false);
   if (!data) return null;
 
-  const { showId, scheduleId, poster, title, date } = data;
+  const { showId, poster, title, date } = data;
 
   const handleCardClick = () => {
-    navigate(`/show/${showId}`);
+    navigate(`/edit/show/${showId}`);
   };
 
   const handleEditClick = (e) => {
     // 부모 카드 클릭으로 상세 페이지로 가지 않도록 전파 차단
     e?.stopPropagation();
-    navigate(`/edit/show/${scheduleId}`);
+    navigate(`/edit/show/${showId}`);
   };
 
   const handleDeleteClick = async (e) => {
@@ -129,7 +129,7 @@ function ShowManageCard({ data, onDeleted }) {
                   padding: 0,
                 }}
               >
-                <img src={showDeleteBtn} alt="공연 삭제" />
+                <img className={styles.card_btn} src={showDeleteBtn} alt="공연 삭제" />
               </button>
             </div>
           </div>
