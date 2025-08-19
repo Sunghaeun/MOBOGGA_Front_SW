@@ -79,7 +79,7 @@ function ClubDetail() {
       setLastRecruitingList(list3);
 
       console.log("진행 중인 이벤트:", list1);
-      console.log("지난 볼거리:", list2);
+      console.log("지난 공연:", list2);
       console.log("지난 리크루팅:", list3);
     } catch (err) {
       console.error("동아리 정보 로드 실패:", err);
@@ -186,6 +186,8 @@ function ClubDetail() {
                     navigate(`/show/${id}`);
                   } else if (category === "행사") {
                     navigate(`/entertain/${id}`);
+                  } else if (category === "리크루팅") {
+                    navigate(`/recruiting/${id}`);
                   }
                 }}
               />
@@ -228,7 +230,7 @@ function ClubDetail() {
           )}
         </div>
 
-        <span className={styles.titleName}> 지난 볼거리 </span>
+        <span className={styles.titleName}> 지난 공연 & 행사 </span>
         <div className={styles.LastRecruitingCardContainer}>
           {lastEventList.length > 0 ? (
             lastEventList.map((item, index) => (

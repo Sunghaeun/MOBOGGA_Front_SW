@@ -92,7 +92,7 @@ function ShowList() {
         <div className={loadingStyles.errorIcon}>⚠️</div>
         <div className={loadingStyles.errorMessage}>{error}</div>
         <button onClick={() => getShow()} className={loadingStyles.retryBtn}>
-          🔄 다시 시도
+          다시 시도
         </button>
       </div>
     );
@@ -204,13 +204,8 @@ function ShowList() {
             onClick={() => {
               const { category, id } = item;
               if (category === "공연") navigate(`/show/${id}`);
-              else if (
-                category === "체험" ||
-                category === "스트릿공연" ||
-                category === "먹거리" ||
-                category === "예배"
-              )
-                navigate(`/entertain/${id}`);
+              else if (category === "리크루팅") navigate(`/recruiting/${id}`);
+              else navigate(`/entertain/${id}`);
             }}
           />
         ))}

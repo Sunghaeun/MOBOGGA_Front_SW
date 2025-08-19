@@ -16,7 +16,7 @@ function ReservManageCard({ data, onDeleted }) {
   };
 
   const handleEditShow = () => {
-    navigate(`/edit/show/${scheduleId}`);
+    navigate(`/edit/show/${id}`);
   };
 
   const handleDeleteShow = async () => {
