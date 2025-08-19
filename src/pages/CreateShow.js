@@ -319,7 +319,10 @@ function CreateShow() {
                     <span className={styles.info_txt}>날짜</span>
                   </span>
                   <span className={styles.variable_Info}>
-                    <div className={styles.form_detail_date_2}>
+                    <div
+                      className={styles.form_detail_date_2}
+                      style={{ display: "flex" }}
+                    >
                       <input
                         id={styles.form_detail_date}
                         type="date"
@@ -415,7 +418,7 @@ function CreateShow() {
                           "신협",
                         ]}
                         style={{ width: "15rem", height: "36px" }}
-                        value
+                        value={accountBankName}
                       />
                       <input
                         type="text"
