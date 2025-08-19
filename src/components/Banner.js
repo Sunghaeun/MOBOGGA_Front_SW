@@ -6,8 +6,10 @@ import apiClient from "../utils/apiClient";
 import top from "../assets/main/topTape.svg";
 import defaultImg from "../assets/main/default.svg";
 import left from "../assets/main/left.svg";
+// eslint-disable-next-line
 import leftHover from "../assets/main/leftHover.svg";
 import right from "../assets/main/right.svg";
+// eslint-disable-next-line
 import rightHover from "../assets/main/rightHover.svg";
 
 function Banner() {
