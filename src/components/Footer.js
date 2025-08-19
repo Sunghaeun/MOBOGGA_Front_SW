@@ -11,9 +11,9 @@ function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.firstContainer}>
-        <div>모보까소개</div>
+        {/* <div>모보까소개</div>
         <div>FAQ</div>
-        <div>문의</div>
+        <div>문의</div> */}
       </div>
 
       <div className={styles.secondContainer}>
@@ -24,8 +24,8 @@ function Footer() {
           </span>{" "}
           |{" "}
           <span>
-            <a href="mailto:mobogga.service@gmail.com">
-              메일: mobogga.service@gmail.com
+            <a href="mailto:moboggahandong@gmail.com">
+              메일: moboggahandong@gmail.com
             </a>
           </span>
         </p>

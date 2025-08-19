@@ -11,6 +11,8 @@ import NotEnteredModal from "../components/modal/NotEnteredModal";
 import EditCheckModal from "../components/modal/EditCheckModal";
 import PageOut from "../components/modal/PageOut";
 
+import CategoryDropdown from "../components/CategoryDropdown";
+
 import useAuthStore from "../stores/authStore";
 import apiClient from "../utils/apiClient";
 
@@ -125,31 +127,9 @@ function CreateRecruiting() {
       const preview = URL.createObjectURL(f);
       setData((prev) => ({ ...prev, photo: preview }));
     } else {
-      setData((prev) => ({ ...prev, photo: defaultImg })); 
+      setData((prev) => ({ ...prev, photo: defaultImg })); // 선택 취소 시 기본 프리뷰로
     }
   };
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const resp = await fetch(defaultImg);
-        const blob = await resp.blob();
-        const ext = blob.type?.split("/")[1] ?? "jpg";
-        const file = new File([blob], `default.${ext}`, {
-          type: blob.type || "image/jpeg",
-        });
-        if (!cancelled) setPhotoFile(file);
-      } catch (e) {
-        console.error("default poster preload failed", e);
-      } finally {
-        if (!cancelled) setPosterReady(true);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   // blob URL 정리
   useEffect(() => {
@@ -279,15 +259,17 @@ function CreateRecruiting() {
               <div className={styles.inputTitle}>
                 <span>카테고리</span><span className={styles.required}>*</span>
               </div>
-              <input
-                ref={setFieldRef("category")}
-                type="text"
-                name="category"
-                className={missing.has("category") ? styles.invalid : ""}
-                placeholder="카테고리"
-                value={data.category}
-                onChange={onChangeInput}
-              />
+                <div className="dropdown">
+                  <CategoryDropdown
+                    ref={setFieldRef("category")}
+                    name="category"
+                    value={data.category}
+                    onChange={onChangeInput}
+                    defaultValue="카테고리"
+                    options={["정기모집", "상시모집", "추가모집"]} 
+                    className={missing.has("category") ? styles.invalid : ""}
+                  />
+                </div>
             </div>
 
             {/* 모집기간 */}
@@ -323,10 +305,10 @@ function CreateRecruiting() {
               </div>
               <input
                 ref={setFieldRef("mandatorySemesters")}
-                type="text"
+                type="number"
                 name="mandatorySemesters"
                 className={missing.has("mandatorySemesters") ? styles.invalid : ""}
-                placeholder="필수학기(없으면 '없음')"
+                placeholder="필수학기(숫자만 입력 가능합니다. 없으면 '0')"
                 value={data.mandatorySemesters}
                 onChange={onChangeInput}
               />

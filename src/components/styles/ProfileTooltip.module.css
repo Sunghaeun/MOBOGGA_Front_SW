@@ -1,0 +1,95 @@
+.tooltip {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 100px;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  padding: 20px;
+  z-index: 1000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.tooltip::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #ffffff;
+}
+
+.header {
+  margin-bottom: 16px;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333333;
+  margin: 0;
+}
+
+.info {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.email {
+  font-size: 14px;
+  color: #666666;
+  margin-bottom: 8px;
+}
+
+.club {
+  font-size: 14px;
+  color: #333333;
+  margin-bottom: 4px;
+}
+
+.contact {
+  font-size: 14px;
+  color: #333333;
+  margin-bottom: 16px;
+}
+
+.profileButton {
+  width: 100%;
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+}
+
+.profileButton:hover {
+  background: #f8f8f8;
+  border-color: #999999;
+}
+
+.logout {
+  text-align: center;
+  font-size: 14px;
+  color: #888888;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  transition: color 0.2s ease;
+}
+
+.logout:hover {
+  color: #333333;
+  background: #f0f0f0;
+}

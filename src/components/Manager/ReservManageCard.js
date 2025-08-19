@@ -1,12 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import styles from "./styles/ReservManageCard.module.css";
 import showHolderBtn from "../../assets/manager/show_holder_btn.svg";
-import showEditBtn from "../../assets/manager/show_edit_btn.svg";
 import showDeleteBtn from "../../assets/manager/show_delete_btn.svg";
 import apiClient from "../../utils/apiClient";
+import Modal from "../Modal";
 
 function ReservManageCard({ data, onDeleted }) {
   const navigate = useNavigate();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
   if (!data) return null;
 
   const { id, scheduleId, poster, title, order, applyPeople, maxPeople } = data;
@@ -15,19 +18,7 @@ function ReservManageCard({ data, onDeleted }) {
     navigate(`/manager/holder/${scheduleId}`);
   };
 
-  const handleEditShow = () => {
-    navigate(`/edit/show/${id}`);
-  };
-
   const handleDeleteShow = async () => {
-    if (
-      !window.confirm(
-        "정말로 이 공연을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
-      )
-    ) {
-      return;
-    }
-
     // showId로 전체 공연(모든 스케줄 포함) 삭제
     const apiUrl = `/mypage/manager/show/${id}`;
     console.log("🔄 공연 삭제 API 요청:", apiUrl);
@@ -75,6 +66,19 @@ function ReservManageCard({ data, onDeleted }) {
     }
   };
 
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const confirmDelete = () => {
+    setIsDeleteModalOpen(false);
+    handleDeleteShow();
+  };
+
   return (
     <div className={styles.card}>
       <div className={styles.card_img_box}>
@@ -110,22 +114,34 @@ function ReservManageCard({ data, onDeleted }) {
             <div className={styles.card_btn_img_box}>
               <img
                 className={styles.card_btn}
-                src={showEditBtn}
-                onClick={() => handleEditShow()}
-                alt="공연 수정"
-              />
-            </div>
-            <div className={styles.card_btn_img_box}>
-              <img
-                className={styles.card_btn}
                 src={showDeleteBtn}
-                onClick={() => handleDeleteShow()}
+                onClick={openDeleteModal}
                 alt="공연 삭제"
               />
             </div>
           </div>
         </div>
       </div>
+
+      <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
+        <div className={styles.modal_content}>
+          <div className={styles.modal_top}>
+            정말로 이 공연을 삭제하시겠습니까?
+          </div>
+          <div className={styles.modal_con}>이 작업은 되돌릴 수 없습니다.</div>
+          <div className={styles.modal_Btns}>
+            <button
+              onClick={closeDeleteModal}
+              className={styles.modal_close_Btn}
+            >
+              취소
+            </button>
+            <button onClick={confirmDelete} className={styles.modal_ok_Btn}>
+              삭제
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
