@@ -116,6 +116,11 @@ function Landing() {
                 onClick={onClickGoogleStartBtn}
               />
             </div>
+            <div className={styles.login_caution}>
+              <div className={styles.caution}>
+                *한동대학교 이메일 계정으로 로그인해주세요.
+              </div>
+            </div>
           </div>
         </div>
       </>

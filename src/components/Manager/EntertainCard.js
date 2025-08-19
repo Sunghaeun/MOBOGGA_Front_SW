@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/ReservManageCard.module.css";
 import showEditBtn from "../../assets/manager/show_edit_btn.svg";
-import showDeleteBtn from "../../assets/manager/show_delete_btn.svg";
+// import showDeleteBtn from "../../assets/manager/show_delete_btn.svg";
 
 function EntertainCard({ data }) {
   const navigate = useNavigate();
@@ -40,12 +40,12 @@ function EntertainCard({ data }) {
               />
             </div>
             <div className={styles.card_btn_img_box}>
-              <img
+              {/* <img
                 className={styles.card_btn}
                 src={showDeleteBtn}
                 onClick={() => navigate(`/delete/entertain/${entertainId}`)}
                 alt="행사 삭제"
-              />
+              /> */}
             </div>
           </div>
         </div>

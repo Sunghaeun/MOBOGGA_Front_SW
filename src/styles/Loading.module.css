@@ -93,7 +93,7 @@
   align-items: center;
   justify-content: center;
   padding: 60px 40px;
-  color: #ff3d12;
+  color: var(--BLACK);
   font-size: 1.1rem;
   min-height: 200px;
   text-align: center;
@@ -116,8 +116,7 @@
   background: #ff3d12;
   color: #fff;
   border: none;
-  border-radius: 6px;
-  padding: 12px 24px;
+  padding: 12px 30px;
   cursor: pointer;
   font-weight: 600;
   font-size: 1rem;
@@ -125,18 +124,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 2px 4px rgba(255, 61, 18, 0.2);
 }
 
 .retryBtn:hover {
   background: #e6350f;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(255, 61, 18, 0.3);
-}
-
-.retryBtn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(255, 61, 18, 0.2);
 }
 
 /* 에러 상태 추가 버튼들 */

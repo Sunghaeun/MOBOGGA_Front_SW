@@ -3,13 +3,12 @@ import React, { useEffect, useState } from "react";
 import sendAccessTokenToBackend from "../api/sendAccessTokenToBackend";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/Loading.module.css";
-import ServerErrorModal from "../components/Mypage/ServerErrorModal";
+import loadingStyles from "../styles/Loading.module.css";
 
 const Loading = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   useEffect(() => {
     const handleOAuthCallback = async () => {
@@ -81,7 +80,6 @@ const Loading = () => {
       } catch (error) {
         console.error("OAuth 콜백 처리 중 에러:", error);
         setError(error.message);
-        setIsErrorModalOpen(true);
       } finally {
         setIsLoading(false);
       }
@@ -90,29 +88,48 @@ const Loading = () => {
     handleOAuthCallback();
   }, [navigate]);
 
-  const handleErrorModalClose = () => {
-    setIsErrorModalOpen(false);
-    navigate("/login");
-  };
-
   return (
-    <div id="loading">
-      {isLoading && <div className={styles.loading_text}>로딩 중...</div>}
+    <div id={styles.loading} className={loadingStyles.pageContainer}>
+      {isLoading && (
+        <div className={loadingStyles.loading}>
+          <div className={loadingStyles.loadingSpinner}></div>
+          <div className={loadingStyles.loadingText}>
+            로그인 처리 중입니다
+            <span className={loadingStyles.loadingDots}>...</span>
+          </div>
+          <div className={loadingStyles.loadingSubtext}>
+            잠시만 기다려주세요
+          </div>
+        </div>
+      )}
+
       {!isLoading && error && (
-        <div className={styles.error_text}>
-          {error}
-          <br />
-          <button onClick={() => navigate("/login")}>
+        <div className={loadingStyles.error}>
+          <div className={loadingStyles.errorIcon}>⚠️</div>
+          <div className={loadingStyles.errorMessage}>
+            {error.split("\n").map((line, idx) => (
+              <React.Fragment key={idx}>
+                {line
+                  .split(/(\*\*[^*]+\*\*)/)
+                  .map((part, i) =>
+                    part.startsWith("**") && part.endsWith("**") ? (
+                      <strong key={i}>{part.slice(2, -2)}</strong>
+                    ) : (
+                      part
+                    )
+                  )}
+                {idx !== error.split("\n").length - 1 && <br />}
+              </React.Fragment>
+            ))}
+          </div>
+          <button
+            onClick={() => navigate("/login")}
+            className={loadingStyles.retryBtn}
+          >
             로그인 페이지로 이동
           </button>
         </div>
       )}
-
-      <ServerErrorModal
-        isOpen={isErrorModalOpen}
-        onClose={handleErrorModalClose}
-        errorMessage={error}
-      />
     </div>
   );
 };

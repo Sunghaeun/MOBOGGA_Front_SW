@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: end;
   background-color: #eeeeee;
+  height: 100vh;
 }
 
 .words_box {
@@ -15,7 +16,7 @@
 }
 
 .words_img_box {
-  margin-bottom: 10%;
+  margin-bottom: 20%;
 }
 
 .google_start_btn_box {
@@ -23,9 +24,14 @@
 }
 
 .google_start_btn {
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
+}
+
+.caution {
+  color: red;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
 }
 
 /* 모바일 반응형 */
@@ -83,7 +89,6 @@
   }
 }
 
-
 /* comingsoon 디자인 */
 
 .overlay {
@@ -99,7 +104,7 @@
   align-items: center;
 }
 
-.overlayText{
+.overlayText {
   font-family: "Pretendard Variable";
   font-size: 5vw;
   font-style: normal;
@@ -107,11 +112,11 @@
 }
 
 .highlight {
-  color: #FF3D12; /* 브랜드 컬러 강조 */
+  color: #ff3d12; /* 브랜드 컬러 강조 */
   font-weight: 800;
 }
 
-.subText{
+.subText {
   font-size: 3vw !important;
   color: #333 !important; /* 서브 텍스트 색상 */
   margin-top: 10px;
