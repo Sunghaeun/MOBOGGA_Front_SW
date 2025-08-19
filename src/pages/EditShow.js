@@ -489,7 +489,7 @@ function EditShow() {
   return (
     <div>
       <div className={styles.CreateBody}>
-        <div className={styles.headText}>공연 새로 만들기</div>
+        <div className={styles.headText}>공연 수정하기</div>
         <div className={styles.Create_Container}>
           <div className={styles.Detail_Entire_Box}>
             {/* 포스터 업로드 */}
