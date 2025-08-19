@@ -29,27 +29,7 @@ function RecruitingDetail() {
     navigate(`/clubs/${clubId}`); // 동아리 상세 페이지로 이동
   };
 
-  const recruite = {
-    clubName: "MIC",
-    recruitingId: 1,
-    recruitingTitle: "MIC 31ST 남자 추가 리쿠르팅",
-    photo:
-      "https://postfiles.pstatic.net/MjAyMTA4MjFfMjU0/MDAxNjI5NTU3MTUwNDk0.NxjYFKCSiQyGqThwfLaKT8kTPABtS6U3K0Db4utl4LEg.oxYqflMZpVpQKxvwD-JpBaUGNQcs6y-GRWDbfbWVL3kg.JPEG.chooddingg/PHOTO_0092.JPG?type=w773",
-    startDate: "2025.03.23(일)",
-    endDate: "03.26(수)",
-    mandatorySemesters: 4,
-    field: "string",
-    eligibility:
-      "️✔️춤 추는 것을 좋아하고 관심이 있는 분\n✔️춤을 통해 하나님께 영광 올려드리는 '문화 사역'에 관심 있으신 분\n✔️한번도 춤을 춰보지 않았지만 차근차근 배워볼 용기와 끈기를 가지신 분\n❗단, 학번 상관 없이 필수 학기인 '연속 4학기 활동'이 가능하신 분!!\n️❗면접 날짜에 참여가 가능하신 분",
-    interviewDate: "3월 27일(목) 오후 7~8시",
-    location: "지하 연습실 (학관 퇴식구쪽)",
-    notice: "🔑간단한 춤 루틴 티칭 및 평가&심층 구술 면접",
-    managerInfo: "최새싹 010-9876-5432",
-    applicationUrl: "string",
-    content:
-      "안녕하세요 25학번 세워가는 세대 '뚝딱이' 여러분들! 한동대 학우 여러분! 춤으로 하나님께 영광 올려드리는 사역 단체이자 힙합 기반의 춤 동아리 MIC입니다!🕺 2025년 신입기수로 저희와 함께할 MIC31기를 모집합니다! \n\n*새내기가 아닌 타 학번 또한 지원 가능합니다!\n*모든 면접은 오프라인으로 진행되며 자세한 사항은 인스타 혹은 카카오 채팅을 통해 문의 바랍니다.",
-  };
-
+  
   const fetchData = async () => {
     try {
       setIsLoading(true);
@@ -188,6 +168,12 @@ function RecruitingDetail() {
                 </div>
                 <div className={styles.infos}>
                   <div className={styles.info_Box}>
+                    <span className={styles.fixed_Info}>카테고리</span>
+                    <span className={styles.variable_Info}>
+                      {recruiting?.category || "카테고리 정보 없음"}
+                    </span>
+                  </div>
+                  <div className={styles.info_Box}>
                     <span className={styles.fixed_Info}>모집기간</span>
                     <span className={styles.variable_Info}>
                       {recruiting?.dates || "날짜 정보 없음"}
@@ -203,18 +189,24 @@ function RecruitingDetail() {
                   </div>
                   <div className={styles.info_Box}>
                     <span className={styles.fixed_Info}>정모시간</span>
-                    <span className={styles.variable_Info}>{"없음"}</span>
+                    <span className={styles.variable_Info}>{recruiting?.meetingTime || "없음"}</span>
                   </div>
                   <div className={styles.info_Box}>
-                    <span className={styles.fixed_Info}>면접날짜</span>
+                    <span className={styles.fixed_Info}>활동내용</span>
                     <span className={styles.variable_Info}>
-                      {recruiting?.interviewDate || "인터뷰 날짜 정보 없음"}
+                      {recruiting?.content || "활동내용 정보 없음"}
+                    </span>
+                  </div>
+                  <div className={styles.info_Box}>
+                    <span className={styles.fixed_Info}>지원자격</span>
+                    <span className={styles.variable_Info}>
+                      {recruiting?.eligibility || "지원자격 없음"}
                     </span>
                   </div>
                   <div className={styles.info_Box}>
                     <span className={styles.fixed_Info}>면접안내</span>
                     <span className={styles.variable_Info}>
-                      {recruiting?.notice || "안내 정보 없음"}
+                      {recruiting?.notice || "면접안내 없음"}
                     </span>
                   </div>
                   <div className={styles.info_Box}>
