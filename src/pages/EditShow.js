@@ -812,7 +812,7 @@ function EditShow() {
 
           {/* 회차 테이블 */}
           <div className={styles.Each_show_All}>
-            <div className={styles.Each_shows}>공연 회차 만들기</div>
+            <div className={styles.Each_shows}>공연 회차 수정</div>
 
             <div className={styles.Each_shows_Name}>
               <div className={styles.form}>회차</div>
