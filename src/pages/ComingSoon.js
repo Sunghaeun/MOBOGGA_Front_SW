@@ -21,13 +21,19 @@ function ComingSoon() {
         <div className={styles.overlay}>
           <div className={styles.overlayText}>
             <div>
-              <span className={styles.highlight}>8월 20일</span> 모보까 오픈
-              예정 !<br />
+              <span className={styles.highlight}>모바일 버전</span> 준비
+              중입니다 !<br />
               <div className={styles.subText}>
-                공연 예매부터 동아리 리크루팅까지
+                현재 모바일 환경은 개발 중입니다
                 <br />
-                한동의 모든 동아리 소식을{" "}
-                <span className={styles.highlight}>한 곳에서</span> 만나보세요
+                PC 환경에서 모보까를 이용해주세요
+                <br />
+                <br />
+                <span style={{ fontSize: "14px", opacity: 0.8 }}>
+                  모바일 버전은{" "}
+                  <span className={styles.highlight}>9월 1일</span> 출시
+                  예정입니다:)
+                </span>
               </div>
             </div>
           </div>

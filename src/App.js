@@ -11,6 +11,7 @@ import {
   useServerStatus,
 } from "./contexts/ServerStatusContext";
 import useAuthStore from "./stores/authStore";
+import useIsMobile from "./hooks/useIsMobile";
 
 import Landing from "./pages/Landing";
 import ComingSoon from "./pages/ComingSoon"; // Assuming this is the correct path for the Coming Soon page
@@ -64,12 +65,25 @@ function AppContent() {
   const { isServerDown, retryConnection, closeModal, handleServerError } =
     useServerStatus();
   const { initialize } = useAuthStore();
+  const isMobile = useIsMobile();
 
   // Zustand 스토어 초기화
   useEffect(() => {
     console.log("🚀 앱 시작 - Zustand 스토어 초기화");
     initialize();
   }, [initialize]);
+
+  // 모바일 접속 시 ComingSoon 페이지 표시
+  if (isMobile) {
+    console.log("📱 모바일 접속 감지 - ComingSoon 페이지 표시");
+    return (
+      <BrowserRouter>
+        <div className="App">
+          <ComingSoon />
+        </div>
+      </BrowserRouter>
+    );
+  }
 
   const handleRetry = async () => {
     const success = await retryConnection();
@@ -85,7 +99,6 @@ function AppContent() {
         <Header />
         <Routes>
           <Route path="/" element={<Landing />} />
-          {/* <Route path="/" element={<ComingSoon />} /> */}
           <Route path="/main" element={<Main />} />
           <Route path="/show/:showId" element={<ShowDetail />} />
           <Route path="/entertain/:id" element={<EntertainDetail />} />
