@@ -555,6 +555,7 @@ function CreateShow() {
                     onChange={(e) =>
                       updateSchedule(show.id, "date", e.target.value)
                     }
+                    style={{ width: "11rem" }}
                   />
                 </div>
                 <div className={styles.form_detail_time}>
