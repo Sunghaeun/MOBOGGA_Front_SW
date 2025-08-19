@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import useAuthStore from "../stores/authStore";
+import apiClient from "../utils/apiClient";
 import styles from "./styles/AddInfo.module.css";
 import loadingStyles from "../styles/Loading.module.css";
 import LoginLogo from "../assets/LoginLogo.svg";
@@ -8,7 +9,7 @@ import Modal from "../components/Modal";
 
 function AddInfo() {
   const navigate = useNavigate();
-  const { isLoggedIn, isLoading: authLoading } = useAuth();
+  const { isLoggedIn, isLoading: authLoading } = useAuthStore();
 
   const [isLoading, setIsLoading] = useState(true);
   const [feedbackModal, setFeedbackModal] = useState({
@@ -38,25 +39,17 @@ function AddInfo() {
 
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
-          {
-            credentials: "include",
-          }
-        );
-
-        if (!response.ok)
-          throw new Error("사용자 정보를 불러오는데 실패했습니다.");
-
-        const userData = await response.json();
+        const response = await apiClient.get("/mypage/student/profile");
+        console.log("사용자 프로필 응답:", response.data);
 
         setFormData({
-          name: userData.name || "",
-          phoneNumber: userData.phoneNumber || "",
-          studentId: userData.studentId?.toString() || "",
+          name: response.data.name || "",
+          phoneNumber: response.data.phoneNumber || "",
+          studentId: response.data.studentId?.toString() || "",
         });
       } catch (error) {
         console.error("Error fetching user profile:", error);
+        // 사용자 정보를 불러올 수 없어도 계속 진행 (첫 로그인일 수 있음)
       } finally {
         setIsLoading(false);
       }
@@ -122,28 +115,23 @@ function AddInfo() {
 
   const saveProfile = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(formData),
-        }
-      );
+      console.log("프로필 저장 요청:", formData);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "저장에 실패했습니다.");
-      }
+      const response = await apiClient.put("/mypage/student/profile", formData);
+      console.log("프로필 저장 성공:", response.data);
 
       showModal("추가 정보 기입이 완료되었습니다.", () => navigate("/main"));
     } catch (error) {
       console.error("Error saving profile:", error);
-      showModal(error.message || "저장에 실패했습니다.");
+
+      let errorMessage = "저장에 실패했습니다.";
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      showModal(errorMessage);
     }
   };
 
