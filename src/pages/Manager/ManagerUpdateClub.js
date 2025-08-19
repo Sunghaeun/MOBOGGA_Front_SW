@@ -199,7 +199,7 @@ function ManagerUpdateClub() {
           instagram: userData.instaUrl || "",
           kakao: userData.url || "",
           youtube: userData.youtubeUrl || "",
-          url: userData.notionUrl || "",
+          url: userData.url || "",
           semester:
             userData.mandatorySemesters ||
             userData.mandatorySemester ||
@@ -212,7 +212,7 @@ function ManagerUpdateClub() {
           instagram: userData.instaUrl,
           kakao: userData.url,
           youtube: userData.youtubeUrl,
-          url: userData.notionUrl,
+          url: userData.url,
         });
       } catch (error) {
         console.error("Error fetching club profile:", error);
@@ -301,92 +301,72 @@ function ManagerUpdateClub() {
   };
 
   const saveProfile = async () => {
-    try {
-      console.log("=== SAVE PROFILE START ===");
-      console.log("현재 토큰 상태:", !!token);
-      console.log("현재 사용자 정보:", user);
+    if (!isLoggedIn || !isManagerUser) {
+      alert("로그인이 필요하거나 매니저 권한이 없습니다.");
+      navigate("/login");
+      return;
+    }
 
-      if (!isLoggedIn || !isManagerUser) {
-        console.log("권한 없음 - 로그인 페이지로 리다이렉트");
-        navigate("/login");
-        return;
-      }
+    // 서버에 보낼 데이터 구조
+    const requestData = {
+      content: formData.description,
+      instaUrl: formData.instagram,
+      kakaoUrl: formData.kakao,
+      youtubeUrl: formData.youtube,
+      url: formData.url,
+      mandatorySemesters: formData.semester,
+      image: formData.poster || formData.photo || formData.imageUrl || "",
+    };
 
-      console.log("=== SAVE PROFILE DATA ===");
-      console.log("Request body:", {
-        clubName: formData.clubName,
-        content: formData.description,
-        instaUrl: formData.instagram,
-        url: formData.kakao,
-        youtubeUrl: formData.youtube,
-        notionUrl: formData.url,
-        managerName: formData.userName,
-        phoneNumber: formData.phoneNum,
-        mandatorySemesters: formData.semester,
-      });
-      console.log(
-        "Selected file:",
-        selectedFile ? selectedFile.name : "No file"
+    const formDataToSend = new FormData();
+    formDataToSend.append(
+      "request",
+      new Blob([JSON.stringify(requestData)], { type: "application/json" })
+    );
+    if (selectedFile instanceof File) {
+      formDataToSend.append(
+        "image",
+        selectedFile,
+        selectedFile.name || "image.jpg"
       );
+    }
 
-      if (selectedFile) {
-        // 파일이 있으면 FormData 사용
-        console.log("Using FormData for file upload");
-        const formDataToSend = new FormData();
-
-        // JSON 데이터를 각각의 필드로 추가
-        formDataToSend.append("clubName", formData.clubName);
-        formDataToSend.append("content", formData.description);
-        formDataToSend.append("instaUrl", formData.instagram);
-        formDataToSend.append("url", formData.kakao);
-        formDataToSend.append("youtubeUrl", formData.youtube);
-        formDataToSend.append("notionUrl", formData.url);
-        formDataToSend.append("managerName", formData.userName);
-        formDataToSend.append("phoneNumber", formData.phoneNum);
-        formDataToSend.append("mandatorySemesters", formData.semester);
-        formDataToSend.append("poster", selectedFile);
-
-        console.log("FormData contents:");
-        for (let [key, value] of formDataToSend.entries()) {
-          console.log(key, value);
-        }
-
-        // apiClient에서 FormData 지원
-        const response = await apiClient.put(
-          "/mypage/manager/club",
-          formDataToSend,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log("Save response with file:", response.data);
+    console.log("== 최종 전송 JSON ==", JSON.stringify(requestData, null, 2));
+    console.log("== FormData entries ==");
+    for (const [k, v] of formDataToSend.entries()) {
+      if (v instanceof File) {
+        console.log(k, "-> File", { name: v.name, size: v.size, type: v.type });
+      } else if (k === "request" && v instanceof Blob) {
+        v.text().then((t) => console.log("request(json) ->", t));
       } else {
-        // 파일이 없으면 JSON으로 전송
-        console.log("Using JSON for update without file");
-        const requestData = {
-          clubName: formData.clubName,
-          content: formData.description,
-          instaUrl: formData.instagram,
-          url: formData.kakao,
-          youtubeUrl: formData.youtube,
-          notionUrl: formData.url,
-          poster: formData.imageUrl, // 기존 이미지 URL 유지
-          managerName: formData.userName,
-          phoneNumber: formData.phoneNum,
-          mandatorySemesters: formData.semester,
-        };
-
-        const response = await apiClient.put(
-          "/mypage/manager/club",
-          requestData
-        );
-        console.log("Save response without file:", response.data);
+        console.log(k, "->", v);
       }
+    }
+
+    try {
+      const response = await apiClient.put(
+        "/mypage/manager/club",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("저장 성공", response.data);
     } catch (error) {
-      console.error("Error saving profile:", error);
-      throw error; // 상위에서 처리하도록 다시 throw
+      console.error("저장 오류", error);
+      if (error?.response?.status === 401) {
+        console.log(
+          "[401] Authorization 헤더 유무/형식, 토큰 만료(exp)/aud/iss, 또는 권한(ROLE) 확인 필요"
+        );
+      }
+      alert(
+        `저장 실패: ${
+          error.response?.data?.message || error.message || "알 수 없는 오류"
+        }`
+      );
+      throw error;
     }
   };
 

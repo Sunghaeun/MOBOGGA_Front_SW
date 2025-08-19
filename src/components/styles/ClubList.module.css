@@ -49,6 +49,10 @@
   letter-spacing: 0.16px;
 }
 
+.inactiveCategory:hover {
+  background: var(--gray-02-footer-background, #EAEAEA);
+}
+
 .activeCategory {
   display: inline-flex;
   padding: 4px 24px;

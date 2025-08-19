@@ -166,6 +166,10 @@
   z-index: 50; /* 드롭다운보다 뒤에 위치하도록 조절 */
 }
 
+.inactiveCategory:hover {
+  background: var(--gray-02-footer-background, #EAEAEA);
+}
+
 @media (max-width: 440px) {
   .showlist {
     grid-template-columns: repeat(2, 1fr); 
