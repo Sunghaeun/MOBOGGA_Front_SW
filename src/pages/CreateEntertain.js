@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+// eslint-disable-next-line
+import React, { useState, useEffect, useRef } from "react";
+import useAuthStore from "../stores/authStore";
 import styles from "./styles/CreateEntertain.module.css";
+import apiClient from "../utils/apiClient"; // axios 대신 apiClient 사용// eslint-disable-next-line
+// eslint-disable-next-line
 import axios from "axios";
 // eslint-disable-next-line
 import Modal from "../components/Modal";
@@ -9,10 +13,14 @@ import KAKAO from "../assets/icons/kakao.svg";
 import YOUTUBE from "../assets/icons/youtube.svg";
 import NOTION from "../assets/icons/notion.svg";
 import LINK from "../assets/icons/linkicons.svg";
+
 function CreateEntertain() {
+  // eslint-disable-next-line
   const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
 
   const navigate = useNavigate();
+  // eslint-disable-next-line
+  const { isLoggedIn, isManager, token } = useAuthStore(); // zustand store 사용
 
   const [name, setName] = useState("");
   const [poster, setPoster] = useState(null);
@@ -31,6 +39,28 @@ function CreateEntertain() {
   const [noUrl, setNoUrl] = useState("");
   const [url, setUrl] = useState("");
 
+  const [nameModalOpen, setNameModalOpen] = useState(false);
+  const [imgModalOpen, setImgModalOpen] = useState(false);
+  const [locationModalOpen, setLocationModalOpen] = useState(false);
+  const [startDateModalOpen, setStartDateModalOpen] = useState(false);
+  const [endDateModalOpen, setEndDateModalOpen] = useState(false);
+  const [saveModalOpen, setSaveModalOpen] = useState(false);
+  const [failedModalOpen, setFailedModalOpen] = useState(false);
+  const [nameLimitModalOpen, setNameLimitModalOpen] = useState(false);
+  const [introLimitModalOpen, setIntroLimitModalOpen] = useState(false);
+  const [contentLimitModalOpen, setContentLimitModalOpen] = useState(false);
+
+  const nameOkRef = useRef(null);
+  const imgOkRef = useRef(null);
+  const locationOkRef = useRef(null);
+  const startDateOkRef = useRef(null);
+  const endDateOkRef = useRef(null);
+  const saveOkRef = useRef(null);
+  const failedOkRef = useRef(null);
+  const nameLimitOkRef = useRef(null);
+  const introLimitOkRef = useRef(null);
+  const contentLimitOkRef = useRef(null);
+
   const [previewURL, setPreviewURL] = useState(null);
 
   /* 사진 미리보기 기능 */
@@ -42,73 +72,26 @@ function CreateEntertain() {
     } else {
     }
   };
-  // eslint-disable-next-line
-  const [auth, setAuth] = useState([]);
-  // eslint-disable-next-line
-  const getAuth = async () => {
-    try {
-      // 요청 설정 준비
-      const requestConfig = {
-        withCredentials: true,
-      };
-
-      // 쿠키가 없고 토큰이 있으면 Authorization 헤더 추가
-      const token = window.tempToken;
-      if (!document.cookie.includes("session") && token) {
-        requestConfig.headers = {
-          Authorization: `Bearer ${token}`,
-        };
-      }
-
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/auth/me`,
-        requestConfig
-      );
-
-      console.log("Response from backend:", response.data);
-
-      setAuth(response.data);
-    } catch (error) {
-      console.error("Login failed with error: ", error);
-      throw error;
-    }
-  };
 
   //모든 입력란을 받아야 submit 가능 + 빈칸이 어디인지 알려줌
   const makeEntertain = async () => {
-    // 요청 설정 준비
-    const requestConfig = {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    };
-
-    // 쿠키가 없고 토큰이 있으면 Authorization 헤더 추가
-    const token = window.tempToken;
-    if (!document.cookie.includes("session") && token) {
-      requestConfig.headers.Authorization = `Bearer ${token}`;
-    }
-
-    if (
-      !requestConfig.headers.Authorization &&
-      !document.cookie.includes("session")
-    ) {
-      console.log("로그인 토큰이 없습니다");
+    // 권한 체크
+    if (!isLoggedIn || !isManager) {
+      alert("로그인이 필요하거나 권한이 없습니다.");
+      navigate("/login");
       return;
     }
 
-    // 필수 입력 체크
-    if (!name) return alert("제목을 입력해 주세요");
+    // 필수값 검증
+    if (!name) return setNameModalOpen(true);
     if (!poster || !(poster instanceof File)) {
       console.log("포스터 파일 확인:", poster);
-      return alert("행사 이미지를 선택해 주세요");
+      return setImgModalOpen(true);
     }
-    if (!location) return alert("장소를 입력해 주세요");
-    if (!startDate) return alert("시작날짜를 입력해 주세요");
-    if (!endDate) return alert("끝 날짜를 입력해 주세요");
+    if (!location) return setLocationModalOpen(true);
+    if (!startDate) return setStartDateModalOpen(true);
+    if (!endDate) return setEndDateModalOpen(true);
 
-    // 서버로 보낼 데이터
     const requestData = {
       name,
       introductionLetter,
@@ -128,56 +111,30 @@ function CreateEntertain() {
     };
 
     const formData = new FormData();
-    formData.append("poster", poster); // 파일
+    formData.append("poster", poster);
     formData.append(
       "request",
-      new Blob([JSON.stringify(requestData)], { type: "application/json" }) // JSON 데이터
+      new Blob([JSON.stringify(requestData)], { type: "application/json" })
     );
 
-    // 디버깅용 로그
-    console.log("폼 데이터 확인:");
-    for (let [key, value] of formData.entries()) {
-      if (key === "request") {
-        value.text().then((text) => console.log(`${key}:`, JSON.parse(text)));
-      } else if (value instanceof File) {
-        console.log(`${key}:`, value.name);
-      } else {
-        console.log(`${key}:`, value);
-      }
-    }
-
-    const urlCreate = `${API_BASE}/manager/entertain/create`;
-    console.log("POST URL:", urlCreate);
-
     try {
-      const response = await axios.post(
-        `https://jinjigui.info:443/manager/entertain/create`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      const response = await apiClient.post(
+        "/manager/entertain/create",
+        formData
       );
-      //새로 만든 행사에 바로 입장가능하게 해줌
-      const { publicId, showId, id } = response.data || {};
-      const detailId = publicId ?? showId ?? id; // 공개 상세에서 쓰는 id 우선
-      navigate(`/entertain/${detailId}`);
 
-      console.log("저장 성공", response.data);
-      if (response.data.status === "ok") {
-        // 문자열 "true"도 boolean true로 통과
-        alert("저장이 완료되었습니다.");
-        navigate("/");
+      const { publicId, showId, id } = response.data || {};
+      const detailId = publicId ?? showId ?? id;
+
+      if (detailId) {
+        navigate(`/entertain/${detailId}`);
       } else {
-        alert("저장은 되었지만, 문제가 발생했습니다.");
+        setSaveModalOpen(true);
+        navigate("/main");
       }
     } catch (error) {
       console.error("저장 오류", error);
-      alert(
-        "저장 실패",
-        `서버 오류:${error.response?.data?.message || "알 수 없는 오류"}`
-      );
+      setFailedModalOpen(true);
     }
   };
 
@@ -186,7 +143,7 @@ function CreateEntertain() {
     if (e.target.value.length <= 30) {
       setName(e.target.value);
     } else {
-      alert("30글자를 초과할 수 없습니다.");
+      setNameLimitModalOpen(true);
     }
   };
 
@@ -194,7 +151,7 @@ function CreateEntertain() {
     if (e.target.value.length <= 100) {
       setIntroductionLetter(e.target.value);
     } else {
-      alert("100자를 초과할 수 없습니다.");
+      setIntroLimitModalOpen(true);
     }
   };
 
@@ -203,7 +160,7 @@ function CreateEntertain() {
     if (e.target.value.length <= 300) {
       setEtcInfo(e.target.value);
     } else {
-      alert("300자를 초과할 수 없습니다.");
+      setContentLimitModalOpen(true);
     }
   };
 
@@ -444,31 +401,196 @@ function CreateEntertain() {
             </button>
           </div>
         </div>
-        {/* 제목 미입력 모달
+        {/* 제목 모달 */}
         <Modal
           className={null}
-          isOpen={titleModalOpen}
-          onClose={() => settitleModalOpen(false)}
+          isOpen={nameModalOpen}
+          onClose={() => setNameModalOpen(false)}
         >
-          <div className={styles.modal_top}>
-            <p>예매에 실패하였습니다.</p>
-          </div>
-          <div className={styles.modal_con}>
-            {!token ? "로그인 후 다시 이용해 주세요" : "다시 시도해주세요."}
-          </div>
+          <div className={styles.modal_con}>제목을 입력해주세요.</div>
           <div className={styles.modal_Btns}>
             <button
-              className={styles.modal_ok_Btn}
-              onClick={() => {
-                settitleModalOpen(false);
-                window.scrollTo(0, 0);
-                if (!token) navigate("/login");
-              }}
+              type="button"
+              ref={nameOkRef}
+              autoFocus
+              className={styles.modal_reserv_Btn}
+              onClick={() => setNameModalOpen(false)}
             >
               확인
             </button>
           </div>
-        </Modal> */}
+        </Modal>
+        {/* img 모달 */}
+        <Modal
+          className={null}
+          isOpen={imgModalOpen}
+          onClose={() => setImgModalOpen(false)}
+        >
+          <div className={styles.modal_con}>행사 포스터를 선택해주세요</div>
+          <div className={styles.modal_Btns}>
+            <button
+              type="button"
+              ref={imgOkRef}
+              autoFocus
+              className={styles.modal_reserv_Btn}
+              onClick={() => setImgModalOpen(false)}
+            >
+              확인
+            </button>
+          </div>
+        </Modal>
+        {/* 장소 모달 */}
+        <Modal
+          className={null}
+          isOpen={locationModalOpen}
+          onClose={() => setLocationModalOpen(false)}
+        >
+          <div className={styles.modal_con}>장소를 입력해주세요</div>
+          <div className={styles.modal_Btns}>
+            <button
+              type="button"
+              ref={locationOkRef}
+              autoFocus
+              className={styles.modal_reserv_Btn}
+              onClick={() => setLocationModalOpen(false)}
+            >
+              확인
+            </button>
+          </div>
+        </Modal>
+        {/* 시작날짜 모달 */}
+        <Modal
+          className={null}
+          isOpen={startDateModalOpen}
+          onClose={() => setStartDateModalOpen(false)}
+        >
+          <div className={styles.modal_con}>시작날짜를 입력해주세요</div>
+          <div className={styles.modal_Btns}>
+            <button
+              type="button"
+              ref={startDateOkRef}
+              autoFocus
+              className={styles.modal_reserv_Btn}
+              onClick={() => setStartDateModalOpen(false)}
+            >
+              확인
+            </button>
+          </div>
+        </Modal>
+        {/* 끝 날짜 모달 */}
+        <Modal
+          className={null}
+          isOpen={endDateModalOpen}
+          onClose={() => setEndDateModalOpen(false)}
+        >
+          <div className={styles.modal_con}>종료 날짜를 입력해주세요</div>
+          <div className={styles.modal_Btns}>
+            <button
+              type="button"
+              ref={endDateOkRef}
+              autoFocus
+              className={styles.modal_reserv_Btn}
+              onClick={() => setEndDateModalOpen(false)}
+            >
+              확인
+            </button>
+          </div>
+        </Modal>
+        {/* 저장 성공 모달 */}
+        <Modal
+          className={null}
+          isOpen={saveModalOpen}
+          onClose={() => setSaveModalOpen(false)}
+        >
+          <div className={styles.modal_con}>행사가 저장되었습니다.</div>
+          <div className={styles.modal_Btns}>
+            <button
+              type="button"
+              ref={saveOkRef}
+              autoFocus
+              className={styles.modal_reserv_Btn}
+              onClick={() => setSaveModalOpen(false)}
+            >
+              확인
+            </button>
+          </div>
+        </Modal>
+        {/* 저장 실패 모달 */}
+        <Modal
+          className={null}
+          isOpen={failedModalOpen}
+          onClose={() => setFailedModalOpen(false)}
+        >
+          <div className={styles.modal_con}>저장 실패</div>
+          <div className={styles.modal_Btns}>
+            <button
+              type="button"
+              ref={failedOkRef}
+              autoFocus
+              className={styles.modal_reserv_Btn}
+              onClick={() => setFailedModalOpen(false)}
+            >
+              확인
+            </button>
+          </div>
+        </Modal>
+        {/* 이름 길이 제한 모달 */}
+        <Modal
+          className={null}
+          isOpen={nameLimitModalOpen}
+          onClose={() => setNameLimitModalOpen(false)}
+        >
+          <div className={styles.modal_con}>30글자를 초과할 수 없습니다.</div>
+          <div className={styles.modal_Btns}>
+            <button
+              type="button"
+              ref={nameLimitOkRef}
+              autoFocus
+              className={styles.modal_reserv_Btn}
+              onClick={() => setNameLimitModalOpen(false)}
+            >
+              확인
+            </button>
+          </div>
+        </Modal>
+        {/* 소개란 길이 제한 모달 */}
+        <Modal
+          className={null}
+          isOpen={introLimitModalOpen}
+          onClose={() => setIntroLimitModalOpen(false)}
+        >
+          <div className={styles.modal_con}>100글자를 초과할 수 없습니다.</div>
+          <div className={styles.modal_Btns}>
+            <button
+              type="button"
+              ref={introLimitOkRef}
+              autoFocus
+              className={styles.modal_reserv_Btn}
+              onClick={() => setIntroLimitModalOpen(false)}
+            >
+              확인
+            </button>
+          </div>
+        </Modal>
+        {/* 공지 길이 제한 모달 */}
+        <Modal
+          className={null}
+          isOpen={contentLimitModalOpen}
+          onClose={() => setContentLimitModalOpen(false)}
+        >
+          <div className={styles.modal_con}>300글자를 초과할 수 없습니다.</div>
+          <div className={styles.modal_Btns}>
+            <button
+              type="button"
+              ref={contentLimitOkRef}
+              autoFocus
+              className={styles.modal_reserv_Btn}
+              onClick={() => setContentLimitModalOpen(false)}
+            >
+              확인
+            </button>
+          </div>
+        </Modal>
       </div>
     </div>
   );
