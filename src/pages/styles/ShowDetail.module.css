@@ -30,7 +30,7 @@
 }
 
 .intro_con {
-  width: 80rem;
+  max-width: 80rem;
 }
 
 .show_Intro {
@@ -41,9 +41,11 @@
 
 .show_Pic {
   height: 35rem;
+  aspect-ratio: 3 / 4;
   flex-shrink: 0;
   object-fit: contain;
   box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
 
   border: 8px solid var(--Gradient-01, #fbfbfb);
 }
@@ -51,6 +53,8 @@
 .intro_con {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
+  gap: 24px;
 }
 
 .intro_con_left {

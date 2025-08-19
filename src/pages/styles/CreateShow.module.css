@@ -15,17 +15,18 @@ input[type="number"] {
   flex-direction: column;
   height: auto;
   color: #000;
+  /* 참고 CSS 값으로 교체 */
   padding-bottom: 200px;
+  padding: 16px 128px 160px 128px;
 }
 
 .headText {
   display: flex;
+  /* 참고 CSS 값으로 교체 */
   align-self: flex-start;
-  margin-left: 10rem;
   margin-bottom: 2rem;
 
   color: var(--gray-10-typo-color, #121212);
-  /* Title 06 */
   font-family: "Pretendard Variable";
   font-size: 1.5rem;
   font-style: normal;
@@ -35,7 +36,6 @@ input[type="number"] {
 
 .Create_Container {
   border: 1px solid white;
-  margin-left: 10rem;
 }
 
 .show_content_Entire p {
@@ -44,6 +44,7 @@ input[type="number"] {
 
 .Detail_Entire_Box {
   display: flex;
+  width: 100%;
 }
 
 .SImage_Box {
@@ -95,6 +96,8 @@ input[type="number"] {
   flex-direction: column;
   justify-content: flex-start;
   margin: 0px 0px 10px 6.1rem;
+
+  width: 100%;
 }
 
 .input_Boxs {
@@ -107,7 +110,7 @@ input[type="number"] {
 .input_Boxs input,
 .input_Boxs select,
 .Start_To_End input {
-  padding: 15px;
+  padding: 0.25rem 0.5rem;
   margin: 7px;
   color: #000;
   font-size: 15px;
@@ -124,12 +127,17 @@ input[type="number"] {
   align-items: center;
 }
 
+.Each_show_All {
+  width: 100%;
+}
+
 /* 상세 공연 만들기 */
 .Each_shows {
   display: flex;
   align-items: flex-start;
   margin-top: 100px;
   padding: 20px 0;
+  width: 100%;
   color: var(--gray-10-typo-color, #121212);
   /* Title 06 */
   font-family: "Pretendard Variable";
@@ -140,6 +148,7 @@ input[type="number"] {
 }
 
 .Each_shows_Name {
+  width: 100%;
   padding-top: 15px;
   padding-bottom: 15px;
   border-bottom: 1px solid #fff;
@@ -153,6 +162,7 @@ input[type="number"] {
 
 .runtime_shows input {
   display: flex;
+  width: 3rem;
 }
 .Detail_show {
   padding-top: 15px;
@@ -162,16 +172,16 @@ input[type="number"] {
 
 .Each_shows_Name,
 .Detail_show {
-  width: 63.75rem;
+  width: 100%;
   display: grid;
   grid-template-columns:
-    7.5rem /* 회차 */
-    11rem /* 날짜 */
-    11rem /* 시간 */
-    8rem /* 구매제한매수 */
-    8rem /* 가격 */
-    6rem /*회차추가*/
-    6rem; /* 삭제 */
+    7rem /* 회차 */
+    14rem /* 날짜 */
+    14rem /* 시간 */
+    9rem /* 구매제한매수 */
+    9rem /* 가격 */
+    8rem /*회차추가*/
+    8rem; /* 삭제 */
   gap: 1rem;
   padding: 15px 0;
   align-items: center;
@@ -185,14 +195,19 @@ input[type="number"] {
 
 #form_detail_date {
   outline: none;
-  width: 11rem;
+  width: 45%;
   height: 2.25rem;
   border: 1px solid var(--gray-10-typo-color, #121212);
 }
 
-#form_detail_time {
-  outline: none;
-  width: 100px;
+.form_detail_time {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 세로 중앙 정렬 */
+}
+
+.unit {
+  margin: 0 0.25rem; /* 시, 분 글자 좌우 간격 */
 }
 
 .Detail_show input {
@@ -380,21 +395,25 @@ input[type="number"] {
 }
 
 .info_Box {
-  display: flex;
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
   gap: 20px;
   font-size: 1rem;
   line-height: 1.6;
-  align-items: center;
-  justify-items: left;
+  justify-items: start;
   margin-bottom: 1.25rem;
+  justify-items: stretch; /* 두 번째 칸이 늘어나게 */
+  align-items: center;
 }
 
 .fixed_Info {
-  width: 4rem;
+  display: flex;
+  padding-top: 2px;
+  width: 5rem;
+  height: 2.75rem;
   flex-shrink: 0;
   font-weight: bold;
   color: var(--Point-03, #8e3dff);
-  /* Body 02 _ M */
   font-family: "Pretendard Variable";
   font-size: 1.125rem;
   font-style: normal;
@@ -408,30 +427,41 @@ input[type="number"] {
 
 .variable_Info {
   color: var(--Gray-03, #ccc);
-  /* Body 03 _ R */
   font-family: "Pretendard Variable";
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
   line-height: 1.6875rem; /* 168.75% */
-  white-space: pre-wrap; /* 줄바꿈 유지 */
-  align-items: center;
+  white-space: pre-wrap;
+  width: 100%;
+  min-width: 0;
 }
 .variable_Info > input,
 .variable_Info > textarea,
 .bank > input,
 .manager > input {
-  padding: 0rem 0.75rem;
+  width: 100%;
+  /* 참고 CSS로 교체 */
+  padding: 0.5rem 0.75rem;
   font-size: 16px;
   line-height: 1.5;
   font-family: inherit;
   border: 1px solid var(--gray-10-typo-color, #ccc);
   box-sizing: border-box;
+  outline-color: #000;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 /* input 높이 */
 .variable_Info > input {
   height: 2.75rem;
+}
+.variable_Info > textarea {
+  height: 6rem;
+  resize: none;
+  overflow-y: auto;
 }
 
 /* textarea 고정 + 스크롤바 숨김 */
@@ -445,6 +475,14 @@ input[type="number"] {
 }
 .variable_Info > textarea {
   scrollbar-width: none; /* Firefox */
+}
+
+.variable_Info select {
+  height: 2.75rem;
+  display: flex;
+  justify-content: left;
+  padding: 0.25rem 0.5rem;
+  font-size: 15px;
 }
 
 .bank,
