@@ -1,5 +1,5 @@
 .footer{
-  height: 200px;
+  height: 100%;
   flex-shrink: 0;
 
   background: #EAEAEA;
@@ -76,3 +76,4 @@
   color: var(--Gray-06, #636363);
   font-size: 11px;
 }
+
