@@ -21,6 +21,25 @@
   margin-bottom: 200px;
 }
 
+.show_Left {
+  display: flex;
+  flex-direction: column;
+}
+
+.sns_icons {
+  display: flex;
+  justify-content: left;
+  gap: 16px;
+  margin-top: 24px;
+  margin-bottom: 20px;
+}
+
+.sns_icon {
+  height: 1.5rem;
+  flex-shrink: 0;
+  aspect-ratio: 1/1;
+}
+
 .intro_Info {
   display: flex;
   flex-direction: column;

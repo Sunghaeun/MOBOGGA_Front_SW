@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import styles from "./styles/Entertain.module.css";
 
 import BACK from "../assets/ShowBackButton.svg";
+import INSTA from "../assets/icons/instagram.svg";
+import YOUTUBE from "../assets/icons/youtube.svg";
+import KAKAO from "../assets/icons/kakao.svg";
+import LINK from "../assets/icons/linkicons.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -93,11 +97,70 @@ function EntertainDetail() {
           <div className={styles.intro_Info}>
             <div className={styles.show_Top}>행사 정보</div>
             <div className={styles.intro_con}>
-              <img
-                src={entertainList?.photo || "https://via.placeholder.com/150"}
-                className={styles.show_Pic}
-                alt="show_IMG"
-              />
+              <div className={styles.show_Left}>
+                <img
+                  src={
+                    entertainList?.photo || "https://via.placeholder.com/150"
+                  }
+                  className={styles.show_Pic}
+                  alt="show_IMG"
+                />
+
+                <div className={styles.sns_icons}>
+                  {entertainList?.instaUrl && (
+                    <a
+                      href={entertainList.instaUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <img
+                        className={styles.sns_icon}
+                        src={INSTA}
+                        alt="sns_icon"
+                      />
+                    </a>
+                  )}
+                  {entertainList?.youtubeUrl && (
+                    <a
+                      href={entertainList.youtubeUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <img
+                        className={styles.sns_icon}
+                        src={YOUTUBE}
+                        alt="sns_icon"
+                      />
+                    </a>
+                  )}
+                  {entertainList?.kakaoUrl && (
+                    <a
+                      href={entertainList.kakaoUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <img
+                        className={styles.sns_icon}
+                        src={KAKAO}
+                        alt="sns_icon"
+                      />
+                    </a>
+                  )}
+                  {entertainList?.url && (
+                    <a
+                      href={entertainList.url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <img
+                        className={styles.sns_icon}
+                        src={LINK}
+                        alt="sns_icon"
+                      />
+                    </a>
+                  )}
+                </div>
+              </div>
 
               <div className={styles.show_Info}>
                 <div className={styles.title}>
