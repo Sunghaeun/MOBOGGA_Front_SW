@@ -4,6 +4,7 @@ import styles from "./styles/CreateShow.module.css";
 import DELETE from "../assets/button_delete.svg";
 import useAuthStore from "../stores/authStore";
 import apiClient from "../utils/apiClient";
+import POSTER from "../assets/Poster.svg";
 import Dropdown from "../components/Dropdown";
 
 function CreateShow() {
@@ -269,7 +270,7 @@ function CreateShow() {
           <div className={styles.Detail_Entire_Box}>
             <div className={styles.SImage_Box_Entire}>
               <div className={styles.SImage_Box}>
-                <img src={posterPreview || ""} alt="미리보기" />
+                <img src={POSTER || ""} alt="미리보기" />
               </div>
               <label className={styles.inputFileLabel} htmlFor="inputFile">
                 이미지 추가
@@ -398,7 +399,7 @@ function CreateShow() {
                     <div className={styles.bank}>
                       <Dropdown
                         onChange={(e) => setAccountBankName(e.target.value)}
-                        defaultValue="OO은행"
+                        defaultValue="은행명"
                         options={[
                           "신한",
                           "농협",
@@ -414,6 +415,7 @@ function CreateShow() {
                           "신협",
                         ]}
                         style={{ width: "15rem", height: "36px" }}
+                        value
                       />
                       <input
                         type="text"
@@ -709,7 +711,7 @@ function CreateShow() {
 
           <div>
             <button className={styles.make_show_submit} onClick={makeShow}>
-              공연 만들기
+              생성하기
             </button>
           </div>
         </div>

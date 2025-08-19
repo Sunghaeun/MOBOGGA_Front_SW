@@ -44,6 +44,14 @@ function EditShow() {
   const [posterPreview, setPosterPreview] = useState(null);
   const [qrPreview, setQrPreview] = useState(null);
 
+  const splitTime = (t = "") => {
+    const [hh = "00", mm = "00"] = t.split(":");
+    return { hh: hh.padStart(2, "0"), mm: mm.padStart(2, "0") };
+  };
+
+  const joinTime = (hh = "00", mm = "00") =>
+    `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}:00`;
+
   const [shows, setShows] = useState([
     {
       id: Date.now(),
@@ -63,6 +71,23 @@ function EditShow() {
           ? { ...show, [key]: value, orderIndex: index + 1 }
           : show
       )
+    );
+  };
+
+  const setShowTimePart = (rowId, part, val) => {
+    setShows((prev) =>
+      prev.map((s) => {
+        if (s.id !== rowId) return s;
+        const nextHour = part === "hour" ? val : s.timeHour ?? "00";
+        const nextMin = part === "minute" ? val : s.timeMinute ?? "00";
+        const nextHHMM = `${nextHour}:${nextMin}`;
+        return {
+          ...s,
+          timeHour: nextHour,
+          timeMinute: nextMin,
+          time: `${nextHHMM}:00`, // 서버 전송용 규격 "HH:mm:ss"
+        };
+      })
     );
   };
 
@@ -228,21 +253,29 @@ function EditShow() {
 
       const mapped =
         list.length > 0
-          ? list.map((s, i) => ({
-              id: s.id ?? Date.now() + i,
-              orderIndex: s.orderIndex ?? i + 1,
-              date: s.date ?? "",
-              time: (s.time ?? "").slice(0, 5), // "HH:mm:ss" -> "HH:mm"
-              cost: s.cost != null ? String(s.cost) : "",
-              maxTicket: s.maxTicket != null ? Number(s.maxTicket) : 0,
-              maxPeople: s.maxPeople != null ? Number(s.maxPeople) : 0,
-            }))
+          ? list.map((s, i) => {
+              const hhmm = (s.time ?? "").slice(0, 5); // "HH:mm"
+              const [hh = "00", mm = "00"] = hhmm.split(":");
+              return {
+                id: s.id ?? Date.now() + i,
+                orderIndex: s.orderIndex ?? i + 1,
+                date: s.date ?? "",
+                time: hhmm, // 원본 유지
+                timeHour: hh, // 화면 표시용
+                timeMinute: mm, // 화면 표시용
+                cost: s.cost != null ? String(s.cost) : "",
+                maxTicket: s.maxTicket != null ? Number(s.maxTicket) : 0,
+                maxPeople: s.maxPeople != null ? Number(s.maxPeople) : 0,
+              };
+            })
           : [
               {
                 id: Date.now(),
                 orderIndex: 1,
                 date: "",
-                time: "",
+                time: "", // 비어있을 때도 화면용 기본값 채워두면 편함
+                timeHour: "00",
+                timeMinute: "00",
                 cost: "",
                 maxTicket: 1,
                 maxPeople: 100,
@@ -495,13 +528,7 @@ function EditShow() {
             {/* 포스터 업로드 */}
             <div className={styles.SImage_Box_Entire}>
               <div className={styles.SImage_Box}>
-                <img
-                  src={
-                    posterPreview ||
-                    "https://via.placeholder.com/300x400?text=Poster"
-                  }
-                  alt="포스터 미리보기"
-                />
+                <img src={posterPreview} alt="포스터 미리보기" />
               </div>
               <label className={styles.inputFileLabel} htmlFor="posterFile">
                 이미지 추가
@@ -632,19 +659,26 @@ function EditShow() {
                   </span>
                   <span className={styles.variable_Info}>
                     <div className={styles.bank}>
-                      <select
+                      <Dropdown
                         onChange={(e) => setAccountBankName(e.target.value)}
+                        defaultValue="은행명"
+                        options={[
+                          "신한",
+                          "농협",
+                          "하나",
+                          "수협",
+                          "우리",
+                          "토스",
+                          "카카오",
+                          "국민",
+                          "기업",
+                          "우체국",
+                          "새마을금고",
+                          "신협",
+                        ]}
+                        style={{ width: "15rem", height: "36px" }}
                         value={accountBankName}
-                        style={{ width: "8rem" }}
-                      >
-                        <option value="">OO은행</option>
-                        <option value="농협">농협</option>
-                        <option value="하나">하나</option>
-                        <option value="신한">신한</option>
-                        <option value="현대">현대</option>
-                        <option value="카카오">카카오</option>
-                        <option value="토스">토스</option>
-                      </select>
+                      />
                       <input
                         type="text"
                         placeholder="'-'없이 숫자만 입력"
@@ -790,108 +824,26 @@ function EditShow() {
 
                 <div className={styles.form_detail_time}>
                   <Dropdown
-                    defaultValue={"00"}
-                    options={[
-                      "00",
-                      "01",
-                      "02",
-                      "03",
-                      "04",
-                      "05",
-                      "06",
-                      "07",
-                      "08",
-                      "09",
-                      "10",
-                      "11",
-                      "12",
-                      "13",
-                      "14",
-                      "15",
-                      "16",
-                      "17",
-                      "18",
-                      "19",
-                      "20",
-                      "21",
-                      "22",
-                      "23",
-                    ]}
+                    defaultValue="00"
+                    options={Array.from({ length: 24 }, (_, i) =>
+                      String(i).padStart(2, "0")
+                    )}
                     style={{ width: "3.75rem" }}
-                    value={show.time || ""}
+                    value={show.timeHour ?? "00"}
                     onChange={(e) =>
-                      updateSchedule(show.id, "time", e.target.value)
+                      setShowTimePart(show.id, "hour", e.target.value)
                     }
                   />
                   <span className={styles.unit}>시</span>
                   <Dropdown
-                    defaultValue={"00"}
-                    options={[
-                      "00",
-                      "01",
-                      "02",
-                      "03",
-                      "04",
-                      "05",
-                      "06",
-                      "07",
-                      "08",
-                      "09",
-                      "10",
-                      "11",
-                      "12",
-                      "13",
-                      "14",
-                      "15",
-                      "16",
-                      "17",
-                      "18",
-                      "19",
-                      "20",
-                      "21",
-                      "22",
-                      "23",
-                      "24",
-                      "25",
-                      "26",
-                      "27",
-                      "28",
-                      "29",
-                      "30",
-                      "31",
-                      "32",
-                      "33",
-                      "34",
-                      "35",
-                      "36",
-                      "37",
-                      "38",
-                      "39",
-                      "40",
-                      "41",
-                      "42",
-                      "43",
-                      "44",
-                      "45",
-                      "46",
-                      "47",
-                      "48",
-                      "49",
-                      "50",
-                      "51",
-                      "52",
-                      "53",
-                      "54",
-                      "55",
-                      "56",
-                      "57",
-                      "58",
-                      "59",
-                    ]}
+                    defaultValue="00"
+                    options={Array.from({ length: 60 }, (_, i) =>
+                      String(i).padStart(2, "0")
+                    )}
                     style={{ width: "3.75rem" }}
-                    value={show.time || ""}
+                    value={show.timeMinute ?? "00"}
                     onChange={(e) =>
-                      updateSchedule(show.id, "time", e.target.value)
+                      setShowTimePart(show.id, "minute", e.target.value)
                     }
                   />
                   <span className={styles.unit}>분</span>
@@ -942,7 +894,7 @@ function EditShow() {
 
           <div>
             <button className={styles.make_show_submit} onClick={updateShow}>
-              공연 수정하기
+              수정하기
             </button>
           </div>
         </div>
