@@ -1,8 +1,10 @@
+/* eslint-disable */
 import React from "react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import styles from "./styles/Header.module.css";
+import ProfileTooltip from "./ProfileTooltip";
 
 import moboggaLogo from "../assets/Logo.svg";
 import header1 from "../assets/header/1.svg";
@@ -18,6 +20,7 @@ function Header() {
   const { auth, isLoggedIn, isLoading, isManager } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [showProfileTooltip, setShowProfileTooltip] = useState(false);
 
   const toggleSide = () => {
     setIsOpen(true);
@@ -51,6 +54,20 @@ function Header() {
       console.log("일반 사용자로 인식 - /mypage로 이동");
       navigate("/mypage");
     }
+  };
+
+  // 프로필 툴팁 핸들러
+  const handleProfileMouseEnter = () => {
+    setShowProfileTooltip(true);
+  };
+
+  const handleProfileMouseLeave = () => {
+    setShowProfileTooltip(false);
+  };
+
+  const handleTooltipClose = () => {
+    setShowProfileTooltip(false);
+    handleProfileClick();
   };
   return (
     <header className={styles.header}>
@@ -159,8 +176,19 @@ function Header() {
         </div>
 
         {isLoggedIn && auth ? (
-          <div className={styles.manager_btn} onClick={handleProfileClick}>
+          <div
+            className={styles.manager_btn}
+            onClick={handleProfileClick}
+            onMouseEnter={handleProfileMouseEnter}
+            onMouseLeave={handleProfileMouseLeave}
+            style={{ position: "relative" }}
+          >
             <img src={profile_btn} alt="마이페이지" />
+            {/* <ProfileTooltip
+              auth={auth}
+              isVisible={showProfileTooltip}
+              onClose={handleTooltipClose}
+            /> */}
           </div>
         ) : location.pathname !== "/login" ? (
           <div className={styles.login} onClick={() => navigate("/login")}>

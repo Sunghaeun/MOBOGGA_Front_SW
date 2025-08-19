@@ -84,8 +84,8 @@ function AppContent() {
       <div className="App">
         <Header />
         <Routes>
-          {/* <Route path="/" element={<Landing />} /> */}
-          <Route path="/" element={<ComingSoon />} />
+          <Route path="/" element={<Landing />} />
+          {/* <Route path="/" element={<ComingSoon />} /> */}
           <Route path="/main" element={<Main />} />
           <Route path="/show/:showId" element={<ShowDetail />} />
           <Route path="/entertain/:id" element={<EntertainDetail />} />
