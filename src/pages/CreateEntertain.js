@@ -11,8 +11,8 @@ import Modal from "../components/Modal";
 import INSTA from "../assets/icons/instagram.svg";
 import KAKAO from "../assets/icons/kakao.svg";
 import YOUTUBE from "../assets/icons/youtube.svg";
-import NOTION from "../assets/icons/notion.svg";
 import LINK from "../assets/icons/linkicons.svg";
+import Dropdown from "../components/Dropdown";
 
 function CreateEntertain() {
   // eslint-disable-next-line
@@ -36,7 +36,6 @@ function CreateEntertain() {
   const [inUrl, setInUrl] = useState("");
   const [kakaUrl, setKakaUrl] = useState("");
   const [youUrl, setYouUrl] = useState("");
-  const [noUrl, setNoUrl] = useState("");
   const [url, setUrl] = useState("");
 
   const [nameModalOpen, setNameModalOpen] = useState(false);
@@ -106,7 +105,6 @@ function CreateEntertain() {
       inUrl,
       kakaUrl,
       youUrl,
-      noUrl,
       url,
     };
 
@@ -190,7 +188,9 @@ function CreateEntertain() {
               <div className={styles.infos}>
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
-                    <span className={styles.info_txt}>제목</span>
+                    <span className={styles.info_txt}>
+                      제목<span className={styles.required}>*</span>
+                    </span>
                   </span>
                   <span className={styles.variable_Info}>
                     <input
@@ -198,20 +198,21 @@ function CreateEntertain() {
                       placeholder="행사 이름(공백포함 최대 30자까지 작성 가능합니다.)"
                       value={name}
                       onChange={handlename}
-                      style={{ width: "27rem" }}
                     />
                   </span>
                 </div>
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
-                    <span className={styles.info_txt}>소개글</span>
+                    <span className={styles.info_txt}>
+                      소개글<span className={styles.required}>*</span>
+                    </span>
                   </span>
                   <span className={styles.variable_Info}>
                     <textarea
                       type="text"
                       placeholder={`행사에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
                       onChange={handleIntro}
-                      style={{ height: "6rem", width: "27rem" }}
+                      style={{ height: "6rem" }}
                     />
                   </span>
                 </div>
@@ -220,14 +221,17 @@ function CreateEntertain() {
                     <span className={styles.info_txt}>카테고리</span>
                   </span>
                   <span className={styles.variable_Info}>
-                    <select onChange={(e) => setCategory(e.target.value)}>
-                      <option value="">선택</option>
-                      <option value="공연">공연</option>
-                      <option value="체험">체험</option>
-                      <option value="스트릿공연">스트릿공연</option>
-                      <option value="먹거리">먹거리</option>
-                      <option value="예배">예배</option>
-                    </select>
+                    <Dropdown
+                      onChange={(e) => setCategory(e.target.value)}
+                      defaultValue="카테고리"
+                      options={[
+                        "카테고리",
+                        "체험",
+                        "스트릿공연",
+                        "먹거리",
+                        "예배",
+                      ]}
+                    />
                   </span>
                 </div>
                 <div className={styles.info_Box}>
@@ -240,22 +244,23 @@ function CreateEntertain() {
                       placeholder="진행 장소"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                      style={{ width: "27rem" }}
                     />
                   </span>
                 </div>
                 <div className={styles.info_Box}>
-                  <span className={styles.fixed_Info}>
-                    <span className={styles.info_txt}>날짜</span>
-                  </span>
-                  <span className={styles.variable_Info}>
+                  <div className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>
+                      날짜<span className={styles.required}>*</span>
+                    </span>
+                  </div>
+                  <div className={styles.variable_Info}>
                     <div className={styles.form_detail_date_2}>
                       <input
                         id={styles.form_detail_date}
                         type="date"
                         onChange={(e) => setStartDate(e.target.value)}
                       />
-                      ~
+                      {"     "}~{"     "}
                       <input
                         id={styles.form_detail_date}
                         type="date"
@@ -265,7 +270,7 @@ function CreateEntertain() {
                     <div className={styles.smallInfo}>
                       하루만 진행할 경우 같은 날짜로 선택해주세요
                     </div>
-                  </span>
+                  </div>
                 </div>
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
@@ -276,41 +281,47 @@ function CreateEntertain() {
                       type="text"
                       placeholder={`시간 입력`}
                       onChange={(e) => setTimeList(e.target.value)}
-                      style={{ width: "27rem" }}
                     />
                   </span>
                 </div>
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
-                    <span className={styles.info_txt}>담당자</span>
+                    <span className={styles.info_txt}>
+                      담당자<span className={styles.required}>*</span>
+                    </span>
                   </span>
-                  <span className={styles.variable_Info}>
-                    <div className={styles.manager}>
-                      <input
-                        type="text"
-                        placeholder="이름"
-                        style={{ width: "4.75rem" }}
-                        onChange={(e) => setManager(e.target.value)}
-                      />
-                      <input
-                        type="text"
-                        placeholder="연락처(전화번호 혹은 이메일)"
-                        style={{ width: "21rem" }}
-                        onChange={(e) => setManagerPhone(e.target.value)}
-                      />
-                    </div>
+                  <span
+                    className={styles.variable_Info}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "23% 74%",
+                    }}
+                  >
+                    <input
+                      type="text"
+                      placeholder="이름"
+                      onChange={(e) => setManager(e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      placeholder="전화번호"
+                      onChange={(e) => setManagerPhone(e.target.value)}
+                      style={{ marginLeft: "1rem" }}
+                    />
                   </span>
                 </div>
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
-                    <span className={styles.info_txt}>기타정보</span>
+                    <span className={styles.info_txt}>
+                      기타정보<span className={styles.required}>*</span>
+                    </span>
                   </span>
                   <span className={styles.variable_Info}>
                     <textarea
                       type="text"
                       placeholder={`상세일정, 가격, 예약 방법 등 추가 정보 입력\n(공백 포함 최대 500자까지 입력 가능합니다.)`}
                       onChange={handleContent}
-                      style={{ width: "27rem", height: "16rem" }}
+                      style={{ height: "26rem" }}
                     />
                   </span>
                 </div>
@@ -327,7 +338,6 @@ function CreateEntertain() {
                         <input
                           type="text"
                           placeholder="인스타그램 링크 입력"
-                          style={{ width: "22rem" }}
                           className={styles.sns_link}
                           onChange={(e) => setInUrl(e.target.value)}
                         ></input>
@@ -341,7 +351,6 @@ function CreateEntertain() {
                         <input
                           type="text"
                           placeholder="카카오톡 오픈채팅방 또는 채널 링크 입력"
-                          style={{ width: "22rem" }}
                           className={styles.sns_link}
                           onChange={(e) => setKakaUrl(e.target.value)}
                         ></input>
@@ -355,23 +364,8 @@ function CreateEntertain() {
                         <input
                           type="text"
                           placeholder="유튜브 링크 입력"
-                          style={{ width: "22rem" }}
                           className={styles.sns_link}
                           onChange={(e) => setYouUrl(e.target.value)}
-                        ></input>
-                      </span>
-                    </div>
-                    <div className={styles.sns}>
-                      <span className={styles.sns_icon}>
-                        <img src={NOTION} alt="sns_icon" />
-                      </span>
-                      <span className={styles.variable_Info}>
-                        <input
-                          type="text"
-                          placeholder="노션(Notion) 링크 입력"
-                          style={{ width: "22rem" }}
-                          className={styles.sns_link}
-                          onChange={(e) => setNoUrl(e.target.value)}
                         ></input>
                       </span>
                     </div>
@@ -383,7 +377,6 @@ function CreateEntertain() {
                         <input
                           type="text"
                           placeholder="구글 폼, 페이스북 등의 링크 입력"
-                          style={{ width: "22rem" }}
                           className={styles.sns_link}
                           onChange={(e) => setUrl(e.target.value)}
                         ></input>
