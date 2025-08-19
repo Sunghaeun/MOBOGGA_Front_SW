@@ -200,10 +200,8 @@ function CreateShow() {
       if (detailId) {
         navigate(`/show/${detailId}`);
       } else {
-        alert(
-          "생성은 성공했지만 상세 ID가 응답에 없습니다. 메인으로 이동합니다."
-        );
         navigate("/main");
+        window.scrollTo(0, 0);
       }
     } catch (error) {
       console.error("저장 오류", error);

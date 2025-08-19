@@ -30,7 +30,7 @@
 }
 
 .intro_con {
-  width: 80rem;
+  max-width: 80rem;
 }
 
 .show_Intro {
@@ -51,6 +51,8 @@
 .intro_con {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
+  gap: 24px;
 }
 
 .intro_con_left {

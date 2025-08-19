@@ -1,0 +1,83 @@
+/* 드롭다운 전체 래퍼 */
+.selectWrapper {
+  position: relative;
+  width: 6rem; /* 원하는 너비 */
+}
+
+/* 닫힌 박스(버튼 역할) */
+.selectBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+
+  height: 2.25rem;
+  width: 100%;
+
+  border: 1px solid var(--Gray-03, #ccc);
+  background: #fff;
+
+  font: var(--BODY03);
+}
+
+.selectBox.open,
+.selectBox.selected {
+  border: 1px solid var(--gray-10-typo-color, #121212);
+  color: #121212;
+}
+/* 펼쳐지는 옵션 영역: selectBox 바로 아래에 딱 붙이기 */
+.optionList {
+  position: absolute;
+  top: 100%; /* 박스 바로 아래 */
+  left: 0;
+  right: 0; /* selectBox와 같은 너비 */
+  display: none;
+  width: 100%;
+
+  background: #fff;
+  border: 1px solid var(--gray-10-typo-color, #121212);
+  border-top: none; /* 위쪽 라인은 공통 경계로 겹치니 제거 */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+
+  margin: 0; /* 기존 margin-top/left 삭제! */
+  padding: 8px 0;
+  list-style: none;
+}
+
+/* 열렸을 때만 보이기 */
+.optionList.open {
+  display: block;
+}
+
+/* 항목 */
+.optionItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.25rem;
+  cursor: pointer;
+  border-radius: 0; /* 스샷처럼 네모 박스 */
+  color: var(--gray-10-typo-color, #121212);
+  font: var(--BODY03);
+}
+.optionItem:hover {
+  font: var(--BODY03_B);
+}
+
+/* 상단 화살표 회전 */
+.arrow {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s;
+}
+.rotate {
+  transform: rotate(180deg);
+}
+
+.arrowOpen {
+  /* 검정색으로 보이게 */
+  filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%)
+    contrast(100%);
+}

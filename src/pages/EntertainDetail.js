@@ -150,7 +150,10 @@ function EntertainDetail() {
                   <div className={styles.info_Box}>
                     <span className={styles.fixed_Info}>담당자</span>
                     <span className={styles.variable_Info}>
-                      {entertainList?.manager || "담당자 정보 없음"}
+                      {entertainList?.managerPhoneNumber || "담당자 정보 없음"}{" "}
+                      {" ("}
+                      {entertainList?.manager || " "}
+                      {") "}
                     </span>
                   </div>
 
