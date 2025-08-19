@@ -44,14 +44,6 @@ function EditShow() {
   const [posterPreview, setPosterPreview] = useState(null);
   const [qrPreview, setQrPreview] = useState(null);
 
-  const splitTime = (t = "") => {
-    const [hh = "00", mm = "00"] = t.split(":");
-    return { hh: hh.padStart(2, "0"), mm: mm.padStart(2, "0") };
-  };
-
-  const joinTime = (hh = "00", mm = "00") =>
-    `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}:00`;
-
   const [shows, setShows] = useState([
     {
       id: Date.now(),
@@ -65,11 +57,13 @@ function EditShow() {
   ]);
 
   const updateSchedule = (rowId, key, value) => {
-    setShows((prevShows) =>
-      prevShows.map((show, index) =>
-        show.id === rowId
-          ? { ...show, [key]: value, orderIndex: index + 1 }
-          : show
+    if (key === "time") {
+      console.warn("⚠️ time은 setShowTimePart를 통해서만 수정하세요.");
+      return;
+    }
+    setShows((prev) =>
+      prev.map((s, index) =>
+        s.id === rowId ? { ...s, [key]: value, orderIndex: index + 1 } : s
       )
     );
   };
@@ -472,7 +466,9 @@ function EditShow() {
           id: Date.now(),
           orderIndex: prev.length + 1,
           date: "",
-          time: "",
+          time: "00:00",
+          timeHour: "00",
+          timeMinute: "00",
           cost: "",
           maxTicket: 1,
           maxPeople: 100,
@@ -581,7 +577,10 @@ function EditShow() {
                     <span className={styles.info_txt}>날짜</span>
                   </span>
                   <span className={styles.variable_Info}>
-                    <div className={styles.form_detail_date_2}>
+                    <div
+                      className={styles.form_detail_date_2}
+                      style={{ display: "flex" }}
+                    >
                       <input
                         id={styles.form_detail_date}
                         type="date"
@@ -617,7 +616,14 @@ function EditShow() {
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>러닝타임</span>
                   </span>
-                  <span className={styles.variable_Info}>
+                  <span
+                    className={styles.variable_Info}
+                    style={{
+                      display: "inline-flex",
+                      justifyContent: "left",
+                      alignItems: "center",
+                    }}
+                  >
                     <input
                       type="number"
                       placeholder="000"
@@ -700,7 +706,14 @@ function EditShow() {
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>송금QR</span>
                   </span>
-                  <span className={styles.variable_Info}>
+                  <span
+                    className={styles.variable_Info}
+                    style={{
+                      display: "inline-flex",
+                      justifyContent: "left",
+                      alignItems: "center",
+                    }}
+                  >
                     <div className={styles.qr}>
                       <label
                         className={styles.inputQrFileLabel}
@@ -755,7 +768,14 @@ function EditShow() {
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>얼리버드</span>
                   </span>
-                  <span className={styles.variable_Info}>
+                  <span
+                    className={styles.variable_Info}
+                    style={{
+                      display: "inline-flex",
+                      justifyContent: "left",
+                      alignItems: "center",
+                    }}
+                  >
                     <label className={styles.radio}>
                       <input
                         type="radio"
