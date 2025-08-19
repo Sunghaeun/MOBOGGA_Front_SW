@@ -7,7 +7,7 @@ import EditCompleteModal from "./EditCompleteModal";
 
 
 const EditCheckModal = (props) => {
-  const { open, close } = props;
+  const { open, close , onConfirm} = props;
 
     // 1) 리쿠르팅 생성 완료 모달
     // const [editCompleteModalOpen, setEditCompleteModalOpen] = useState(false);
@@ -20,6 +20,7 @@ const EditCheckModal = (props) => {
     const [editCompleteModalOpen, setEditCompleteModalOpen] = useState(false);
 
   const handleCreate = () => {
+    onConfirm(); // 부모 컴포넌트에서 api 호출
     setEditCompleteModalOpen(true);
     close();
     document.body.style.removeProperty('overflow');
