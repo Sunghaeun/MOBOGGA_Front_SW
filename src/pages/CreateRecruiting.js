@@ -10,8 +10,6 @@ import defaultImg from "../assets/defaultImg.jpg";
 import NotEnteredModal from "../components/modal/NotEnteredModal";
 import EditCheckModal from "../components/modal/EditCheckModal";
 import PageOut from "../components/modal/PageOut";
-import CategoryDropdown from "../components/Dropdown";
-
 
 import useAuthStore from "../stores/authStore";
 import apiClient from "../utils/apiClient";
@@ -127,31 +125,9 @@ function CreateRecruiting() {
       const preview = URL.createObjectURL(f);
       setData((prev) => ({ ...prev, photo: preview }));
     } else {
-      setData((prev) => ({ ...prev, photo: defaultImg })); 
+      setData((prev) => ({ ...prev, photo: defaultImg })); // 선택 취소 시 기본 프리뷰로
     }
   };
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const resp = await fetch(defaultImg);
-        const blob = await resp.blob();
-        const ext = blob.type?.split("/")[1] ?? "jpg";
-        const file = new File([blob], `default.${ext}`, {
-          type: blob.type || "image/jpeg",
-        });
-        if (!cancelled) setPhotoFile(file);
-      } catch (e) {
-        console.error("default poster preload failed", e);
-      } finally {
-        if (!cancelled) setPosterReady(true);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   // blob URL 정리
   useEffect(() => {
@@ -278,16 +254,17 @@ function CreateRecruiting() {
 
             {/* 카테고리 */}
             <div className={styles.row}>
-              <div className={`${styles.inputTitle} ${styles.inputTitle1}`}>
+              <div className={styles.inputTitle}>
                 <span>카테고리</span><span className={styles.required}>*</span>
               </div>
-              <CategoryDropdown
+              <input
                 ref={setFieldRef("category")}
-                defaultValue="카테고리"
-                options={["정기모집", "추가모집", "상시모집"]}
-                value={data.category}                // 현재 선택된 값
+                type="text"
+                name="category"
+                className={missing.has("category") ? styles.invalid : ""}
+                placeholder="카테고리"
+                value={data.category}
                 onChange={onChangeInput}
-                className={`${missing.has("category") ? styles.invalid : ""} ${styles.dropdown}`}
               />
             </div>
 
