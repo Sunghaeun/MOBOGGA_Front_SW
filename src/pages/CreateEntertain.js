@@ -390,7 +390,7 @@ function CreateEntertain() {
 
           <div>
             <button className={styles.make_show_submit} onClick={makeEntertain}>
-              행사 만들기
+              만들기
             </button>
           </div>
         </div>
