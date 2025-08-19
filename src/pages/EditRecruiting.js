@@ -13,6 +13,8 @@ import kakao from "../assets/icons/kakao.svg";
 import youtube from "../assets/icons/youtube.svg";
 import link from "../assets/icons/linkicons.svg";
 
+import CategoryDropdown from "../components/CategoryDropdown";
+
 import NotEnteredModal from "../components/modal/NotEnteredModal";
 import EditCheckModal from "../components/modal/EditCheckModal";
 import PageOut from "../components/modal/PageOut";
@@ -159,7 +161,7 @@ function CreateRecruiting() {
         youUrl: src.youUrl ?? "",
         noUrl: src.noUrl ?? "",
         url: src.url ?? "",
-        applicationUrl: src.applyUrl ?? src.applicationUrl ?? "", // ← applyUrl 대응
+        applicationUrl: src.applicationUrl ?? "", // ← applyUrl 대응
         photo: src.photo ?? null,
       };
 
@@ -387,15 +389,15 @@ function CreateRecruiting() {
                 <span>카테고리</span>
                 <span className={styles.required}>*</span>
               </div>
-              <input
-                ref={setFieldRef("category")}
-                type="text"
-                name="category"
-                className={missing.has("category") ? styles.invalid : ""}
-                placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
-                value={data.category}
-                onChange={onChangeInput}
-              />
+                  <CategoryDropdown
+                    ref={setFieldRef("category")}
+                    name="category"
+                    value={data.category}
+                    onChange={onChangeInput}
+                    defaultValue="카테고리"
+                    options={["정기모집", "상시모집", "추가모집"]} 
+                    className={missing.has("category") ? styles.invalid : ""}
+                  />
             </div>
 
             <div className={styles.row}>
