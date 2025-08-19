@@ -403,7 +403,6 @@ input[type="number"] {
   justify-items: start;
   margin-bottom: 1.25rem;
   justify-items: stretch; /* 두 번째 칸이 늘어나게 */
-  align-items: center;
 }
 
 .fixed_Info {

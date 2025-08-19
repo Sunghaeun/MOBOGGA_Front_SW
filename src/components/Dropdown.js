@@ -1,77 +1,97 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import styles from "./styles/Dropdown.module.css";
 import useDetectClose from "./useDetectClose";
 import down from "../assets/Arrow.svg";
 
-/* 
-  dropdown 사용법
-  1. 원하는 페이지에 
-      <Dropdown
-          defaultValue=""
-          options={["", "", "", ""]}
-      />
-     붙여 넣는다.
-  2. defaultValue에는 기본으로 띄워지는 것을 넣는다.
-  3. options에는 아래 들어갈 항목을 넣는다
-  4. 끗
+/*dropdown 사용법
+    1. 원하는 페이지에 
+    <Dropdown
+        defaultValue=""
+        options={["", "", "", ""]}
+    />
+    붙여 넣는다.
+    2. defaultValue에는 기본으로 띄워지는 것을 넣는다.
+    3. options에는 아래 들어갈 항목을 넣는다
+    4. 끗
 */
-
 function Dropdown({
-  defaultValue,
-  options,
+  defaultValue = "",
+  value, // 있으면 컨트롤드
+  onChange, // onChange(e)로 호출됨
+  options = [],
+  placeholder = "카테고리",
   className = "",
   style,
-  value,
-  onChange,
 }) {
-  const dropDownRef = useRef();
-  const [internalValue, setInternalValue] = useState(defaultValue);
+  const dropDownRef = useRef(null);
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef);
 
-  // 외부에서 value prop이 들어오면 내부 값도 동기화
+  // 컨트롤드 여부
+  const isControlled = value !== undefined;
+
+  // 내부 상태 (언컨트롤드일 때만 사용)
+  const [innerValue, setInnerValue] = useState(
+    isControlled ? "" : defaultValue ?? ""
+  );
+
+  // 외부 value/defaultValue 변화 동기화
   useEffect(() => {
-    if (value !== undefined) {
-      setInternalValue(value);
-    }
-  }, [value]);
+    if (isControlled) return; // 컨트롤드는 내부값 무시
+    setInnerValue(defaultValue ?? "");
+  }, [defaultValue, isControlled]);
+
+  // 실제 표시값
+  const displayValue = isControlled ? value ?? "" : innerValue;
+
+  const selectedClass =
+    displayValue && displayValue !== placeholder ? styles.selected : "";
 
   const handleSelect = (option) => {
-    setInternalValue(option);
-    if (onChange) {
-      // 부모에서 onChange(e) 형태로 쓰고 싶으면 이렇게 넘김
-      onChange({ target: { value: option } });
-    }
+    if (!isControlled) setInnerValue(option);
     setIsOpen(false);
+    // onChange(e) 형태로 전달
+    onChange?.({ target: { value: option } });
   };
+
+  // 옵션 10개 이상이면 스크롤 (이미 CSS에 있다면 생략 가능)
+  const optionListClass = useMemo(
+    () => `${styles.optionList} ${isOpen ? styles.open : ""}`,
+    [isOpen]
+  );
 
   return (
     <div className={`${styles.selectWrapper} ${className}`} style={style}>
       <div
         ref={dropDownRef}
-        className={`${styles.selectBox} ${isOpen ? styles.open : ""} ${
-          internalValue !== "카테고리" ? styles.selected : ""
-        }`}
-        onClick={() => setIsOpen(!isOpen)}
+        className={`${styles.selectBox} ${
+          isOpen ? styles.open : ""
+        } ${selectedClass}`}
+        onClick={() => setIsOpen((o) => !o)}
       >
         <span className={styles.selected}>
-          {internalValue}
+          {displayValue || placeholder}
           {"  "}
           <img
             src={down}
             alt="down"
             className={`${styles.arrow} ${isOpen ? styles.rotate : ""} ${
-              isOpen ? styles.arrowOpen : ""
-            } ${internalValue !== "카테고리" ? styles.arrowOpen : ""}`}
+              isOpen || (displayValue && displayValue !== placeholder)
+                ? styles.arrowOpen
+                : ""
+            }`}
           />
         </span>
 
-        <ul className={`${styles.optionList} ${isOpen ? styles.open : ""}`}>
+        <ul
+          className={optionListClass}
+          style={{ maxHeight: 240, overflowY: "auto" }}
+        >
           {options.map((option, index) => (
             <li
-              key={index}
+              key={`${option}-${index}`}
               className={styles.optionItem}
               onClick={(e) => {
-                e.stopPropagation(); // 클릭 시 이벤트 버블 방지
+                e.stopPropagation();
                 handleSelect(option);
               }}
             >
