@@ -108,6 +108,7 @@
 }
 
 .variable_Info {
+  width:80%;
   color: #333;
   white-space: pre-line;
 }
@@ -138,6 +139,8 @@
   align-items: center;
   margin-bottom: 160px;
   margin-left: 50%;
+
+  margin-top: 80px;
 }
 
 .apply_Btn {
