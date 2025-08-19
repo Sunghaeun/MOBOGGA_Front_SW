@@ -10,6 +10,7 @@ import defaultImg from "../assets/defaultImg.jpg";
 import NotEnteredModal from "../components/modal/NotEnteredModal";
 import EditCheckModal from "../components/modal/EditCheckModal";
 import PageOut from "../components/modal/PageOut";
+import CategoryDropdown from "../components/Dropdown";
 
 
 import useAuthStore from "../stores/authStore";
@@ -277,17 +278,16 @@ function CreateRecruiting() {
 
             {/* 카테고리 */}
             <div className={styles.row}>
-              <div className={styles.inputTitle}>
+              <div className={`${styles.inputTitle} ${styles.inputTitle1}`}>
                 <span>카테고리</span><span className={styles.required}>*</span>
               </div>
-              <input
+              <CategoryDropdown
                 ref={setFieldRef("category")}
-                type="text"
-                name="category"
-                className={missing.has("category") ? styles.invalid : ""}
-                placeholder="카테고리"
-                value={data.category}
+                defaultValue="카테고리"
+                options={["정기모집", "추가모집", "상시모집"]}
+                value={data.category}                // 현재 선택된 값
                 onChange={onChangeInput}
+                className={`${missing.has("category") ? styles.invalid : ""} ${styles.dropdown}`}
               />
             </div>
 

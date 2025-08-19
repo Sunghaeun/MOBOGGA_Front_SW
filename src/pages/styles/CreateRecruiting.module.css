@@ -81,6 +81,11 @@
   /* border:1px solid black; */
 }
 
+.inputTitle1{
+  width: 70px !important;
+
+}
+
 .inputTitle span {
   color: var(--Point-03, #8e3dff);
   font: var(--BODY03_B);
@@ -92,6 +97,15 @@
   padding-left: 8px;
   border: 1px solid var(--gray-01-border, #ccc);
   color: var(--gray-10-typo-color, #121212);
+}
+
+.dropdown{
+  width: 90px;
+  height: 36px;
+  border: 1px solid var(--gray-01-border, #ccc);
+  color: var(--gray-10-typo-color, #121212);
+  padding-right: 2px;
+  padding-bottom: 2px;
 }
 
 .row input:focus {
