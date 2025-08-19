@@ -1,7 +1,6 @@
 /* 드롭다운 전체 래퍼 */
 .selectWrapper {
   position: relative;
-  width: 6rem; /* 원하는 너비 */
 }
 
 /* 닫힌 박스(버튼 역할) */
@@ -15,7 +14,7 @@
   height: 2.25rem;
   width: 100%;
 
-  border: 1px solid var(--Gray-03, #ccc);
+  border: 1px solid var(--Gray-03, #fff);
   background: #fff;
 
   font: var(--BODY03);
@@ -80,4 +79,31 @@
   /* 검정색으로 보이게 */
   filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(0%)
     contrast(100%);
+}
+
+/* 옵션 리스트가 열릴 때 스크롤 가능하도록 */
+.optionList {
+  display: none;
+  position: absolute; /* 열림 레이어라면 권장 */
+  z-index: 10;
+
+  max-height: calc(36px * 7 + 16px); /* 아이템 10개 + 위아래 padding(=16px) */
+  overflow-y: auto;
+
+  /* 기존 네모/그리드 스타일 유지 */
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.optionList.open {
+  display: block;
+}
+
+/* 아이템 높이를 일정하게(계산 편하도록) */
+.optionItem {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 6px;
 }

@@ -4,6 +4,7 @@ import styles from "./styles/CreateShow.module.css";
 import useAuthStore from "../stores/authStore";
 import apiClient from "../utils/apiClient";
 import DELETE from "../assets/button_delete.svg";
+import Dropdown from "../components/Dropdown";
 
 function EditShow() {
   const navigate = useNavigate();
@@ -201,7 +202,6 @@ function EditShow() {
 
       // API 요청
       const res = await apiClient.get(`/manager/show/update/${id}`);
-
       console.log(`[GET] /manager/show/update/${id} 성공`, {
         status: res.status,
         data: res.data,
@@ -362,11 +362,11 @@ function EditShow() {
       new Blob([JSON.stringify(requestData)], { type: "application/json" })
     );
     if (poster instanceof File) {
-      formData.append("poster", poster, poster.name || "poster.jpg");
+      formData.append("poster", poster);
     }
     if (qr instanceof File) {
       // 서버가 대문자 "QR"을 기대한다고 했으니 그대로 보냅니다.
-      formData.append("QR", qr, qr.name || "qr.jpg");
+      formData.append("QR", qr);
     }
 
     console.log("== 최종 전송 JSON ==", JSON.stringify(requestData, null, 2));
@@ -380,13 +380,15 @@ function EditShow() {
         console.log(k, "->", v);
       }
     }
+    const hasSession = document.cookie.includes("session=");
+    if (!hasSession && !token) {
+      alert("로그인 세션이 없습니다. 다시 로그인해 주세요.");
+      navigate("/login");
+      return;
+    }
 
     try {
-      const resp = await apiClient.put(`/manager/show/update/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const resp = await apiClient.put(`/manager/show/update/${id}`, formData);
 
       console.log("저장 성공", resp.data);
       const { publicId, showId, id: respId } = resp.data || {};
@@ -529,7 +531,6 @@ function EditShow() {
                       placeholder="공연 이름(공백포함 최대 30자까지 작성 가능합니다.)"
                       value={name}
                       onChange={handlename}
-                      style={{ width: "27rem" }}
                     />
                   </span>
                 </div>
@@ -544,14 +545,13 @@ function EditShow() {
                       placeholder={`공연에 대한 간략한 소개\n(공백포함 최대 100자까지 작성 가능합니다.)`}
                       value={introductionLetter}
                       onChange={handleIntro}
-                      style={{ height: "6rem", width: "27rem" }}
                     />
                   </span>
                 </div>
 
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
-                    <span className={styles.info_txt}>카테고리</span>
+                    <span className={styles.info_txt}>날짜</span>
                   </span>
                   <span className={styles.variable_Info}>
                     <div className={styles.form_detail_date_2}>
@@ -560,8 +560,8 @@ function EditShow() {
                         type="date"
                         value={startDate}
                         onChange={(e) => setStartDate(e.target.value)}
-                      />{" "}
-                      ~{" "}
+                      />
+                      {"     "}~{"     "}
                       <input
                         id={styles.form_detail_date}
                         type="date"
@@ -582,7 +582,6 @@ function EditShow() {
                       placeholder="공연 장소"
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
-                      style={{ width: "10.75rem" }}
                     />
                   </span>
                 </div>
@@ -597,10 +596,12 @@ function EditShow() {
                       placeholder="000"
                       value={runtime}
                       onChange={(e) => setRunTime(e.target.value)}
-                      style={{ width: "3rem" }}
+                      style={{ width: "5rem" }}
                     />
+                    <span style={{ color: "#121212", marginLeft: "0.5rem" }}>
+                      분
+                    </span>
                   </span>
-                  <span>분</span>
                 </div>
 
                 <div className={styles.info_Box}>
@@ -614,14 +615,12 @@ function EditShow() {
                         placeholder="이름"
                         value={manager}
                         onChange={(e) => setManager(e.target.value)}
-                        style={{ width: "4.75rem" }}
                       />
                       <input
                         type="text"
                         placeholder="연락처(전화번호 혹은 이메일)"
                         value={managerPhoneNumber}
                         onChange={(e) => setManagerPhoneNumber(e.target.value)}
-                        style={{ width: "21rem" }}
                       />
                     </div>
                   </span>
@@ -651,14 +650,12 @@ function EditShow() {
                         placeholder="'-'없이 숫자만 입력"
                         value={accountNumber}
                         onChange={(e) => setAccountNumber(e.target.value)}
-                        style={{ width: "11.75rem" }}
                       />
                       <input
                         type="text"
                         placeholder="예금주"
                         value={accountName}
                         onChange={(e) => setAccountName(e.target.value)}
-                        style={{ width: "4.75rem" }}
                       />
                     </div>
                   </span>
@@ -716,7 +713,6 @@ function EditShow() {
                       placeholder={`티켓 수령 장소, 환불 방법 및 기간, 에티켓 등 작성\n(공백 포함 최대 300백자까지 작성 가능합니다.)`}
                       value={noticeLetter}
                       onChange={handleNotice}
-                      style={{ width: "27rem", height: "16rem" }}
                     />
                   </span>
                 </div>
@@ -788,18 +784,117 @@ function EditShow() {
                     onChange={(e) =>
                       updateSchedule(show.id, "date", e.target.value)
                     }
+                    style={{ width: "11rem" }}
                   />
                 </div>
 
-                <div className={styles.form_detail_time_2}>
-                  <input
-                    id={styles.form_detail_time}
-                    type="time"
+                <div className={styles.form_detail_time}>
+                  <Dropdown
+                    defaultValue={"00"}
+                    options={[
+                      "00",
+                      "01",
+                      "02",
+                      "03",
+                      "04",
+                      "05",
+                      "06",
+                      "07",
+                      "08",
+                      "09",
+                      "10",
+                      "11",
+                      "12",
+                      "13",
+                      "14",
+                      "15",
+                      "16",
+                      "17",
+                      "18",
+                      "19",
+                      "20",
+                      "21",
+                      "22",
+                      "23",
+                    ]}
+                    style={{ width: "3.75rem" }}
                     value={show.time || ""}
                     onChange={(e) =>
                       updateSchedule(show.id, "time", e.target.value)
                     }
                   />
+                  <span className={styles.unit}>시</span>
+                  <Dropdown
+                    defaultValue={"00"}
+                    options={[
+                      "00",
+                      "01",
+                      "02",
+                      "03",
+                      "04",
+                      "05",
+                      "06",
+                      "07",
+                      "08",
+                      "09",
+                      "10",
+                      "11",
+                      "12",
+                      "13",
+                      "14",
+                      "15",
+                      "16",
+                      "17",
+                      "18",
+                      "19",
+                      "20",
+                      "21",
+                      "22",
+                      "23",
+                      "24",
+                      "25",
+                      "26",
+                      "27",
+                      "28",
+                      "29",
+                      "30",
+                      "31",
+                      "32",
+                      "33",
+                      "34",
+                      "35",
+                      "36",
+                      "37",
+                      "38",
+                      "39",
+                      "40",
+                      "41",
+                      "42",
+                      "43",
+                      "44",
+                      "45",
+                      "46",
+                      "47",
+                      "48",
+                      "49",
+                      "50",
+                      "51",
+                      "52",
+                      "53",
+                      "54",
+                      "55",
+                      "56",
+                      "57",
+                      "58",
+                      "59",
+                    ]}
+                    style={{ width: "3.75rem" }}
+                    value={show.time || ""}
+                    onChange={(e) =>
+                      updateSchedule(show.id, "time", e.target.value)
+                    }
+                  />
+                  <span className={styles.unit}>분</span>
                 </div>
 
                 <div className={styles.form_detail_number}>
@@ -847,7 +942,7 @@ function EditShow() {
 
           <div>
             <button className={styles.make_show_submit} onClick={updateShow}>
-              공연 업데이트하기
+              공연 수정하기
             </button>
           </div>
         </div>

@@ -14,7 +14,7 @@ import down from "../assets/Arrow.svg";
     3. options에는 아래 들어갈 항목을 넣는다
     4. 끗
 */
-function Dropdown({ defaultValue, options }) {
+function Dropdown({ defaultValue, options, className = "", style }) {
   const dropDownRef = useRef();
   const [value, setValue] = useState(defaultValue);
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef);
@@ -25,7 +25,7 @@ function Dropdown({ defaultValue, options }) {
   };
 
   return (
-    <div className={styles.selectWrapper}>
+    <div className={`${styles.selectWrapper} ${className}`} style={style}>
       <div
         ref={dropDownRef}
         className={`${styles.selectBox} ${isOpen ? styles.open : ""} ${
