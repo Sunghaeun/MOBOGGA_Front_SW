@@ -107,7 +107,7 @@ function ClubDetail() {
         <div className={loadingStyles.errorIcon}>⚠️</div>
         <div className={loadingStyles.errorMessage}>{error}</div>
         <button onClick={() => getClub()} className={loadingStyles.retryBtn}>
-          🔄 다시 시도
+          다시 시도
         </button>
       </div>
     );

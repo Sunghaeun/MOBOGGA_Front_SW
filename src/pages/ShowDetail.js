@@ -195,7 +195,7 @@ function ShowDetail() {
             onClick={() => fetchData()}
             className={loadingStyles.retryBtn}
           >
-            🔄 다시 시도
+            다시 시도
           </button>
           <button onClick={navigateToPrepage} className={loadingStyles.backBtn}>
             ← 이전 페이지
