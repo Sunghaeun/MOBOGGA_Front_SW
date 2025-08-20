@@ -129,18 +129,6 @@ function Mypage() {
     fetchMyReservations();
   };
 
-  useEffect(() => {
-    if (!authLoading && !isLoggedIn) {
-      setIsLoginOverModalOpen(true);
-      return;
-    }
-
-    if (!authLoading && isLoggedIn) {
-      fetchUserProfile();
-      fetchMyReservations();
-    }
-  }, [authLoading, isLoggedIn]);
-
   if (!isLoggedIn && !authLoading) {
     return (
       <LoginOverModal
