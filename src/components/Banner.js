@@ -41,7 +41,6 @@ function Banner() {
         );
         setShow(converted);
       } catch (err) {
-        console.error("API 불러오기 실패", err);
         setError("배너 정보를 불러오는데 실패했습니다.");
       } finally {
         setIsLoading(false);

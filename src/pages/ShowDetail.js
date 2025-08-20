@@ -32,19 +32,15 @@ function ShowDetail() {
 
   // 상세 데이터 불러오기
   const fetchData = async () => {
-    console.log("받은 showId:", showId);
-    console.log("인증 상태:", isLoggedIn ? "로그인됨" : "로그인안됨");
-
     try {
       setLoading(true);
       setError(null);
 
-      const res = await apiClient.get(`/show/detail/${showId}`);
-      console.log("API 응답 성공:", res.status);
-      setShow(res.data || {});
+      const _res = await apiClient.get(`/show/detail/${showId}`);
+      setShow(_res.data || {});
       setError(null);
     } catch (err) {
-      console.error("Error fetching data:", err);
+      // fetch error handled below
 
       if (err.response?.status === 401) {
         setError(
@@ -97,7 +93,7 @@ function ShowDetail() {
 
   useEffect(() => {
     if (authLoading) {
-      console.log("인증 상태 로딩 중이므로 데이터 조회 대기");
+      // 인증 로딩 중이면 대기
       return;
     }
     fetchData();
@@ -125,14 +121,13 @@ function ShowDetail() {
     };
 
     try {
-      const res = await apiClient.post("/show/detail/reservation", requestData);
-      console.log("예매 성공:", res.data);
+      await apiClient.post("/show/detail/reservation", requestData);
 
       setOpen(false);
       setSecondModalOpen(true);
       setIsDisable(true);
     } catch (err) {
-      console.error("예매 실패:", err);
+      // reservation failed -- show fail modal
       setOpen(false);
       setFailModalOpen(true);
     }

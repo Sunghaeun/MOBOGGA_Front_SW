@@ -101,7 +101,7 @@ function UpdateProfile() {
       closeUpdateConfirmModal();
       navigate("/mypage");
     } catch (error) {
-      console.error("Error saving profile:", error);
+      // debug output removed
     }
   };
 
@@ -133,7 +133,7 @@ function UpdateProfile() {
           phoneNum: userData.phoneNumber || "",
         });
       } catch (error) {
-        console.error("프로필 정보 조회 실패:", error);
+        // debug output removed
         setValidationErrorModal({
           isOpen: true,
           message: error.message || "사용자 정보를 불러오는데 실패했습니다.",
@@ -206,7 +206,7 @@ function UpdateProfile() {
       });
       showModal("프로필 정보가 수정되었습니다.", () => navigate("/mypage"));
     } catch (error) {
-      console.error("프로필 저장 실패:", error);
+      // debug output removed
       const errorMessage =
         error.response?.data?.message ||
         error.message ||

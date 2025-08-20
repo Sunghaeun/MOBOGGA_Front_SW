@@ -25,8 +25,7 @@ if (SECURITY_CONFIG.DETECT_DEV_TOOLS) {
     ) {
       if (!devtools.open) {
         devtools.open = true;
-        console.warn("개발자 도구가 감지되었습니다.");
-        // 필요시 추가 보안 조치
+        // 개발자 도구 감지됨 - 필요한 보안 조치 적용 가능
       }
     } else {
       devtools.open = false;

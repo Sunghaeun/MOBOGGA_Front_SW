@@ -13,39 +13,23 @@ import apiClient from "../../utils/apiClient";
 
 function ManagerRecruitingpage() {
   const navigate = useNavigate();
-  const {
-    user,
-    isLoggedIn,
-    isLoading: authLoading,
-    isManager,
-    token,
-  } = useAuthStore();
+  const { isLoggedIn, isLoading: authLoading, isManager } = useAuthStore();
 
   // 매니저 권한 여부를 변수로 저장
   const isManagerUser = isManager();
-  const userRole = user?.authority;
+  // userRole not used here
 
   // 초기 권한 체크
   useEffect(() => {
-    console.log("=== MANAGER RECRUITING PAGE INIT ===");
-    console.log("Auth loading:", authLoading);
-    console.log("로그인 상태:", isLoggedIn);
-    console.log("매니저 권한:", isManagerUser);
-    console.log("사용자 역할:", userRole);
-
-    // 로딩 중이면 기다림
+    // 초기 권한 체크
     if (authLoading) {
-      console.log("인증 정보 로딩 중... 기다림");
       return;
     }
 
     if (!isLoggedIn || !isManagerUser) {
-      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
       navigate("/login", { replace: true });
       return;
     }
-
-    console.log("권한 확인 완료");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, isManagerUser, authLoading, navigate]);
 
@@ -70,13 +54,8 @@ function ManagerRecruitingpage() {
 
   const fetchManagerProfile = useCallback(async () => {
     try {
-      console.log("=== FETCH MANAGER PROFILE START ===");
-      console.log("현재 토큰 상태:", !!token);
-      console.log("현재 사용자 정보:", user);
-
+      // fetch manager profile
       const response = await apiClient.get("/mypage/manager/profile");
-      console.log("Manager profile response:", response.data);
-
       const managerData = response.data;
 
       // 서버에서 받은 데이터를 폼 데이터 형식에 맞게 변환
@@ -88,13 +67,11 @@ function ManagerRecruitingpage() {
         clubPoster: managerData.clubPoster || "",
       });
     } catch (error) {
-      console.error("Manager profile fetch error:", error);
       if (
         error.code === "ECONNABORTED" ||
         error.name === "TypeError" ||
         (error.message && error.message.includes("fetch"))
       ) {
-        setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
         setIsServerErrorModalOpen(true);
       } else {
         setError(error.message || "사용자 정보를 불러오는데 실패했습니다.");
@@ -102,34 +79,25 @@ function ManagerRecruitingpage() {
     } finally {
       setIsLoading(false);
     }
-  }, [token, user]);
+  }, []);
 
   const getRecruitingCards = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
-      console.log("=== FETCH RECRUITING CARDS START ===");
-      console.log("현재 토큰 상태:", !!token);
-      console.log("현재 사용자 정보:", user);
-
+      // fetch recruiting cards
       const response = await apiClient.get("/mypage/manager/recruiting");
-      console.log("Recruiting cards response:", response.data);
-
       const data = response.data;
-      console.log("Recruiting 전체 응답 데이터:", data);
 
       // API 응답에서 recruitingList 추출
       if (!data || !data.recruitingList) {
-        console.log("recruitingList가 없습니다. 전체 응답:", data);
         setRecruitingCards([]);
         return;
       }
 
       setRecruitingCards(data.recruitingList || []);
-      console.log("설정된 리크루팅 내역 데이터:", data.recruitingList);
     } catch (err) {
-      console.error("리크루팅 카드 조회 에러:", err);
       if (
         err.code === "ECONNABORTED" ||
         err.name === "TypeError" ||
@@ -144,7 +112,7 @@ function ManagerRecruitingpage() {
     } finally {
       setIsLoading(false);
     }
-  }, [token, user]);
+  }, []);
 
   // 사용자 정보 조회
   useEffect(() => {
@@ -173,7 +141,6 @@ function ManagerRecruitingpage() {
   };
 
   if (isLoading) {
-    console.log("로딩 중 화면 렌더링");
     return (
       <>
         <div className={styles.body}>

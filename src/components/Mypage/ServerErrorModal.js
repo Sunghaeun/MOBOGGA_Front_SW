@@ -5,7 +5,6 @@ import Modal from "../Modal";
 
 const ServerErrorModal = ({ isOpen, onClose, errorMessage }) => {
   const handleErrorConfirm = () => {
-    console.log("서버 에러 모달 닫기");
     onClose();
   };
 
@@ -38,8 +37,6 @@ const ServerErrorModal = ({ isOpen, onClose, errorMessage }) => {
     .toLowerCase();
 
   // 디버그 로그: 실제 원문과 정규화된 문자열 확인
-  console.log("[ServerErrorModal] rawMessage:", rawMessage);
-  console.log("[ServerErrorModal] normalized:", normalized);
 
   const isEmailDomainError =
     normalized.includes("허용되지 않은 이메일 도메인") ||

@@ -27,11 +27,8 @@ function Sidebar({
   // 마이페이지 이동 핸들러
   const handleMyPageClick = () => {
     if (!auth) {
-      console.log("권한 정보가 없음");
       return;
     }
-
-    console.log("Sidebar - 사용자 권한:", auth.authority);
 
     if (isManager()) {
       go("/manager/mypage");

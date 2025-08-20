@@ -38,7 +38,6 @@ function Login() {
       !process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID ||
       !process.env.REACT_APP_GOOGLE_AUTH_REDIRECT_URI
     ) {
-      console.error("Google OAuth 환경변수가 설정되지 않았습니다.");
       alert("로그인 설정에 문제가 있습니다. 관리자에게 문의해주세요.");
       return;
     }
@@ -50,12 +49,6 @@ function Login() {
       // state와 nonce 저장
       sessionStorage.setItem("oauth_state", state);
       sessionStorage.setItem("oauth_nonce", nonce);
-
-      console.log("Starting OAuth flow with direct Google API");
-      console.log(
-        "Redirect URI:",
-        process.env.REACT_APP_GOOGLE_AUTH_REDIRECT_URI
-      );
 
       const authUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
       authUrl.searchParams.append(
@@ -73,10 +66,8 @@ function Login() {
       authUrl.searchParams.append("prompt", "consent");
       authUrl.searchParams.append("state", state);
 
-      console.log("OAuth URL:", authUrl.toString());
       window.location.href = authUrl.toString();
     } catch (error) {
-      console.error("OAuth 로그인 중 오류:", error);
       alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
@@ -108,7 +99,9 @@ function Login() {
           onClick={onClickGoogleLoginBtn}
         />
         <div className={styles.login_caution}>
-          <div className={styles.caution}>*한동대학교 이메일 계정으로 로그인해주세요.</div>
+          <div className={styles.caution}>
+            *한동대학교 이메일 계정으로 로그인해주세요.
+          </div>
         </div>
       </div>
     </div>

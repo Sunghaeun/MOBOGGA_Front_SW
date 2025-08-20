@@ -28,29 +28,16 @@ function ManagerUpdateClub() {
 
   // 매니저 권한 여부를 변수로 저장
   const isManagerUser = isManager();
-  const userRole = user?.authority;
 
   // 초기 권한 체크
   useEffect(() => {
-    console.log("=== MANAGER UPDATE CLUB INIT ===");
-    console.log("Auth loading:", authLoading);
-    console.log("로그인 상태:", isLoggedIn);
-    console.log("매니저 권한:", isManagerUser);
-    console.log("사용자 역할:", userRole);
-
-    // 로딩 중이면 기다림
-    if (authLoading) {
-      console.log("인증 정보 로딩 중... 기다림");
-      return;
-    }
+    // 초기 권한 및 로그인 검사
+    if (authLoading) return;
 
     if (!isLoggedIn || !isManagerUser) {
-      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
       navigate("/login", { replace: true });
       return;
     }
-
-    console.log("권한 확인 완료");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, isManagerUser, authLoading, navigate]);
 
@@ -96,13 +83,7 @@ function ManagerUpdateClub() {
   };
 
   const openUpdateConfirmModal = () => {
-    console.log("=== OPEN UPDATE MODAL START ===");
-    console.log("Token exists:", !!token);
-    console.log("로그인 상태:", isLoggedIn);
-    console.log("매니저 권한:", isManagerUser);
-
     if (!isLoggedIn || !isManagerUser) {
-      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
       setValidationErrorModal({
         isOpen: true,
         message: "로그인이 필요합니다. 다시 로그인해주세요.",
@@ -113,7 +94,6 @@ function ManagerUpdateClub() {
       return;
     }
 
-    console.log("권한 확인 완료 - 모달 열기");
     setIsUpdateConfirmModalOpen(true);
   };
 
@@ -123,13 +103,9 @@ function ManagerUpdateClub() {
 
   const handleUpdateConfirmConfirm = async () => {
     try {
-      console.log("=== UPDATE CONFIRMATION START ===");
-      console.log("Token exists:", !!token);
-      console.log("로그인 상태:", isLoggedIn);
-      console.log("매니저 권한:", isManagerUser);
+      // proceed with update
 
       if (!isLoggedIn || !isManagerUser) {
-        console.log("권한 없음 - 로그인 페이지로 리다이렉트");
         navigate("/login");
         return;
       }
@@ -148,7 +124,7 @@ function ManagerUpdateClub() {
         }
       }, 1500);
     } catch (error) {
-      console.error("Error saving profile:", error);
+      // error saving profile
       closeUpdateConfirmModal();
 
       if (
@@ -176,21 +152,9 @@ function ManagerUpdateClub() {
       }
 
       try {
-        console.log("=== FETCH CLUB PROFILE START ===");
-        console.log("현재 토큰 상태:", !!token);
-        console.log("현재 사용자 정보:", user);
-
         const response = await apiClient.get("/mypage/manager/club");
-        console.log("Club profile response:", response.data);
 
         const userData = response.data;
-        console.log("Club Data:", userData);
-        console.log("URL fields:", {
-          instaUrl: userData.instaUrl,
-          youtubeUrl: userData.youtubeUrl,
-          notionUrl: userData.notionUrl,
-          url: userData.url,
-        });
         setFormData({
           clubName: userData.clubName || "",
           userName: userData.managerName || userData.userName || "",
@@ -208,14 +172,9 @@ function ManagerUpdateClub() {
           imageUrl:
             userData.poster || userData.photo || userData.imageUrl || "",
         });
-        console.log("Form data set successfully:", {
-          instagram: userData.instaUrl,
-          kakao: userData.url,
-          youtube: userData.youtubeUrl,
-          url: userData.url,
-        });
+        // form data initialized
       } catch (error) {
-        console.error("Error fetching club profile:", error);
+        // error fetching club profile
         if (
           error.code === "ECONNABORTED" ||
           error.name === "TypeError" ||
@@ -238,18 +197,16 @@ function ManagerUpdateClub() {
 
   // formData 변경 감지용 useEffect
   useEffect(() => {
-    console.log("FormData updated:", formData);
+    // formData updated
   }, [formData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log("Input change:", name, "=", value);
     setFormData((prev) => {
       const newData = {
         ...prev,
         [name]: value,
       };
-      console.log("Updated formData:", newData);
       return newData;
     });
   };
@@ -296,7 +253,7 @@ function ManagerUpdateClub() {
       // 실제 파일도 저장
       setSelectedFile(file);
 
-      console.log("Selected file:", file.name, "Size:", file.size, "bytes");
+      // selected file set
     }
   };
 
@@ -331,35 +288,19 @@ function ManagerUpdateClub() {
       );
     }
 
-    console.log("== 최종 전송 JSON ==", JSON.stringify(requestData, null, 2));
-    console.log("== FormData entries ==");
-    for (const [k, v] of formDataToSend.entries()) {
-      if (v instanceof File) {
-        console.log(k, "-> File", { name: v.name, size: v.size, type: v.type });
-      } else if (k === "request" && v instanceof Blob) {
-        v.text().then((t) => console.log("request(json) ->", t));
-      } else {
-        console.log(k, "->", v);
-      }
-    }
+    // requestData and formData prepared for submission (debug logs removed)
 
     try {
-      const response = await apiClient.put(
-        "/mypage/manager/club",
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log("저장 성공", response.data);
+      await apiClient.put("/mypage/manager/club", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      // 저장 성공
     } catch (error) {
-      console.error("저장 오류", error);
+      // 저장 오류 발생
       if (error?.response?.status === 401) {
-        console.log(
-          "[401] Authorization 헤더 유무/형식, 토큰 만료(exp)/aud/iss, 또는 권한(ROLE) 확인 필요"
-        );
+        // 401 에러 처리: 권한/토큰 문제 가능
       }
       alert(
         `저장 실패: ${

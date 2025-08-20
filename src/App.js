@@ -69,13 +69,11 @@ function AppContent() {
 
   // Zustand 스토어 초기화
   useEffect(() => {
-    console.log("🚀 앱 시작 - Zustand 스토어 초기화");
     initialize();
   }, [initialize]);
 
   // 모바일 접속 시 ComingSoon 페이지 표시
   if (isMobile) {
-    console.log("📱 모바일 접속 감지 - ComingSoon 페이지 표시");
     return (
       <BrowserRouter>
         <div className="App">

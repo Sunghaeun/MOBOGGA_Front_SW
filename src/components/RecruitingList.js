@@ -16,7 +16,7 @@ function RecruitingList() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-// 4) 관리자 권한 받아오기 - Hooks를 최상위로 이동
+  // 4) 관리자 권한 받아오기 - Hooks를 최상위로 이동
   const { isManager, initialize } = useAuthStore();
 
   // 앱 진입 시 토큰이 있으면 사용자 정보 조회 (onRehydrateStorage에서도 호출되지만 안전하게 한 번 더)
@@ -24,9 +24,6 @@ function RecruitingList() {
     initialize?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-
-  
 
   // 1) recruiting 데이터 가져오기
   const [recruiting, setRecruiting] = useState([]);
@@ -38,11 +35,8 @@ function RecruitingList() {
       const res = await axios.get(
         `${process.env.REACT_APP_API_URL}/recruiting/list`
       );
-      console.log("recruiting 데이터 가져오기 성공");
-      console.log(res.data);
       setRecruiting(res.data.recruitingList);
     } catch (err) {
-      console.error(err);
       setError("리크루팅 목록을 불러오는데 실패했습니다.");
     } finally {
       setIsLoading(false);
@@ -88,7 +82,6 @@ function RecruitingList() {
     );
   }
 
-
   return (
     <div className={styles.column}>
       <div className={styles.categoryHeader}>
@@ -113,7 +106,10 @@ function RecruitingList() {
         </div>
 
         {isManager?.() && (
-          <div className={styles.createButton} onClick={() => navigate("/recruiting/create")}>
+          <div
+            className={styles.createButton}
+            onClick={() => navigate("/recruiting/create")}
+          >
             <span>리쿠르팅 새로 만들기</span>
           </div>
         )}

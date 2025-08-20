@@ -32,7 +32,6 @@ function Landing() {
       !process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID ||
       !process.env.REACT_APP_GOOGLE_AUTH_REDIRECT_URI
     ) {
-      console.error("Google OAuth 환경변수가 설정되지 않았습니다.");
       alert("로그인 설정에 문제가 있습니다. 관리자에게 문의해주세요.");
       return;
     }
@@ -45,11 +44,7 @@ function Landing() {
       sessionStorage.setItem("oauth_state", state);
       sessionStorage.setItem("oauth_nonce", nonce);
 
-      console.log("Starting OAuth flow from Landing page");
-      console.log(
-        "Redirect URI:",
-        process.env.REACT_APP_GOOGLE_AUTH_REDIRECT_URI
-      );
+      // OAuth flow 시작
 
       const authUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
       authUrl.searchParams.append(
@@ -67,10 +62,10 @@ function Landing() {
       authUrl.searchParams.append("prompt", "consent");
       authUrl.searchParams.append("state", state);
 
-      console.log("OAuth URL:", authUrl.toString());
+      // Redirect to OAuth URL
       window.location.href = authUrl.toString();
     } catch (error) {
-      console.error("OAuth 로그인 중 오류:", error);
+      // OAuth login error: show user-friendly alert
       alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };

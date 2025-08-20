@@ -1,10 +1,10 @@
-import React, { use, useRef, useStates } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./Dropdown.module.css";
 import useDetectClose from "./utils/hooks/useDetectClose";
 
 function Dropdown() {
   const dropDownRef = useRef();
-  const [value, setValue] = useStates("");
+  const [value, setValue] = useState("");
 
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef);
 

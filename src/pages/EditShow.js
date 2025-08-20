@@ -59,7 +59,7 @@ function EditShow() {
 
   const updateSchedule = (rowId, key, value) => {
     if (key === "time") {
-      console.warn("⚠️ time은 setShowTimePart를 통해서만 수정하세요.");
+      // time 변경은 setShowTimePart를 사용해야 합니다.
       return;
     }
     setShows((prev) =>
@@ -131,35 +131,25 @@ function EditShow() {
 
   // 권한 체크
   useEffect(() => {
-    console.log("=== EDIT SHOW INIT ===");
-    console.log("로그인 상태:", isLoggedIn);
-    console.log("매니저 권한:", isManager());
-    console.log("인증 로딩 상태:", authLoading);
-    console.log("사용자 정보:", user);
-    console.log("토큰 존재:", !!token);
+    // Init: 권한/인증 상태 확인
+    // init checks
 
     // authLoading이 undefined이면 false로 처리
     const loading = authLoading === undefined ? false : authLoading;
 
     if (loading) {
-      console.log("인증 상태 로딩 중...");
+      // auth loading
       return;
     }
 
     if (!isLoggedIn || !isManager()) {
-      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
-      console.log("상세 권한 정보:", {
-        isLoggedIn,
-        isManagerResult: isManager(),
-        userAuthority: user?.authority,
-        userRole: user?.role,
-      });
+      // not authorized
       alert("로그인이 필요하거나 매니저 권한이 없습니다.");
       navigate("/login", { replace: true });
       return;
     }
 
-    console.log("권한 확인 완료");
+    // authorized
   }, [isLoggedIn, isManager, navigate, authLoading, user, token]);
 
   // 더 이상 사용하지 않는 함수 (쿠키 + 임시 토큰 방식으로 대체)
@@ -174,58 +164,23 @@ function EditShow() {
     const loading = authLoading === undefined ? false : authLoading;
 
     if (loading) {
-      console.log("인증 상태 로딩 중이므로 데이터 조회 대기");
       return;
     }
 
     if (!isLoggedIn || !isManager()) {
-      console.log("권한 없음 - 데이터 조회 불가");
       return;
     }
 
     try {
       setDataLoading(true);
       setError(null);
-      console.log(`공연 데이터 로드 시작: ID ${id}`);
-      console.log("API 요청 전 토큰 상태:", {
-        tokenExists: !!token,
-        tokenLength: token?.length,
-        isLoggedIn,
-        isManager: isManager(),
-        userAuthority: user?.authority,
-      });
 
       // JWT 토큰 디코딩해서 확인
-      if (token) {
-        try {
-          const tokenParts = token.split(".");
-          if (tokenParts.length === 3) {
-            const payload = JSON.parse(atob(tokenParts[1]));
-            console.log("🔍 JWT 토큰 페이로드:", {
-              sub: payload.sub,
-              role: payload.role,
-              exp: payload.exp,
-              expDate: new Date(payload.exp * 1000),
-              currentTime: new Date(),
-              isExpired: payload.exp * 1000 < Date.now(),
-            });
-          } else {
-            console.log(
-              "❌ JWT 토큰 형식이 올바르지 않음 - parts:",
-              tokenParts.length
-            );
-          }
-        } catch (e) {
-          console.log("❌ JWT 토큰 파싱 에러:", e);
-        }
-      }
+      // 토큰 정보는 내부적으로 사용됨. 디버그 로그 제거됨.
 
       // API 요청
       const res = await apiClient.get(`/manager/show/update/${id}`);
-      console.log(`[GET] /manager/show/update/${id} 성공`, {
-        status: res.status,
-        data: res.data,
-      });
+      // 응답 수신: res.data 사용
 
       const src = res.data ?? {};
       setName(src.name ?? "");
@@ -287,27 +242,10 @@ function EditShow() {
       setPosterPreview(serverPoster || null);
       setQrPreview(serverQr || null);
 
-      // 디버깅: 받은 회차 출력
-      console.log("받은 scheduleDtoList:", list);
-      console.log("화면에 세팅될 shows:", mapped);
+      // received schedule list -> mapped shows are set
     } catch (err) {
-      console.error("공연 데이터 로드 실패", err);
-      console.error("에러 상세 정보:", {
-        status: err.response?.status,
-        statusText: err.response?.statusText,
-        data: err.response?.data,
-        message: err.message,
-      });
-
+      // 에러는 사용자에게 보여질 메시지로 처리
       if (err.response?.status === 401) {
-        console.log("401 오류 - 인증 문제");
-        console.log("현재 인증 상태:", {
-          token: !!token,
-          tokenLength: token?.length,
-          isLoggedIn,
-          isManager: isManager(),
-          userInfo: user,
-        });
         setError("인증에 문제가 있습니다. 다시 로그인해주세요.");
       } else {
         setError("공연 데이터를 불러오는데 실패했습니다.");
@@ -318,23 +256,14 @@ function EditShow() {
   };
 
   useEffect(() => {
-    console.log("=== getShow useEffect 실행 ===");
-    console.log("조건 체크:", {
-      id: !!id,
-      authLoading,
-      isLoggedIn,
-      isManager: isManager(),
-      token: !!token,
-    });
+    // getShow 실행 조건 체크
+    // condition checks
 
     // authLoading이 undefined이면 false로 처리
     const loading = authLoading === undefined ? false : authLoading;
 
     if (id && !loading && isLoggedIn && isManager()) {
-      console.log("조건 만족 - getShow 실행");
       getShow();
-    } else {
-      console.log("조건 불만족 - getShow 실행하지 않음");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, authLoading, isLoggedIn, isManager, token]);
@@ -355,19 +284,20 @@ function EditShow() {
       if (!shows[i].time) return alert(`${i + 1}공의 시작시간을 입력해 주세요`);
       if (!shows[i].cost || Number(shows[i].cost) <= 0)
         return alert(`${i + 1}공의 가격을 입력해 주세요`);
+      // waiting for data retrieval due to auth loading
     }
 
     const toHms = (t) => (t && t.length === 5 ? `${t}:00` : t || "");
 
     const requestData = {
-      name,
+      // no permission - data retrieval not possible
       location,
       startDate,
       endDate,
       runtime: Number(runtime),
       manager,
       managerPhoneNumber,
-      accountNumber,
+      // start loading show data: ID ${id}
       accountName,
       accountBankName,
       introductionLetter,
@@ -382,6 +312,7 @@ function EditShow() {
         maxTicket: Number(s.maxTicket) || 0,
         maxPeople: Number(s.maxPeople) || 100,
       })),
+      // JWT token payload:
     };
 
     const formData = new FormData();
@@ -391,23 +322,11 @@ function EditShow() {
     );
     if (poster instanceof File) {
       formData.append("poster", poster);
-    }
-    if (qr instanceof File) {
-      // 서버가 대문자 "QR"을 기대한다고 했으니 그대로 보냅니다.
-      formData.append("QR", qr);
+      // JWT token format is invalid - parts:
     }
 
-    console.log("== 최종 전송 JSON ==", JSON.stringify(requestData, null, 2));
-    console.log("== FormData entries ==");
-    for (const [k, v] of formData.entries()) {
-      if (v instanceof File) {
-        console.log(k, "-> File", { name: v.name, size: v.size, type: v.type });
-      } else if (k === "request" && v instanceof Blob) {
-        v.text().then((t) => console.log("request(json) ->", t));
-      } else {
-        console.log(k, "->", v);
-      }
-    }
+    // JWT token parsing error:
+    // FormData prepared for 전송 (디버그 로그 제거됨)
     const hasSession = document.cookie.includes("session=");
     if (!hasSession && !token) {
       alert("로그인 세션이 없습니다. 다시 로그인해 주세요.");
@@ -418,7 +337,7 @@ function EditShow() {
     try {
       const resp = await apiClient.put(`/manager/show/update/${id}`, formData);
 
-      console.log("저장 성공", resp.data);
+      // 저장 성공: resp.data 사용
       const { publicId, showId, id: respId } = resp.data || {};
       const detailId = publicId ?? showId ?? id ?? respId;
       if (detailId) {
@@ -430,12 +349,7 @@ function EditShow() {
         navigate("/main");
       }
     } catch (error) {
-      console.error("저장 오류", error);
-      if (error?.response?.status === 401) {
-        console.log(
-          "[401] Authorization 헤더 유무/형식, 토큰 만료(exp)/aud/iss, 또는 권한(ROLE) 확인 필요"
-        );
-      }
+      // 에러는 사용자에게 알림
       alert(
         `저장 실패: ${
           error.response?.data?.message || error.message || "알 수 없는 오류"
@@ -469,8 +383,8 @@ function EditShow() {
           date: "",
           time: "00:00",
           timeHour: "00",
-          timeMinute: "00",
-          cost: "",
+          // received scheduleDtoList: ${list}
+          // shows to be set on screen: ${mapped}
           maxTicket: 1,
           maxPeople: 100,
         },

@@ -40,23 +40,14 @@ function Mypage() {
 
   // 초기 권한 체크
   useEffect(() => {
-    console.log("=== MYPAGE INIT ===");
-    console.log("Auth loading:", authLoading);
-    console.log("Is logged in:", isLoggedIn);
-
+    // 초기 권한 체크
     // 로딩 중이면 기다림
-    if (authLoading) {
-      console.log("인증 정보 로딩 중... 기다림");
-      return;
-    }
+    if (authLoading) return;
 
     if (!isLoggedIn) {
-      console.log("로그인되지 않음 - 로그인 페이지로 리다이렉트");
       navigate("/login", { replace: true });
       return;
     }
-
-    console.log("권한 확인 완료 - 데이터 조회 시작");
     fetchUserProfile();
     fetchMyReservations();
   }, [isLoggedIn, authLoading, navigate]);
@@ -71,10 +62,8 @@ function Mypage() {
 
   const fetchUserProfile = async () => {
     try {
-      console.log("=== FETCH USER PROFILE START ===");
-
       const response = await apiClient.get("/mypage/student/profile");
-      console.log("User profile response:", response.data);
+      // response received
 
       const userData = response.data;
 
@@ -86,7 +75,6 @@ function Mypage() {
         email: userData.email || "",
       });
     } catch (error) {
-      console.error("User profile fetch error:", error);
       if (
         error.code === "ECONNABORTED" ||
         error.name === "TypeError" ||
@@ -104,14 +92,11 @@ function Mypage() {
 
   const fetchMyReservations = async () => {
     try {
-      console.log("=== FETCH MY RESERVATIONS START ===");
-
       const response = await apiClient.get("/mypage/student/myreservation");
-      console.log("My reservations response:", response.data);
+      // response received
 
       setMyReservCards(response.data || []);
     } catch (error) {
-      console.error("My reservations fetch error:", error);
       if (
         error.code === "ECONNABORTED" ||
         error.name === "TypeError" ||
@@ -120,7 +105,7 @@ function Mypage() {
         setError("서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.");
         setIsServerErrorModalOpen(true);
       } else {
-        console.error("예약 정보를 불러오는데 실패했습니다:", error.message);
+        setError(error.message || "예약 정보를 불러오는데 실패했습니다.");
       }
     }
   };

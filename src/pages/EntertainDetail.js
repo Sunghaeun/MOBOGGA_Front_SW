@@ -29,10 +29,9 @@ function EntertainDetail() {
     const fetchEntertain = async () => {
       try {
         const res = await axios.get(endpoint);
-        console.log(res.data);
         setEntertain(res.data);
       } catch (err) {
-        console.error("데이터 로드 실패:", err);
+        // error loading entertain detail
       }
     };
 
@@ -45,11 +44,10 @@ function EntertainDetail() {
     const fetchShow = async () => {
       try {
         const res = await axios.get(endpoint);
-        console.log(res.data);
         setEntertain(res.data);
         setLoading(false);
       } catch (err) {
-        console.error("데이터 로드 실패:", err);
+        // loading error
         setLoading(false);
       }
     };
@@ -134,11 +132,9 @@ function EntertainDetail() {
         withCredentials: true,
       });
 
-      console.log("Response from backend:", response.data);
-
       setAuth(response.data);
     } catch (error) {
-      console.error("Login failed with error: ", error);
+      // login failure handled by caller; debug output suppressed
       throw error;
     }
   };

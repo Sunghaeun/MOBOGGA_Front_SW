@@ -71,7 +71,6 @@ function EditEntertain() {
 
     try {
       const res = await apiClient.get(`/manager/entertain/update/${id}`);
-      console.log("== 서버에서 받은 데이터 ==", res.data);
 
       const src = res.data ?? {};
       setName(src.name ?? "");
@@ -95,7 +94,6 @@ function EditEntertain() {
       setPosterUrl(serverPoster);
       setPreviewURL(serverPoster || null);
     } catch (err) {
-      console.error("행사 데이터 로드 실패", err);
       if (err.response?.status === 401) {
         alert("인증이 만료되었습니다. 다시 로그인해주세요.");
         navigate("/login");
@@ -158,19 +156,6 @@ function EditEntertain() {
       new Blob([JSON.stringify(requestData)], { type: "application/json" })
     );
 
-    // 디버깅 로그
-    console.log("== 최종 전송 JSON ==", JSON.stringify(requestData, null, 2));
-    console.log("== FormData entries ==");
-    for (const [k, v] of formData.entries()) {
-      if (v instanceof File) {
-        console.log(k, "-> File", { name: v.name, size: v.size, type: v.type });
-      } else if (k === "request" && v instanceof Blob) {
-        v.text().then((t) => console.log("request(json) ->", t));
-      } else {
-        console.log(k, "->", v);
-      }
-    }
-
     try {
       await apiClient.put(`/manager/entertain/update/${id}`, formData, {
         headers: {
@@ -180,8 +165,6 @@ function EditEntertain() {
       alert("행사 수정 완료");
       navigate(`/entertain/${id}`);
     } catch (error) {
-      console.error("저장 오류", error);
-
       if (error.response?.status === 401) {
         alert("인증이 만료되었습니다. 다시 로그인해주세요.");
         navigate("/login");

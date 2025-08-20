@@ -17,61 +17,18 @@ class ApiClient {
     this.client.interceptors.request.use(
       (config) => {
         const { token } = useAuthStore.getState();
-        console.log("🔍 API 요청 인터셉터 실행:", {
-          url: config.url,
-          method: config.method,
-          tokenExists: !!token,
-          tokenLength: token?.length,
-          tokenPreview: token ? `${token.substring(0, 20)}...` : "없음",
-        });
-
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
-          console.log(
-            "✅ Authorization 헤더 설정됨:",
-            `Bearer ${token.substring(0, 20)}...`
-          );
-
-          // 디버깅을 위해 전체 토큰도 로깅 (보안상 주의)
-          console.log(
-            "🔍 전체 Authorization 헤더:",
-            config.headers.Authorization
-          );
-        } else {
-          console.log("❌ 토큰이 없어서 Authorization 헤더 설정 안됨");
         }
-
-        console.log("📤 최종 요청 헤더:", {
-          ...config.headers,
-          Authorization: config.headers.Authorization
-            ? `Bearer ${config.headers.Authorization.substring(7, 27)}...`
-            : undefined,
-        });
         return config;
       },
       (error) => Promise.reject(error)
     );
-
-    // 응답 인터셉터: 401/403 에러 시 선택적 로그아웃
+    // 응답 인터셉터: 인증 실패(401/403)시 필요하면 로그아웃 처리
     this.client.interceptors.response.use(
       (response) => response,
       (error) => {
-        console.log("🔍 API 에러 응답 분석:", {
-          status: error.response?.status,
-          url: error.config?.url,
-          method: error.config?.method,
-          message: error.message,
-          data: error.response?.data,
-        });
-
         if (error.response?.status === 401 || error.response?.status === 403) {
-          console.log("🚨 API 응답에서 인증 실패 감지");
-          console.log("요청 URL:", error.config?.url);
-          console.log("응답 데이터:", error.response?.data);
-          console.log("현재 토큰 존재 여부:", !!useAuthStore.getState().token);
-          console.log("현재 사용자 정보:", useAuthStore.getState().user);
-
-          // 중요한 인증 관련 API에서만 로그아웃 수행
           const url = error.config?.url || "";
           const shouldLogout =
             url.includes("/auth/") ||
@@ -80,13 +37,8 @@ class ApiClient {
             url.includes("/token");
 
           if (shouldLogout) {
-            console.log("🚨 중요한 인증 API 실패 - 자동 로그아웃 실행");
             const { logout } = useAuthStore.getState();
-            logout();
-          } else {
-            console.log(
-              "⚠️ 데이터 조회 API 실패 - 로그아웃하지 않고 에러만 처리"
-            );
+            if (typeof logout === "function") logout();
           }
         }
         return Promise.reject(error);
