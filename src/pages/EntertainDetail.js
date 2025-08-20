@@ -61,6 +61,64 @@ function EntertainDetail() {
     navigate(`/clubs/${clubId}`);
   };
 
+  // etcInfo 처리: 앞뒤 따옴표 제거, 줄바꿈 보존, URL을 하이퍼링크로 변환
+  const renderEtcInfo = (raw) => {
+    if (!raw) return "공지 정보 없음";
+
+    let text = String(raw);
+
+    // 앞뒤 작은따옴표/큰따옴표 제거
+    if (
+      (text.startsWith('"') && text.endsWith('"')) ||
+      (text.startsWith("'") && text.endsWith("'"))
+    ) {
+      text = text.slice(1, -1);
+    }
+
+    text = text.trim();
+
+    const urlRegex = /https?:\/\/[\w\-@:%._\+~#=\/\?&;,\(\)\[\]\$\'\!\*\+\=]+/g;
+
+    const lines = text.split(/\r?\n/);
+
+    return lines.map((line, idx) => {
+      const elements = [];
+      let lastIndex = 0;
+      let match;
+      // reset lastIndex of regex
+      urlRegex.lastIndex = 0;
+      while ((match = urlRegex.exec(line)) !== null) {
+        const url = match[0];
+        const index = match.index;
+        if (index > lastIndex) {
+          elements.push(line.substring(lastIndex, index));
+        }
+        elements.push(
+          <a
+            key={`link-${idx}-${index}`}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "#2b7cff" }}
+          >
+            {url}
+          </a>
+        );
+        lastIndex = index + url.length;
+      }
+      if (lastIndex < line.length) {
+        elements.push(line.substring(lastIndex));
+      }
+
+      return (
+        <React.Fragment key={`line-${idx}`}>
+          {elements}
+          {idx !== lines.length - 1 && <br />}
+        </React.Fragment>
+      );
+    });
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -226,7 +284,7 @@ function EntertainDetail() {
                     </div>
                     <div className={styles.inner}>
                       <span className={styles.variable_Info}>
-                        {entertainList?.etcInfo || "공지 정보 없음"}
+                        {renderEtcInfo(entertainList?.etcInfo)}
                       </span>
                     </div>
                   </div>
