@@ -150,11 +150,7 @@
 .reload_icon {
   width: 20px;
   height: 20px;
-  margin-right: 4px;
-
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
 }
 
 /* 모달 CSS */

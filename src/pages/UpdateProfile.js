@@ -56,35 +56,21 @@ function UpdateProfile() {
   };
 
   const openUpdateConfirmModal = () => {
-    if (!formData.userName?.trim()) {
-      setValidationErrorModal({
-        isOpen: true,
-        message: "이름을 입력해주세요.",
-      });
-      return;
+    // 집계된 유효성 검사 후 errors 상태 업데이트.
+    const newErrors = {};
+    if (!formData.userName?.trim()) newErrors.userName = "이름을 입력해주세요.";
+    if (!formData.stdId?.trim()) newErrors.stdId = "학번을 입력해주세요.";
+    else if (!/^\d{8}$/.test(formData.stdId))
+      newErrors.stdId = "학번은 8자리 숫자여야 합니다.";
+    if (!formData.phoneNum?.trim())
+      newErrors.phoneNum = "전화번호를 입력해주세요.";
+
+    setErrors(newErrors);
+
+    // 검증 통과할 때만 확인 모달을 연다. 실패하면 아무 반응도 하지 않음(에러 메시지는 표시됨).
+    if (Object.keys(newErrors).length === 0) {
+      setIsUpdateConfirmModalOpen(true);
     }
-    if (!formData.stdId?.trim()) {
-      setValidationErrorModal({
-        isOpen: true,
-        message: "학번을 입력해주세요.",
-      });
-      return;
-    }
-    if (!formData.phoneNum?.trim()) {
-      setValidationErrorModal({
-        isOpen: true,
-        message: "전화번호를 입력해주세요.",
-      });
-      return;
-    }
-    if (!/^\d{3}-\d{4}-\d{4}$/.test(formData.phoneNum)) {
-      setValidationErrorModal({
-        isOpen: true,
-        message: "전화번호 입력 형식은 다음과 같습니다. 010-1234-5678",
-      });
-      return;
-    }
-    setIsUpdateConfirmModalOpen(true);
   };
 
   const closeUpdateConfirmModal = () => setIsUpdateConfirmModalOpen(false);
@@ -127,9 +113,11 @@ function UpdateProfile() {
       try {
         const response = await apiClient.get("/mypage/student/profile");
         const userData = response.data;
+        // 서버가 0을 반환하는 경우(또는 null/undefined)는 입력에 '0'으로 보이지 않게 빈 문자열로 처리
+        const rawStdId = userData.studentId;
         setFormData({
           userName: userData.name || "",
-          stdId: userData.studentId?.toString() || "",
+          stdId: rawStdId === 0 || rawStdId == null ? "" : String(rawStdId),
           phoneNum: userData.phoneNumber || "",
         });
       } catch (error) {
@@ -175,13 +163,43 @@ function UpdateProfile() {
     setFormData((prev) => ({ ...prev, [name]: newValue }));
   };
 
+  // 학번 input을 벗어날 때 유효성 검사하여 에러 메시지 표시
+  const handleStdIdBlur = () => {
+    if (!/^\d{8}$/.test(formData.stdId || "")) {
+      setErrors((prev) => ({ ...prev, stdId: "학번 8자리를 입력해주세요." }));
+    } else {
+      setErrors((prev) => ({ ...prev, stdId: "" }));
+    }
+  };
+
+  // 이름 input blur 검증
+  const handleNameBlur = () => {
+    if (!formData.userName || !formData.userName.trim()) {
+      setErrors((prev) => ({ ...prev, userName: "이름을 입력해주세요." }));
+    } else {
+      setErrors((prev) => ({ ...prev, userName: "" }));
+    }
+  };
+
+  // 전화번호 input blur 검증
+  const handlePhoneBlur = () => {
+    if (!/^\d{3}-\d{4}-\d{4}$/.test(formData.phoneNum || "")) {
+      setErrors((prev) => ({
+        ...prev,
+        phoneNum: "전화번호 형식을 확인해주세요.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, phoneNum: "" }));
+    }
+  };
+
   const validateFields = () => {
     const newErrors = {};
     if (!formData.userName.trim()) newErrors.userName = "이름을 입력해주세요.";
     if (!/^\d{8}$/.test(formData.stdId))
       newErrors.stdId = "학번 8자리를 입력해주세요.";
     if (!/^\d{3}-\d{4}-\d{4}$/.test(formData.phoneNum))
-      newErrors.phoneNum = "전화번호 형식은 010-1234-5678입니다.";
+      newErrors.phoneNum = "전화번호 형식을 확인해주세요.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -263,7 +281,7 @@ function UpdateProfile() {
                   type="text"
                   maxLength="20"
                   name="userName"
-                  placeholder="이름을 입력해주세요."
+                  placeholder="홍길동"
                   value={formData.userName}
                   onChange={handleInputChange}
                   className={`${styles.input} ${
@@ -283,9 +301,10 @@ function UpdateProfile() {
                   inputMode="numeric"
                   maxLength="8"
                   name="stdId"
-                  placeholder="학번 8자리를 입력해주세요."
+                  placeholder="22000000"
                   value={formData.stdId}
                   onChange={handleInputChange}
+                  onBlur={handleStdIdBlur}
                   className={`${styles.input} ${
                     errors.stdId ? styles.inputError : ""
                   }`}
@@ -301,7 +320,7 @@ function UpdateProfile() {
                 <input
                   type="text"
                   name="phoneNum"
-                  placeholder="전화번호를 입력해주세요."
+                  placeholder="010-1234-5678"
                   value={formData.phoneNum}
                   onChange={handleInputChange}
                   maxLength={13}
@@ -359,10 +378,14 @@ function UpdateProfile() {
                 type="text"
                 maxLength="20"
                 name="userName"
-                placeholder="이름을 입력해주세요."
+                placeholder="홍길동"
                 value={formData.userName}
                 onChange={handleInputChange}
+                onBlur={handleNameBlur}
               />
+              {errors.userName && (
+                <div className={styles.errorMessage}>{errors.userName}</div>
+              )}
             </div>
           </div>
           <div className={styles.info}>
@@ -373,10 +396,14 @@ function UpdateProfile() {
                 inputMode="numeric"
                 maxLength="8"
                 name="stdId"
-                placeholder="학번 8자리를 입력해주세요."
+                placeholder="22000000"
                 value={formData.stdId}
                 onChange={handleInputChange}
+                onBlur={handleStdIdBlur}
               />
+              {errors.stdId && (
+                <div className={styles.errorMessage}>{errors.stdId}</div>
+              )}
             </div>
           </div>
           <div className={styles.info}>
@@ -385,11 +412,15 @@ function UpdateProfile() {
               <input
                 type="text"
                 name="phoneNum"
-                placeholder="전화번호를 입력해주세요."
+                placeholder="010-1234-5678"
                 value={formData.phoneNum}
                 onChange={handleInputChange}
+                onBlur={handlePhoneBlur}
                 maxLength={13}
               />
+              {errors.phoneNum && (
+                <div className={styles.errorMessage}>{errors.phoneNum}</div>
+              )}
             </div>
           </div>
         </div>

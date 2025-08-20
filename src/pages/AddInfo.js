@@ -18,6 +18,8 @@ function AddInfo() {
     onClose: null,
   });
 
+  const [leaveModal, setLeaveModal] = useState({ isOpen: false });
+
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -41,10 +43,16 @@ function AddInfo() {
       try {
         const response = await apiClient.get("/mypage/student/profile");
 
+        const rawStudentId = response.data.studentId;
+        const studentId =
+          rawStudentId == null || Number(rawStudentId) === 0
+            ? ""
+            : String(rawStudentId);
+
         setFormData({
           name: response.data.name || "",
           phoneNumber: response.data.phoneNumber || "",
-          studentId: response.data.studentId?.toString() || "",
+          studentId,
         });
       } catch (error) {
         // fetching user profile failed; debug output suppressed
@@ -58,6 +66,55 @@ function AddInfo() {
       fetchUserProfile();
     }
   }, [authLoading, isLoggedIn, navigate]);
+
+  // 작성 중인 내용이 있을 때 브라우저 새로고침/탭 닫기 경고
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      const hasData =
+        (formData.name && formData.name.trim()) ||
+        (formData.studentId && formData.studentId.trim()) ||
+        (formData.phoneNumber && formData.phoneNumber.trim());
+      if (hasData) {
+        e.preventDefault();
+        e.returnValue = "";
+        return "";
+      }
+      return undefined;
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [formData]);
+
+  // 전역 플래그: 다른 컴포넌트(예: Header)에서 이동 전에 확인할 수 있도록 상태를 노출
+  useEffect(() => {
+    const hasData =
+      (formData.name && formData.name.trim()) ||
+      (formData.studentId && formData.studentId.trim()) ||
+      (formData.phoneNumber && formData.phoneNumber.trim());
+    try {
+      window.__MBOGGA_UNSAVED = !!hasData;
+    } catch (err) {
+      // 환경에 따라 window 쓰기 불가할 수 있으나 무시
+    }
+    return () => {
+      try {
+        window.__MBOGGA_UNSAVED = false;
+      } catch (err) {}
+    };
+  }, [formData]);
+
+  const handleBack = () => {
+    const hasData =
+      (formData.name && formData.name.trim()) ||
+      (formData.studentId && formData.studentId.trim()) ||
+      (formData.phoneNumber && formData.phoneNumber.trim());
+    if (hasData) {
+      setLeaveModal({ isOpen: true });
+    } else {
+      navigate(-1);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -88,14 +145,47 @@ function AddInfo() {
     });
   };
 
+  // 이름 blur 검증
+  const handleNameBlur = () => {
+    if (!formData.name || !formData.name.trim()) {
+      setErrors((prev) => ({ ...prev, name: "이름을 입력해주세요." }));
+    } else {
+      setErrors((prev) => ({ ...prev, name: "" }));
+    }
+  };
+
+  // 학번 blur 검증
+  const handleStudentIdBlur = () => {
+    if (!/^\d{8}$/.test(formData.studentId || "")) {
+      setErrors((prev) => ({
+        ...prev,
+        studentId: "학번 8자리를 입력해주세요.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, studentId: "" }));
+    }
+  };
+
+  // 전화번호 blur 검증
+  const handlePhoneBlur = () => {
+    if (!/^\d{3}-\d{4}-\d{4}$/.test(formData.phoneNumber || "")) {
+      setErrors((prev) => ({
+        ...prev,
+        phoneNumber: "전화번호 형식을 확인해주세요.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, phoneNumber: "" }));
+    }
+  };
+
   const validateFields = () => {
     const newErrors = {};
 
     if (!formData.name.trim()) newErrors.name = "이름을 입력해주세요.";
     if (!/^\d{8}$/.test(formData.studentId))
-      newErrors.studentId = "학번 8자리를 입력해주세요";
+      newErrors.studentId = "학번 8자리를 입력해주세요.";
     if (!/^\d{3}-\d{4}-\d{4}$/.test(formData.phoneNumber))
-      newErrors.phoneNumber = "전화번호 형식은 010-1234-5678입니다.";
+      newErrors.phoneNumber = "전화번호 형식을 확인해주세요.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -115,6 +205,11 @@ function AddInfo() {
   const saveProfile = async () => {
     try {
       await apiClient.put("/mypage/student/profile", formData);
+
+      // 저장 성공 시 미작성 플래그 해제
+      try {
+        window.__MBOGGA_UNSAVED = false;
+      } catch (err) {}
 
       showModal("추가 정보 기입이 완료되었습니다.", () => navigate("/main"));
     } catch (error) {
@@ -158,7 +253,7 @@ function AddInfo() {
         <img className={styles.login_logo} src={LoginLogo} alt="login_logo" />
       </div>
       <header className={styles.mobile_header}>
-        <button className={styles.back_btn} onClick={() => navigate(-1)}>
+        <button className={styles.back_btn} onClick={handleBack}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="12"
@@ -195,10 +290,14 @@ function AddInfo() {
                 type="text"
                 maxLength="20"
                 name="name"
-                placeholder="이름을 입력해주세요."
+                placeholder="홍길동"
                 value={formData.name}
                 onChange={handleInputChange}
+                onBlur={handleNameBlur}
               />
+              {errors.name && (
+                <div className={styles.errorMessage}>{errors.name}</div>
+              )}
             </div>
           </div>
 
@@ -210,9 +309,10 @@ function AddInfo() {
                 inputMode="numeric"
                 maxLength="8"
                 name="studentId"
-                placeholder="학번 8자리를 입력해주세요."
+                placeholder="22000000"
                 value={formData.studentId}
                 onChange={handleInputChange}
+                onBlur={handleStudentIdBlur}
                 className={`${styles.input} ${
                   errors.studentId ? styles.inputError : ""
                 }`}
@@ -229,9 +329,10 @@ function AddInfo() {
               <input
                 type="text"
                 name="phoneNumber"
-                placeholder="전화번호를 입력해주세요."
+                placeholder="010-1234-5678"
                 value={formData.phoneNumber}
                 onChange={handleInputChange}
+                onBlur={handlePhoneBlur}
                 maxLength={13}
                 className={styles.input}
               />
@@ -249,8 +350,38 @@ function AddInfo() {
         </div>
       </div>
 
+      <Modal
+        isOpen={leaveModal.isOpen}
+        onClose={() => setLeaveModal({ isOpen: false })}
+      >
+        <div className={styles.modal_content}>
+          <div className={styles.modal_top}>
+            작성 중인 내용이 있습니다. 페이지를 나가시겠습니까?
+          </div>
+          <div className={styles.modal_Btns}>
+            <button
+              onClick={() => {
+                setLeaveModal({ isOpen: false });
+              }}
+              className={styles.modal_close_Btn}
+            >
+              취소
+            </button>
+            <button
+              onClick={() => {
+                setLeaveModal({ isOpen: false });
+                navigate(-1);
+              }}
+              className={styles.modal_ok_Btn}
+            >
+              나가기
+            </button>
+          </div>
+        </div>
+      </Modal>
+
       <div className={styles.caution}>
-        *모보까에 가입함으로써 개인정보 수집에 관해 동의하게 됩니다
+        *모보까에 가입함으로써 개인정보 수집에 관해 동의하게 됩니다.
       </div>
 
       <Modal isOpen={feedbackModal.isOpen} onClose={feedbackModal.onClose}>

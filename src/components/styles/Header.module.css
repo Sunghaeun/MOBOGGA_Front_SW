@@ -2,6 +2,12 @@
   cursor: pointer;
 }
 
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: default;
+}
+
 .manager_caution {
   color: var(--main-02, #ff3d12);
   margin-left: 16px;
