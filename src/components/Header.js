@@ -26,14 +26,30 @@ function Header() {
     setIsOpen(true);
   };
 
+  // 전역 플래그로 비활성화 여부를 읽어오는 헬퍼
+  const isDisabled = () => {
+    try {
+      return !!window.__MBOGGA_UNSAVED;
+    } catch (err) {
+      return false;
+    }
+  };
+  const disabledClass = isDisabled() ? ` ${styles.disabled}` : "";
+
+  // 안전한 네비게이션: AddInfo 등에서 전역 플래그를 통해 작성 중인지 확인
+  const safeNavigate = (to) => {
+    if (isDisabled()) return;
+    navigate(to);
+  };
+
   // 디버깅을 위한 로그 추가
   const isManagerUser = isManager();
 
   // 프로필 버튼 클릭 핸들러
   const handleProfileClick = () => {
     if (!auth) return;
-    if (isManagerUser) navigate("/manager/mypage");
-    else navigate("/mypage");
+    if (isManagerUser) safeNavigate("/manager/mypage");
+    else safeNavigate("/mypage");
   };
 
   // 프로필 툴팁 핸들러
@@ -56,8 +72,8 @@ function Header() {
           <img
             src={moboggaLogo}
             alt="MoboggaLogo"
-            className="logoImg"
-            onClick={() => navigate("/main")}
+            className={"logoImg" + disabledClass}
+            onClick={() => safeNavigate("/main")}
           />
         </div>
         {isManagerUser && (
@@ -70,12 +86,12 @@ function Header() {
       <div className={styles.right}>
         <div
           className={
-            location.pathname === "/main" ||
+            (location.pathname === "/main" ||
             location.pathname.startsWith("/show")
               ? `${styles.watching} ${styles.selectPadding}`
-              : styles.back
+              : styles.back) + disabledClass
           }
-          onClick={() => navigate("/main")}
+          onClick={() => safeNavigate("/main")}
         >
           <img
             src={header1}
@@ -103,11 +119,11 @@ function Header() {
 
         <div
           className={
-            location.pathname.startsWith("/recruiting")
+            (location.pathname.startsWith("/recruiting")
               ? `${styles.recruiting} ${styles.selectPadding}`
-              : styles.back
+              : styles.back) + disabledClass
           }
-          onClick={() => navigate("/recruiting")}
+          onClick={() => safeNavigate("/recruiting")}
         >
           <img
             src={header2}
@@ -131,11 +147,11 @@ function Header() {
 
         <div
           className={
-            location.pathname.startsWith("/clubs")
+            (location.pathname.startsWith("/clubs")
               ? `${styles.club} ${styles.selectPadding}`
-              : styles.back
+              : styles.back) + disabledClass
           }
-          onClick={() => navigate("/clubs")}
+          onClick={() => safeNavigate("/clubs")}
         >
           <img
             src={header3}
@@ -157,7 +173,7 @@ function Header() {
 
         {isLoggedIn && auth ? (
           <div
-            className={styles.manager_btn}
+            className={styles.manager_btn + disabledClass}
             onClick={handleProfileClick}
             onMouseEnter={handleProfileMouseEnter}
             onMouseLeave={handleProfileMouseLeave}
@@ -171,7 +187,7 @@ function Header() {
             /> */}
           </div>
         ) : location.pathname !== "/login" ? (
-          <div className={styles.login} onClick={() => navigate("/login")}>
+          <div className={styles.login} onClick={() => safeNavigate("/login")}>
             <span>로그인</span>
           </div>
         ) : null}

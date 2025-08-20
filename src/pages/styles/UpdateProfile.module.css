@@ -1,7 +1,3 @@
-.body {
-  padding: 16px 131px;
-}
-
 .loading {
   display: flex;
   flex-direction: column;
@@ -60,6 +56,19 @@
   }
 }
 
+.body {
+  padding: 16px 131px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: center;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 30px; /* 166.667% */
+  letter-spacing: 0.18px;
+}
+
 .title_box {
   width: 100%;
   margin-bottom: 100px;
@@ -72,23 +81,19 @@
 .info {
   display: flex;
   flex-direction: row;
-  margin-bottom: 12px;
+  /* 기본 간격을 넉넉히 주어 필드 간에 공간이 늘어나지 않도록 고정 여백 유지 */
+  margin-bottom: 20px;
 }
 
 .back_btn {
   display: none;
 }
 
-.body {
-  display: flex;
-  flex-direction: column;
-  height: 745px;
-  align-items: center;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 30px; /* 166.667% */
-  letter-spacing: 0.18px;
+/* 에러 메시지 스타일: 학번 8자리 등 입력 오류 표시용 */
+.errorMessage {
+  font-size: 12px;
+  color: var(--ORANGE);
+  text-align: right;
 }
 
 .logo_box {
@@ -101,8 +106,9 @@
 }
 
 .infos {
-  width: 294px;
-  height: 132px;
+  width: 100%;
+  /* 콘텐츠가 부족해도 최소 공간을 확보하기 위해 고정 높이 대신 최소 높이 사용 */
+  min-height: 132px;
   margin-bottom: 103px;
 }
 
@@ -111,17 +117,54 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 40px;
+  gap: 30px;
 }
 
 .info_head {
-  margin-right: auto;
+  width: 100%;
+  text-align: left;
 }
 
 .info_body input {
   height: 1.5em;
   border: 1px solid #ccc;
   padding: 0.5em;
+  font-size: 16px;
+}
+
+/* errorMessage가 레이아웃을 밀지 않도록 부모를 relative로 하고 에러는 absolute로 배치 */
+.info_body {
+  position: relative;
+}
+
+.errorMessage {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  font-size: 12px;
+  color: var(--ORANGE);
+  text-align: right;
+  margin: 0;
+  /* 부드러운 등장 애니메이션 */
+  animation: errorFadeIn 180ms ease-out both;
+}
+
+@keyframes errorFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .errorMessage {
+    animation: none;
+  }
 }
 
 .button_box {
@@ -174,7 +217,6 @@
 .modal_strong {
   color: var(--main-02, #ff3d12);
   /* Body 03 _ SB */
-  font-family: "IBM Plex Sans KR";
   font-size: 1rem;
   font-style: normal;
   font-weight: 600;
@@ -196,10 +238,9 @@
   color: var(--gray-10-typo-color, #121212);
   text-align: center;
   /* Body 01 _ SB */
-  font-family: "IBM Plex Sans KR";
   font-size: 1.25rem;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 2.0625rem; /* 165% */
   letter-spacing: 0.0125rem;
 }
@@ -228,10 +269,9 @@
   background: var(--gray-01-background, #fbfbfb);
   color: var(--main-02, #ff3d12);
   /* Body 04 _ R */
-  font-family: "IBM Plex Sans KR";
   font-size: 0.875rem;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.5rem; /* 171.429% */
   letter-spacing: 0.00875rem;
   &:hover {
@@ -250,16 +290,12 @@
   /* Typo*/
 
   color: var(--gray-01-background, #fbfbfb);
-  font-family: "IBM Plex Sans KR";
   font-size: 0.875rem;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.5rem; /* 171.429% */
   letter-spacing: 0.00875rem;
-
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {

@@ -92,7 +92,7 @@ function Mypage() {
 
   const fetchMyReservations = async () => {
     try {
-      const response = await apiClient.get("/mypage/student/myreservation");
+      const response = await apiClient.get("/mypage/student/reservation");
       // response received
 
       setMyReservCards(response.data || []);
@@ -113,6 +113,9 @@ function Mypage() {
   const reloadMyReservCards = () => {
     fetchMyReservations();
   };
+
+  // 안전: 서버 응답이 배열이 아닐 수 있으므로 렌더링 전 배열로 보장
+  const reservArray = Array.isArray(myReservCards) ? myReservCards : [];
 
   if (!isLoggedIn && !authLoading) {
     return (
@@ -165,12 +168,12 @@ function Mypage() {
               </div>
             </div>
           )}
-          {!isLoading && !error && myReservCards.length === 0 && (
+          {!isLoading && !error && reservArray.length === 0 && (
             <div className={styles.no_reserv}>예매 내역이 없습니다.</div>
           )}
           {!isLoading &&
             !error &&
-            myReservCards.map((myReservCard) => (
+            reservArray.map((myReservCard) => (
               <MyReservCard key={myReservCard.scheduleId} data={myReservCard} />
             ))}
         </div>
@@ -219,12 +222,12 @@ function Mypage() {
                   </div>
                 </div>
               )}
-              {!isLoading && !error && myReservCards.length === 0 && (
+              {!isLoading && !error && reservArray.length === 0 && (
                 <div className={styles.no_reserv}>예매 내역이 없습니다.</div>
               )}
               {!isLoading &&
                 !error &&
-                myReservCards.map((myReservCard) => (
+                reservArray.map((myReservCard) => (
                   <div
                     key={myReservCard.scheduleId * Math.random()}
                     className="myreservcard"
