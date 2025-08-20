@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import styles from "./styles/UpdateProfile.module.css";
 import UpdateProfileWord from "../assets/UpdateProfileWord.svg";
 import Modal from "../components/Modal";
+import useAuthStore from "../stores/authStore";
+import apiClient from "../utils/apiClient";
 
 function UpdateProfile() {
+  const { user, token, logout } = useAuthStore();
   const navigate = useNavigate();
-  const token = window.tempToken;
   const [isLoading, setIsLoading] = useState(true);
 
   const [formData, setFormData] = useState({
@@ -122,25 +124,15 @@ function UpdateProfile() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error("사용자 정보를 불러오는데 실패했습니다.");
-        }
-        const userData = await response.json();
+        const response = await apiClient.get("/mypage/student/profile");
+        const userData = response.data;
         setFormData({
           userName: userData.name || "",
           stdId: userData.studentId?.toString() || "",
           phoneNum: userData.phoneNumber || "",
         });
       } catch (error) {
+        console.error("프로필 정보 조회 실패:", error);
         setValidationErrorModal({
           isOpen: true,
           message: error.message || "사용자 정보를 불러오는데 실패했습니다.",
@@ -155,8 +147,13 @@ function UpdateProfile() {
         setIsLoading(false);
       }
     };
-    fetchUserProfile();
-  }, [token]);
+
+    if (token) {
+      fetchUserProfile();
+    } else {
+      navigate("/login");
+    }
+  }, [token, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -201,29 +198,19 @@ function UpdateProfile() {
 
   const saveProfile = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/mypage/student/profile`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: formData.userName,
-            phoneNumber: formData.phoneNum,
-            studentId: formData.stdId,
-          }),
-        }
-      );
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "저장에 실패했습니다.");
-      }
+      const response = await apiClient.put("/mypage/student/profile", {
+        name: formData.userName,
+        phoneNumber: formData.phoneNum,
+        studentId: formData.stdId,
+      });
       showModal("프로필 정보가 수정되었습니다.", () => navigate("/mypage"));
     } catch (error) {
-      showModal(error.message || "저장에 실패했습니다.");
+      console.error("프로필 저장 실패:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "저장에 실패했습니다.";
+      showModal(errorMessage);
       throw error;
     }
   };
