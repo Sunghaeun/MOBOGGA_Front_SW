@@ -31,8 +31,6 @@ function ClubDetail() {
         `${process.env.REACT_APP_API_URL}/club/detail/${id}`
       );
 
-      console.log("club 데이터 가져오기 성공");
-      console.log(res.data);
       setClub(res.data);
 
       const list1 =
@@ -73,11 +71,9 @@ function ClubDetail() {
       setLastEventList(list2);
       setLastRecruitingList(list3);
 
-      console.log("진행 중인 이벤트:", list1);
-      console.log("지난 볼거리:", list2);
-      console.log("지난 리크루팅:", list3);
+      // debug output suppressed
     } catch (err) {
-      console.error(err);
+      // error handling: debug output suppressed
     }
   };
   // 2) 페이지 로드되면 club 정보값 불러옴

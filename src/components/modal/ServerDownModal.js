@@ -36,8 +36,6 @@ function ServerDownModal({ isOpen, onRetry, onClose, errorMessage }) {
     .toLowerCase();
 
   // 디버그 로그
-  console.log("[ServerDownModal] rawMessage:", rawMessage);
-  console.log("[ServerDownModal] normalized:", normalized);
 
   // 이메일 도메인 에러인지 확인
   const isEmailDomainError =

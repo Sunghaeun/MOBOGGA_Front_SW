@@ -29,7 +29,6 @@ function RecruitingDetail() {
     navigate(`/clubs/${clubId}`); // 동아리 상세 페이지로 이동
   };
 
-  
   const fetchData = async () => {
     try {
       setIsLoading(true);
@@ -38,24 +37,15 @@ function RecruitingDetail() {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URL}/recruiting/detail/${recruitingId}`
       );
-      console.log("API 응답 데이터:", response.data);
       if (response.data) {
         setRecruiting(response.data);
-        console.log("API 전체", response.data);
       } else {
-        console.error("API에 recruiting 데이터가 없습니다.");
+        // 응답에 데이터 없음
         setRecruiting(null);
         setError("리크루팅 정보를 찾을 수 없습니다.");
       }
     } catch (error) {
-      console.error("Fetch Error:");
-      if (error.response) {
-        console.error("Response error:", error.response.data);
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Error message:", error.message);
-      }
+      // 상세 조회 오류 처리
       setRecruiting(null);
       setError("리크루팅 정보를 불러오는데 실패했습니다.");
     } finally {
@@ -189,7 +179,9 @@ function RecruitingDetail() {
                   </div>
                   <div className={styles.info_Box}>
                     <span className={styles.fixed_Info}>정모시간</span>
-                    <span className={styles.variable_Info}>{recruiting?.meetingTime || "없음"}</span>
+                    <span className={styles.variable_Info}>
+                      {recruiting?.meetingTime || "없음"}
+                    </span>
                   </div>
                   <div className={styles.info_Box}>
                     <span className={styles.fixed_Info}>활동내용</span>

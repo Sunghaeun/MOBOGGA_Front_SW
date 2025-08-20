@@ -17,16 +17,13 @@ function ShowManageCard({ data, onDeleted }) {
   };
 
   const handleEditClick = (e) => {
-    // 부모 카드 클릭으로 상세 페이지로 가지 않도록 전파 차단
     e?.stopPropagation();
     navigate(`/edit/show/${showId}`);
   };
 
   const handleDeleteClick = async (e) => {
     e?.stopPropagation();
-
-    if (isDeleting) return; // 다중 클릭 방지
-
+    if (isDeleting) return;
     if (
       !window.confirm(
         "정말로 이 공연을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
@@ -37,36 +34,24 @@ function ShowManageCard({ data, onDeleted }) {
 
     setIsDeleting(true);
     try {
-      const response = await apiClient.delete(`/mypage/manager/show/${showId}`);
-      console.log("공연 삭제 성공", showId, response?.data);
+      await apiClient.delete(`/mypage/manager/show/${showId}`);
 
-      // 사용자에게 성공 안내
       try {
         alert("공연이 성공적으로 삭제되었습니다.");
       } catch (e) {
-        /* alert가 차단될 경우 무시 */
+        /* ignore */
       }
 
-      // 부모가 onDeleted 콜백을 제공하면 우선 호출하여 부모에서 목록 갱신 처리
       if (typeof onDeleted === "function") {
         try {
           onDeleted(showId);
           return;
         } catch (cbErr) {
-          console.error("onDeleted callback error:", cbErr);
-          // 콜백 실패 시 폴백 동작 없음 — 경고만 로깅
+          // ignore
         }
       }
-
-      // 부모 콜백이 없으면 콘솔에 경고. 페이지 강제 이동/새로고침은 피함.
-      if (typeof onDeleted !== "function") {
-        console.warn(
-          "onDeleted not provided — 삭제 후 화면 갱신을 부모에서 처리해주세요."
-        );
-      }
+      // if no onDeleted, parent is expected to refresh
     } catch (error) {
-      console.error("공연 삭제 실패:", error);
-      // 서버에서 유의미한 메시지가 있으면 사용자에게 보여줌
       const userMsg =
         error?.response?.data?.message ||
         error?.message ||
@@ -129,7 +114,11 @@ function ShowManageCard({ data, onDeleted }) {
                   padding: 0,
                 }}
               >
-                <img className={styles.card_btn} src={showDeleteBtn} alt="공연 삭제" />
+                <img
+                  className={styles.card_btn}
+                  src={showDeleteBtn}
+                  alt="공연 삭제"
+                />
               </button>
             </div>
           </div>
@@ -138,4 +127,5 @@ function ShowManageCard({ data, onDeleted }) {
     </div>
   );
 }
+
 export default ShowManageCard;

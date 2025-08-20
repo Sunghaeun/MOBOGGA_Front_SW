@@ -19,29 +19,15 @@ function ManagerUpdateProfile() {
 
   // 매니저 권한 여부를 변수로 저장
   const isManagerUser = isManager();
-  const userRole = user?.authority;
 
   // 초기 권한 체크
   useEffect(() => {
-    console.log("=== MANAGER UPDATE PROFILE INIT ===");
-    console.log("Auth loading:", authLoading);
-    console.log("로그인 상태:", isLoggedIn);
-    console.log("매니저 권한:", isManagerUser);
-    console.log("사용자 역할:", userRole);
-
-    // 로딩 중이면 기다림
-    if (authLoading) {
-      console.log("인증 정보 로딩 중... 기다림");
-      return;
-    }
-
+    // init: manager update profile
+    if (authLoading) return;
     if (!isLoggedIn || !isManagerUser) {
-      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
       navigate("/login", { replace: true });
       return;
     }
-
-    console.log("권한 확인 완료");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, isManagerUser, authLoading, navigate]);
 
@@ -129,7 +115,7 @@ function ManagerUpdateProfile() {
       closeUpdateConfirmModal();
       navigate("/manager/mypage");
     } catch (error) {
-      console.error("Error saving profile:", error);
+      // error saving profile
     }
   };
 
@@ -150,15 +136,9 @@ function ManagerUpdateProfile() {
       }
 
       try {
-        console.log("=== FETCH MANAGER PROFILE START ===");
-        console.log("현재 토큰 상태:", !!token);
-        console.log("현재 사용자 정보:", user);
-
+        // fetch manager profile
         const response = await apiClient.get("/mypage/manager/profile");
-        console.log("Manager profile response:", response.data);
-
         const userData = response.data;
-        console.log("Manager Data:", userData);
 
         setFormData({
           clubName: userData.clubName || "",
@@ -166,9 +146,7 @@ function ManagerUpdateProfile() {
             userData.managerName || userData.userName || userData.name || "",
           phoneNum: userData.phoneNumber || "",
         });
-        console.log("userData:", userData);
       } catch (error) {
-        console.error("Error fetching user profile:", error);
         if (
           error.code === "ECONNABORTED" ||
           error.name === "TypeError" ||
@@ -202,12 +180,8 @@ function ManagerUpdateProfile() {
 
   const saveProfile = async () => {
     try {
-      console.log("=== SAVE PROFILE START ===");
-      console.log("현재 토큰 상태:", !!token);
-      console.log("현재 사용자 정보:", user);
-
+      // save profile
       if (!isLoggedIn || !isManagerUser) {
-        console.log("권한 없음 - 로그인 페이지로 리다이렉트");
         navigate("/login");
         return;
       }
@@ -218,15 +192,9 @@ function ManagerUpdateProfile() {
         phoneNumber: formData.phoneNum,
       };
 
-      console.log("Request data:", requestData);
-
-      const response = await apiClient.put(
-        "/mypage/manager/profile",
-        requestData
-      );
-      console.log("Save response:", response.data);
+      await apiClient.put("/mypage/manager/profile", requestData);
     } catch (error) {
-      console.error("Error saving profile:", error);
+      // error saving profile
       if (
         error.code === "ECONNABORTED" ||
         error.name === "TypeError" ||

@@ -168,26 +168,7 @@ function CreateShow() {
     formData.append("poster", poster, "poster.jpg");
     formData.append("qr", qr, "qr.jpg");
 
-    // 디버깅 로그
-    console.log("== 최종 전송 JSON ==");
-    console.log(JSON.stringify(requestData, null, 2));
-
-    console.log("== FormData entries ==");
-    for (const [k, v] of formData.entries()) {
-      if (v instanceof File) {
-        console.log(k, "-> File", { name: v.name, size: v.size, type: v.type });
-        // eslint-disable-next-line
-      } else {
-        // eslint-disable-next-line
-
-        // request는 Blob이라 바로 못 봄. 서버가 받는 건 JSON 문자열이므로 확인용:
-        if (k === "request" && v instanceof Blob) {
-          v.text().then((t) => console.log("request(json) ->", t));
-        } else {
-          console.log(k, "->", v);
-        }
-      }
-    }
+    // Debug info removed: requestData and FormData remain unchanged.
 
     try {
       const resp = await apiClient.post("/manager/show/create", formData, {
@@ -196,7 +177,7 @@ function CreateShow() {
         },
       });
 
-      console.log("저장 성공", resp.data);
+      // 저장 성공: resp.data 사용
       const { publicId, showId, id } = resp.data || {};
       const detailId = publicId ?? showId ?? id;
       if (detailId) {
@@ -206,14 +187,7 @@ function CreateShow() {
         window.scrollTo(0, 0);
       }
     } catch (error) {
-      console.error("저장 오류", error);
-
-      if (error?.response?.status === 401) {
-        console.log(
-          "[401] Authorization 헤더 유무/형식, 토큰 만료(exp)/aud/iss, 또는 권한(ROLE) 확인 필요"
-        );
-      }
-
+      // 에러는 사용자에게 알림
       alert(
         `저장 실패: ${
           error.response?.data?.message || error.message || "알 수 없는 오류"

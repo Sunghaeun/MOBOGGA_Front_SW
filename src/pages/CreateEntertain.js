@@ -84,7 +84,6 @@ function CreateEntertain() {
     // 필수값 검증
     if (!name) return setNameModalOpen(true);
     if (!poster || !(poster instanceof File)) {
-      console.log("포스터 파일 확인:", poster);
       return setImgModalOpen(true);
     }
     if (!location) return setLocationModalOpen(true);
@@ -131,7 +130,6 @@ function CreateEntertain() {
         navigate("/main");
       }
     } catch (error) {
-      console.error("저장 오류", error);
       setFailedModalOpen(true);
     }
   };

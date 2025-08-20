@@ -28,32 +28,12 @@ function Header() {
 
   // 디버깅을 위한 로그 추가
   const isManagerUser = isManager();
-  console.log("Header - auth:", auth);
-  console.log("Header - isLoggedIn:", isLoggedIn);
-  console.log("Header - isLoading:", isLoading);
-  console.log("Header - isManagerUser:", isManagerUser);
 
   // 프로필 버튼 클릭 핸들러
   const handleProfileClick = () => {
-    console.log("=== PROFILE CLICK DEBUG ===");
-    console.log("auth:", auth);
-    console.log("isLoggedIn:", isLoggedIn);
-    console.log("isManagerUser:", isManagerUser);
-
-    if (!auth) {
-      console.log("권한 정보가 없음");
-      return;
-    }
-
-    console.log("사용자 권한:", auth.authority);
-
-    if (isManagerUser) {
-      console.log("매니저로 인식 - /manager/mypage로 이동");
-      navigate("/manager/mypage");
-    } else {
-      console.log("일반 사용자로 인식 - /mypage로 이동");
-      navigate("/mypage");
-    }
+    if (!auth) return;
+    if (isManagerUser) navigate("/manager/mypage");
+    else navigate("/mypage");
   };
 
   // 프로필 툴팁 핸들러

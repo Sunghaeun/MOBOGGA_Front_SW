@@ -24,25 +24,25 @@ function ManagerEntertainpage() {
 
   // 초기 권한 체크
   useEffect(() => {
-    console.log("=== MANAGER ENTERTAIN PAGE INIT ===");
-    console.log("Auth loading:", authLoading);
-    console.log("로그인 상태:", isLoggedIn);
-    console.log("매니저 권한:", isManagerUser);
-    console.log("사용자 역할:", userRole);
+  // [removed] "=== MANAGER ENTERTAIN PAGE INIT ==="
+  // [removed] Auth loading
+  // [removed] 로그인 상태
+  // [removed] 매니저 권한
+  // [removed] 사용자 역할
 
     // 로딩 중이면 기다림
     if (authLoading) {
-      console.log("인증 정보 로딩 중... 기다림");
+  // [removed] 인증 정보 로딩 중... 기다림
       return;
     }
 
     if (!isLoggedIn || !isManagerUser) {
-      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
+  // [removed] 권한 없음 - 로그인 페이지로 리다이렉트
       navigate("/login", { replace: true });
       return;
     }
 
-    console.log("권한 확인 완료");
+  // [removed] 권한 확인 완료
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, isManagerUser, authLoading, navigate]);
 
@@ -66,13 +66,13 @@ function ManagerEntertainpage() {
   };
 
   const fetchManagerProfile = useCallback(async () => {
-    try {
-      console.log("=== FETCH MANAGER PROFILE START ===");
-      console.log("현재 토큰 상태:", !!token);
-      console.log("현재 사용자 정보:", user);
+  try {
+  // [removed] === FETCH MANAGER PROFILE START ===
+  // [removed] 현재 토큰 상태
+  // [removed] 현재 사용자 정보
 
-      const response = await apiClient.get("/mypage/manager/profile");
-      console.log("Manager profile response:", response.data);
+    const response = await apiClient.get("/mypage/manager/profile");
+  // [removed] Manager profile response
 
       const managerData = response.data;
 
@@ -85,7 +85,7 @@ function ManagerEntertainpage() {
         clubPoster: managerData.clubPoster || "",
       });
     } catch (error) {
-      console.error("Manager profile fetch error:", error);
+  // [removed] Manager profile fetch error
       if (
         error.code === "ECONNABORTED" ||
         error.name === "TypeError" ||
@@ -104,27 +104,27 @@ function ManagerEntertainpage() {
         }
       );
 
-      console.log("Manager profile response status:", response.status);
-
+  // [removed] Manager profile response status
+      
       // 401/403 에러 명시적 처리
       if (response.status === 401 || response.status === 403) {
-        console.log("Authentication/Authorization failed");
+  // [removed] Authentication/Authorization failed
         const errorText = await response.text();
-        console.log("Error response:", errorText);
+  // [removed] Error response
         handleTokenExpired();
         return;
       }
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.log("API Error response:", errorText);
+  // [removed] API Error response
         throw new Error(
           `서버 응답 오류 (${response.status}): 사용자 정보를 불러오는데 실패했습니다.`
         );
       }
 
-      const managerData = await response.json();
-      console.log("manager Data:", managerData);
+    const managerData = await response.json();
+  // [removed] manager Data
 
       // 서버에서 받은 데이터를 폼 데이터 형식에 맞게 변환
       setFormData({
@@ -135,7 +135,7 @@ function ManagerEntertainpage() {
         clubPoster: managerData.clubPoster || "",
       });
     } catch (error) {
-      console.error("Error fetching manager profile:", error);
+  // [removed] Error fetching manager profile
 
       // 네트워크 에러 vs 인증 에러 구분
       if (error.message.includes("401") || error.message.includes("403")) {
@@ -153,27 +153,27 @@ function ManagerEntertainpage() {
       setIsLoading(true);
       setError(null);
 
-      console.log("=== FETCH ENTERTAIN CARDS START ===");
-      console.log("현재 토큰 상태:", !!token);
-      console.log("현재 사용자 정보:", user);
+  // [removed] === FETCH ENTERTAIN CARDS START ===
+  // [removed] 현재 토큰 상태
+  // [removed] 현재 사용자 정보
 
-      const response = await apiClient.get("/mypage/manager/show");
-      console.log("Entertain cards response:", response.data);
+    const response = await apiClient.get("/mypage/manager/show");
+  // [removed] Entertain cards response
 
-      const data = response.data;
-      console.log("Entertain 전체 응답 데이터:", data);
+    const data = response.data;
+  // [removed] Entertain 전체 응답 데이터
 
       // API 응답에서 entertainList 추출
-      if (!data || !data.entertainList) {
-        console.log("entertainList가 없습니다. 전체 응답:", data);
+    if (!data || !data.entertainList) {
+  // [removed] entertainList가 없습니다. 전체 응답
         setEntertainCards([]);
         return;
       }
 
-      setEntertainCards(data.entertainList || []);
-      console.log("설정된 행사 내역 데이터:", data.entertainList);
+    setEntertainCards(data.entertainList || []);
+  // [removed] 설정된 행사 내역 데이터
     } catch (err) {
-      console.error("행사 카드 조회 에러:", err);
+  // [removed] 행사 카드 조회 에러
       if (
         err.code === "ECONNABORTED" ||
         err.name === "TypeError" ||
@@ -203,7 +203,7 @@ function ManagerEntertainpage() {
   }, [authLoading, isLoggedIn, isManagerUser, fetchManagerProfile, getEntertainCards]);
 
   if (isLoading) {
-    console.log("로딩 중 화면 렌더링");
+  // [removed] 로딩 중 화면 렌더링
     return (
       <>
         <div className={styles.body}>
@@ -258,7 +258,7 @@ function ManagerEntertainpage() {
   }
 
   // if (error) {
-  //   console.log("에러 화면 렌더링:", error);
+  //   // [removed] 에러 화면 렌더링
   //   return (
   //     <>
   //       <div className={styles.error_message}>

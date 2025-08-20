@@ -19,17 +19,17 @@ function ManagerRecruitingpage() {
 
   // 초기 권한 체크
   useEffect(() => {
-    console.log("=== MANAGER RECRUITING PAGE INIT ===");
-    console.log("로그인 상태:", isLoggedIn);
-    console.log("매니저 권한:", isManager());
+  // [removed] === MANAGER RECRUITING PAGE INIT ===
+  // [removed] 로그인 상태
+  // [removed] 매니저 권한
 
     if (!isLoggedIn || !isManager()) {
-      console.log("권한 없음 - 404로 리다이렉트");
+  // [removed] 권한 없음 - 404로 리다이렉트
       navigate("/404", { replace: true });
       return;
     }
 
-    console.log("권한 확인 완료 - 데이터 조회 시작");
+  // [removed] 권한 확인 완료 - 데이터 조회 시작
   }, [isLoggedIn, isManager, navigate]);
 
   const [formData, setFormData] = useState({
@@ -47,31 +47,31 @@ function ManagerRecruitingpage() {
 
   const fetchManagerProfile = async () => {
     try {
-      console.log("=== FETCH MANAGER PROFILE START ===");
+  // [removed] === FETCH MANAGER PROFILE START ===
       
       const response = await apiClient.get("/mypage/manager/profile");
 
-      console.log("Manager profile response status:", response.status);
+  // [removed] Manager profile response status
 
       // 401/403 에러 명시적 처리
-      if (response.status === 401 || response.status === 403) {
-        console.log("Authentication/Authorization failed");
-        const errorText = await response.text();
-        console.log("Error response:", errorText);
+  if (response.status === 401 || response.status === 403) {
+  // [removed] Authentication/Authorization failed
+    const errorText = await response.text();
+  // [removed] Error response
         handleTokenExpired();
         return;
       }
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.log("API Error response:", errorText);
+  // [removed] API Error response
         throw new Error(
           `서버 응답 오류 (${response.status}): 사용자 정보를 불러오는데 실패했습니다.`
         );
       }
 
-      const managerData = await response.json();
-      console.log("manager Data:", managerData);
+    const managerData = await response.json();
+  // [removed] manager Data
 
       // 서버에서 받은 데이터를 폼 데이터 형식에 맞게 변환
       setFormData({
@@ -82,7 +82,7 @@ function ManagerRecruitingpage() {
         clubPoster: managerData.clubPoster || "",
       });
     } catch (error) {
-      console.error("Error fetching manager profile:", error);
+  // [removed] Error fetching manager profile
 
       // 네트워크 에러 vs 인증 에러 구분
       if (error.message.includes("401") || error.message.includes("403")) {
@@ -100,26 +100,26 @@ function ManagerRecruitingpage() {
       setIsLoading(true);
       setError(null);
 
-      console.log("=== FETCH RECRUITING CARDS START ===");
+  // [removed] === FETCH RECRUITING CARDS START ===
 
       const response = await apiClient.get("/mypage/manager/show");
 
-      console.log("Recruiting cards response status:", response.status);
+  // [removed] Recruiting cards response status
 
       const data = response.data;
-      console.log("Recruiting 전체 응답 데이터:", data);
+  // [removed] Recruiting 전체 응답 데이터
 
       // API 응답에서 recruitingList 추출
-      if (!data || !data.recruitingList) {
-        console.log("recruitingList가 없습니다. 전체 응답:", data);
+    if (!data || !data.recruitingList) {
+  // [removed] recruitingList가 없습니다. 전체 응답
         setRecruitingCards([]);
         return;
       }
 
-      setRecruitingCards(data.recruitingList || []);
-      console.log("설정된 리크루팅 내역 데이터:", data.recruitingList);
+    setRecruitingCards(data.recruitingList || []);
+  // [removed] 설정된 리크루팅 내역 데이터
     } catch (err) {
-      console.error("에러 발생:", err);
+  // [removed] 에러 발생
 
       // recruiting API 에러는 토큰을 삭제하지 않음
       if (err.response?.status === 401 || err.response?.status === 403) {
@@ -146,7 +146,7 @@ function ManagerRecruitingpage() {
   }, [isLoggedIn, isManager]);
 
   if (isLoading) {
-    console.log("로딩 중 화면 렌더링");
+  // [removed] 로딩 중 화면 렌더링
     return (
       <>
         <div className={styles.body}>
@@ -201,7 +201,7 @@ function ManagerRecruitingpage() {
   }
 
   // if (error) {
-  //   console.log("에러 화면 렌더링:", error);
+  //   // [removed] 에러 화면 렌더링
   //   return (
   //     <>
   //       <div className={styles.error_message}>

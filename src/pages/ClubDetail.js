@@ -36,8 +36,6 @@ function ClubDetail() {
         `${process.env.REACT_APP_API_URL}/club/detail/${id}`
       );
 
-      console.log("club 데이터 가져오기 성공");
-      console.log(res.data);
       setClub(res.data);
 
       const list1 =
@@ -77,12 +75,8 @@ function ClubDetail() {
       setProgressingEventList(list1);
       setLastEventList(list2);
       setLastRecruitingList(list3);
-
-      console.log("진행 중인 이벤트:", list1);
-      console.log("지난 공연:", list2);
-      console.log("지난 리크루팅:", list3);
     } catch (err) {
-      console.error("동아리 정보 로드 실패:", err);
+      // error handled by state
       setError("동아리 정보를 불러오는데 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsLoading(false);

@@ -13,9 +13,6 @@ function MobileBanner() {
     const getShow = async () => {
       try {
         const res = await apiClient.get("/attraction/list");
-        console.log("rotatingPerformances 데이터 가져오기 성공");
-        console.log(res.data.rotatingPerformances);
-        console.log(res.data.rotatingPerformances[1]);
         const converted = res.data.rotatingPerformances.map((item) => ({
           id: item.id,
           name: item.title,
@@ -26,7 +23,7 @@ function MobileBanner() {
         }));
         setShow(converted);
       } catch (err) {
-        console.error("API 불러오기 실패", err);
+        // API 호출 실패: 사용자에게 에러 표시 대신 빈 배너 유지
       }
     };
     getShow();

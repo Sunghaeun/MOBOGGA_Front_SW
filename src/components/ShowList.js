@@ -28,7 +28,6 @@ function ShowList() {
       setError(null);
 
       const res = await apiClient.get("/attraction/list");
-      console.log("📥 Raw response from /attraction/list:", res.data);
 
       const converted = res.data.entireList.map((item) => {
         const [startDate, endDate] = item.period.split(" - ");
@@ -45,7 +44,6 @@ function ShowList() {
       });
       setShow(converted);
     } catch (err) {
-      console.log("데이터 가져오기 실패:", err);
       setError("공연 목록을 불러오는데 실패했습니다.");
     } finally {
       setIsLoading(false);
@@ -59,13 +57,7 @@ function ShowList() {
     getShow();
   }, []);
 
-  useEffect(() => {
-    console.log("현재 로그인한 사용자:", user);
-    console.log("사용자 역할:", user?.role);
-    console.log("사용자 권한:", user?.authority);
-    console.log("관리자 여부:", isManager());
-    console.log("인증 로딩 상태:", authLoading);
-  }, [user, isManager, authLoading]);
+  useEffect(() => {}, [user, isManager, authLoading]);
 
   // 3) 가져온 데이터별 카테고리 별로 필터링
   const filteredList =

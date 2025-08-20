@@ -40,7 +40,6 @@ function AddInfo() {
     const fetchUserProfile = async () => {
       try {
         const response = await apiClient.get("/mypage/student/profile");
-        console.log("사용자 프로필 응답:", response.data);
 
         setFormData({
           name: response.data.name || "",
@@ -48,7 +47,7 @@ function AddInfo() {
           studentId: response.data.studentId?.toString() || "",
         });
       } catch (error) {
-        console.error("Error fetching user profile:", error);
+        // fetching user profile failed; debug output suppressed
         // 사용자 정보를 불러올 수 없어도 계속 진행 (첫 로그인일 수 있음)
       } finally {
         setIsLoading(false);
@@ -115,14 +114,11 @@ function AddInfo() {
 
   const saveProfile = async () => {
     try {
-      console.log("프로필 저장 요청:", formData);
-
-      const response = await apiClient.put("/mypage/student/profile", formData);
-      console.log("프로필 저장 성공:", response.data);
+      await apiClient.put("/mypage/student/profile", formData);
 
       showModal("추가 정보 기입이 완료되었습니다.", () => navigate("/main"));
     } catch (error) {
-      console.error("Error saving profile:", error);
+      // saving profile failed; debug output suppressed
 
       let errorMessage = "저장에 실패했습니다.";
       if (error.response?.data?.message) {

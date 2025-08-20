@@ -14,38 +14,28 @@ import ServerErrorModal from "../../components/Mypage/ServerErrorModal";
 
 function ManagerMypage() {
   const navigate = useNavigate();
-  const {
-    user,
-    isLoggedIn,
-    isLoading: authLoading,
-    isManager,
-  } = useAuthStore();
+  const { isLoggedIn, isLoading: authLoading, isManager } = useAuthStore();
 
   // 매니저 권한 여부를 변수로 저장
   const isManagerUser = isManager();
 
   // 초기 권한 체크
   useEffect(() => {
-    console.log("=== MANAGER MYPAGE INIT ===");
-    console.log("Auth loading:", authLoading);
-    console.log("Is logged in:", isLoggedIn);
-    console.log("User:", user);
-    console.log("Is manager:", isManagerUser);
+    // init checks
 
     // 로딩 중이면 기다림
     if (authLoading) {
-      console.log("인증 정보 로딩 중... 기다림");
+      // waiting for auth loading
       return;
     }
 
     if (!isLoggedIn || !isManagerUser) {
-      console.log("권한 없음 - 로그인 페이지로 리다이렉트");
-      console.log("isLoggedIn:", isLoggedIn, "isManagerUser:", isManagerUser);
+      // not authorized - redirect to login
       navigate("/login", { replace: true });
       return;
     }
 
-    console.log("권한 확인 완료 - 데이터 조회 시작");
+    // authorized - fetch data
     fetchManagerProfile();
     // fetchClubInfo();
     // fetchReservationManage();
@@ -74,12 +64,10 @@ function ManagerMypage() {
 
   const fetchManagerProfile = useCallback(async () => {
     try {
-      console.log("=== FETCH MANAGER PROFILE START ===");
-      console.log("현재 토큰 상태:", !!useAuthStore.getState().token);
-      console.log("현재 사용자 정보:", useAuthStore.getState().user);
+      // fetch manager profile
 
       const response = await apiClient.get("/mypage/manager/profile");
-      console.log("Manager profile response:", response.data);
+      // response received
 
       const managerData = response.data;
 
@@ -92,13 +80,7 @@ function ManagerMypage() {
         clubPoster: managerData.clubPoster || "",
       });
     } catch (error) {
-      console.error("Manager profile fetch error:", error);
-      console.log("에러 상세:", {
-        status: error.response?.status,
-        message: error.message,
-        data: error.response?.data,
-      });
-
+      // Manager profile fetch error
       if (
         error.code === "ECONNABORTED" ||
         error.name === "TypeError" ||
@@ -119,36 +101,22 @@ function ManagerMypage() {
       setIsLoading(true);
       setError(null);
 
-      console.log("=== FETCH RESERVATION CARDS START ===");
-      console.log("현재 토큰 상태:", !!useAuthStore.getState().token);
-      console.log("현재 사용자 정보:", useAuthStore.getState().user);
+      // fetch reservation cards
 
       const response = await apiClient.get("/mypage/manager/holder/list");
-      console.log("Reservation cards response:", response.data);
+      // reservation cards response
 
       const data = response.data;
-      console.log("=== RAW RESERVATION DATA ===");
-      console.log("Full response data:", data);
-      console.log("Data keys:", Object.keys(data));
-      console.log("Has reservationList:", "reservationList" in data);
-      console.log("reservationList value:", data.reservationList);
+      // raw reservation data inspected
 
       if (!data || !data.reservationList) {
-        console.log("Data structure issue - trying alternative keys");
-        console.log("Available keys:", Object.keys(data || {}));
+        // data structure issue
         throw new Error("공연 내역 데이터 형식이 올바르지 않습니다.");
       }
 
       setReservManageCards(data.reservationList || []);
-      console.log("공연 내역 데이터:", data.reservationList);
+      // reservation data set
     } catch (err) {
-      console.error("에러 발생:", err);
-      console.log("에러 상세:", {
-        status: err.response?.status,
-        message: err.message,
-        data: err.response?.data,
-      });
-
       if (
         err.code === "ECONNABORTED" ||
         err.name === "TypeError" ||
@@ -187,7 +155,7 @@ function ManagerMypage() {
   };
 
   if (isLoading) {
-    console.log("로딩 중 화면 렌더링");
+    // loading state render
     return (
       <>
         <div className={styles.body}>

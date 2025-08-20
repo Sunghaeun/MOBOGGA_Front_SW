@@ -11,27 +11,6 @@ const sendAccessTokenToBackend = async (idToken, navigate) => {
       );
     }
 
-    console.log("API URL:", process.env.REACT_APP_API_URL);
-    console.log("Request payload:", {
-      credential: idToken?.substring(0, 50) + "...",
-    });
-    console.log(
-      "Sending request with idToken:",
-      idToken?.substring(0, 50) + "..."
-    );
-
-    console.log("Starting main OAuth request...");
-    console.log("Request details:", {
-      url: "/api/oauth/google/session",
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-      timeout: 30000,
-    });
-
-    // 요청 전 로그
-    console.log("About to send OAuth request...");
-
     // OAuth 요청은 토큰이 없는 상태이므로 직접 axios 인스턴스 사용
     const response = await apiClient.getInstance().post(
       "/api/oauth/google/session",
@@ -42,33 +21,15 @@ const sendAccessTokenToBackend = async (idToken, navigate) => {
         },
         withCredentials: true,
         timeout: 30000, // 30초로 타임아웃 늘림 (OAuth 토큰 검증은 시간이 걸릴 수 있음)
-        onUploadProgress: (progressEvent) => {
-          console.log("Upload progress:", progressEvent);
-        },
-        onDownloadProgress: (progressEvent) => {
-          console.log("Download progress:", progressEvent);
-        },
+        onUploadProgress: (progressEvent) => {},
+        onDownloadProgress: (progressEvent) => {},
       }
     );
 
-    console.log("Response received!");
-    console.log("Response status:", response.status);
-    console.log("Response headers:", response.headers);
-    console.log("Response from backend:", response.data);
-
-    // 쿠키 설정 확인
-    console.log("Document cookies after login:", document.cookie);
-
-    console.log("Login successful, session created via cookie");
-
     // Zustand 스토어에 토큰 저장
     if (response.data.token) {
-      console.log("토큰 받음:", response.data.token.substring(0, 30) + "...");
       const { setToken } = useAuthStore.getState();
       setToken(response.data.token);
-      console.log("Zustand 스토어에 토큰 저장 완료");
-    } else {
-      console.warn("백엔드에서 토큰을 받지 못했습니다!");
     }
 
     // 전역 인증 상태 업데이트 이벤트 발생 (하위 호환성)
@@ -88,20 +49,10 @@ const sendAccessTokenToBackend = async (idToken, navigate) => {
       }, 100);
     }
   } catch (error) {
-    console.error("Full error object:", error);
-    console.error("Error response:", error.response);
-    console.error("Error request:", error.request);
-
     // 네트워크 에러 처리
     if (error.code === "ERR_NETWORK" || error.message === "Network Error") {
-      console.error("Network error details:", {
-        code: error.code,
-        message: error.message,
-        config: error.config,
-      });
-
       throw new Error(
-        "서버에 연결할 수 없습니다. 서버가 실행 중인지 확인하거나 관리자에게 문의해주세요."
+        "서버에 연결할 수 없습니다. 서버가 실행 중인지 확인하거나 관리자에게 문의하세요."
       );
     }
 

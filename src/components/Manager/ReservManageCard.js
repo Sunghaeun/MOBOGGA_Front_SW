@@ -21,13 +21,9 @@ function ReservManageCard({ data, onDeleted }) {
   const handleDeleteShow = async () => {
     // showId로 전체 공연(모든 스케줄 포함) 삭제
     const apiUrl = `/mypage/manager/show/${id}`;
-    console.log("🔄 공연 삭제 API 요청:", apiUrl);
-    console.log("삭제할 공연 정보:", { id, scheduleId, title });
 
     try {
-      const response = await apiClient.delete(apiUrl);
-      console.log("📡 응답 상태:", response.status);
-      console.log("공연 삭제 성공:", response.data);
+      await apiClient.delete(apiUrl);
 
       alert("공연이 성공적으로 삭제되었습니다.");
 
@@ -37,23 +33,11 @@ function ReservManageCard({ data, onDeleted }) {
         try {
           onDeleted(id);
           return;
-        } catch (cbErr) {
-          console.error("onDeleted callback error:", cbErr);
-        }
+        } catch (cbErr) {}
       } else {
-        console.warn(
-          "ReservManageCard: onDeleted not provided — 목록 갱신을 부모에서 처리해주세요."
-        );
+        // onDeleted not provided — nothing to call
       }
     } catch (error) {
-      console.error("공연 삭제 실패:", error);
-      console.error("에러 상세:", {
-        status: error.response?.status,
-        statusText: error.response?.statusText,
-        data: error.response?.data,
-        message: error.message,
-      });
-
       if (error.response?.status === 401) {
         alert("권한이 없습니다. 다시 로그인해주세요.");
       } else if (error.response?.status === 403) {
