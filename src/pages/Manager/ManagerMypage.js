@@ -272,7 +272,7 @@ function ManagerMypage() {
                     }}
                     className={styles.retry_button}
                   >
-                    🔄 다시 시도
+                    다시 시도
                   </button>
                 </div>
               )}

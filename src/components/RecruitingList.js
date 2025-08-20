@@ -76,7 +76,7 @@ function RecruitingList() {
           onClick={() => getRecruiting()}
           className={loadingStyles.retryBtn}
         >
-          🔄 다시 시도
+          다시 시도
         </button>
       </div>
     );

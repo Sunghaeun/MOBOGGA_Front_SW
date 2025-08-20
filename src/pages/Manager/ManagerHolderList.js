@@ -402,7 +402,7 @@ function ManagerHolderList() {
           <div className={styles.errorIcon}>⚠️</div>
           <div className={styles.errorMessage}>{error}</div>
           <button onClick={handleRetry} className={styles.retryBtn}>
-            🔄 다시 시도
+            다시 시도
           </button>
         </div>
       </div>
