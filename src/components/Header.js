@@ -113,7 +113,7 @@ function Header() {
                 : ""
             }
           >
-            볼거리
+            공연&행사
           </span>
         </div>
 

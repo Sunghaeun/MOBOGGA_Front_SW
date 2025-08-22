@@ -1,37 +1,39 @@
-.footer{
-  height: 100%;
+.footer {
+  width: 100%;
   flex-shrink: 0;
 
-  background: #EAEAEA;
+  background: #eaeaea;
 
   box-sizing: border-box;
-  padding:12px 128px 20px 128px;
+  padding: 12px 128px 20px 128px;
+  position: relative;
+  z-index: 1000;
 }
 
-.firstContainer{
+.firstContainer {
   width: 20%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  color:rgba(62, 62, 62, 1);
+  color: rgba(62, 62, 62, 1);
 }
 
-.firstContainer span{
+.firstContainer span {
   font-weight: 500;
 }
 
-.firstContainer span:hover{
+.firstContainer span:hover {
   font-weight: 700;
   text-decoration: underline;
   cursor: pointer;
 }
 
-.secondContainer{
+.secondContainer {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 
-.secondContainer p{
+.secondContainer p {
   margin-top: 2px;
   margin-bottom: 2px;
   font-size: 11px;
@@ -39,13 +41,13 @@
   color: var(--Gray-06, #636363);
 }
 
-.logoImg{
-  margin-top:7px;
-  margin-bottom:17px;
+.logoImg {
+  margin-top: 7px;
+  margin-bottom: 17px;
 }
 
-.contact{
-  span a{
+.contact {
+  span a {
     color: var(--Gray-06, #636363);
     text-decoration: none;
   }
@@ -55,25 +57,24 @@
   }
 }
 
-.insta{
+.insta {
   display: flex;
-  margin-top:7px;
-  margin-bottom:21px;
+  margin-top: 7px;
+  margin-bottom: 21px;
   &:hover {
     cursor: pointer;
   }
 }
 
-.insta span{
-  color: var(--Gray-08, #3E3E3E);
+.insta span {
+  color: var(--Gray-08, #3e3e3e);
   font-size: 11px;
   font-weight: 500;
 
-  margin-left:6px;
+  margin-left: 6px;
 }
 
-.secondContainer span{
+.secondContainer span {
   color: var(--Gray-06, #636363);
   font-size: 11px;
 }
-

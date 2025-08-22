@@ -65,8 +65,8 @@ function ClubList() {
   }
 
   return (
-    <>
-      <div className={styles.column}>
+    <div className={styles.column}>
+      <div className={styles.buttons}>
         <div className={styles.category}>
           {["공연", "체육", "종교", "학술", "전시", "봉사", "전산"].map(
             (category, idx) => (
@@ -84,24 +84,23 @@ function ClubList() {
             )
           )}
         </div>
-
-        <div className={styles.showlist}>
-          {filteredList.map((item) => (
-            <ClubCard
-              key={item.id}
-              show={item}
-              className={styles.showCard}
-              onClick={() => navigate(`/clubs/${item.clubId}`)}
-            />
-          ))}
-          {filteredList.length === 0 && (
-            <div className={styles.noData}>
-              해당 카테고리의 동아리가 없습니다.
-            </div>
-          )}
-        </div>
       </div>
-    </>
+      <div className={styles.showlist}>
+        {filteredList.map((item) => (
+          <ClubCard
+            key={item.id}
+            show={item}
+            className={styles.showCard}
+            onClick={() => navigate(`/clubs/${item.clubId}`)}
+          />
+        ))}
+        {filteredList.length === 0 && (
+          <div className={styles.noData}>
+            해당 카테고리의 동아리가 없습니다.
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 

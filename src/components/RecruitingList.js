@@ -83,48 +83,49 @@ function RecruitingList() {
   }
 
   return (
-    <div className={styles.column}>
-      <div className={styles.categoryHeader}>
-        <img src={back} alt="back" />
-        <span className={styles.title}>카테고리</span>
-      </div>
-      <div className={styles.buttons}>
-        <div className={styles.category}>
-          {["전체", "정기모집", "추가모집", "상시모집"].map((category, idx) => (
+    <>
+      <div className={styles.column}>
+        <span className={styles.categoryText}>카테고리</span>
+        <div className={styles.buttons}>
+          <div className={styles.category}>
+            {["전체", "정기모집", "추가모집", "상시모집"].map(
+              (category, idx) => (
+                <div
+                  key={idx}
+                  className={
+                    selectedCategory === category
+                      ? styles.activeCategory
+                      : styles.inactiveCategory
+                  }
+                  onClick={() => setSelectedCategory(category)}
+                >
+                  <span>{category}</span>
+                </div>
+              )
+            )}
+          </div>
+
+          {isManager?.() && (
             <div
-              key={idx}
-              className={
-                selectedCategory === category
-                  ? styles.activeCategory
-                  : styles.inactiveCategory
-              }
-              onClick={() => setSelectedCategory(category)}
+              className={styles.createButton}
+              onClick={() => navigate("/recruiting/create")}
             >
-              <span>{category}</span>
+              <span>리쿠르팅 새로 만들기</span>
             </div>
-          ))}
+          )}
         </div>
 
-        {isManager?.() && (
-          <div
-            className={styles.createButton}
-            onClick={() => navigate("/recruiting/create")}
-          >
-            <span>리쿠르팅 새로 만들기</span>
-          </div>
-        )}
+        <div className={styles.recruitingList}>
+          {filteredList.map((item, index) => (
+            <RecruitingCard
+              key={index}
+              show={item}
+              onClick={() => navigate(`/recruiting/${item.recruitingId}`)}
+            />
+          ))}
+        </div>
       </div>
-
-      <div className={styles.recruitingList}>
-        {filteredList.map((item, index) => (
-          <RecruitingCard
-            key={index}
-            show={item}
-            onClick={() => navigate(`/recruiting/${item.recruitingId}`)}
-          />
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
 
