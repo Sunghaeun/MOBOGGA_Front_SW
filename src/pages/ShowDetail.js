@@ -170,6 +170,30 @@ function ShowDetail() {
     return parts.length >= 2 ? `${parts[0]}시${parts[1]}분` : timeString;
   };
 
+  // 공연이 과거인지 판별 (endDate가 있으면 endDate 기준, 없으면 스케줄의 모든 날짜가 과거인지 확인)
+  const isPastShow = () => {
+    try {
+      const now = new Date();
+      if (show?.endDate) {
+        const end = new Date(show.endDate);
+        // endDate가 YYYY-MM-DD일 경우, 당일은 공연 있음으로 간주하기 위해 하루 끝까지 포함
+        end.setHours(23, 59, 59, 999);
+        return end < now;
+      }
+      if (Array.isArray(show?.scheduleList) && show.scheduleList.length > 0) {
+        return show.scheduleList.every((s) => {
+          if (!s?.date) return false;
+          const d = new Date(s.date);
+          d.setHours(23, 59, 59, 999);
+          return d < now;
+        });
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  };
+
   // 로딩
   if (authLoading || loading) {
     return (
@@ -312,7 +336,8 @@ function ShowDetail() {
           </div>
         </div>
 
-        <div className={styles.show_ticket}>
+  {!isPastShow() && (
+  <div className={styles.show_ticket}>
           <div className={styles.ticket_Box}>
             <div className={styles.section}>공연 회차 선택</div>
             <div className={styles.selectSch}>
@@ -553,6 +578,7 @@ function ShowDetail() {
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
