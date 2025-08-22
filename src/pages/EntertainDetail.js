@@ -1,6 +1,6 @@
-/* eslint-disable */
 import React from "react";
 import { useState, useEffect } from "react";
+import { useCallback } from "react";
 import styles from "./styles/Entertain.module.css";
 import loadingStyles from "../styles/Loading.module.css";
 
@@ -29,7 +29,7 @@ function EntertainDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchEntertain = async () => {
+  const fetchEntertain = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -42,12 +42,12 @@ function EntertainDetail() {
     } finally {
       setIsLoading(false); // 무조건 로딩 상태 변경
     }
-  };
+  }, [endpoint]);
 
   // 처음 컴포넌트가 마운트될 때 fetchEntertain 호출
   useEffect(() => {
     fetchEntertain();
-  }, []);
+  }, [fetchEntertain]);
 
   const navigateToClubDetail = (clubId) => {
     navigate(`/clubs/${clubId}`);
@@ -69,7 +69,7 @@ function EntertainDetail() {
 
     text = text.trim();
 
-    const urlRegex = /https?:\/\/[\w\-@:%._\+~#=\/\?&;,\(\)\[\]\$\'\!\*\+\=]+/g;
+    const urlRegex = /https?:\/\/[\w\-@:%._+~#=/?,&;()[\]$'!*+=]+/g;
 
     const lines = text.split(/\r?\n/);
 
@@ -129,7 +129,10 @@ function EntertainDetail() {
       <div className={loadingStyles.error}>
         <div className={loadingStyles.errorIcon}>⚠️</div>
         <div className={loadingStyles.errorMessage}>{error}</div>
-        <button onClick={() => getClub()} className={loadingStyles.retryBtn}>
+        <button
+          onClick={() => fetchEntertain()}
+          className={loadingStyles.retryBtn}
+        >
           다시 시도
         </button>
       </div>
