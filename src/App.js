@@ -95,58 +95,69 @@ function AppContent() {
     <BrowserRouter>
       <div className="App">
         <Header />
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/main" element={<Main />} />
-          <Route path="/show/:showId" element={<ShowDetail />} />
-          <Route path="/entertain/:id" element={<EntertainDetail />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/clubs" element={<Clubs />} />
-          <Route path="/clubs/:id" element={<ClubDetail />} />
-          <Route path="/recruiting" element={<Recruiting />} />
-          <Route
-            path="/recruiting/:recruitingId"
-            element={<RecruitingDetail />}
-          />
-          <Route path="/mypage" element={<Mypage />} />
-          <Route path="/mypage/update" element={<UpdateProfile />} />
-          <Route path="/manager/mypage" element={<ManagerMypage />} />
-          <Route
-            path="/manager/mypage/update"
-            element={<ManagerUpdateProfile />}
-          />
-          <Route path="/manager/club/update" element={<ManagerUpdateClub />} />
-          <Route
-            path="/manager/holder/:scheduleId"
-            element={<ManagerHolderList />}
-          />
-          <Route path="/manager/show" element={<ManagerShowpage />} />
-          <Route path="/manager/entertain" element={<ManagerEntertainpage />} />
-          <Route
-            path="/manager/recruiting"
-            element={<ManagerRecruitingpage />}
-          />
+        <main>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/main" element={<Main />} />
+            <Route path="/show/:showId" element={<ShowDetail />} />
+            <Route path="/entertain/:id" element={<EntertainDetail />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/clubs" element={<Clubs />} />
+            <Route path="/clubs/:id" element={<ClubDetail />} />
+            <Route path="/recruiting" element={<Recruiting />} />
+            <Route
+              path="/recruiting/:recruitingId"
+              element={<RecruitingDetail />}
+            />
+            <Route path="/mypage" element={<Mypage />} />
+            <Route path="/mypage/update" element={<UpdateProfile />} />
+            <Route path="/manager/mypage" element={<ManagerMypage />} />
+            <Route
+              path="/manager/mypage/update"
+              element={<ManagerUpdateProfile />}
+            />
+            <Route
+              path="/manager/club/update"
+              element={<ManagerUpdateClub />}
+            />
+            <Route
+              path="/manager/holder/:scheduleId"
+              element={<ManagerHolderList />}
+            />
+            <Route path="/manager/show" element={<ManagerShowpage />} />
+            <Route
+              path="/manager/entertain"
+              element={<ManagerEntertainpage />}
+            />
+            <Route
+              path="/manager/recruiting"
+              element={<ManagerRecruitingpage />}
+            />
 
-          <Route path="/add-info" element={<AddInfo />} />
-          <Route path="/loading" element={<Loading />} />
-          <Route path="/login/oauth2/code/google" element={<OAuthCallback />} />
-          <Route path="/404" element={<Error404 />} />
+            <Route path="/add-info" element={<AddInfo />} />
+            <Route path="/loading" element={<Loading />} />
+            <Route
+              path="/login/oauth2/code/google"
+              element={<OAuthCallback />}
+            />
+            <Route path="/404" element={<Error404 />} />
 
-          <Route path="/recruiting/create" element={<CreateRecruiting />} />
-          <Route path="/show/create" element={<CreateShow />} />
-          <Route path="/entertain/create" element={<CreateEntertain />} />
+            <Route path="/recruiting/create" element={<CreateRecruiting />} />
+            <Route path="/show/create" element={<CreateShow />} />
+            <Route path="/entertain/create" element={<CreateEntertain />} />
 
-          <Route
-            path="/edit/recruiting/:recruitingId"
-            element={<EditRecruiting />}
-          />
-          <Route path="edit/entertain/:id" element={<EditEntertain />} />
-          <Route path="edit/show/:id" element={<EditShow />} />
-          <Route path="/manager/club/:id" element={<ManageClubDetail />} />
-          <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
-          <Route path="/tosslinktest" element={<TossAppLauncher />} />
-        </Routes>
+            <Route
+              path="/edit/recruiting/:recruitingId"
+              element={<EditRecruiting />}
+            />
+            <Route path="edit/entertain/:id" element={<EditEntertain />} />
+            <Route path="edit/show/:id" element={<EditShow />} />
+            <Route path="/manager/club/:id" element={<ManageClubDetail />} />
+            <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
+            <Route path="/tosslinktest" element={<TossAppLauncher />} />
+          </Routes>
+        </main>
         <Footer />
 
         {/* 서버 다운 모달 */}
