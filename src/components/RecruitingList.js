@@ -7,8 +7,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/authStore";
 
-import back from "../assets/icons/back.svg";
-
 function RecruitingList() {
   const navigate = useNavigate();
 
