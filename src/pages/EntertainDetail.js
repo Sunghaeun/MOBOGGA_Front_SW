@@ -2,6 +2,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import styles from "./styles/Entertain.module.css";
+import loadingStyles from "../styles/Loading.module.css";
 
 import BACK from "../assets/ShowBackButton.svg";
 import INSTA from "../assets/icons/instagram.svg";
@@ -25,35 +26,28 @@ function EntertainDetail() {
   const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
   const endpoint = `${API_BASE}/entertain/detail/${id}`;
 
-  useEffect(() => {
-    const fetchEntertain = async () => {
-      try {
-        const res = await axios.get(endpoint);
-        setEntertain(res.data);
-      } catch (err) {
-        // error loading entertain detail
-      }
-    };
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  const fetchEntertain = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const res = await axios.get(endpoint);
+      setEntertain(res.data);
+    } catch (err) {
+      // error loading entertain detail
+      setError(err);
+    } finally {
+      setIsLoading(false); // 무조건 로딩 상태 변경
+    }
+  };
+
+  // 처음 컴포넌트가 마운트될 때 fetchEntertain 호출
+  useEffect(() => {
     fetchEntertain();
-  }, [endpoint]);
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchShow = async () => {
-      try {
-        const res = await axios.get(endpoint);
-        setEntertain(res.data);
-        setLoading(false);
-      } catch (err) {
-        // loading error
-        setLoading(false);
-      }
-    };
-
-    fetchShow();
-  }, [endpoint]);
+  }, []);
 
   const navigateToClubDetail = (clubId) => {
     navigate(`/clubs/${clubId}`);
@@ -117,27 +111,48 @@ function EntertainDetail() {
     });
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className={loadingStyles.loading}>
+        <div className={loadingStyles.loadingSpinner}></div>
+        <div className={loadingStyles.loadingText}>
+          행사 정보를 불러오고 있습니다
+          <span className={loadingStyles.loadingDots}>...</span>
+        </div>
+        <div className={loadingStyles.loadingSubtext}>잠시만 기다려주세요</div>
+      </div>
+    );
   }
 
-  const getAuth = async () => {
-    try {
-      const token = window.tempToken; // 임시 토큰 사용
+  if (error) {
+    return (
+      <div className={loadingStyles.error}>
+        <div className={loadingStyles.errorIcon}>⚠️</div>
+        <div className={loadingStyles.errorMessage}>{error}</div>
+        <button onClick={() => getClub()} className={loadingStyles.retryBtn}>
+          다시 시도
+        </button>
+      </div>
+    );
+  }
 
-      const response = await axios.get(`${API_BASE}/auth/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
-        },
-        withCredentials: true,
-      });
+  // const getAuth = async () => {
+  //   try {
+  //     const token = window.tempToken; // 임시 토큰 사용
 
-      setAuth(response.data);
-    } catch (error) {
-      // login failure handled by caller; debug output suppressed
-      throw error;
-    }
-  };
+  //     const response = await axios.get(`${API_BASE}/auth/me`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
+  //       },
+  //       withCredentials: true,
+  //     });
+
+  //     setAuth(response.data);
+  //   } catch (error) {
+  //     // login failure handled by caller; debug output suppressed
+  //     throw error;
+  //   }
+  // };
 
   return (
     <div className={styles.wrap}>
