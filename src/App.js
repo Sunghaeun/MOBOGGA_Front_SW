@@ -65,7 +65,6 @@ function AppContent() {
   const { isServerDown, retryConnection, closeModal, handleServerError } =
     useServerStatus();
   const { initialize } = useAuthStore();
-  const isMobile = useIsMobile();
 
   // Zustand 스토어 초기화
   useEffect(() => {
@@ -73,7 +72,7 @@ function AppContent() {
   }, [initialize]);
 
   // 모바일 접속 시 ComingSoon 페이지 표시
-  if (isMobile) {
+  if (window.innerWidth < 768) {
     return (
       <BrowserRouter>
         <div className="App">
