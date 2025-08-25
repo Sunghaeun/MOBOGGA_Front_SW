@@ -11,8 +11,6 @@
 
   font-size: 24px;
   font-weight: 700;
-  text-shadow:   /* 글씨 더 굵게 보이게  */ -0.1px 0 currentColor,
-    0.1px 0 currentColor, 0 -0.1px currentColor, 0 0.1px currentColor;
   line-height: 40px; /* 166.667% */
   letter-spacing: 2px;
 
@@ -72,8 +70,6 @@
 
   font-size: 56px;
   font-weight: 700;
-  text-shadow:   /* 글씨 더 굵게 보이게  */ -1px 0 currentColor,
-    1px 0 currentColor, 0 -1px currentColor, 0 1px currentColor;
   line-height: 84px; /* 150% */
   letter-spacing: 3px;
 }
