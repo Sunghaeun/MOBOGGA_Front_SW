@@ -56,7 +56,7 @@ import ManageClubDetail from "./pages/ManageClubDetail";
 import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
 import TossAppLauncher from "./components/Mypage/TossAppLauncher";
 
-import FAQ from "./pages/FAQ";
+// import FAQ from "./pages/FAQ";
 
 import "./App.css";
 
