@@ -121,6 +121,11 @@ function RecruitingList() {
               onClick={() => navigate(`/recruiting/${item.recruitingId}`)}
             />
           ))}
+          {filteredList.length === 0 && (
+            <div className={styles.noData}>
+              해당 카테고리의 리크루팅이 없습니다.
+            </div>
+          )}
         </div>
       </div>
     </>
