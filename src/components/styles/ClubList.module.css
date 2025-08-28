@@ -92,3 +92,61 @@
 .showCard {
   display: flex;
 }
+
+
+@media (max-width: 440px) {
+  .main{
+    padding-top: 64px !important;
+  }
+
+  .column{
+    width:100%;
+  }
+
+  .title{
+    font:var(--BODY03_SB);
+  }
+
+  .buttons{
+    margin-top:8px;
+  }
+
+  .category{
+    margin-bottom:32px;
+    overflow-x: auto;       /* 좌우 스크롤 가능하게 만듦 */
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category::-webkit-scrollbar {
+    display: none;
+  }
+
+  .inactiveCategory{
+    margin-right: 12px;
+    border-radius: 4px;
+  }
+
+  .inactiveCategory span{
+    font:var(--BODY04);
+    
+  }
+
+  .activeCategory{
+    margin-right: 12px;
+    border-radius: 4px;
+  }
+
+  .activeCategory span{
+    font:var(--BODY04);
+  } 
+
+  .showlist{
+    grid-template-columns: repeat(2, minmax(0, 1fr)); 
+    gap: 10px; 
+    width:100%;
+
+    padding-top: 0px;
+  }
+}
+

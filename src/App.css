@@ -17,7 +17,7 @@ main {
 }
 
 main {
-  padding-top: 88px; /* 헤더 높이만큼 */
+  padding-top: 64px; /* 헤더 높이만큼 */
   min-height: 100vh; /* (선택) 화면 최소 높이 */
   height: auto; /* 내용에 따라 자동으로 늘어남 */
   box-sizing: border-box;

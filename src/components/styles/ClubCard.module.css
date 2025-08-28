@@ -85,3 +85,25 @@
 @media (prefers-reduced-motion: reduce) {
   .top { transition: none; transform: none; }
 }
+
+@media (max-width: 440px) {
+  .clubCard{
+    width: 100%;
+
+    margin:0px;
+  }
+
+  .clubImg{
+    width: 100% !important;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .mainImg{
+    width: 100% !important;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+
+}
