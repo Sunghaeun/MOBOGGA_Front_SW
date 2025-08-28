@@ -89,7 +89,7 @@ function Login() {
           이용하실 수 있습니다.
         </div>
       </div>
-      <div>
+      <div className={styles.google_login_btn_box}>
         <img
           className={styles.google_login_btn}
           src={isHovering ? GoogleLoginBtnHover : GoogleLoginBtnDefault}

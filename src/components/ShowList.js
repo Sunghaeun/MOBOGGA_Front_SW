@@ -202,9 +202,7 @@ function ShowList() {
           />
         ))}
         {filteredList.length === 0 && (
-          <div className={styles.noData}>
-            해당 카테고리의 행사가 없습니다.
-          </div>
+          <div className={styles.noData}>해당 카테고리의 행사가 없습니다.</div>
         )}
       </div>
     </div>

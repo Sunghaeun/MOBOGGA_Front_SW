@@ -23,11 +23,21 @@
   margin-bottom: 156px;
 }
 
+.words {
+  text-align: center;
+}
+
 .highlight_word {
   color: var(--ORANGE);
 }
 
-.google_login_btn:hover {
+.google_login_btn_box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.google_login_btn {
   cursor: pointer;
 }
 
