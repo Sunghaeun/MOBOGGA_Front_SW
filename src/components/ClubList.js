@@ -1,15 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ClubCard from "./ClubCard";
 import styles from "./styles/ClubList.module.css";
 import loadingStyles from "../styles/Loading.module.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function ClubList() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   //1) 카테고리 별 분류
   const [selectedCategory, setSelectedCategory] = useState("공연");
+
+  // URL에서 category 파라미터를 메모이제이션하여 최적화
+  const categoryFromUrl = useMemo(() => {
+    return searchParams.get("category");
+  }, [searchParams]);
+
+  // URL에서 category 파라미터 읽어서 초기 카테고리 설정
+  useEffect(() => {
+    if (categoryFromUrl) {
+      const categoryMap = {
+        performance: "공연",
+        sports: "체육",
+        religion: "종교",
+        study: "학술",
+        exhibit: "전시",
+        volunteer: "봉사",
+        legacy: "전산",
+      };
+      const mappedCategory = categoryMap[categoryFromUrl];
+      if (mappedCategory) {
+        setSelectedCategory(mappedCategory);
+      }
+    }
+  }, [categoryFromUrl]);
 
   // 1) club 데이터 가져오기
   const [club, setClub] = useState([]);
