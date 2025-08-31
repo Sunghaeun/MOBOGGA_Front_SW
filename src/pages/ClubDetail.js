@@ -14,8 +14,19 @@ import link from "../assets/icons/linkicons.svg";
 import EventCard from "../components/ClubDetail/EventCard";
 import LastRecruitingCard from "../components/ClubDetail/LastRecruitingCard";
 import LastEventCard from "../components/ClubDetail/LastEventCard";
+import MobileClubDetail from "../components/ClubDetail/MobileClubDetail";
 
 function ClubDetail() {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 600px)");
+    const update = (e) => setIsMobile(e.matches);
+    update(mq);                 // 최초 반영
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   const navigate = useNavigate();
   const { id } = useParams(); // 경로에서 :id 부분 가져옴
 
@@ -33,7 +44,7 @@ function ClubDetail() {
       setError(null);
 
       const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/club/detail/1`
+        `${process.env.REACT_APP_API_URL}/club/detail/${id}`
       );
 
       setClub(res.data);
@@ -115,148 +126,155 @@ function ClubDetail() {
 
   return (
     <>
-      <div className={styles.clubDetail}>
-        <span className={styles.titleName}> 동아리 정보 </span>
-        <div className={styles.clubDeatilContainer}>
-          <div className={styles.clubDeatilLeft}>
-            <img
-              src={clubList.photo}
-              alt="동아리 사진"
-              className={styles.ClubImg}
-            />
+      {isMobile ? 
+      <MobileClubDetail clubList={clubList}
+          progressingEventList={progressingEventList}
+          lastRecruitingList={lastRecruitingList}
+          lastEventList={lastEventList} /> : (
+        <div className={styles.clubDetail}>
+          <span className={styles.titleName}> 동아리 정보 </span>
+          <div className={styles.clubDeatilContainer}>
+            <div className={styles.clubDeatilLeft}>
+              <img
+                src={clubList.photo}
+                alt="동아리 사진"
+                className={styles.ClubImg}
+              />
 
-            <div className={styles.clubDeatilText1}>
-              <div className={styles.clubDeatiltitleDiv}>
-                <span className={styles.clubDeatiltitle}>필수학기</span>
+              <div className={styles.clubDeatilText1}>
+                <div className={styles.clubDeatiltitleDiv}>
+                  <span className={styles.clubDeatiltitle}>필수학기</span>
+                </div>
+                <div className={styles.clubDeatiltextDiv}>
+                  <span className={styles.clubDeatiltext}>
+                    {clubList.mandatorySemesters}학기
+                  </span>
+                </div>
               </div>
-              <div className={styles.clubDeatiltextDiv}>
-                <span className={styles.clubDeatiltext}>
-                  {clubList.mandatorySemesters}학기
-                </span>
+            </div>
+
+            <div className={styles.clubDeatilRight}>
+              <span className={styles.clubName}>{clubList.clubName}</span>
+
+              <div className={styles.icons}>
+                <a href={clubList.instaUrl}>
+                  <img src={insta} alt="" className={styles.iconImg} />
+                </a>
+                <a href={clubList.youtubeUrl}>
+                  <img src={youtube} alt="" className={styles.iconImg} />
+                </a>
+                <a href={clubList.kakaoUrl}>
+                  <img src={kakao} alt="" className={styles.iconImg} />
+                </a>
+                <a href={clubList.kakaoUrl}>
+                  <img src={link} alt="" className={styles.iconImg} />
+                </a>
               </div>
+              <span className={styles.content}>
+                {clubList.content?.split("\n").map((line, index) => (
+                  <React.Fragment key={index}>
+                    {line}
+                    {index < clubList.content.split("\n").length - 1 && <br />}
+                  </React.Fragment>
+                ))}
+              </span>
             </div>
           </div>
 
-          <div className={styles.clubDeatilRight}>
-            <span className={styles.clubName}>{clubList.clubName}</span>
+          <span className={styles.titleName}> 진행 중인 행사 </span>
+          <div className={styles.EventCardContainer}>
+            {progressingEventList.length > 0 ? (
+              progressingEventList.map((item, index) => (
+                <EventCard
+                  key={index}
+                  show={item}
+                  onClick={() => {
+                    const category = item.categoryOfEvent;
+                    const id = item.id;
 
-            <div className={styles.icons}>
-              <a href={clubList.instaUrl}>
-                <img src={insta} alt="" className={styles.iconImg} />
-              </a>
-              <a href={clubList.youtubeUrl}>
-                <img src={youtube} alt="" className={styles.iconImg} />
-              </a>
-              <a href={clubList.kakaoUrl}>
-                <img src={kakao} alt="" className={styles.iconImg} />
-              </a>
-              <a href={clubList.kakaoUrl}>
-                <img src={link} alt="" className={styles.iconImg} />
-              </a>
-            </div>
-            <span className={styles.content}>
-              {clubList.content?.split("\n").map((line, index) => (
-                <React.Fragment key={index}>
-                  {line}
-                  {index < clubList.content.split("\n").length - 1 && <br />}
-                </React.Fragment>
-              ))}
-            </span>
+                    if (category === "공연") {
+                      navigate(`/show/${id}`);
+                    } else if (category === "행사") {
+                      navigate(`/entertain/${id}`);
+                    } else if (category === "리크루팅") {
+                      navigate(`/recruiting/${id}`);
+                    }
+                  }}
+                />
+              ))
+            ) : (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "40px 20px",
+                  color: "#666",
+                  fontSize: "16px",
+                }}
+              >
+                해당 내역이 없습니다.
+              </div>
+            )}
           </div>
-        </div>
 
-        <span className={styles.titleName}> 진행 중인 이벤트 </span>
-        <div className={styles.EventCardContainer}>
-          {progressingEventList.length > 0 ? (
-            progressingEventList.map((item, index) => (
-              <EventCard
-                key={index}
-                show={item}
-                onClick={() => {
-                  const category = item.categoryOfEvent;
-                  const id = item.id;
-
-                  if (category === "공연") {
-                    navigate(`/show/${id}`);
-                  } else if (category === "행사") {
-                    navigate(`/entertain/${id}`);
-                  } else if (category === "리크루팅") {
-                    navigate(`/recruiting/${id}`);
-                  }
+          <span className={styles.titleName}> 지난 리크루팅 </span>
+          <div className={styles.LastRecruitingCardContainer}>
+            {lastRecruitingList.length > 0 ? (
+              lastRecruitingList.map((item, index) => (
+                <LastRecruitingCard
+                  key={index}
+                  show={item}
+                  onClick={() => navigate(`/recruiting/${item.recruitingId}`)}
+                />
+              ))
+            ) : (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "40px 20px",
+                  color: "#666",
+                  fontSize: "16px",
                 }}
-              />
-            ))
-          ) : (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "40px 20px",
-                color: "#666",
-                fontSize: "16px",
-              }}
-            >
-              해당 내역이 없습니다.
-            </div>
-          )}
-        </div>
+              >
+                해당 내역이 없습니다.
+              </div>
+            )}
+          </div>
 
-        <span className={styles.titleName}> 지난 리크루팅 </span>
-        <div className={styles.LastRecruitingCardContainer}>
-          {lastRecruitingList.length > 0 ? (
-            lastRecruitingList.map((item, index) => (
-              <LastRecruitingCard
-                key={index}
-                show={item}
-                onClick={() => navigate(`/recruiting/${item.recruitingId}`)}
-              />
-            ))
-          ) : (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "40px 20px",
-                color: "#666",
-                fontSize: "16px",
-              }}
-            >
-              해당 내역이 없습니다.
-            </div>
-          )}
-        </div>
+          <span className={styles.titleName}> 지난 공연 & 행사 </span>
+          <div className={styles.LastRecruitingCardContainer}>
+            {lastEventList.length > 0 ? (
+              lastEventList.map((item, index) => (
+                <LastEventCard
+                  key={index}
+                  show={item}
+                  onClick={() => {
+                    const category = item.showOrEntertain;
+                    const id = item.id;
 
-        <span className={styles.titleName}> 지난 공연 & 행사 </span>
-        <div className={styles.LastRecruitingCardContainer}>
-          {lastEventList.length > 0 ? (
-            lastEventList.map((item, index) => (
-              <LastEventCard
-                key={index}
-                show={item}
-                onClick={() => {
-                  const category = item.showOrEntertain;
-                  const id = item.id;
-
-                  if (category === "공연") {
-                    navigate(`/show/${id}`);
-                  } else {
-                    navigate(`/entertain/${id}`);
-                  }
+                    if (category === "공연") {
+                      navigate(`/show/${id}`);
+                    } else {
+                      navigate(`/entertain/${id}`);
+                    }
+                  }}
+                />
+              ))
+            ) : (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "40px 20px",
+                  color: "#666",
+                  fontSize: "16px",
                 }}
-              />
-            ))
-          ) : (
-            <div
-              style={{
-                textAlign: "center",
-                padding: "40px 20px",
-                color: "#666",
-                fontSize: "16px",
-              }}
-            >
-              해당 내역이 없습니다.
-            </div>
-          )}
+              >
+                해당 내역이 없습니다.
+              </div>
+            )}
+          </div>
+          
         </div>
-      </div>
+      )}
     </>
   );
 }
