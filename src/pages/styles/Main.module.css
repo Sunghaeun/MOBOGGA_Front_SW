@@ -12,7 +12,7 @@
   font:var(--TITLE06);
 }
 
-@media (max-width: 440px) {
+@media (max-width: 600px) {
 .main{
   padding: 8px 20px 90px 20px;
 }

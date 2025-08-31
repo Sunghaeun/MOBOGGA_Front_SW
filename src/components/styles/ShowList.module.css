@@ -170,11 +170,11 @@
   background: var(--gray-02-footer-background, #EAEAEA);
 }
 
-@media (max-width: 440px) {
+@media (max-width: 600px) {
   .showlist {
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 12px; 
-    width:100%;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
   }
 
   .category{

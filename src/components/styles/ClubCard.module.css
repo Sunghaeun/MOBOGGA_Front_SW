@@ -86,7 +86,7 @@
   .top { transition: none; transform: none; }
 }
 
-@media (max-width: 440px) {
+@media (max-width: 600px) {
   .clubCard{
     width: 100%;
 
