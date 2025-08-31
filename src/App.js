@@ -60,8 +60,7 @@ import "./App.css";
 
 // 메인 앱 컴포넌트 (ServerStatusProvider 내부)
 function AppContent() {
-  const { isServerDown, retryConnection, closeModal } =
-    useServerStatus();
+  const { isServerDown, retryConnection, closeModal } = useServerStatus();
   const { initialize } = useAuthStore();
 
   // Zustand 스토어 초기화
@@ -77,13 +76,13 @@ function AppContent() {
     }
   };
 
-  if(window.innerWidth <= 768) {
-    return (
-      <div className="App">
-        <ComingSoon />
-      </div>
-    );
-  }
+  // if(window.innerWidth <= 768) {
+  //   return (
+  //     <div className="App">
+  //       <ComingSoon />
+  //     </div>
+  //   );
+  // }
 
   return (
     <BrowserRouter>
