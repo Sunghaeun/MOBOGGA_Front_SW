@@ -183,7 +183,7 @@
   background: var(--gray-02-footer-background, #eaeaea);
 }
 
-@media (max-width: 440px) {
+@media (max-width: 600px) {
   .showlist {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;

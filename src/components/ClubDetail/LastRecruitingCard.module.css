@@ -21,8 +21,21 @@
   text-align: center;
   
 
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 40px; /* 166.667% */
-  letter-spacing: 0.72px;
+  font:var(--TITLE06);
+}
+
+@media (max-width: 600px) {
+  .showCard{
+    width: 183px;
+    height: 325px;  
+  }
+
+  .card img{
+    width: 180px;
+    height: 255px;
+  }
+
+  .name{
+    font:var(--BODY02_B);
+  }
 }

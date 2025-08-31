@@ -1,8 +1,6 @@
 .column{
   display: flex;
   flex-direction: column;
-
-  padding: 24px 128px 0px 128px;
 }
 
 .categoryText{
@@ -122,9 +120,9 @@
 }
 
 @media (max-width: 768px) {
-  .column{
+  /* .column{
     padding: 0px 22px 90px 20px;
-  }
+  } */
 
   .title{
     font:var(--BODY03_SB);

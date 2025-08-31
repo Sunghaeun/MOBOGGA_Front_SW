@@ -12,7 +12,7 @@ import {
 import useAuthStore from "./stores/authStore";
 
 import Landing from "./pages/Landing";
-import ComingSoon from "./pages/ComingSoon"; // Assuming this is the correct path for the Coming Soon page
+//import ComingSoon from "./pages/ComingSoon"; // Assuming this is the correct path for the Coming Soon page
 import Main from "./pages/Main";
 
 import ShowDetail from "./pages/ShowDetail";

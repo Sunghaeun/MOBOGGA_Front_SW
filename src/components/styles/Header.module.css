@@ -32,7 +32,7 @@
   align-items: center;
   justify-content: space-between;
 
-  background: var(--gray-01-background, #fbfbfb);
+  background: #fbfbfb;
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
   padding: 0px 128px;
   position: fixed;
@@ -114,7 +114,8 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
+
   .right {
     display: none;
   }
@@ -127,6 +128,7 @@
   .header {
     padding: 0 24px;
     height: 64px;
+    box-shadow: none;
   }
 
   .logo img {
