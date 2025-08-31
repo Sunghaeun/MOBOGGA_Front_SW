@@ -15,18 +15,10 @@
 }
 
 .firstContainer {
-  width: 20%;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  color: rgba(62, 62, 62, 1);
-}
-
-.firstContainer span {
-  font-weight: 500;
-}
-
-.firstContainer span:hover {
-  cursor: pointer;
+  width: 30%;
+  display: flex;
+  gap: 20px;
+  fill: var(--Gray-08, #3e3e3e);
 }
 
 .secondContainer {
