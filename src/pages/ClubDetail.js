@@ -33,7 +33,7 @@ function ClubDetail() {
       setError(null);
 
       const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/club/detail/${id}`
+        `${process.env.REACT_APP_API_URL}/club/detail/1`
       );
 
       setClub(res.data);
