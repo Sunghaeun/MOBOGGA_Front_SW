@@ -151,7 +151,7 @@
   display: none;
 }
 
-@media (max-width: 440px) {
+@media (max-width: 600px) {
   .showCard {
     width: 194px;
     height: auto;

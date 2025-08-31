@@ -3,16 +3,16 @@
   flex-direction: column;
   align-items: center;
 
-  width: 238px;
-  height: 430px;
+  width: 316px;
+  height: 545px;
 
   /* margin-bottom: 40px; */
   cursor: pointer;
 }
 
 .card img{
-  width: 231.875px;
-  height: 328px;
+  width: 316px;
+  height: 446px;
 
   border: 3px solid var(--gray-02-footer-background, #EAEAEA);
   background: lightgray 50% / cover no-repeat;
@@ -22,10 +22,11 @@
   color: var(--gray-10-typo-color, #121212);
   text-align: center;
   font:var(--TITLE06);
-  width: 238px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis; 
+
+  margin-top: 12px;
 }
 
 .clubDate{
@@ -50,28 +51,18 @@
   margin-left: 6px;
 }
 
-@media (max-width: 600px){
+@media (max-width: 600px) {
   .showCard{
-    width: 183px;
-    height: 325px;
+    width: 280px;
+    height: 480px;
   }
 
   .card img{
-    width: 180px;
-    height: 255px;
+    width: 280px;
+    height: 396px;
   }
 
   .name{
-    font:var(--BODY02_B);
-    width: 160px;
-  }
-
-  .date, .date1{
-    font-size: 12px;
-
-    line-height: 23px; /* 191.667% */
-    letter-spacing: 0.14px;
-
-    margin-left: 4px;
+    font:var(--BODY01_B);
   }
 }

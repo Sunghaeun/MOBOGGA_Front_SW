@@ -1,0 +1,18 @@
+.recruiting {
+  padding: 30px 130px 160px 130px;
+  box-sizing: border-box;
+}
+
+.categoryText{
+  color: var(--gray-10-typo-color, #121212);
+  font:var(--TITLE06);
+  margin-top: 70px;
+}
+
+
+@media (max-width: 600px) {
+  .recruiting {
+    padding: 6px 20px 90px 20px;
+    box-sizing: border-box;
+  }
+}

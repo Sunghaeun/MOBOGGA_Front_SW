@@ -1,0 +1,67 @@
+.clubDetail{
+  padding: 6px 24px 92px 24px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.ClubImg{
+  margin-top: 18px;
+  border: 8px solid var(--Gradient-01, #FBFBFB);
+  background: lightgray 50% / cover no-repeat;
+  box-shadow: 2px 2px 8px 0 rgba(0, 0, 0, 0.25);
+}
+
+.clubDetailContent{
+  margin-top: 20px;
+}
+
+.clubName{
+  color: var(--main-02, #FF3D12);
+  font:var(--TITLE03);
+}
+
+.icons{
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+
+.icons img{
+  width: 28px;
+  height: 28px;
+
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.content{
+  font: var(--BODY04);
+  white-space: pre-wrap;
+}
+
+.detailContent{
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.clubDetailtitle{
+  margin-top: 38px;
+  font: var(--BODY03_B);
+  color: var(--Point-03, #8E3DFF);
+  margin-bottom: 6px;
+}
+
+.titleNameDesign{
+  margin: 38px 0px 26px 16px;
+  font: var(--BODY03_B);
+  color: var(--Point-03, #8E3DFF);
+}
+
+.EventCardContainer, .LastRecruitingCardContainer{
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 16px;
+  padding-bottom: 8px;
+}
