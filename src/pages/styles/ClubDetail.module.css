@@ -9,18 +9,14 @@
 .titleName {
   color: var(--gray-10-typo-color, #121212);
 
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 40px; /* 166.667% */
-  letter-spacing: 2px;
-
+  font:var(--TITLE06);
   margin-top: 20px;
   margin-bottom: 30px;
 }
 
 .ClubImg {
   width: 384px;
-  height: 384px;
+  height: auto;
   border: 4px solid var(--Gradient-01, #fbfbfb);
   background: lightgray 50% / cover no-repeat;
 
@@ -51,7 +47,7 @@
 .clubDeatilText1 {
   display: flex;
   flex-direction: row;
-
+  align-items: center;
   margin-top: 20px;
 }
 
@@ -68,10 +64,7 @@
 .clubName {
   color: var(--main-02, #ff3d12);
 
-  font-size: 56px;
-  font-weight: 700;
-  line-height: 84px; /* 150% */
-  letter-spacing: 3px;
+  font:var(--TITLE01);
 }
 
 .icons {
@@ -87,10 +80,7 @@
 .content {
   margin-top: 28px;
   text-align: left;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 27px; /* 168.75% */
+  font:var(--BODY03);
 }
 
 .clubDeatiltitleDiv {
@@ -103,10 +93,7 @@
 .clubDeatiltitle {
   color: var(--Point-03, #8e3dff);
 
-  /* Body 03 _ EB */
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 800;
+  font:var(--BODY03_B);
   display: inline-block;
   width: 100%;
 }
@@ -126,7 +113,7 @@
 .EventCardContainer {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   justify-items: center;
 
