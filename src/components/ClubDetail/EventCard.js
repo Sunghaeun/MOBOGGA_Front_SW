@@ -1,7 +1,5 @@
 import React from "react";
-import styles from "../styles/ShowCard.module.css";
-
-
+import styles from "./EventCard.module.css";
 
 function EventCard({ show ,onClick }) {
   return (

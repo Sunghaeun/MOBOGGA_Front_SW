@@ -83,7 +83,6 @@ function RecruitingList() {
   return (
     <>
       <div className={styles.column}>
-        <span className={styles.categoryText}>카테고리</span>
         <div className={styles.buttons}>
           <div className={styles.category}>
             {["전체", "정기모집", "추가모집", "상시모집"].map(

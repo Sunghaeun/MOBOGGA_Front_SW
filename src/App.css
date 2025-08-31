@@ -53,3 +53,10 @@ main {
     transform: rotate(360deg);
   }
 }
+
+
+@media (max-width: 600px){
+  main{
+    padding-top: 64px !important;
+  }
+}

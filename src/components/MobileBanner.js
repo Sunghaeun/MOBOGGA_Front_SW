@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles/MobileBanner.module.css";
+import loadingStyles from "../styles/Loading.module.css";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../utils/apiClient";
 
@@ -7,6 +8,8 @@ function MobileBanner() {
   const [show, setShow] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,6 +27,8 @@ function MobileBanner() {
         setShow(converted);
       } catch (err) {
         // API 호출 실패: 사용자에게 에러 표시 대신 빈 배너 유지
+      } finally {
+        setIsLoading(false);
       }
     };
     getShow();
@@ -43,8 +48,25 @@ function MobileBanner() {
     return () => clearInterval(interval);
   }, [show]);
 
+  if (isLoading) {
+    return (
+      <div className={loadingStyles.loading}>
+        <div className={loadingStyles.loadingSpinner}></div>
+        <div className={loadingStyles.loadingText}>
+          배너 정보를 불러오고 있습니다
+          <span className={loadingStyles.loadingDots}>...</span>
+        </div>
+        <div className={loadingStyles.loadingSubtext}>잠시만 기다려주세요</div>
+      </div>
+    );
+  }
+
   if (show.length === 0) {
-    return <div className={styles.banner}>Loading...</div>;
+    return (
+      <div className={styles.banner}>
+        <div className={styles.noData}>표시할 배너가 없습니다.</div>
+      </div>
+    );
   }
 
   const len = show.length;

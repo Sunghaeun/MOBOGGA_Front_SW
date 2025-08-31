@@ -12,6 +12,21 @@
   padding: 18px 140px 42px 142px;
 }
 
+.noData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 200px;
+  color: var(--GRAY-04, #888888);
+  font: var(--BODY01);
+
+  grid-column: 1 / -1; /* 모든 컬럼을 차지 */
+  text-align: center;
+}
+
 .fade {
   opacity: 0;
   transition: opacity 1s ease-in-out;
