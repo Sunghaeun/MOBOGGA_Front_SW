@@ -211,7 +211,12 @@
 }
 
 .disabled_Label {
-  color: #acacac !important;
+  color: #7f7f7f !important;
+  background: var(--gray-04-disabled, #acacac);
+}
+
+.disabled_txt {
+  font: var(--TITLE06);
 }
 
 .selected_Label {
@@ -231,6 +236,9 @@
 .ticket_Box {
   margin-top: 20px;
   padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .section {
@@ -242,9 +250,11 @@
 
 .sch_Item {
   display: flex;
-  width: 100%;
-  height: 7rem;
-  align-items: center;
+  height: 5.5rem;
+  padding: 1rem 1.5rem;
+
+  gap: 3rem;
+  color: var(--gray-10-typo-color, #121212);
 }
 
 .sch_Item > input[type="radio"] {
@@ -255,6 +265,12 @@
 
 .Item_left {
   font: var(--BODY01);
+  display: flex;
+  align-items: flex-start;
+}
+
+.ItemDate {
+  font: var(--BODY02_B);
 }
 
 .ticket_Radio {
@@ -271,10 +287,12 @@
   display: flex;
   width: 5.25rem;
   height: 2.25rem;
-  border: solid 1px #acacac;
+  border: solid 1px #121212;
+  border-radius: 0.1875rem;
   align-items: center;
   justify-content: center;
   gap: 7px;
+  margin-top: 0.25rem;
 }
 
 .ticket_Count {
@@ -502,6 +520,8 @@
   background: #fbfbfb;
   box-shadow: 0 -4px 10px 0 rgba(0, 0, 0, 0.15);
   border-radius: 0.75rem 0.75rem 0 0;
+
+  padding: 0.25rem 0;
 }
 
 .stickyTop {

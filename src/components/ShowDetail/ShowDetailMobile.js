@@ -14,7 +14,7 @@ function ShowDetailMobile() {
   const { user, isLoggedIn, token, authLoading } = useAuthStore();
 
   const [show, setShow] = useState({});
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(0);
   const [selectedSch, setSelectedSch] = useState(null);
   const [isDisable, setIsDisable] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -125,7 +125,7 @@ function ShowDetailMobile() {
   const formatPrice = (price) =>
     typeof price === "number" ? price.toLocaleString("ko-KR") : "0";
 
-  useEffect(() => setCount(1), [selectedSch]);
+  useEffect(() => setCount(0), [selectedSch]);
 
   const Minus = () => {
     if (count > 1) setCount(count - 1);
@@ -364,21 +364,6 @@ function ShowDetailMobile() {
                       }`}
                             key={sch.scheduleId}
                           >
-                            <input
-                              type="radio"
-                              value={sch.scheduleId}
-                              name="schedule"
-                              disabled={isFull}
-                              className={styles.ticket_Radio}
-                              onChange={(e) =>
-                                setSelectedSch(
-                                  show.scheduleList.find(
-                                    (s) =>
-                                      s?.scheduleId === Number(e.target.value)
-                                  )
-                                )
-                              }
-                            />
                             <div className={styles.Item_left}>
                               {sch.order}공
                             </div>
@@ -388,33 +373,33 @@ function ShowDetailMobile() {
                               </div>
                               <div className={styles.ItemMid}>
                                 {formatPrice(sch.cost)}원 |{" "}
-                                {isFull ? (
-                                  <span className={styles.disabled_Label}>
-                                    매진
-                                  </span>
-                                ) : (
-                                  <span className={styles.people_Count}>
-                                    {sch.applyPeople}/{sch.maxPeople}
-                                  </span>
-                                )}
-                              </div>
-                              <div className={styles.ticket_Btns}>
-                                <button
-                                  className={styles.ticket_Btn}
-                                  onClick={Minus}
-                                >
-                                  -
-                                </button>
-                                <span className={styles.ticket_Count}>
-                                  {count}
+                                <span className={styles.people_Count}>
+                                  {sch.applyPeople}/{sch.maxPeople}
                                 </span>
-                                <button
-                                  className={styles.ticket_Btn}
-                                  onClick={Plus}
-                                >
-                                  +
-                                </button>
                               </div>
+                              {isFull ? (
+                                <span className={styles.disabled_txt}>
+                                  매진
+                                </span>
+                              ) : (
+                                <div className={styles.ticket_Btns}>
+                                  <button
+                                    className={styles.ticket_Btn}
+                                    onClick={Minus}
+                                  >
+                                    -
+                                  </button>
+                                  <span className={styles.ticket_Count}>
+                                    {count}
+                                  </span>
+                                  <button
+                                    className={styles.ticket_Btn}
+                                    onClick={Plus}
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </label>
                         );

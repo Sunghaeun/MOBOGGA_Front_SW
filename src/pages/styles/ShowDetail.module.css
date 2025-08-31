@@ -386,7 +386,8 @@
 
 .modal_Btns {
   display: flex;
-  padding-top: 1rem;
+  padding-top: 2rem;
+  margin-bottom: 0.5rem;
   gap: 0.5rem;
   justify-content: center;
   align-items: center;
