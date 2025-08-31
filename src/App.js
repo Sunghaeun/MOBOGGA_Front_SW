@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -11,7 +10,6 @@ import {
   useServerStatus,
 } from "./contexts/ServerStatusContext";
 import useAuthStore from "./stores/authStore";
-import useIsMobile from "./hooks/useIsMobile";
 
 import Landing from "./pages/Landing";
 import ComingSoon from "./pages/ComingSoon"; // Assuming this is the correct path for the Coming Soon page
@@ -62,7 +60,7 @@ import "./App.css";
 
 // 메인 앱 컴포넌트 (ServerStatusProvider 내부)
 function AppContent() {
-  const { isServerDown, retryConnection, closeModal, handleServerError } =
+  const { isServerDown, retryConnection, closeModal } =
     useServerStatus();
   const { initialize } = useAuthStore();
 
@@ -71,17 +69,6 @@ function AppContent() {
     initialize();
   }, [initialize]);
 
-  // 모바일 접속 시 ComingSoon 페이지 표시
-  if (window.innerWidth < 768) {
-    return (
-      <BrowserRouter>
-        <div className="App">
-          <ComingSoon />
-        </div>
-      </BrowserRouter>
-    );
-  }
-
   const handleRetry = async () => {
     const success = await retryConnection();
     if (success) {
@@ -89,6 +76,14 @@ function AppContent() {
       window.location.reload();
     }
   };
+
+  if(window.innerWidth <= 768) {
+    return (
+      <div className="App">
+        <ComingSoon />
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>

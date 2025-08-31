@@ -128,7 +128,7 @@ function Mypage() {
     );
   }
 
-  if (isMobile) {
+  if (window.innerWidth <= 768 || isMobile) {
     return (
       <div className={styles.mobile_body}>
         <header className={styles.mobile_header}>
@@ -146,7 +146,7 @@ function Mypage() {
               />
             </svg>
           </button>
-          <span className={styles.header_title}>마이페이지</span>
+          <span className={styles.header_title}>공연 예매 내역</span>
           <img
             src={reload_btn}
             alt="새로고침"
@@ -154,7 +154,6 @@ function Mypage() {
             onClick={reloadMyReservCards}
           />
         </header>
-        <div className={styles.mobile_section_title}>공연 예매 내역</div>
         <div className={styles.mobile_reservlist}>
           {isLoading && (
             <div className={loadingStyles.loading}>

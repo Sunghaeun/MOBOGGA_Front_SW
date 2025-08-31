@@ -10,6 +10,10 @@
   z-index: 1000;
 }
 
+.logoImg {
+  margin-bottom: 12px;
+}
+
 .firstContainer {
   width: 20%;
   display: grid;
@@ -22,8 +26,6 @@
 }
 
 .firstContainer span:hover {
-  font-weight: 700;
-  text-decoration: underline;
   cursor: pointer;
 }
 
@@ -31,19 +33,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  gap: 5px;
 }
 
-.secondContainer p {
-  margin-top: 2px;
-  margin-bottom: 2px;
+.secondContainer div {
   font-size: 11px;
   font-weight: 500;
   color: var(--Gray-06, #636363);
-}
-
-.logoImg {
-  margin-top: 7px;
-  margin-bottom: 17px;
 }
 
 .contact {
@@ -59,11 +55,9 @@
 
 .insta {
   display: flex;
-  margin-top: 7px;
+  align-items: center;
   margin-bottom: 21px;
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
 }
 
 .insta span {
@@ -77,4 +71,61 @@
 .secondContainer span {
   color: var(--Gray-06, #636363);
   font-size: 11px;
+}
+
+@media (max-width: 900px) {
+  .footer {
+    padding: 12px 32px 20px 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer {
+    padding: 12px 16px 20px 16px;
+  }
+  .firstContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    grid-template-columns: none;
+    text-align: left;
+    gap: 8px;
+  }
+  .firstContainer span {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .secondContainer {
+    align-items: flex-start;
+    margin-top: 12px;
+    text-align: left;
+  }
+  .secondContainer div,
+  .secondContainer span {
+    font-size: 10px;
+    text-align: left;
+  }
+  .logoImg {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 80px;
+    height: auto;
+    display: block;
+    margin-right: 0;
+  }
+  .insta {
+    justify-content: flex-start;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+  .insta span {
+    font-size: 10px;
+    margin-left: 4px;
+    margin-bottom: 0;
+  }
+  .copyRight {
+    margin-top: 10px;
+  }
 }

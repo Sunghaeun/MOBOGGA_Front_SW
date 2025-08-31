@@ -125,10 +125,8 @@ function Banner() {
   if (show.length === 0) {
     return (
       <div className={styles.banner}>
-        <div className={loadingStyles.error}>
-          <div className={loadingStyles.errorMessage}>
-            표시할 배너가 없습니다.
-          </div>
+        <div className={styles.noData}>
+          표시할 배너가 없습니다.
         </div>
       </div>
     );
