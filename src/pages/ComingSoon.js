@@ -13,6 +13,11 @@ function ComingSoon() {
           />
         </div>
         <div className={styles.landing_mobile_btn}>모보까 로그인</div>
+        <div className={styles.login_caution}>
+          <div className={styles.caution}>
+            *한동대학교 이메일 계정으로 로그인해주세요.
+          </div>
+        </div>
       </div>
       {/* 딤처리 오버레이 */}
       <div className={styles.overlay}>

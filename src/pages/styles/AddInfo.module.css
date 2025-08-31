@@ -29,15 +29,13 @@
 }
 
 .words_box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 56px;
 }
 
-.words {
-  text-align: center;
-}
-
-.infos {
-  width: 294px;
+.info_box {
   margin-bottom: 103px;
 }
 
@@ -51,7 +49,7 @@
 }
 
 .info_head {
-  width: 100px;
+  width: 30%;
   text-align: left;
 }
 
@@ -62,6 +60,10 @@
   width: 100%;
   font-size: 16px;
   border-radius: 4px;
+  &:focus {
+    outline: none;
+    border: 1px solid var(--ORANGE);
+  }
 }
 
 /* errorMessage를 절대 위치로 하여 레이아웃을 밀지 않도록 함 */
@@ -146,11 +148,22 @@
   border: 1px solid var(--ORANGE);
   background: var(--ORANGE);
   color: white;
+  cursor: pointer;
   &:hover {
     border: 1px solid var(--DEEPORANGE);
     background: var(--DEEPORANGE);
-    cursor: pointer;
   }
+}
+
+.disabled {
+  padding: 4px 94px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  background: #e0e0e0;
+  border: 1px solid #e0e0e0;
+  color: #aaa;
 }
 
 #cancel_button {
@@ -187,7 +200,6 @@
 .modal_strong {
   color: var(--main-02, #ff3d12);
   /* Body 03 _ SB */
-  font-family: "IBM Plex Sans KR";
   font-size: 1rem;
   font-style: normal;
   font-weight: 600;
@@ -209,7 +221,6 @@
   color: var(--gray-10-typo-color, #121212);
   text-align: center;
   /* Body 01 _ SB */
-  font-family: "IBM Plex Sans KR";
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 600;
@@ -241,7 +252,6 @@
   background: var(--gray-01-background, #fbfbfb);
   color: var(--main-02, #ff3d12);
   /* Body 04 _ R */
-  font-family: "IBM Plex Sans KR";
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 400;
@@ -263,7 +273,6 @@
   /* Typo*/
 
   color: var(--gray-01-background, #fbfbfb);
-  font-family: "IBM Plex Sans KR";
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 400;
@@ -278,9 +287,14 @@
 /* 반응형 모바일 전용 스타일 */
 @media (max-width: 768px) {
   .body {
-    height: 600px;
-    padding: 0 16px;
-    font-size: 16px;
+    display: none;
+  }
+
+  .mobile_body {
+    width: 100vw;
+    min-height: 100vh;
+    background: #fff;
+    padding-bottom: 32px;
   }
 
   .logo_box {
@@ -290,19 +304,21 @@
   .mobile_header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     height: 56px;
     padding: 0 16px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
   }
 
   .header_title {
     font-size: 1.1rem;
     font-weight: 700;
+    margin: 0 auto;
   }
 
   .highlight {
     color: var(--main-02, #ff3d12);
-    font-weight: 700;
+    font-weight: 800;
   }
 
   .back_btn {
@@ -311,20 +327,19 @@
     font-size: 1.5rem;
     color: #ff3d12;
     cursor: pointer;
-    transform: translateX(-600%);
   }
 
   .words_box {
+    padding: 0 32px;
     width: 100%;
-    padding-left: 50px;
-    text-align: left;
+    max-width: 100%;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 21px;
   }
 
   .words_box .word_title {
-    color: var(--gray-10-typo-color, #121212);
-
     /* Title 06 */
-    font-family: "Pretendard Variable";
     font-size: 24px;
     font-style: normal;
     font-weight: 800;
@@ -333,26 +348,34 @@
 
   .word_content {
     /* Body 03 _ SB */
-    font-family: "Pretendard Variable";
     font-size: 16px;
     font-style: normal;
     font-weight: 600;
     line-height: 27px; /* 168.75% */
   }
 
-  .infos {
+  .info_box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 32px;
     margin-bottom: 40px;
+    gap: 16px;
   }
 
   .info {
+    width: 100%;
     flex-direction: column;
     align-items: flex-start;
-    margin-right: 20px;
-    gap: 8px;
+    margin-bottom: 0;
   }
 
   .info_head {
+    /* Body 04 _ B */
     font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 24px; /* 171.429% */
   }
 
   .info_body {
@@ -360,18 +383,19 @@
   }
 
   .info_body input {
-    width: 100%;
+    width: 90%;
     font-size: 16px;
     border-radius: 4px;
   }
 
   .btn_box {
-    width: 100%;
+    width: 90%;
     display: flex;
     justify-content: center;
   }
 
   .start_btn {
+    margin: 0 32px;
     padding: 10px;
     width: 100%;
     justify-content: center;
@@ -381,12 +405,40 @@
     border: 1px solid var(--ORANGE);
     border-radius: 7px;
     background: var(--ORANGE);
-    color: white;
+
+    color: var(--gray-01-background, #fbfbfb);
+    text-align: center;
+
+    /* Body 02 _ SB */
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px; /* 166.667% */
+    cursor: pointer;
     &:hover {
       border: 1px solid var(--DEEPORANGE);
       background: var(--DEEPORANGE);
-      cursor: pointer;
     }
+  }
+
+  .disabled {
+    margin: 0 32px;
+    padding: 10px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    background: #e0e0e0;
+    border: 1px solid #e0e0e0;
+    border-radius: 7px;
+    color: #aaa;
+    text-align: center;
+
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 30px; /* 166.667% */
   }
 
   .caution {
