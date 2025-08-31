@@ -76,20 +76,6 @@ function AppContent() {
     }
   };
 
-  if (window.innerWidth <= 768) {
-    return (
-      <BrowserRouter>
-        <div className="App">
-          {/* <ComingSoon / */}
-          <Routes>
-            <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
-            <Route path="/tosslinktest" element={<TossAppLauncher />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
-  );
-}
-
   return (
     <BrowserRouter>
       <div className="App">
