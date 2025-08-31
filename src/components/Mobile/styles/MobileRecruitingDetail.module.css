@@ -18,11 +18,21 @@
   position: absolute;
   bottom: 65px;
   left: -30px;
-  width: 130%;
+  width: 111%;
   height: 160px;
-  background: lightgray 50% / cover no-repeat;
-  z-index: -10;
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
 
+.backgroundImg::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,.45); 
+  backdrop-filter: blur(2px);
+  pointer-events:none;
 }
 
 .sns_icons{
@@ -35,13 +45,14 @@
 }
 
 .recruite_Pic{
-  width: 100px;
-  height: 143px;
+  width: 120px;
+  height: auto;
   border: 4px solid var(--gray-01-background, #FBFBFB);
   background: lightgray 50% / cover no-repeat;
 
   /* Shadow _ Mobile */
   box-shadow: 2px 2px 8px 0 rgba(0, 0, 0, 0.25);
+  z-index: 2;
 }
 
 .title{

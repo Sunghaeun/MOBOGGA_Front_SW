@@ -37,7 +37,7 @@ function MobileClubDetail({ clubList = {},
                 <a href={clubList.instaUrl}>
                   <img src={insta} alt="" className={styles.iconImg} />
                 </a>
-                <a href={clubList.youtubeUrl}>
+                <a href={clubList.youtubeUrl}> 
                   <img src={youtube} alt="" className={styles.iconImg} />
                 </a>
                 <a href={clubList.kakaoUrl}>

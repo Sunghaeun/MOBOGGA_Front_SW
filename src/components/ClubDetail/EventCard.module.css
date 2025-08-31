@@ -11,8 +11,8 @@
 }
 
 .card img{
-  width: 100%;
-  height: 100%;
+  width: 316px;
+  height: 446px;
 
   border: 3px solid var(--gray-02-footer-background, #EAEAEA);
   background: lightgray 50% / cover no-repeat;
@@ -49,4 +49,20 @@
   letter-spacing: 0.16px;
 
   margin-left: 6px;
+}
+
+@media (max-width: 600px) {
+  .showCard{
+    width: 280px;
+    height: 480px;
+  }
+
+  .card img{
+    width: 280px;
+    height: 396px;
+  }
+
+  .name{
+    font:var(--BODY01_B);
+  }
 }

@@ -12,7 +12,7 @@ import {
 import useAuthStore from "./stores/authStore";
 
 import Landing from "./pages/Landing";
-import ComingSoon from "./pages/ComingSoon"; // Assuming this is the correct path for the Coming Soon page
+//import ComingSoon from "./pages/ComingSoon"; // Assuming this is the correct path for the Coming Soon page
 import Main from "./pages/Main";
 
 import ShowDetail from "./pages/ShowDetail";
@@ -54,7 +54,7 @@ import ManageClubDetail from "./pages/ManageClubDetail";
 import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
 import TossAppLauncher from "./components/Mypage/TossAppLauncher";
 
-// import FAQ from "./pages/FAQ";
+import FAQ from "./pages/FAQ";
 
 import "./App.css";
 
@@ -75,14 +75,6 @@ function AppContent() {
       window.location.reload();
     }
   };
-
-  // if(window.innerWidth <= 768) {
-  //   return (
-  //     <div className="App">
-  //       <ComingSoon />
-  //     </div>
-  //   );
-  // }
 
   return (
     <BrowserRouter>
@@ -135,6 +127,7 @@ function AppContent() {
               element={<OAuthCallback />}
             />
             <Route path="/404" element={<Error404 />} />
+            <Route path="/faq" element={<FAQ />} />
 
             <Route path="/recruiting/create" element={<CreateRecruiting />} />
             <Route path="/show/create" element={<CreateShow />} />

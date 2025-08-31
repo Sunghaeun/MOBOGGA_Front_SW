@@ -94,8 +94,7 @@ function Mypage() {
     try {
       const response = await apiClient.get("/mypage/student/reservation");
       // response received
-
-      setMyReservCards(response.data || []);
+      setMyReservCards(response.data.performanceList || []);
     } catch (error) {
       if (
         error.code === "ECONNABORTED" ||
