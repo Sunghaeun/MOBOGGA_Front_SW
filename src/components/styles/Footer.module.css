@@ -84,8 +84,8 @@
     text-align: left;
     gap: 8px;
   }
-  .firstContainer span {
-    font-size: 14px;
+  .firstContainer div {
+    font-size: 12px;
     margin-bottom: 4px;
   }
   .secondContainer {
