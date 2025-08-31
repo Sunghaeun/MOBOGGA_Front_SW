@@ -65,6 +65,8 @@ function RecruitingDetail() {
     }
   };
 
+  console.log(recruiting);
+
   useEffect(() => {
     fetchData();
   }, []);

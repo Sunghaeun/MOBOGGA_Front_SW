@@ -20,7 +20,9 @@ function MobileRecruitingDetail({ recruiting = {} }) {
       <div className={styles.recruitingDetail}>
         <PageHeader title="리쿠르팅 정보" />
         <div className={styles.recruitingTopContainer}>
-          <div className={styles.backgroundImg}>
+          <div className={styles.backgroundImg}
+          style={{ backgroundImage: `url(${recruiting.poster})` }}
+          aria-hidden="true">
 
           </div>
                     <div className={styles.sns_icons}>
