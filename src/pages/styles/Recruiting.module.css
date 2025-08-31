@@ -13,5 +13,6 @@
 @media (max-width: 600px) {
   .recruiting {
     padding: 6px 20px 90px 20px;
+    box-sizing: border-box;
   }
 }
