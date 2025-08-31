@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import ShowCard from "./ShowCard";
 import styles from "./styles/ShowList.module.css";
 import loadingStyles from "../styles/Loading.module.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import useAuthStore from "../stores/authStore";
 import apiClient from "../utils/apiClient";
 
@@ -10,6 +10,8 @@ import image1 from "../assets/mainTest/1.png";
 
 function ShowList() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
   // eslint-disable-next-line no-unused-vars
   const { user, isLoggedIn, isManager, authLoading } = useAuthStore();
 
@@ -21,29 +23,106 @@ function ShowList() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownValue, setDropdownValue] = useState("새로 만들기");
 
+  // 카테고리 버튼 ref들
+  const categoryRefs = useRef([]);
+
+  // URL에서 category 파라미터를 메모이제이션하여 최적화
+  const categoryFromUrl = useMemo(() => {
+    return searchParams.get("category");
+  }, [searchParams]);
+
+  // URL에서 category 파라미터 읽어서 초기 카테고리 설정
+  useEffect(() => {
+    if (categoryFromUrl) {
+      const categoryMap = {
+        all: "전체",
+        performance: "공연",
+        experience: "체험",
+        street: "스트릿공연",
+        food: "먹거리",
+        worship: "예배",
+      };
+      const mappedCategory = categoryMap[categoryFromUrl];
+      if (mappedCategory) {
+        setSelectedCategory(mappedCategory);
+      }
+    }
+  }, [categoryFromUrl]);
+
+  // selectedCategory 변경 시 해당 카테고리 버튼으로 스크롤
+  useEffect(() => {
+    const categories = ["전체", "공연", "체험", "스트릿공연", "먹거리", "예배"];
+    const index = categories.indexOf(selectedCategory);
+    if (index !== -1 && categoryRefs.current[index]) {
+      categoryRefs.current[index].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }, [selectedCategory]);
+
   // 1) show 데이터 가져오기
   const getShow = async () => {
     try {
       setIsLoading(true);
       setError(null);
 
+      // console.log("Fetching show data from /attraction/list"); // 디버깅용
       const res = await apiClient.get("/attraction/list");
+      // console.log("API Response:", res); // 디버깅용
+      // console.log("Response data:", res.data); // 디버깅용
+
+      if (!res.data || !res.data.entireList) {
+        throw new Error("Invalid response structure");
+      }
 
       const converted = res.data.entireList.map((item) => {
         const [startDate, endDate] = item.period.split(" - ");
-        return {
+        let category = item.category || "기타";
+
+        // 임시: category가 "기타"인 경우, name이나 다른 필드로 유추
+        if (category === "기타") {
+          if (item.title.includes("공연") || item.tag.includes("공연")) {
+            category = "공연";
+          } else if (item.title.includes("체험") || item.tag.includes("체험")) {
+            category = "체험";
+          } else if (
+            item.title.includes("스트릿") ||
+            item.tag.includes("스트릿")
+          ) {
+            category = "스트릿공연";
+          } else if (
+            item.title.includes("먹거리") ||
+            item.tag.includes("먹거리")
+          ) {
+            category = "먹거리";
+          } else if (item.title.includes("예배") || item.tag.includes("예배")) {
+            category = "예배";
+          }
+          // 기본적으로 "공연"으로 설정 (임시)
+          if (category === "기타") {
+            category = "공연";
+          }
+        }
+
+        const convertedItem = {
           id: item.id,
           name: item.title,
           clubID: item.club,
           startDate,
           endDate,
           tag: item.tag,
-          category: item.category || "기타",
+          category: category,
           photo: item.img?.trim() || image1,
         };
+        // console.log("Converted item:", convertedItem); // 디버깅용
+        return convertedItem;
       });
       setShow(converted);
     } catch (err) {
+      // console.error("Error fetching show data:", err);
+      // console.error("Error response:", err.response);
       setError("공연 목록을 불러오는데 실패했습니다.");
     } finally {
       setIsLoading(false);
@@ -63,7 +142,16 @@ function ShowList() {
   const filteredList =
     selectedCategory === "전체"
       ? show
-      : show.filter((item) => item.category === selectedCategory);
+      : show.filter((item) => {
+          const matches = item.category === selectedCategory;
+          // console.log(
+          //   `Filtering: ${item.category} === ${selectedCategory} ? ${matches}`
+          // ); // 디버깅용
+          return matches;
+        });
+
+  // console.log("Selected category:", selectedCategory); // 디버깅용
+  // console.log("Filtered list length:", filteredList.length); // 디버깅용
 
   if (authLoading || isLoading) {
     return (
@@ -98,6 +186,7 @@ function ShowList() {
             (category, idx) => (
               <div
                 key={idx}
+                ref={(el) => (categoryRefs.current[idx] = el)}
                 className={
                   selectedCategory === category
                     ? styles.activeCategory
@@ -202,7 +291,11 @@ function ShowList() {
           />
         ))}
         {filteredList.length === 0 && (
-          <div className={styles.noData}>해당 카테고리의 행사가 없습니다.</div>
+          <div className={styles.noData}>
+            {selectedCategory === "전체"
+              ? "현재 진행중인 볼거리가 없습니다."
+              : "해당 카테고리의 행사가 없습니다."}
+          </div>
         )}
       </div>
     </div>
