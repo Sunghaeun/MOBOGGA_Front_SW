@@ -1,19 +1,34 @@
 .banner {
- display: flex;
- flex-direction: column;
- align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.text{
-  font:var(--BODY01_B);
-  color:var(--BLACK);
+.noData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 200px;
+  color: var(--GRAY-04, #888888);
+  font: var(--BODY01);
+
+  grid-column: 1 / -1; /* 모든 컬럼을 차지 */
+  text-align: center;
+}
+
+.text {
+  font: var(--BODY01_B);
+  color: var(--BLACK);
 
   margin-top: 15px;
   margin-left: 22px;
   margin-bottom: 15px;
 }
 
-.container{
+.container {
   width: 100vw;
   height: 460px;
   flex-shrink: 0;
@@ -24,23 +39,23 @@
   align-items: center;
 }
 
-.MainImg{
+.MainImg {
   position: relative;
   width: 313.682px;
   height: 443px;
   flex-shrink: 0;
 
-  margin:0px 10px 0px 10px;
+  margin: 0px 10px 0px 10px;
 
   z-index: 1;
 }
 
-.MainImg img{
+.MainImg img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 
-  border: 4px solid var(--gray-02-footer-background, #EAEAEA);
+  border: 4px solid var(--gray-02-footer-background, #eaeaea);
   background: lightgray 50% / cover no-repeat;
 }
 
@@ -56,77 +71,74 @@
   pointer-events: none; /* ✅ 클릭은 이미지로 전달되게 */
 }
 
-.MainImg span{
-  color: #FFF;
+.MainImg span {
+  color: #fff;
   position: absolute;
 
-  white-space: nowrap;         /* ✅ 한 줄로 표시 */
-  overflow: hidden;            /* ✅ 넘치는 건 잘라냄 */
-  text-overflow: ellipsis;     /* ✅ 잘린 부분에 ... */
-  max-width: 270px;        
+  white-space: nowrap; /* ✅ 한 줄로 표시 */
+  overflow: hidden; /* ✅ 넘치는 건 잘라냄 */
+  text-overflow: ellipsis; /* ✅ 잘린 부분에 ... */
+  max-width: 270px;
 }
 
-.name{
+.name {
   top: 340px;
   left: 20px;
-  font:var(--TITLE06);
+  font: var(--TITLE06);
   z-index: 5;
 }
 
-.date{
+.date {
   top: 375px;
   left: 20px;
-  font:var(--BODY03_SB);
+  font: var(--BODY03_SB);
   z-index: 5;
 }
 
-.clubName{
+.clubName {
   top: 418px;
   left: 20px;
-  font:var(--CAPTION_B);
+  font: var(--CAPTION_B);
   z-index: 5;
-
 }
 
-.imgBox{
+.imgBox {
   width: 293.856px;
   height: 415px;
   flex-shrink: 0;
-  aspect-ratio: 293.86/415.00;
+  aspect-ratio: 293.86/415;
 
-  margin:0px 10px 0px 10px;
+  margin: 0px 10px 0px 10px;
 }
 
-.miniImgBox{
+.miniImgBox {
   width: 273.856px;
   height: 385px;
   flex-shrink: 0;
-  aspect-ratio: 273.86/385.00;
+  aspect-ratio: 273.86/385;
 
-  margin:0px 10px 0px 10px;
+  margin: 0px 10px 0px 10px;
 }
 
-.miniImgBox img{
+.miniImgBox img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 
-  border: 4px solid var(--gray-02-footer-background, #EAEAEA);
+  border: 4px solid var(--gray-02-footer-background, #eaeaea);
   background: lightgray 50% / cover no-repeat;
-
 }
 
-.imgBox img{
+.imgBox img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 
-  border: 4px solid var(--gray-02-footer-background, #EAEAEA);
+  border: 4px solid var(--gray-02-footer-background, #eaeaea);
   background: lightgray 50% / cover no-repeat;
 }
 
-.imgBox1{
-
+.imgBox1 {
 }
 
 .fade {
