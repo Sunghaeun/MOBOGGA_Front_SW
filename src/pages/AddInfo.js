@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/authStore";
@@ -248,7 +249,9 @@ function AddInfo() {
   }
 
   return (
-    <div className={styles.body}>
+    <div
+      className={window.innerWidth <= 768 ? styles.mobile_body : styles.body}
+    >
       <div className={styles.logo_box}>
         <img className={styles.login_logo} src={LoginLogo} alt="login_logo" />
       </div>
@@ -270,82 +273,88 @@ function AddInfo() {
         <span className={styles.header_title}>회원가입</span>
       </header>
       <div className={styles.words_box}>
-        <div className={styles.words}>
-          <div className={styles.word_title}>
-            <span className={styles.highlight}>모보까</span>를 처음
-            이용하시나요?
-          </div>
-          <div className={styles.word_content}>
-            추가 정보 기입을 통해 회원가입을 진행해주세요!
-          </div>
+        <div className={styles.word_title}>
+          <span className={styles.highlight}>모보까</span>를 처음 이용하시나요?
+        </div>
+        <div className={styles.word_content}>
+          추가 정보 기입을 통해 회원가입을 진행해주세요!{" "}
         </div>
       </div>
 
       <div className={styles.info_box}>
-        <div className={styles.infos}>
-          <div className={styles.info}>
-            <div className={styles.info_head}>이름</div>
-            <div className={styles.info_body}>
-              <input
-                type="text"
-                maxLength="20"
-                name="name"
-                placeholder="홍길동"
-                value={formData.name}
-                onChange={handleInputChange}
-                onBlur={handleNameBlur}
-              />
-              {errors.name && (
-                <div className={styles.errorMessage}>{errors.name}</div>
-              )}
-            </div>
+        <div className={styles.info}>
+          <div className={styles.info_head}>이름</div>
+          <div className={styles.info_body}>
+            <input
+              type="text"
+              maxLength="20"
+              name="name"
+              placeholder="홍길동"
+              value={formData.name}
+              onChange={handleInputChange}
+              onBlur={handleNameBlur}
+            />
+            {errors.name && (
+              <div className={styles.errorMessage}>{errors.name}</div>
+            )}
           </div>
+        </div>
 
-          <div className={styles.info}>
-            <div className={styles.info_head}>학번</div>
-            <div className={styles.info_body}>
-              <input
-                type="text"
-                inputMode="numeric"
-                maxLength="8"
-                name="studentId"
-                placeholder="22000000"
-                value={formData.studentId}
-                onChange={handleInputChange}
-                onBlur={handleStudentIdBlur}
-                className={`${styles.input} ${
-                  errors.studentId ? styles.inputError : ""
-                }`}
-              />
-              {errors.studentId && (
-                <div className={styles.errorMessage}>{errors.studentId}</div>
-              )}
-            </div>
+        <div className={styles.info}>
+          <div className={styles.info_head}>학번</div>
+          <div className={styles.info_body}>
+            <input
+              type="text"
+              inputMode="numeric"
+              maxLength="8"
+              name="studentId"
+              placeholder="22000000"
+              value={formData.studentId}
+              onChange={handleInputChange}
+              onBlur={handleStudentIdBlur}
+              className={`${styles.input} ${
+                errors.studentId ? styles.inputError : ""
+              }`}
+            />
+            {errors.studentId && (
+              <div className={styles.errorMessage}>{errors.studentId}</div>
+            )}
           </div>
+        </div>
 
-          <div className={styles.info}>
-            <div className={styles.info_head}>전화번호</div>
-            <div className={styles.info_body}>
-              <input
-                type="text"
-                name="phoneNumber"
-                placeholder="010-1234-5678"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                onBlur={handlePhoneBlur}
-                maxLength={13}
-                className={styles.input}
-              />
-              {errors.phoneNumber && (
-                <div className={styles.errorMessage}>{errors.phoneNumber}</div>
-              )}
-            </div>
+        <div className={styles.info}>
+          <div className={styles.info_head}>전화번호</div>
+          <div className={styles.info_body}>
+            <input
+              type="text"
+              name="phoneNumber"
+              placeholder="010-1234-5678"
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
+              onBlur={handlePhoneBlur}
+              maxLength={13}
+              className={styles.input}
+            />
+            {errors.phoneNumber && (
+              <div className={styles.errorMessage}>{errors.phoneNumber}</div>
+            )}
           </div>
         </div>
       </div>
 
       <div className={styles.btn_box}>
-        <div className={styles.start_btn} onClick={handleSubmit}>
+        <div
+          className={
+            formData.name && formData.studentId && formData.phoneNumber
+              ? styles.start_btn
+              : styles.disabled
+          }
+          onClick={
+            formData.name && formData.studentId && formData.phoneNumber
+              ? handleSubmit
+              : undefined
+          }
+        >
           모보까 시작하기
         </div>
       </div>

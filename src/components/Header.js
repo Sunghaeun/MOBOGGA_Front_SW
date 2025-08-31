@@ -65,6 +65,9 @@ function Header() {
     setShowProfileTooltip(false);
     handleProfileClick();
   };
+  // /add-info 페이지 여부 확인
+  const isAddInfoPage = location.pathname === "/add-info";
+
   return (
     <header className={styles.header}>
       <div className={styles.left_section}>
@@ -192,18 +195,22 @@ function Header() {
           </div>
         ) : null}
       </div>
-      <div className={styles.sidebar} onClick={toggleSide}>
-        <img src={sidebar} alt="사이드바" />
-      </div>
-
-      <Sidebar
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        auth={auth}
-        isLoggedIn={isLoggedIn}
-        isLoading={isLoading}
-        isManager={isManager}
-      />
+      {/* /add-info 페이지가 아닐 때만 sidebar 아이콘과 Sidebar 컴포넌트 렌더링 */}
+      {!isAddInfoPage && (
+        <>
+          <div className={styles.sidebar} onClick={toggleSide}>
+            <img src={sidebar} alt="사이드바" />
+          </div>
+          <Sidebar
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            auth={auth}
+            isLoggedIn={isLoggedIn}
+            isLoading={isLoading}
+            isManager={isManager}
+          />
+        </>
+      )}
     </header>
   );
 }

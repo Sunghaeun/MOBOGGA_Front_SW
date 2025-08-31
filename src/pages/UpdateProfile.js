@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/UpdateProfile.module.css";
+import loadingStyles from "../styles/Loading.module.css";
 import UpdateProfileWord from "../assets/UpdateProfileWord.svg";
 import Modal from "../components/Modal";
 import useAuthStore from "../stores/authStore";
@@ -30,8 +31,6 @@ function UpdateProfile() {
     message: "",
     onClose: null,
   });
-
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
 
   const [isHoveringCancelBtn, setIsHoveringCancelBtn] = useState(false);
   const [isHoveringConfirmBtn, setIsHoveringConfirmBtn] = useState(false);
@@ -98,14 +97,6 @@ function UpdateProfile() {
   const handleUpdateCancelCancel = () => {
     closeUpdateCancelModal();
   };
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 600);
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   // 사용자 정보 조회
   useEffect(() => {
@@ -243,18 +234,21 @@ function UpdateProfile() {
   };
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
-  if (isMobile && window.innerWidth <= 600) {
     return (
-      <div className={styles.body}>
-        <div className={styles.logo_box}>
-          <img
-            className={styles.login_logo}
-            src={UpdateProfileWord}
-            alt="프로필 정보 수정"
-          />
+      <div className={loadingStyles.loading}>
+        <div className={loadingStyles.loadingSpinner}></div>
+        <div className={loadingStyles.loadingText}>
+          사용자 정보를 불러오고 있습니다
+          <span className={loadingStyles.loadingDots}>...</span>
         </div>
+        <div className={loadingStyles.loadingSubtext}>잠시만 기다려주세요</div>
+      </div>
+    );
+  }
+
+  if (window.innerWidth <= 768) {
+    return (
+      <div className={styles.mobile_body}>
         <header className={styles.mobile_header}>
           <button className={styles.back_btn} onClick={() => navigate(-1)}>
             <svg
@@ -273,71 +267,82 @@ function UpdateProfile() {
           <span className={styles.header_title}>프로필 수정</span>
         </header>
         <div className={styles.info_box}>
-          <div className={styles.infos}>
-            <div className={styles.info}>
-              <div className={styles.info_head}>이름</div>
-              <div className={styles.info_body}>
-                <input
-                  type="text"
-                  maxLength="20"
-                  name="userName"
-                  placeholder="홍길동"
-                  value={formData.userName}
-                  onChange={handleInputChange}
-                  className={`${styles.input} ${
-                    errors.userName ? styles.inputError : ""
-                  }`}
-                />
-                {errors.userName && (
-                  <div className={styles.errorMessage}>{errors.userName}</div>
-                )}
-              </div>
+          <div className={styles.info}>
+            <div className={styles.info_head}>이름</div>
+            <div className={styles.info_body}>
+              <input
+                type="text"
+                maxLength="20"
+                name="userName"
+                placeholder="홍길동"
+                value={formData.userName}
+                onChange={handleInputChange}
+                onBlur={handleNameBlur}
+                className={`${styles.input} ${
+                  errors.userName ? styles.inputError : ""
+                }`}
+              />
+              {errors.userName && (
+                <div className={styles.errorMessage}>{errors.userName}</div>
+              )}
             </div>
-            <div className={styles.info}>
-              <div className={styles.info_head}>학번</div>
-              <div className={styles.info_body}>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  maxLength="8"
-                  name="stdId"
-                  placeholder="22000000"
-                  value={formData.stdId}
-                  onChange={handleInputChange}
-                  onBlur={handleStdIdBlur}
-                  className={`${styles.input} ${
-                    errors.stdId ? styles.inputError : ""
-                  }`}
-                />
-                {errors.stdId && (
-                  <div className={styles.errorMessage}>{errors.stdId}</div>
-                )}
-              </div>
+          </div>
+          <div className={styles.info}>
+            <div className={styles.info_head}>학번</div>
+            <div className={styles.info_body}>
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength="8"
+                name="stdId"
+                placeholder="22000000"
+                value={formData.stdId}
+                onChange={handleInputChange}
+                onBlur={handleStdIdBlur}
+                className={`${styles.input} ${
+                  errors.stdId ? styles.inputError : ""
+                }`}
+              />
+              {errors.stdId && (
+                <div className={styles.errorMessage}>{errors.stdId}</div>
+              )}
             </div>
-            <div className={styles.info}>
-              <div className={styles.info_head}>전화번호</div>
-              <div className={styles.info_body}>
-                <input
-                  type="text"
-                  name="phoneNum"
-                  placeholder="010-1234-5678"
-                  value={formData.phoneNum}
-                  onChange={handleInputChange}
-                  maxLength={13}
-                  className={`${styles.input} ${
-                    errors.phoneNum ? styles.inputError : ""
-                  }`}
-                />
-                {errors.phoneNum && (
-                  <div className={styles.errorMessage}>{errors.phoneNum}</div>
-                )}
-              </div>
+          </div>
+          <div className={styles.info}>
+            <div className={styles.info_head}>전화번호</div>
+            <div className={styles.info_body}>
+              <input
+                type="text"
+                name="phoneNum"
+                placeholder="010-1234-5678"
+                value={formData.phoneNum}
+                onChange={handleInputChange}
+                onBlur={handlePhoneBlur}
+                maxLength={13}
+                className={`${styles.input} ${
+                  errors.phoneNum ? styles.inputError : ""
+                }`}
+              />
+              {errors.phoneNum && (
+                <div className={styles.errorMessage}>{errors.phoneNum}</div>
+              )}
             </div>
           </div>
         </div>
         <div className={styles.btn_box}>
-          <div className={styles.start_btn} onClick={handleSubmit}>
-            프로필 수정하기
+          <div
+            className={
+              formData.userName && formData.stdId && formData.phoneNum
+                ? styles.start_btn
+                : styles.disabled
+            }
+            onClick={
+              formData.userName && formData.stdId && formData.phoneNum
+                ? handleSubmit
+                : undefined
+            }
+          >
+            수정하기
           </div>
         </div>
         <Modal isOpen={feedbackModal.isOpen} onClose={feedbackModal.onClose}>
@@ -360,17 +365,15 @@ function UpdateProfile() {
         </Modal>
       </div>
     );
-  }
-
-  return (
-    <div className={styles.body}>
-      <div className={styles.title_box}>
-        <div className={styles.title}>
-          <img src={UpdateProfileWord} alt="프로필 정보 수정" />
+  } else {
+    return (
+      <div className={styles.body}>
+        <div className={styles.title_box}>
+          <div className={styles.title}>
+            <img src={UpdateProfileWord} alt="프로필 정보 수정" />
+          </div>
         </div>
-      </div>
-      <div className={styles.info_box}>
-        <div className={styles.infos}>
+        <div className={styles.info_box}>
           <div className={styles.info}>
             <div className={styles.info_head}>이름</div>
             <div className={styles.info_body}>
@@ -424,106 +427,110 @@ function UpdateProfile() {
             </div>
           </div>
         </div>
-      </div>
-      <div className={styles.button_box}>
-        <div
-          className={styles.button}
-          id={
-            isHoveringCancelBtn
-              ? styles.cancel_button_hover
-              : styles.cancel_button
-          }
-          onMouseOver={onMouseOverCancelBtn}
-          onMouseOut={onMouseOutCancelBtn}
-          onClick={openUpdateCancelModal}
-        >
-          <div className={styles.button_text} id={styles.cancel_button_text}>
-            취소
-          </div>
-        </div>
-        <div
-          className={styles.button}
-          id={
-            isHoveringConfirmBtn
-              ? styles.confirm_button_hover
-              : styles.confirm_button
-          }
-          onMouseOver={onMouseOverConfirmBtn}
-          onMouseOut={onMouseOutConfirmBtn}
-          onClick={openUpdateConfirmModal}
-        >
-          <div className={styles.button_text} id={styles.confirm_button_text}>
-            확인
-          </div>
-        </div>
-      </div>
-      <Modal
-        isOpen={isUpdateConfirmModalOpen}
-        onClose={() => setIsUpdateConfirmModalOpen(false)}
-      >
-        <div className={styles.modal_content}>
-          <div className={styles.modal_top}>
-            프로필 정보를 수정하시겠습니까?
-          </div>
-          <div className={styles.modal_Btns}>
-            <button
-              onClick={handleUpdateConfirmCancel}
-              className={styles.modal_close_Btn}
-            >
+        <div className={styles.button_box}>
+          <div
+            className={styles.button}
+            id={
+              isHoveringCancelBtn
+                ? styles.cancel_button_hover
+                : styles.cancel_button
+            }
+            onMouseOver={onMouseOverCancelBtn}
+            onMouseOut={onMouseOutCancelBtn}
+            onClick={openUpdateCancelModal}
+          >
+            <div className={styles.button_text} id={styles.cancel_button_text}>
               취소
-            </button>
-            <button
-              onClick={handleUpdateConfirmConfirm}
-              className={styles.modal_ok_Btn}
-            >
+            </div>
+          </div>
+          <div
+            className={styles.button}
+            id={
+              isHoveringConfirmBtn
+                ? styles.confirm_button_hover
+                : styles.confirm_button
+            }
+            onMouseOver={onMouseOverConfirmBtn}
+            onMouseOut={onMouseOutConfirmBtn}
+            onClick={openUpdateConfirmModal}
+          >
+            <div className={styles.button_text} id={styles.confirm_button_text}>
               확인
-            </button>
+            </div>
           </div>
         </div>
-      </Modal>
-      <Modal
-        isOpen={isUpdateCancelModalOpen}
-        onClose={() => setIsUpdateCancelModalOpen(false)}
-      >
-        <div className={styles.modal_content}>
-          <div className={styles.modal_top}>이 페이지에서 나가시겠습니까?</div>
-          <div className={styles.modal_con}>
-            작성 중인 내용은 저장되지 않습니다.
+        <Modal
+          isOpen={isUpdateConfirmModalOpen}
+          onClose={() => setIsUpdateConfirmModalOpen(false)}
+        >
+          <div className={styles.modal_content}>
+            <div className={styles.modal_top}>
+              프로필 정보를 수정하시겠습니까?
+            </div>
+            <div className={styles.modal_Btns}>
+              <button
+                onClick={handleUpdateConfirmCancel}
+                className={styles.modal_close_Btn}
+              >
+                취소
+              </button>
+              <button
+                onClick={handleUpdateConfirmConfirm}
+                className={styles.modal_ok_Btn}
+              >
+                확인
+              </button>
+            </div>
           </div>
-          <div className={styles.modal_Btns}>
-            <button
-              onClick={handleUpdateCancelConfirm}
-              className={styles.modal_ok_Btn}
-            >
-              확인
-            </button>
-            <button
-              onClick={handleUpdateCancelCancel}
-              className={styles.modal_close_Btn}
-            >
-              취소
-            </button>
+        </Modal>
+        <Modal
+          isOpen={isUpdateCancelModalOpen}
+          onClose={() => setIsUpdateCancelModalOpen(false)}
+        >
+          <div className={styles.modal_content}>
+            <div className={styles.modal_top}>
+              이 페이지에서 나가시겠습니까?
+            </div>
+            <div className={styles.modal_con}>
+              작성 중인 내용은 저장되지 않습니다.
+            </div>
+            <div className={styles.modal_Btns}>
+              <button
+                onClick={handleUpdateCancelConfirm}
+                className={styles.modal_ok_Btn}
+              >
+                확인
+              </button>
+              <button
+                onClick={handleUpdateCancelCancel}
+                className={styles.modal_close_Btn}
+              >
+                취소
+              </button>
+            </div>
           </div>
-        </div>
-      </Modal>
-      <Modal
-        isOpen={validationErrorModal.isOpen}
-        onClose={closeValidationErrorModal}
-      >
-        <div className={styles.modal_content}>
-          <div className={styles.modal_top}>{validationErrorModal.message}</div>
-          <div className={styles.modal_Btns}>
-            <button
-              onClick={closeValidationErrorModal}
-              className={styles.modal_ok_Btn}
-            >
-              확인
-            </button>
+        </Modal>
+        <Modal
+          isOpen={validationErrorModal.isOpen}
+          onClose={closeValidationErrorModal}
+        >
+          <div className={styles.modal_content}>
+            <div className={styles.modal_top}>
+              {validationErrorModal.message}
+            </div>
+            <div className={styles.modal_Btns}>
+              <button
+                onClick={closeValidationErrorModal}
+                className={styles.modal_ok_Btn}
+              >
+                확인
+              </button>
+            </div>
           </div>
-        </div>
-      </Modal>
-    </div>
-  );
+        </Modal>
+      </div>
+    );
+  }
 }
 
 export default UpdateProfile;

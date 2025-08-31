@@ -1,22 +1,74 @@
+/* ===== 기본 레이아웃 ===== */
 .body {
   display: flex;
+  height: 100vh;
+  width: 100vw;
   position: relative;
-  height: 745px;
   overflow: hidden;
   align-items: center;
   justify-content: end;
-  background-color: #eeeeee;
-  height: 100vh;
+  background: var(
+    --Gradient-02,
+    linear-gradient(180deg, #ccc 0%, #fbfbfb 50%, #ccc 100%)
+  );
 }
 
+.tape_box {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.landing_tape {
+  width: 100vw;
+  max-width: calc(100vw - 220px);
+  height: 100vh;
+  object-fit: cover;
+  display: block;
+}
+
+.login_caution {
+  margin-top: 8px;
+  margin-bottom: 50%;
+}
+
+.landing_mobile {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  margin-bottom: 0;
+}
+
+.landing_mobile_btn {
+  margin-top: 0;
+}
 .words_box {
   position: absolute;
-  top: 30%;
-  left: 10%;
+  top: 30vh;
+  left: 10vw;
+  width: 30vw;
+  min-width: 220px;
+  max-width: 480px;
+  margin-right: 32px;
 }
 
 .words_img_box {
   margin-bottom: 20%;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.words_img {
+  width: 80%;
+  height: auto;
+  object-fit: cover;
 }
 
 .google_start_btn_box {
@@ -29,14 +81,39 @@
 
 .caution {
   color: red;
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 400;
   text-align: left;
 }
 
-/* 모바일 반응형 */
+/* ===== 반응형 미디어 쿼리 ===== */
+@media screen and (max-width: 1200px) {
+  .landing_tape {
+    max-width: calc(100vw - 160px);
+  }
+  .words_box {
+    width: 40vw;
+    left: 6vw;
+    top: 28vh;
+    margin-right: 24px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .landing_tape {
+    max-width: calc(100vw - 80px);
+  }
+  .words_box {
+    width: 60vw;
+    left: 4vw;
+    top: 24vh;
+    margin-right: 12px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .body {
+    margin-top: -50px;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
@@ -46,29 +123,25 @@
       linear-gradient(180deg, #ccc 0%, #fbfbfb 50%, #ccc 100%)
     );
   }
-
   .tape_box {
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
   }
 
   .landing_mobile {
-    width: 100%;
-    height: auto;
-    margin-bottom: 20px;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    display: block;
   }
 
   .landing_mobile_btn {
     display: flex;
-    position: absolute;
-    bottom: 20%;
     width: 50%;
-    height: 3vh;
     padding: 3vw 20vw;
     justify-content: center;
     align-items: center;
@@ -78,19 +151,41 @@
     background: var(--main-02, #ff3d12);
     color: var(--gray-01-background, #fbfbfb);
     text-align: center;
-
-    /* Body 02 _ SB */
-    font-family: "Pretendard Variable";
     font-size: 5vw;
     font-style: normal;
     font-weight: 600;
-
     cursor: pointer;
+    margin-top: 0; /* or a small value */
+  }
+
+  .words_box {
+    position: static;
+    width: 100vw;
+    left: 0;
+    top: 0;
+    margin-top: 24px;
+    margin-right: 0;
+    margin-left: 0;
+    text-align: center;
   }
 }
 
-/* comingsoon 디자인 */
+@media screen and (max-width: 600px) {
+  .landing_tape {
+    max-width: 100vw;
+  }
+  .words_box {
+    position: static;
+    width: 100vw;
+    left: 0;
+    top: 0;
+    margin-top: 24px;
+    margin-right: 0;
+    text-align: center;
+  }
+}
 
+/* ===== ComingSoon 오버레이 ===== */
 .overlay {
   position: fixed;
   top: 0;
@@ -98,7 +193,7 @@
   z-index: 999;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(255, 255, 255, 0.812); /* 반투명 검정 배경 */
+  background-color: rgba(255, 255, 255, 0.812);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -112,13 +207,13 @@
 }
 
 .highlight {
-  color: #ff3d12; /* 브랜드 컬러 강조 */
+  color: #ff3d12;
   font-weight: 800;
 }
 
 .subText {
   font-size: 3vw !important;
-  color: #333 !important; /* 서브 텍스트 색상 */
+  color: #333 !important;
   margin-top: 10px;
   text-align: center;
   font-weight: 700 !important;
