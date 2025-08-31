@@ -49,3 +49,29 @@
 
   margin-left: 6px;
 }
+
+@media (max-width: 600px){
+  .showCard{
+    width: 183px;
+    height: 325px;
+  }
+
+  .card img{
+    width: 180px;
+    height: 255px;
+  }
+
+  .name{
+    font:var(--BODY02_B);
+    width: 160px;
+  }
+
+  .date, .date1{
+    font-size: 12px;
+
+    line-height: 23px; /* 191.667% */
+    letter-spacing: 0.14px;
+
+    margin-left: 4px;
+  }
+}

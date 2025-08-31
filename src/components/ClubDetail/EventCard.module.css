@@ -50,3 +50,19 @@
 
   margin-left: 6px;
 }
+
+@media (max-width: 600px) {
+  .showCard{
+    width: 280px;
+    height: 480px;
+  }
+
+  .card img{
+    width: 280px;
+    height: 396px;
+  }
+
+  .name{
+    font:var(--BODY01_B);
+  }
+}
