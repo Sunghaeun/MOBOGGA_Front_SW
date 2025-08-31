@@ -121,7 +121,7 @@
   background: var(--gray-02-footer-background, #EAEAEA);
 }
 
-@media (max-width: 440px) {
+@media (max-width: 768px) {
   .column{
     padding: 0px 22px 90px 20px;
   }
