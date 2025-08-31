@@ -15,6 +15,7 @@ function ShowDetailMobile() {
 
   const [show, setShow] = useState({});
   const [count, setCount] = useState(0);
+  // eslint-disable-next-line
   const [selectedSch, setSelectedSch] = useState(null);
   const [isDisable, setIsDisable] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -26,6 +27,7 @@ function ShowDetailMobile() {
   const [failModalOpen, setFailModalOpen] = useState(false);
   const [limitOpen, setLimitOpen] = useState(false);
   const limitOkRef = useRef(null);
+  // eslint-disable-next-line
   const selectSchOkRef = useRef(null);
 
   const navigateToPrepage = () => navigate(-1);
