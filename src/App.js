@@ -54,14 +54,13 @@ import ManageClubDetail from "./pages/ManageClubDetail";
 import KakaoLinkButton from "./components/Mypage/KakaoLinkButton";
 import TossAppLauncher from "./components/Mypage/TossAppLauncher";
 
-// import FAQ from "./pages/FAQ";
+import FAQ from "./pages/FAQ";
 
 import "./App.css";
 
 // 메인 앱 컴포넌트 (ServerStatusProvider 내부)
 function AppContent() {
-  const { isServerDown, retryConnection, closeModal } =
-    useServerStatus();
+  const { isServerDown, retryConnection, closeModal } = useServerStatus();
   const { initialize } = useAuthStore();
 
   // Zustand 스토어 초기화
@@ -77,13 +76,19 @@ function AppContent() {
     }
   };
 
-  if(window.innerWidth <= 768) {
+  if (window.innerWidth <= 768) {
     return (
-      <div className="App">
-        <ComingSoon />
+      <BrowserRouter>
+        <div className="App">
+          {/* <ComingSoon / */}
+          <Routes>
+            <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
+            <Route path="/tosslinktest" element={<TossAppLauncher />} />
+        </Routes>
       </div>
-    );
-  }
+    </BrowserRouter>
+  );
+}
 
   return (
     <BrowserRouter>
@@ -136,6 +141,7 @@ function AppContent() {
               element={<OAuthCallback />}
             />
             <Route path="/404" element={<Error404 />} />
+            <Route path="/faq" element={<FAQ />} />
 
             <Route path="/recruiting/create" element={<CreateRecruiting />} />
             <Route path="/show/create" element={<CreateShow />} />
