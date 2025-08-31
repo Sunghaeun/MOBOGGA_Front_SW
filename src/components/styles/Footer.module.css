@@ -15,7 +15,7 @@
 }
 
 .firstContainer {
-  width: 30%;
+  width: 40%;
   display: flex;
   gap: 20px;
   fill: var(--Gray-08, #3e3e3e);
