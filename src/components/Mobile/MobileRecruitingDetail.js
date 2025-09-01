@@ -120,7 +120,7 @@ function MobileRecruitingDetail({ recruiting = {} }) {
           <span className={styles.contentTitle}>활동내용</span>
           <span className={styles.contentText}>
             {recruiting?.content
-              ? recruiting.content.split("\n\n").map((line, index) => (
+              ? recruiting.content.split("\n").map((line, index) => (
                   <React.Fragment key={index}>
                     {line}
                     <br />
@@ -132,7 +132,7 @@ function MobileRecruitingDetail({ recruiting = {} }) {
           <span className={styles.contentTitle}>지원자격</span>
           <span className={styles.contentText}>
             {recruiting?.eligibility
-              ? recruiting.eligibility.split("\n\n").map((line, index) => (
+              ? recruiting.eligibility.split("\n").map((line, index) => (
                   <React.Fragment key={index}>
                     {line}
                     <br />
@@ -144,7 +144,7 @@ function MobileRecruitingDetail({ recruiting = {} }) {
           <span className={styles.contentTitle}>면접안내</span>
           <span className={styles.contentText}>
             {recruiting?.notice
-              ? recruiting.notice.split("\n\n").map((line, index) => (
+              ? recruiting.notice.split("\n").map((line, index) => (
                   <React.Fragment key={index}>
                     {line}
                     <br />
