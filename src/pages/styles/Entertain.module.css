@@ -220,7 +220,6 @@
 }
 
 .total {
-  font-family: "IBM Plex Sans KR";
   font-weight: bold;
   font-size: 56px;
   letter-spacing: 0.105rem;
@@ -233,7 +232,6 @@
   background: #ff3d12;
   color: #fbfbfb;
   border: none;
-  font-family: "IBM Plex Sans KR";
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 400;
@@ -247,7 +245,6 @@
   color: #7f7f7f;
   background: #acacac;
   border: none;
-  font-family: "IBM Plex Sans KR";
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 400;
