@@ -13,6 +13,7 @@ import KAKAO from "../assets/icons/kakao.svg";
 import YOUTUBE from "../assets/icons/youtube.svg";
 import LINK from "../assets/icons/linkicons.svg";
 import Dropdown from "../components/Dropdown";
+import POSTER from "../assets/Poster.svg";
 
 function CreateEntertain() {
   // eslint-disable-next-line
@@ -168,7 +169,7 @@ function CreateEntertain() {
           <div className={styles.Detail_Entire_Box}>
             <div className={styles.SImage_Box_Entire}>
               <div className={styles.SImage_Box}>
-                <img src={previewURL} alt="미리보기" />
+                <img src={previewURL || POSTER} alt="미리보기" />
               </div>
               <label className={styles.inputFileLabel} htmlFor="inputFile">
                 이미지 추가
@@ -220,8 +221,8 @@ function CreateEntertain() {
                   </span>
                   <span className={styles.variable_Info}>
                     <Dropdown
-                      onChange={(e) => setCategory(e.target.value)}
                       defaultValue="카테고리"
+                      value={category}
                       options={[
                         "카테고리",
                         "체험",
@@ -229,6 +230,7 @@ function CreateEntertain() {
                         "먹거리",
                         "예배",
                       ]}
+                      onChange={(val) => setCategory(val)}
                     />
                   </span>
                 </div>
@@ -386,7 +388,7 @@ function CreateEntertain() {
             </div>
           </div>
 
-          <div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <button className={styles.make_show_submit} onClick={makeEntertain}>
               생성하기
             </button>
