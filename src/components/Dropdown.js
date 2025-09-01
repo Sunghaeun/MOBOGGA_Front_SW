@@ -1,60 +1,93 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styles from "./styles/Dropdown.module.css";
 import useDetectClose from "./useDetectClose";
 import down from "../assets/Arrow.svg";
 
-/*dropdown 사용법
-    1. 원하는 페이지에 
-    <Dropdown
-        defaultValue=""
-        options={["", "", "", ""]}
-    />
-    붙여 넣는다.
-    2. defaultValue에는 기본으로 띄워지는 것을 넣는다.
-    3. options에는 아래 들어갈 항목을 넣는다
-    4. 끗
-*/
-function Dropdown({ defaultValue, options, className = "", style }) {
-  const dropDownRef = useRef();
-  const [value, setValue] = useState(defaultValue);
+/**
+ * props
+ * - options: string[] (필수)
+ * - defaultValue: string (선택, 비제어일 때 초기 표시)
+ * - value: string (선택, 제어 모드에서 표시값)
+ * - onChange: (val: string) => void (선택, 제어 모드에서 선택 이벤트)
+ * - className, style: (선택)
+ */
+function Dropdown({
+  options = [],
+  defaultValue = "",
+  value, // 제어 모드 값
+  onChange, // 제어 모드 변경 콜백
+  className = "",
+  style,
+}) {
+  const dropDownRef = useRef(null);
   const [isOpen, setIsOpen] = useDetectClose(dropDownRef);
 
+  // 비제어 모드용 내부 상태
+  const [innerValue, setInnerValue] = useState(defaultValue);
+
+  // 표시할 값: 제어 모드면 value, 아니면 내부 상태
+  const displayValue = value !== undefined ? value : innerValue;
+
+  // defaultValue가 바뀌었고, 제어 모드가 아니라면 내부값 초기화
+  useEffect(() => {
+    if (value === undefined) setInnerValue(defaultValue);
+  }, [defaultValue, value]);
+
   const handleSelect = (option) => {
-    setValue(option);
+    // 제어 모드: 부모에게 전달
+    if (onChange) onChange(option);
+    // 비제어 모드: 내부 상태 업데이트
+    if (value === undefined) setInnerValue(option);
     setIsOpen(false);
   };
+
+  const handleToggle = () => setIsOpen((o) => !o);
 
   return (
     <div className={`${styles.selectWrapper} ${className}`} style={style}>
       <div
         ref={dropDownRef}
         className={`${styles.selectBox} ${isOpen ? styles.open : ""} ${
-          value !== "카테고리" ? styles.selected : ""
-        }
-  `}
-        onClick={() => setIsOpen(!isOpen)}
+          displayValue !== "카테고리" ? styles.selected : ""
+        }`}
+        onClick={handleToggle}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") handleToggle();
+          if (e.key === "Escape") setIsOpen(false);
+        }}
+        role="button"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
       >
         <span className={styles.selected}>
-          {value}
+          {displayValue || defaultValue || "선택"}
           {"  "}
           <img
             src={down}
             alt="down"
             className={`${styles.arrow} ${isOpen ? styles.rotate : ""} ${
               isOpen ? styles.arrowOpen : ""
-            } ${value !== "카테고리" ? styles.arrowOpen : ""}`}
+            } ${displayValue !== "카테고리" ? styles.arrowOpen : ""}`}
           />
         </span>
 
-        <ul className={`${styles.optionList} ${isOpen ? styles.open : ""} `}>
-          {options.map((option, index) => (
+        <ul
+          className={`${styles.optionList} ${isOpen ? styles.open : ""}`}
+          role="listbox"
+        >
+          {options.map((option) => (
             <li
-              key={index}
+              key={option}
               className={styles.optionItem}
+              role="option"
+              aria-selected={option === displayValue}
               onClick={(e) => {
-                e.stopPropagation(); // 클릭 시 이벤트 버블 방지
+                e.stopPropagation();
                 handleSelect(option);
               }}
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && handleSelect(option)}
             >
               {option}
             </li>

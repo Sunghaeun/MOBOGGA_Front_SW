@@ -52,7 +52,8 @@ function CreateShow() {
       id: Date.now(),
       order: 1,
       date: "",
-      time: "",
+      hour: "",
+      minute: "",
       cost: "",
       maxTicket: 1,
       maxPeople: 100,
@@ -124,13 +125,20 @@ function CreateShow() {
 
     for (let i = 0; i < shows.length; i++) {
       if (!shows[i].date) return alert(`${i + 1}공의 날짜를 입력해 주세요`);
-      if (!shows[i].time) return alert(`${i + 1}공의 시작시간을 입력해 주세요`);
+      if (!shows[i].hour || !shows[i].minute)
+        return alert(`${i + 1}공의 시작시간(시/분)을 모두 선택해 주세요`);
       if (!shows[i].cost || Number(shows[i].cost) <= 0)
         return alert(`${i + 1}공의 가격을 입력해 주세요`);
     }
 
     // 1) 시간 HH:mm -> HH:mm:ss
-    const toHms = (t) => (t && t.length === 5 ? `${t}:00` : t || "");
+    const toHmsFromHM = (h, m) => {
+      const pad = (x) =>
+        x === "" || x == null ? "" : String(x).padStart(2, "0");
+      const hh = pad(h);
+      const mm = pad(m);
+      return hh && mm ? `${hh}:${mm}:00` : "";
+    };
 
     // 2) 서버 DTO (ShowCreateRequest)
     const requestData = {
@@ -152,7 +160,7 @@ function CreateShow() {
         id: Number(s.order) || i + 1,
         orderIndex: Number(s.order) || i + 1,
         date: s.date,
-        time: toHms(s.time),
+        time: toHmsFromHM(s.hour, s.minute),
         cost: Number(s.cost),
         maxTicket: Number(s.maxTicket) || 0,
         maxPeople: Number(s.maxPeople) || 100,
@@ -219,7 +227,8 @@ function CreateShow() {
           id: Date.now(),
           order: prev.length + 1,
           date: "",
-          time: "",
+          hour: "",
+          minute: "",
           cost: "",
           maxTicket: 1,
           maxPeople: 100,
@@ -244,7 +253,7 @@ function CreateShow() {
           <div className={styles.Detail_Entire_Box}>
             <div className={styles.SImage_Box_Entire}>
               <div className={styles.SImage_Box}>
-                <img src={POSTER || ""} alt="미리보기" />
+                <img src={posterPreview ?? POSTER} alt="미리보기" />
               </div>
               <label className={styles.inputFileLabel} htmlFor="inputFile">
                 이미지 추가
@@ -375,7 +384,7 @@ function CreateShow() {
                   <span className={styles.variable_Info}>
                     <div className={styles.bank}>
                       <Dropdown
-                        onChange={(e) => setAccountBankName(e.target.value)}
+                        onChange={(val) => setAccountBankName(val)}
                         defaultValue="은행명"
                         options={[
                           "신한",
@@ -567,10 +576,8 @@ function CreateShow() {
                       "23",
                     ]}
                     style={{ width: "3.75rem" }}
-                    value={show.time || ""}
-                    onChange={(e) =>
-                      updateSchedule(show.id, "time", e.target.value)
-                    }
+                    value={show.hour || ""}
+                    onChange={(val) => updateSchedule(show.id, "hour", val)}
                   />
                   <span className={styles.unit}>시</span>
                   <Dropdown
@@ -638,10 +645,8 @@ function CreateShow() {
                       "59",
                     ]}
                     style={{ width: "3.75rem" }}
-                    value={show.time || ""}
-                    onChange={(e) =>
-                      updateSchedule(show.id, "time", e.target.value)
-                    }
+                    value={show.minute || ""}
+                    onChange={(val) => updateSchedule(show.id, "minute", val)}
                   />
                   <span className={styles.unit}>분</span>
                 </div>
