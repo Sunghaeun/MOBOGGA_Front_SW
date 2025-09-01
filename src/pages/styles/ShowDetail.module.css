@@ -230,7 +230,6 @@
 .count_info {
   color: var(--Warning, #d50024);
   /* Caption _ R */
-  font-family: "IBM Plex Sans KR";
   font-size: 0.6875rem;
   font-style: normal;
   font-weight: 400;
@@ -239,7 +238,6 @@
 }
 
 .total {
-  font-family: "IBM Plex Sans KR";
   font-size: 3.5rem;
   font-style: normal;
   font-weight: 700;
@@ -252,7 +250,6 @@
   background: #ff3d12;
   color: #fbfbfb;
   border: none;
-  font-family: "IBM Plex Sans KR";
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 400;
@@ -274,7 +271,6 @@
   color: #7f7f7f;
   background: #acacac;
   border: none;
-  font-family: "IBM Plex Sans KR";
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 400;
@@ -291,7 +287,6 @@
 .modal_strong {
   color: var(--main-02, #ff3d12);
   /* Body 03 _ SB */
-  font-family: "IBM Plex Sans KR";
   font-size: 1rem;
   font-style: normal;
   font-weight: 600;
@@ -303,7 +298,6 @@
   color: var(--gray-10-typo-color, #121212);
   text-align: center;
   /* Body 03 _ B */
-  font-family: "IBM Plex Sans KR";
   font-size: 1rem;
   font-style: normal;
   font-weight: 700;
@@ -339,7 +333,6 @@
   color: var(--gray-10-typo-color, #121212);
   text-align: center;
   /* Body 01 _ SB */
-  font-family: "IBM Plex Sans KR";
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 600;
@@ -404,7 +397,6 @@
 
   color: var(--gray-01-background, #fbfbfb);
   /* Body 04 _ R */
-  font-family: "IBM Plex Sans KR";
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 400;
@@ -427,7 +419,6 @@
   /* Typo*/
 
   color: var(--gray-01-background, #fbfbfb);
-  font-family: "IBM Plex Sans KR";
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 400;
