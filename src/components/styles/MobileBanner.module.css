@@ -37,6 +37,8 @@
   justify-content: center;
   flex-direction: row;
   align-items: center;
+
+  overflow-x: hidden; /* 튀어나간 부분 숨김 */
 }
 
 .MainImg {
