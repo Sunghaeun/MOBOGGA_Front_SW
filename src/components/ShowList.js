@@ -71,7 +71,7 @@ function ShowList() {
       // console.log("Fetching show data from /attraction/list"); // 디버깅용
       const res = await apiClient.get("/attraction/list");
       // console.log("API Response:", res); // 디버깅용
-      // console.log("Response data:", res.data); // 디버깅용
+      console.log("Response data:", res.data); // 디버깅용
 
       if (!res.data || !res.data.entireList) {
         throw new Error("Invalid response structure");
@@ -79,10 +79,11 @@ function ShowList() {
 
       const converted = res.data.entireList.map((item) => {
         const [startDate, endDate] = item.period.split(" - ");
-        let category = item.category || "기타";
+        let category = item.category || "행사";
 
-        // 임시: category가 "기타"인 경우, name이나 다른 필드로 유추
-        if (category === "기타") {
+        // category가 "행사"가 아닌 경우, title이나 tag로 유추
+        if (category === "행사" && !item.category) {
+          // category가 비어있어서 "체험"으로 설정된 경우, title로 재분류 시도
           if (item.title.includes("공연") || item.tag.includes("공연")) {
             category = "공연";
           } else if (item.title.includes("체험") || item.tag.includes("체험")) {
@@ -100,10 +101,7 @@ function ShowList() {
           } else if (item.title.includes("예배") || item.tag.includes("예배")) {
             category = "예배";
           }
-          // 기본적으로 "공연"으로 설정 (임시)
-          if (category === "기타") {
-            category = "공연";
-          }
+          // 기본적으로 "행사" 유지
         }
 
         const convertedItem = {
@@ -113,7 +111,7 @@ function ShowList() {
           startDate,
           endDate,
           tag: item.tag,
-          category: category,
+          category: item.category || "행사", // category가 비어있으면 "행사"으로 설정
           photo: item.img?.trim() || image1,
         };
         // console.log("Converted item:", convertedItem); // 디버깅용
