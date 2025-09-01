@@ -1,20 +1,20 @@
-.recruitingDetail{
+.recruitingDetail {
   padding: 6px 24px 92px 24px;
 
   display: flex;
   flex-direction: column;
 }
 
-.recruitingTopContainer{
+.recruitingTopContainer {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
 
-  height:222px;
+  height: 222px;
   position: relative;
 }
 
-.backgroundImg{
+.backgroundImg {
   position: absolute;
   bottom: 65px;
   left: -30px;
@@ -26,16 +26,16 @@
   z-index: 0;
 }
 
-.backgroundImg::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background: rgba(0,0,0,.45); 
+.backgroundImg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(2px);
-  pointer-events:none;
+  pointer-events: none;
 }
 
-.sns_icons{
+.sns_icons {
   position: absolute;
   top: 120px;
   right: 24px;
@@ -44,10 +44,10 @@
   flex-direction: row;
 }
 
-.recruite_Pic{
+.recruite_Pic {
   width: 120px;
   height: auto;
-  border: 4px solid var(--gray-01-background, #FBFBFB);
+  border: 4px solid var(--gray-01-background, #fbfbfb);
   background: lightgray 50% / cover no-repeat;
 
   /* Shadow _ Mobile */
@@ -55,43 +55,90 @@
   z-index: 2;
 }
 
-.title{
+.title {
   color: var(--gray-10-typo-color, #121212);
   font: var(--TITLE06);
+  font-size: 20px;
   margin-top: 24px;
   margin-bottom: 12px;
+  padding-left: 16px;
 }
 
-.recruitingDetailContent{
+.recruitingDetailContent {
   color: var(--gray-10-typo-color, #121212);
   font: var(--BODY04);
 }
 
-.club{
-  color: var(--main-02, #FF3D12);
-  font:var(--TITLE04_B);
+.club {
+  color: var(--main-02, #ff3d12);
+  font: var(--TITLE04_B);
+  font-size: 20px;
   padding-bottom: 6px;
   padding-left: 24px;
 }
 
-.recruitingDetailContent{
+.recruitingDetailContent {
   padding-left: 16px;
   display: flex;
   flex-direction: column;
 }
 
-.contentTitle{
-  color: var(--Point-03, #8E3DFF);
+.contentTitle {
+  color: var(--Point-03, #8e3dff);
   font: var(--BODY03_B);
   margin-bottom: 4px;
 }
 
-.contentText{
+.contentText {
   color: var(--gray-10-typo-color, #121212);
   font: var(--BODY03);
   margin-bottom: 40px;
 }
 
-.clubDetailTexts{
+.clubDetailTexts {
   margin-bottom: 40px;
+}
+
+.recruite_apply {
+  display: flex;
+  justify-content: center;
+  margin-top: 120px;
+  margin-bottom: 200px;
+}
+
+.apply_Btn {
+  width: 100%;
+  height: 41px;
+  background: #ff3d12;
+  color: #fbfbfb;
+  border: none;
+  border-radius: 7px;
+  color: var(--gray-01-background, #fbfbfb);
+  text-align: center;
+
+  /* Body 02 _ SB */
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 30px; /* 166.667% */
+
+  &:hover {
+    cursor: pointer;
+    background: var(--DEEPORANGE);
+  }
+}
+
+.applyButtonContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 24px 24px 40px 24px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  display: flex;
+  justify-content: center;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
