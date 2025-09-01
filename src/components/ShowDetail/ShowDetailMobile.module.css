@@ -76,10 +76,11 @@
   margin-bottom: 25px;
 
   font: var(--BODY02);
+  color: #4e4e4e;
 }
 
 .sectionL {
-  width: 15rem;
+  width: 35vw;
   height: 2.5rem;
   border-radius: 0.375rem 0 0 0.375rem;
   border: 1px solid var(--gray-10-typo-color, #121212);
@@ -87,7 +88,7 @@
 }
 
 .sectionR {
-  width: 15rem;
+  width: 35vw;
   height: 2.5rem;
   border-radius: 0 0.375rem 0.375rem 0;
   border: 1px solid var(--gray-10-typo-color, #121212);
@@ -194,8 +195,7 @@
 .show_ticket {
   margin-top: 40px;
   margin-bottom: 100px;
-  padding-left: 20px;
-  justify-content: space-between;
+  justify-content: center;
   align-items: flex-start;
   display: flex;
   text-align: left;
@@ -250,7 +250,7 @@
 
 .sch_Item {
   display: flex;
-  height: 5.5rem;
+  height: 16vh;
   padding: 1rem 1.5rem;
 
   gap: 3rem;
@@ -261,6 +261,10 @@
   align-self: center; /* 혹시 모를 상속/중첩 깨짐 대비 */
   margin: 0; /* 브라우저 기본 여백 제거 */
   margin-right: 0.75rem;
+}
+
+.sch_Item:not(:first-child) {
+  border-top: 1px solid #ccc; /* 연한 회색 */
 }
 
 .Item_left {
@@ -292,7 +296,8 @@
   align-items: center;
   justify-content: center;
   gap: 7px;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
+  color: #121212;
 }
 
 .ticket_Count {
@@ -368,6 +373,9 @@
   align-items: center;
   gap: 0.625rem;
 }
+.limitModal {
+  padding-top: 5vh;
+}
 
 .modal_strong {
   color: var(--main-02, #ff3d12);
@@ -410,6 +418,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 
   color: var(--gray-10-typo-color, #121212);
   text-align: center;
@@ -439,12 +448,13 @@
 
 .modal_Btns {
   display: flex;
-  padding: 0.5rem 0;
+  padding: 1rem 0;
   width: 100%;
   gap: 0;
   justify-content: center;
   align-items: center;
   border-top: 1px solid var(--Gray-03, #ccc);
+  margin-top: 5vh;
 }
 
 .modal_close_Btn {
