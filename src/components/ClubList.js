@@ -91,6 +91,7 @@ function ClubList() {
 
   return (
     <div className={styles.column}>
+      <div className={styles.title}>카테고리</div>
       <div className={styles.buttons}>
         <div className={styles.category}>
           {["공연", "체육", "종교", "학술", "전시", "봉사", "전산"].map(

@@ -12,9 +12,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
-
   padding-top: 32px;
-  justify-items: stretch;
   width: 100%;
 }
 
@@ -28,6 +26,9 @@
   flex-direction: row;
 
   margin-top: 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 8px;
 }
 
 .inactiveCategory {
@@ -127,7 +128,6 @@
   height: 200px;
   color: var(--GRAY-04, #888888);
   font: var(--BODY01);
-  font-size: 14px;
 
   grid-column: 1 / -1; /* 모든 컬럼을 차지 */
   text-align: center;
@@ -191,5 +191,9 @@
 
     padding-top: 0px;
     justify-items: stretch;
+  }
+
+  .noData {
+    font-size: 14px;
   }
 }

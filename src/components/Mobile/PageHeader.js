@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import back from "../../assets/ShowBackButton.svg";
 
-function Clubs({title = ""}) {
+function PageHeader({title = ""}) {
   const navigate = useNavigate();
 
   return (
@@ -17,4 +17,4 @@ function Clubs({title = ""}) {
   );
 }
 
-export default Clubs;
+export default PageHeader;

@@ -18,7 +18,7 @@ function Main() {
     <>
       {showBanner && (isMobile ? <MobileBanner /> : <Banner />)}
 
-      <div className={styles.main}>
+      <div className={styles.mainPage}>
         <span className={styles.categoryText}>카테고리</span>
         <ShowList />
       </div>

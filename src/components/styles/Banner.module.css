@@ -1,6 +1,6 @@
 .banner {
   height: 560px;
-  width:100vw;
+  width: 100vw;
   box-sizing: border-box;
   flex-shrink: 0;
 
@@ -42,16 +42,14 @@
 
 .text {
   display: flex;
-
   margin-bottom: 30px;
 }
 
 .text span {
-  color: var(--gray-10-typo-color, #121212);
   font-size: 24px;
-  font-weight: 700;
-  text-shadow:   /* 글씨 더 굵게 보이게  */ -0.2px 0 currentColor,
-    0.2px 0 currentColor, 0 -0.2px currentColor, 0 0.2px currentColor;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 40px; /* 166.667% */
 }
 
 .container {
@@ -73,22 +71,22 @@
   position: relative;
 }
 
-.left{
+.left {
   position: absolute;
   top: -6%;
   left: -30px;
   width: 110px;
 
-  transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s;
 }
 
-.right{
+.right {
   position: absolute;
   top: 92%;
   right: -40px;
   width: 120px;
 
-  transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s;
 }
 
 .leftMainImg {
@@ -156,8 +154,8 @@
 
 .imgBox {
   position: relative;
-  isolation: isolate;     
-  overflow: visible; 
+  isolation: isolate;
+  overflow: visible;
   width: 84.286px;
   height: 118px;
 
@@ -173,7 +171,6 @@
   &:hover {
     cursor: pointer;
   }
-  
 }
 
 .thumb {
@@ -182,20 +179,19 @@
   object-fit: cover;
   display: block;
   position: relative;
-  z-index: 1;        /* 테이프보다 낮게 */
+  z-index: 1; /* 테이프보다 낮게 */
 }
-
 
 .top {
   position: absolute;
-  width: 32px;     
+  width: 32px;
 
-  top: -5px; 
+  top: -5px;
   left: -14px;
 
   opacity: 0;
   visibility: hidden;
-  transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s;
   pointer-events: none; /* hover 깜빡임 방지 */
   z-index: 1000000;
 }
@@ -205,31 +201,34 @@
   opacity: 1;
   visibility: visible;
   transform: translate(135%, -20%);
-  transition: opacity .25s ease, transform .25s ease, visibility 0s;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s;
 }
 
 /*  카드 hover 시 이미지 그림자도 같이 */
 .imgBox:hover .imgBox {
-  box-shadow: 4px 4px 12px rgba(0,0,0,.25);
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 /* 접근성: 모션 최소화 설정 존중 */
 @media (prefers-reduced-motion: reduce) {
-  .top { transition: none; transform: none; }
+  .top {
+    transition: none;
+    transform: none;
+  }
 }
 
-.default{
+.default {
   position: absolute;
   top: -2%;
   left: -2%;
-  width: 104%; 
+  width: 104%;
   height: 104%;
 
   pointer-events: none;
   z-index: 5;
 }
 
-.imgBox:hover .default{
+.imgBox:hover .default {
   opacity: 0;
   visibility: hidden;
 }

@@ -32,22 +32,12 @@
   display: flex;
 }
 
-.date{
+.date, .date1{
   color: var(--Gray-08, #3E3E3E);
   font:var(--BODY03);
 
   margin-left: 6px;
   margin-right: 6px;
-}
-
-.date1{
-  color: var(--Gray-08, #3E3E3E);
-  font-size: 14px;
-
-  line-height: 27px; /* 168.75% */
-  letter-spacing: 0.16px;
-
-  margin-left: 6px;
 }
 
 @media (max-width: 600px){
