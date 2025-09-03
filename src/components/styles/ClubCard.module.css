@@ -1,6 +1,6 @@
 .clubCard {
-  width: 236px;
-  height: 284px;
+  width: 100%;
+  max-width: 236px;
   flex-shrink: 0;
 
   display: flex;
@@ -27,14 +27,14 @@
 }
 
 .clubImg {
-  width: 236px;
+  width: 100%;
+  max-width: 236px;
   height: 236px;
-
-  background-color: rgb(67, 67, 67);
 }
 
 .mainImg {
-  width: 236px;
+  width: 100%;
+  max-width: 236px;
   height: 236px;
   object-fit: cover;
 }
@@ -52,18 +52,17 @@
   margin-top: 12px;
 }
 
-
 .top {
   position: absolute;
   width: 60px;
 
   /* 원하는 위치로 조정 (예시: 살짝 위에서 떨어지는 느낌) */
-  top: -8px; 
-  left: 10px;
+  top: -13%;
+  left: 50%;
 
   opacity: 0;
   visibility: hidden;
-  transition: opacity .25s ease, transform .25s ease, visibility 0s .25s;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s;
   pointer-events: none; /* hover 깜빡임 방지 */
   z-index: 100;
 }
@@ -72,38 +71,47 @@
 .clubCard:hover .top {
   opacity: 1;
   visibility: visible;
-  transform: translate(135%, -20%);
-  transition: opacity .25s ease, transform .25s ease, visibility 0s;
+  transform: translate(-50%, 50%);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s;
 }
 
 /* (선택) 카드 hover 시 이미지 그림자도 같이 */
 .clubCard:hover .mainImg {
-  box-shadow: 4px 4px 12px rgba(0,0,0,.25);
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 /* 접근성: 모션 최소화 설정 존중 */
 @media (prefers-reduced-motion: reduce) {
-  .top { transition: none; transform: none; }
+  .top {
+    transition: none;
+    transform: none;
+  }
 }
 
 @media (max-width: 600px) {
-  .clubCard{
+  .clubCard {
     width: 100%;
-
-    margin:0px;
+    max-width: none;
+    margin: 0px;
+  }
+  
+  .name {
+    font-size: 16px;
   }
 
-  .clubImg{
+  .clubCard:hover .name {
+    font-size: 16px;
+}
+
+  .clubImg {
     width: 100% !important;
     height: auto;
     aspect-ratio: 1 / 1;
   }
 
-  .mainImg{
+  .mainImg {
     width: 100% !important;
     height: auto;
     aspect-ratio: 1 / 1;
   }
-
-
 }

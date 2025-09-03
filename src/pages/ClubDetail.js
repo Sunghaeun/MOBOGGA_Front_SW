@@ -18,11 +18,11 @@ import MobileClubDetail from "../components/ClubDetail/MobileClubDetail";
 
 function ClubDetail() {
   const [isMobile, setIsMobile] = useState(false);
-  
+
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 600px)");
     const update = (e) => setIsMobile(e.matches);
-    update(mq);                 // 최초 반영
+    update(mq); // 최초 반영
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
@@ -126,11 +126,14 @@ function ClubDetail() {
 
   return (
     <>
-      {isMobile ? 
-      <MobileClubDetail clubList={clubList}
+      {isMobile ? (
+        <MobileClubDetail
+          clubList={clubList}
           progressingEventList={progressingEventList}
           lastRecruitingList={lastRecruitingList}
-          lastEventList={lastEventList} /> : (
+          lastEventList={lastEventList}
+        />
+      ) : (
         <div className={styles.clubDetail}>
           <span className={styles.titleName}> 동아리 정보 </span>
           <div className={styles.clubDeatilContainer}>
@@ -203,14 +206,7 @@ function ClubDetail() {
                 />
               ))
             ) : (
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: "40px 20px",
-                  color: "#666",
-                  fontSize: "16px",
-                }}
-              >
+              <div className={styles.noContentMessage}>
                 해당 내역이 없습니다.
               </div>
             )}
@@ -227,14 +223,7 @@ function ClubDetail() {
                 />
               ))
             ) : (
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: "40px 20px",
-                  color: "#666",
-                  fontSize: "16px",
-                }}
-              >
+              <div className={styles.noContentMessage}>
                 해당 내역이 없습니다.
               </div>
             )}
@@ -260,19 +249,11 @@ function ClubDetail() {
                 />
               ))
             ) : (
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: "40px 20px",
-                  color: "#666",
-                  fontSize: "16px",
-                }}
-              >
+              <div className={styles.noContentMessage}>
                 해당 내역이 없습니다.
               </div>
             )}
           </div>
-          
         </div>
       )}
     </>

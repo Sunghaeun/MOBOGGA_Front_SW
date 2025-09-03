@@ -195,28 +195,22 @@
     overflow-x: auto; /* 좌우 스크롤 가능하게 만듦 */
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
+    gap: 10px;
   }
 
   .category::-webkit-scrollbar {
     display: none;
   }
 
-  .inactiveCategory {
-    margin-right: 12px;
+  .inactiveCategory, .activeCategory {
     border-radius: 4px;
+    padding: 2px 12px;
+    margin: 0;
   }
 
-  .inactiveCategory span {
+  .inactiveCategory span, .activeCategory span {
     font: var(--BODY04);
-  }
-
-  .activeCategory {
-    margin-right: 12px;
-    border-radius: 4px;
-  }
-
-  .activeCategory span {
-    font: var(--BODY04);
+    font-size: 12px;
   }
 
   .selectBox2 {
@@ -225,5 +219,9 @@
 
   .showCard {
     width: calc((100% - 40px) / 2) !important;
+  }
+
+  .noData{
+    font-size: 14px;
   }
 }

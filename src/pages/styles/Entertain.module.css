@@ -87,13 +87,9 @@
 }
 
 .title {
-  font-size: 48px;
+  font-size: 36px;
   font-weight: bold;
-  text-shadow:   /* 글씨 더 굵게 보이게  */ -0.7px 0 currentColor,
-    0.7px 0 currentColor, 0 -0.7px currentColor, 0 0.7px currentColor;
-  margin-bottom: 5px;
-  line-height: 72px; /* 150% */
-  letter-spacing: 1.44px;
+  margin-bottom: 12px;
 }
 
 .club {

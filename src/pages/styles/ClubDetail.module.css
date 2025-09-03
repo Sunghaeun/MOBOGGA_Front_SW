@@ -9,7 +9,7 @@
 .titleName {
   color: var(--gray-10-typo-color, #121212);
 
-  font:var(--TITLE06);
+  font: var(--TITLE06);
   margin-top: 20px;
   margin-bottom: 30px;
 }
@@ -63,8 +63,8 @@
 
 .clubName {
   color: var(--main-02, #ff3d12);
-
-  font:var(--TITLE01);
+  font: var(--TITLE01);
+  font-size: 52px;
 }
 
 .icons {
@@ -80,7 +80,7 @@
 .content {
   margin-top: 28px;
   text-align: left;
-  font:var(--BODY03);
+  font: var(--BODY03);
 }
 
 .clubDeatiltitleDiv {
@@ -93,7 +93,7 @@
 .clubDeatiltitle {
   color: var(--Point-03, #8e3dff);
 
-  font:var(--BODY03_B);
+  font: var(--BODY03_B);
   display: inline-block;
   width: 100%;
 }
@@ -113,11 +113,9 @@
 .EventCardContainer {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
-  justify-items: center;
-
-  margin-bottom: 50px;
+  margin-bottom: 32px;
 }
 
 .LastRecruitingCardContainer {
@@ -125,7 +123,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
-  justify-items: center;
+  margin-bottom: 32px;
 }
 
 .setcenter {
@@ -152,4 +150,11 @@
 .modifyClub span {
   font: var(--BODY01);
   color: var(--gray-01-background, #fbfbfb);
+}
+
+.noContentMessage {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 16px;
 }
