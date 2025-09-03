@@ -19,6 +19,7 @@
 .clubName {
   color: var(--main-02, #ff3d12);
   font: var(--TITLE03);
+  font-size: 36px;
 }
 
 .icons {
