@@ -44,6 +44,7 @@ function ShowDetailMobile() {
       const _res = await apiClient.get(`/show/detail/${showId}`);
       setShow(_res.data || {});
       setError(null);
+      console.log(_res);
     } catch (err) {
       // fetch error handled below
 
@@ -188,7 +189,9 @@ function ShowDetailMobile() {
   const formatDate = (dateString) => {
     if (!dateString) return dateString;
     const parts = dateString.split("-");
-    return parts.length >= 3 ? `${parts[1]}월${parts[2]}일` : dateString;
+    return parts.length >= 3
+      ? `${parts[0]}.${parts[1]}.${parts[2]}`
+      : dateString;
     // YYYY-MM-DD 가정
   };
   const formatTime = (timeString) => {
@@ -420,7 +423,8 @@ function ShowDetailMobile() {
                             </div>
                             <div className={styles.Item_right}>
                               <div className={styles.ItemDate}>
-                                {sch.date} {sch?.time || "시간 정보 없음"}
+                                {formatDate(sch.date)}{" "}
+                                {formatTime(sch?.time) || "시간 정보 없음"}
                               </div>
                               <div className={styles.ItemMid}>
                                 {formatPrice(sch.cost)}원 |{" "}

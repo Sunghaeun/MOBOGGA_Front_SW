@@ -785,9 +785,7 @@ function EditShow() {
                     )}
                     style={{ width: "3.75rem" }}
                     value={show.timeHour ?? "00"}
-                    onChange={(e) =>
-                      setShowTimePart(show.id, "hour", e.target.value)
-                    }
+                    onChange={(val) => setShowTimePart(show.id, "hour", val)}
                   />
                   <span className={styles.unit}>시</span>
                   <Dropdown
@@ -797,9 +795,7 @@ function EditShow() {
                     )}
                     style={{ width: "3.75rem" }}
                     value={show.timeMinute ?? "00"}
-                    onChange={(e) =>
-                      setShowTimePart(show.id, "minute", e.target.value)
-                    }
+                    onChange={(val) => setShowTimePart(show.id, "minute", val)}
                   />
                   <span className={styles.unit}>분</span>
                 </div>
