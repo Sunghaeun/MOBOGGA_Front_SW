@@ -250,18 +250,24 @@ function EntertainDetail() {
                 <div className={styles.infos}>
                   <div className={styles.info_Box}>
                     <div className={styles.textBox}>
-                      <span className={styles.fixed_Info1}>소개글</span>
+                      <span className={styles.fixed_Info1}>소개</span>
                     </div>
 
                     <span className={styles.variable_Info}>
-                      {entertainList?.introductionLetter || "소개글 정보 없음"}
+                      {entertainList?.introductionLetter || "소개 정보 없음"}
                     </span>
                   </div>
 
                   <div className={styles.info_Box}>
-                    <span className={styles.fixed_Info}>카테고리</span>
+                    <span className={styles.fixed_Info}>신청기한</span>
                     <span className={styles.variable_Info}>
-                      {entertainList?.category || "카테고리 정보 없음"}
+                      {entertainList?.date || "신청기한 정보 없음"}
+                    </span>
+                  </div>
+                  <div className={styles.info_Box}>
+                    <span className={styles.fixed_Info}>일시</span>
+                    <span className={styles.variable_Info}>
+                      {entertainList?.timeList || "일시 정보 없음"}
                     </span>
                   </div>
                   <div className={styles.info_Box}>
@@ -271,24 +277,10 @@ function EntertainDetail() {
                     </span>
                   </div>
                   <div className={styles.info_Box}>
-                    <span className={styles.fixed_Info}>날짜</span>
-                    <span className={styles.variable_Info}>
-                      {entertainList?.date || "날짜 정보 없음"}
-                    </span>
-                  </div>
-                  <div className={styles.info_Box}>
-                    <span className={styles.fixed_Info}>시간</span>
-                    <span className={styles.variable_Info}>
-                      {entertainList?.timeList || "시간 정보 없음"}
-                    </span>
-                  </div>
-                  <div className={styles.info_Box}>
-                    <span className={styles.fixed_Info}>담당자</span>
+                    <span className={styles.fixed_Info}>문의</span>
                     <span className={styles.variable_Info}>
                       {entertainList?.managerPhoneNumber || "담당자 정보 없음"}{" "}
-                      {" ("}
-                      {entertainList?.manager || " "}
-                      {") "}
+                      {entertainList?.manager ? "(" + entertainList.manager + ")" : ""}
                     </span>
                   </div>
 
