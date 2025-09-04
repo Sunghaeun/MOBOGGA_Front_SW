@@ -149,18 +149,17 @@ function RecruitingDetail() {
                         )}
                       </div>
                       <div className={styles.recruite_left_cont}>
-                        <span className={styles.clubDetailText}>
-                          {recruiting.introductionLetter
-                            ? recruiting.introductionLetter
-                                .split("\n\n")
-                                .map((line, index) => (
-                                  <React.Fragment key={index}>
-                                    {line}
-                                    <br />
-                                  </React.Fragment>
-                                ))
-                            : "소개 정보 없음"}
-                        </span>
+                        <span
+                          className={styles.clubDetailText}
+                          dangerouslySetInnerHTML={{
+                            __html: recruiting.introductionLetter
+                              ? recruiting.introductionLetter
+                                  .replace(/\n\n\n\n/g, "<br /><br /><br />")
+                                  .replace(/\n\n/g, "<br /><br />")
+                                  .replace(/\n/g, "<br />")
+                              : "소개 정보 없음",
+                          }}
+                        />
                       </div>
                     </div>
 
@@ -205,48 +204,45 @@ function RecruitingDetail() {
                         </div>
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>활동내용</span>
-                          <span className={styles.variable_Info}>
-                            {recruiting?.content
-                              ? recruiting.content
-                                  .split("\n\n")
-                                  .map((line, index) => (
-                                    <React.Fragment key={index}>
-                                      {line}
-                                      <br />
-                                    </React.Fragment>
-                                  ))
-                              : "활동내용 정보 없음"}
-                          </span>
+                          <span
+                            className={styles.variable_Info}
+                            dangerouslySetInnerHTML={{
+                              __html: recruiting?.content
+                                ? recruiting.content
+                                    .replace(/\n\n\n\n/g, "<br /><br /><br />")
+                                    .replace(/\n\n/g, "<br /><br />")
+                                    .replace(/\n/g, "<br />")
+                                : "활동내용 정보 없음",
+                            }}
+                          />
                         </div>
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>지원자격</span>
-                          <span className={styles.variable_Info}>
-                            {recruiting?.eligibility
-                              ? recruiting.eligibility
-                                  .split("\n\n")
-                                  .map((line, index) => (
-                                    <React.Fragment key={index}>
-                                      {line}
-                                      <br />
-                                    </React.Fragment>
-                                  ))
-                              : "지원자격 없음"}
-                          </span>
+                          <span
+                            className={styles.variable_Info}
+                            dangerouslySetInnerHTML={{
+                              __html: recruiting?.eligibility
+                                ? recruiting.eligibility
+                                    .replace(/\n\n\n\n/g, "<br /><br /><br />")
+                                    .replace(/\n\n/g, "<br /><br />")
+                                    .replace(/\n/g, "<br />")
+                                : "지원자격 없음",
+                            }}
+                          />
                         </div>
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>면접안내</span>
-                          <span className={styles.variable_Info}>
-                            {recruiting?.notice
-                              ? recruiting.notice
-                                  .split("\n\n")
-                                  .map((line, index) => (
-                                    <React.Fragment key={index}>
-                                      {line}
-                                      <br />
-                                    </React.Fragment>
-                                  ))
-                              : "면접안내 없음"}
-                          </span>
+                          <span
+                            className={styles.variable_Info}
+                            dangerouslySetInnerHTML={{
+                              __html: recruiting?.notice
+                                ? recruiting.notice
+                                    .replace(/\n\n\n\n/g, "<br /><br /><br />")
+                                    .replace(/\n\n/g, "<br /><br />")
+                                    .replace(/\n/g, "<br />")
+                                : "면접안내 없음",
+                            }}
+                          />
                         </div>
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>문의</span>
