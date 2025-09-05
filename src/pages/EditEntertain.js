@@ -456,7 +456,7 @@ function EditEntertain() {
             </div>
           </div>
 
-          <div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <button
               className={styles.make_show_submit}
               onClick={updateEntertain}

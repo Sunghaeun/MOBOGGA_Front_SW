@@ -360,6 +360,29 @@ function CreateShow() {
                 </div>
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>좌석수</span>
+                  </span>
+                  <span
+                    className={styles.variable_Info}
+                    style={{
+                      display: "inline-flex",
+                      justifyContent: "left",
+                      alignItems: "center",
+                    }}
+                  >
+                    <input
+                      type="number"
+                      placeholder="000"
+                      onChange={(e) => setMaxPeople(e.target.value)}
+                      style={{ width: "5rem" }}
+                    />
+                    <span style={{ color: "#121212", marginLeft: "0.5rem" }}>
+                      석
+                    </span>
+                  </span>
+                </div>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>담당자</span>
                   </span>
                   <span className={styles.variable_Info}>
@@ -691,7 +714,7 @@ function CreateShow() {
             ))}
           </div>
 
-          <div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <button className={styles.make_show_submit} onClick={makeShow}>
               생성하기
             </button>
