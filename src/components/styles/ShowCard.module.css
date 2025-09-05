@@ -163,6 +163,15 @@
     height: auto;
   }
 
+  .tape {
+  position: absolute;
+  transform: translate(90%, -40%);
+  z-index: 100;
+  img {
+    width: 80px;
+  }
+}
+
   .mainImg {
     width: 100%;
     height: auto;
