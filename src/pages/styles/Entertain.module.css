@@ -258,3 +258,15 @@
 .inner {
   width: 100%;
 }
+
+
+@media (max-width: 600px) {
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+    width: 100%
+  }
+}
