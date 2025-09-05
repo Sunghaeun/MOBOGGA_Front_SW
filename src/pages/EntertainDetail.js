@@ -161,11 +161,6 @@ function EntertainDetail() {
   return (
     <div className={styles.wrap}>
       <div className={styles.desktop}>
-        <div className={styles.back_Div}>
-          <button className={styles.back_Btn} onClick={navigateToPrepage}>
-            <img src={BACK} className={styles.move_Back} alt="back" />
-          </button>
-        </div>
         <div className={styles.show_con}>
           <div className={styles.show_Intro}>
             <div className={styles.intro_Info}>
@@ -252,7 +247,7 @@ function EntertainDetail() {
                   <div className={styles.infos}>
                     <div className={styles.info_Box}>
                       <div className={styles.textBox}>
-                        <span className={styles.fixed_Info1}>소개글</span>
+                        <span className={styles.fixed_Info}>소개글</span>
                       </div>
 
                       <span className={styles.variable_Info}>
@@ -298,7 +293,7 @@ function EntertainDetail() {
 
                     <div className={styles.info_Box}>
                       <div className={styles.textBox}>
-                        <span className={styles.fixed_Info1}>기타정보</span>
+                        <span className={styles.fixed_Info}>기타정보</span>
                       </div>
                       <div className={styles.inner}>
                         <span className={styles.variable_Info}>

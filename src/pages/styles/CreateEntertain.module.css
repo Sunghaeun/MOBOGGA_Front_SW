@@ -347,11 +347,7 @@ input[type="number"] {
   color: var(--gray-01-background, #fbfbfb);
   text-align: center;
   /* Body 01 _ R */
-  font-family: "IBM Plex Sans KR";
-  font-size: 1.25rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 2.0625rem; /* 165% */
+  font: var(--BODY01);
 }
 
 .make_show_submit:hover {
@@ -535,13 +531,7 @@ input[type="number"] {
   background: var(--main-02, #ff3d12);
 
   color: var(--gray-01-background, #fbfbfb);
-  /* Body 04 _ R */
-  font-family: "IBM Plex Sans KR";
-  font-size: 0.875rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1.5rem; /* 171.429% */
-  letter-spacing: 0.00875rem;
+  font: var(--BODY04);
   &:hover {
     cursor: pointer;
   }

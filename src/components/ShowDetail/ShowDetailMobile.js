@@ -44,7 +44,6 @@ function ShowDetailMobile() {
       const _res = await apiClient.get(`/show/detail/${showId}`);
       setShow(_res.data || {});
       setError(null);
-      console.log(_res);
     } catch (err) {
       // fetch error handled below
 
