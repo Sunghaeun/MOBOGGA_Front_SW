@@ -4,11 +4,7 @@ import { useCallback } from "react";
 import styles from "./EntertainDetailMobile.module.css";
 import loadingStyles from "../../styles/Loading.module.css";
 
-import BACK from "../../assets/ShowBackButton.svg";
-import { ReactComponent as INSTA } from "../../assets/icons/instagram.svg";
-import { ReactComponent as YOUTUBE } from "../../assets/icons/youtube.svg";
 import { ReactComponent as KAKAO } from "../../assets/icons/kakao.svg";
-import { ReactComponent as LINK } from "../../assets/icons/linkicons.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 

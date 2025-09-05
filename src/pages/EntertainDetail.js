@@ -5,7 +5,6 @@ import styles from "./styles/Entertain.module.css";
 import loadingStyles from "../styles/Loading.module.css";
 import EntertainDetailMobile from "../components/EntertainDetail/EntertainDetailMobile";
 
-import BACK from "../assets/ShowBackButton.svg";
 import INSTA from "../assets/icons/instagram.svg";
 import YOUTUBE from "../assets/icons/youtube.svg";
 import KAKAO from "../assets/icons/kakao.svg";
@@ -15,10 +14,6 @@ import axios from "axios";
 
 function EntertainDetail() {
   const navigate = useNavigate(); // ⬅️ navigate 함수 받아오기
-
-  const navigateToPrepage = () => {
-    navigate(-1); // ⬅️ 뒤로가기
-  };
 
   const { id } = useParams();
   const [entertainList, setEntertain] = useState(null);
@@ -231,7 +226,6 @@ function EntertainDetail() {
                   </div>
                 </div>
 
-<<<<<<< HEAD
                 <div className={styles.show_Info}>
                   <div className={styles.title}>
                     {entertainList?.entertainName || "타이틀 정보 없음"}
@@ -250,44 +244,6 @@ function EntertainDetail() {
                       <div className={styles.textBox}>
                         <span className={styles.fixed_Info}>소개글</span>
                       </div>
-=======
-                <div className={styles.infos}>
-                  <div className={styles.info_Box}>
-                    <div className={styles.textBox}>
-                      <span className={styles.fixed_Info1}>소개</span>
-                    </div>
-
-                    <span className={styles.variable_Info}>
-                      {entertainList?.introductionLetter || "소개 정보 없음"}
-                    </span>
-                  </div>
-
-                  <div className={styles.info_Box}>
-                    <span className={styles.fixed_Info}>신청기한</span>
-                    <span className={styles.variable_Info}>
-                      {entertainList?.date || "신청기한 정보 없음"}
-                    </span>
-                  </div>
-                  <div className={styles.info_Box}>
-                    <span className={styles.fixed_Info}>일시</span>
-                    <span className={styles.variable_Info}>
-                      {entertainList?.timeList || "일시 정보 없음"}
-                    </span>
-                  </div>
-                  <div className={styles.info_Box}>
-                    <span className={styles.fixed_Info}>장소</span>
-                    <span className={styles.variable_Info}>
-                      {entertainList?.location || "장소 정보 없음"}
-                    </span>
-                  </div>
-                  <div className={styles.info_Box}>
-                    <span className={styles.fixed_Info}>문의</span>
-                    <span className={styles.variable_Info}>
-                      {entertainList?.managerPhoneNumber || "담당자 정보 없음"}{" "}
-                      {entertainList?.manager ? "(" + entertainList.manager + ")" : ""}
-                    </span>
-                  </div>
->>>>>>> main
 
                       <span className={styles.variable_Info}>
                         {entertainList?.introductionLetter ||

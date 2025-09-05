@@ -347,14 +347,7 @@ input[type="number"] {
   color: var(--gray-01-background, #fbfbfb);
   text-align: center;
   /* Body 01 _ R */
-<<<<<<< HEAD
   font: var(--BODY01);
-=======
-  font-size: 1.25rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 2.0625rem; /* 165% */
->>>>>>> main
 }
 
 .make_show_submit:hover {
@@ -538,16 +531,7 @@ input[type="number"] {
   background: var(--main-02, #ff3d12);
 
   color: var(--gray-01-background, #fbfbfb);
-<<<<<<< HEAD
   font: var(--BODY04);
-=======
-  /* Body 04 _ R */
-  font-size: 0.875rem;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1.5rem; /* 171.429% */
-  letter-spacing: 0.00875rem;
->>>>>>> main
   &:hover {
     cursor: pointer;
   }
