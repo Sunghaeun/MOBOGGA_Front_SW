@@ -5,6 +5,14 @@
   padding-top: 20px;
 }
 
+.desktop {
+  width: 100%;
+}
+
+.mobile {
+  display: none;
+}
+
 .back_Div {
   margin-left: 85px;
 }
@@ -257,4 +265,22 @@
 
 .inner {
   width: 100%;
+}
+
+@media (max-width: 600px) {
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+    width: 100%;
+  }
+
+  .wrap {
+    margin: 0;
+    padding: 0;
+
+    width: 100vw;
+  }
 }
