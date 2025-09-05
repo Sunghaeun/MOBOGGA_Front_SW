@@ -23,6 +23,7 @@ function Sidebar({ isOpen, setIsOpen, auth, isLoggedIn, isLoading }) {
       return;
     }
   };
+
   return (
     <div className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
       <div className={styles.closeButton} onClick={closeSidebar}>
@@ -32,16 +33,11 @@ function Sidebar({ isOpen, setIsOpen, auth, isLoggedIn, isLoading }) {
       <ul className={styles.menu}>
         {/* 공연 */}
         <li>
-          <div className={styles.menuHeader} onClick={() => go("/main")}>
-            <span>공연 & 행사</span>
-          </div>
-        </li>
-        {/* <li>
           <div
             className={styles.menuHeader}
             onClick={() => toggleDropdown("show")}
           >
-            <span>공연</span>
+            <span>볼거리</span>
             <span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -59,14 +55,14 @@ function Sidebar({ isOpen, setIsOpen, auth, isLoggedIn, isLoading }) {
           </div>
           {openDropdown === "show" && (
             <div className={styles.submenu}>
-              <div onClick={() => go("/main")}>공연</div>
-              <div onClick={() => go("/show/experience")}>체험</div>
-              <div onClick={() => go("/show/street")}>스트릿공연</div>
-              <div onClick={() => go("/show/food")}>먹거리</div>
-              <div onClick={() => go("/show/worship")}>예배</div>
+              <div onClick={() => go("/main?category=performance")}>공연</div>
+              <div onClick={() => go("/show/experience?category=experience")}>체험</div>
+              <div onClick={() => go("/show/street?category=street")}>스트릿공연</div>
+              <div onClick={() => go("/show/food?category=food")}>먹거리</div>
+              <div onClick={() => go("/show/worship?category=worship")}>예배</div>
             </div>
           )}
-        </li> */}
+        </li>
 
         {/* 리크루팅 */}
         <li>
@@ -77,11 +73,6 @@ function Sidebar({ isOpen, setIsOpen, auth, isLoggedIn, isLoading }) {
 
         {/* 동아리 */}
         <li>
-          <div className={styles.menuHeader} onClick={() => go("/clubs")}>
-            <span>동아리 목록</span>
-          </div>
-        </li>
-        {/* <li>
           <div
             className={styles.menuHeader}
             onClick={() => toggleDropdown("club")}
@@ -104,16 +95,16 @@ function Sidebar({ isOpen, setIsOpen, auth, isLoggedIn, isLoading }) {
           </div>
           {openDropdown === "club" && (
             <div className={styles.submenu}>
-              <div onClick={() => go("/clubs/performance")}>공연</div>
-              <div onClick={() => go("/clubs/exhibit")}>전시</div>
-              <div onClick={() => go("/clubs/religion")}>종교</div>
-              <div onClick={() => go("/clubs/sports")}>체육</div>
-              <div onClick={() => go("/clubs/study")}>학술</div>
-              <div onClick={() => go("/clubs/volunteer")}>봉사</div>
-              <div onClick={() => go("/clubs/legacy")}>전산</div>
+              <div onClick={() => go("/clubs?category=performance")}>공연</div>
+              <div onClick={() => go("/clubs?category=sports")}>체육</div>
+              <div onClick={() => go("/clubs?category=religion")}>종교</div>
+              <div onClick={() => go("/clubs?category=study")}>학술</div>
+              <div onClick={() => go("/clubs?category=exhibit")}>전시</div>
+              <div onClick={() => go("/clubs?category=volunteer")}>봉사</div>
+              <div onClick={() => go("/clubs?category=legacy")}>전산</div>
             </div>
           )}
-        </li> */}
+        </li>
         {isLoading ? (
           <li>
             <div className={styles.menuHeader}>로딩중...</div>

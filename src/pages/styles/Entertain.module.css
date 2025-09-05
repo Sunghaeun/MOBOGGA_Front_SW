@@ -98,13 +98,9 @@
 }
 
 .title {
-  font-size: 48px;
+  font-size: 36px;
   font-weight: bold;
-  text-shadow:   /* 글씨 더 굵게 보이게  */ -0.7px 0 currentColor,
-    0.7px 0 currentColor, 0 -0.7px currentColor, 0 0.7px currentColor;
-  margin-bottom: 5px;
-  line-height: 72px; /* 150% */
-  letter-spacing: 1.44px;
+  margin-bottom: 12px;
 }
 
 .club {
@@ -122,7 +118,7 @@
 .infos {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }
 
 .info_Box {
@@ -227,7 +223,6 @@
 }
 
 .total {
-  font-family: "IBM Plex Sans KR";
   font-weight: bold;
   font-size: 56px;
   letter-spacing: 0.105rem;
@@ -240,7 +235,6 @@
   background: #ff3d12;
   color: #fbfbfb;
   border: none;
-  font-family: "IBM Plex Sans KR";
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 400;
@@ -254,7 +248,6 @@
   color: #7f7f7f;
   background: #acacac;
   border: none;
-  font-family: "IBM Plex Sans KR";
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 400;

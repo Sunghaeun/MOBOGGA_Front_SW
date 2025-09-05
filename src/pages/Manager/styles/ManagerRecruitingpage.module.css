@@ -182,7 +182,6 @@
 .modal_strong {
   color: var(--main-02, #ff3d12);
   /* Body 03 _ SB */
-  font-family: "IBM Plex Sans KR";
   font-size: 1rem;
   font-style: normal;
   font-weight: 600;
@@ -204,7 +203,6 @@
   color: var(--gray-10-typo-color, #121212);
   text-align: center;
   /* Body 01 _ SB */
-  font-family: "IBM Plex Sans KR";
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 600;
@@ -236,7 +234,6 @@
   background: var(--gray-01-background, #fbfbfb);
   color: var(--main-02, #ff3d12);
   /* Body 04 _ R */
-  font-family: "IBM Plex Sans KR";
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 400;
@@ -258,7 +255,6 @@
   /* Typo*/
 
   color: var(--gray-01-background, #fbfbfb);
-  font-family: "IBM Plex Sans KR";
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 400;

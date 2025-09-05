@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Pretendard Variable";
+  src: url("../public/fonts/PretendardVariable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --ORANGE: #ff3d12;
   --DEEPORANGE: #bb2200;
@@ -39,7 +47,6 @@
   --CAPTION_M: 500 11px/18px "Pretendard Variable";
   --CAPTION: 400 11px/18px "Pretendard Variable";
 }
-
 
 body {
   margin: 0;

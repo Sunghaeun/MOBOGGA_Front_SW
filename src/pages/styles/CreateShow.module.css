@@ -375,7 +375,6 @@ input[type="number"] {
   color: var(--gray-01-background, #fbfbfb);
   text-align: center;
   /* Body 01 _ R */
-  font-family: "IBM Plex Sans KR";
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 400;

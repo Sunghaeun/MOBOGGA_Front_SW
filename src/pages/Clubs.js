@@ -1,5 +1,5 @@
-import React , { useEffect, useState } from "react";
-import styles from "./styles/Main.module.css";
+import React, { useEffect, useState } from "react";
+import styles from "./styles/Clubs.module.css";
 
 import ClubList from "../components/ClubList";
 import PageHeader from "../components/Mobile/PageHeader";
@@ -19,12 +19,8 @@ function Clubs() {
 
   return (
     <>
-      <div className={styles.main}>
-        {isMobile ? (
-          <PageHeader title="동아리" />
-        ) : (
-          <span className={styles.categoryText}>카테고리</span>
-        )}
+      <div className={styles.clubs}>
+        {isMobile ? <PageHeader title="동아리" /> : ""}
         <ClubList />
       </div>
     </>

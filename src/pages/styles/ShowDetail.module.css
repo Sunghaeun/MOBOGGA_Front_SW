@@ -288,14 +288,12 @@
 
 .modal_strong {
   color: var(--main-02, #ff3d12);
-  /* Body 03 _ SB */
   font: var(--BODY03_SB);
 }
 
 .modal_strong_bl {
   color: var(--gray-10-typo-color, #121212);
   text-align: center;
-  /* Body 03 _ B */
   font: var(--BODY03_B);
 }
 
@@ -326,7 +324,6 @@
 
   color: var(--gray-10-typo-color, #121212);
   text-align: center;
-  /* Body 01 _ SB */
   font: var(--BODY01_SB);
 }
 
@@ -387,7 +384,6 @@
   background: var(--main-02, #ff3d12);
 
   color: var(--gray-01-background, #fbfbfb);
-  /* Body 04 _ R */
   font: var(--BODY04);
 
   &:hover {

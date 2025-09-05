@@ -1,4 +1,4 @@
-.recruiting {
+.clubs {
   padding: 28px 128px 128px 128px;
   box-sizing: border-box;
 }
@@ -9,7 +9,7 @@
 }
 
 @media (max-width: 600px) {
-  .recruiting {
+  .clubs {
     padding: 0px 20px 90px 20px;
     box-sizing: border-box;
   }

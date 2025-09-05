@@ -17,6 +17,12 @@ class ApiClient {
     this.client.interceptors.request.use(
       (config) => {
         const { token } = useAuthStore.getState();
+        // console.log(
+        //   "API Request:",
+        //   config.url,
+        //   "Token:",
+        //   token ? "Present" : "Missing"
+        // ); // 디버깅용
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -28,6 +34,7 @@ class ApiClient {
     this.client.interceptors.response.use(
       (response) => response,
       (error) => {
+        // console.error("API Error:", error.response?.status, error.config?.url); // 디버깅용
         if (error.response?.status === 401 || error.response?.status === 403) {
           const url = error.config?.url || "";
           const shouldLogout =

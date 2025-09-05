@@ -3,6 +3,21 @@
   flex-direction: column;
 }
 
+.noData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 200px;
+  color: var(--GRAY-04, #888888);
+  font: var(--BODY01);
+
+  grid-column: 1 / -1; /* 모든 컬럼을 차지 */
+  text-align: center;
+}
+
 .categoryHeader {
   position: relative;
 }
@@ -19,10 +34,10 @@
 
 .showlist {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  justify-items: center;
-  /* padding: 20px; */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 36px;
+  width: 100%;
+  justify-items: stretch; /* 카드가 칼럼폭을 꽉 채우게 */
 }
 
 .category {
@@ -30,7 +45,7 @@
   flex-direction: row;
 
   margin-top: 12px;
-  margin-bottom: 64px;
+  margin-bottom: 32px;
   cursor: pointer;
 }
 
@@ -93,60 +108,52 @@
   display: flex;
 }
 
-
 @media (max-width: 600px) {
-  .main{
-    padding-top: 64px !important;
+  .column {
+    width: 100%;
+    padding: 0;
   }
 
-  .column{
-    width:100%;
+  .title {
+    display: none;
   }
 
-  .title{
-    font:var(--BODY03_SB);
+  .buttons {
+    margin-top: 8px;
   }
 
-  .buttons{
-    margin-top:8px;
-  }
-
-  .category{
-    margin-bottom:32px;
-    overflow-x: auto;       /* 좌우 스크롤 가능하게 만듦 */
+  .category {
+    margin-bottom: 32px;
+    overflow-x: auto; /* 좌우 스크롤 가능하게 만듦 */
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
+    gap: 10px;
   }
 
   .category::-webkit-scrollbar {
     display: none;
   }
 
-  .inactiveCategory{
-    margin-right: 12px;
+  .inactiveCategory, .activeCategory {
     border-radius: 4px;
+    padding: 4px 12px;
+    margin: 0;
   }
 
-  .inactiveCategory span{
-    font:var(--BODY04);
-    
+  .inactiveCategory span, .activeCategory span {
+    font: var(--BODY04);
+    font-size: 12px;
   }
 
-  .activeCategory{
-    margin-right: 12px;
-    border-radius: 4px;
-  }
-
-  .activeCategory span{
-    font:var(--BODY04);
-  } 
-
-  .showlist{
-    grid-template-columns: repeat(2, minmax(0, 1fr)); 
-    gap: 10px; 
-    width:100%;
+  .showlist {
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
+    gap: 10px;
+    width: 100%;
 
     padding-top: 0px;
   }
-}
 
+  .noData {
+    font-size: 14px;
+  }
+}

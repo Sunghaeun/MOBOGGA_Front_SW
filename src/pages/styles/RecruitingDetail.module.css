@@ -96,7 +96,7 @@
 
 .info_Box {
   display: flex;
-  gap: 10px;
+  gap: 20px;
   font-size: 16px;
   line-height: 1.6;
 }
@@ -109,7 +109,6 @@
 
 .variable_Info {
   color: #333;
-  white-space: pre-line;
 }
 
 .disabled_Label {

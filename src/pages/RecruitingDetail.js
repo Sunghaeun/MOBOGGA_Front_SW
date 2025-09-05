@@ -1,6 +1,5 @@
-/* eslint-disable */
-import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 import styles from "./styles/RecruitingDetail.module.css";
 import loadingStyles from "../styles/Loading.module.css";
@@ -15,11 +14,11 @@ import MobileRecruitingDetail from "../components/Mobile/MobileRecruitingDetail"
 
 function RecruitingDetail() {
   const [isMobile, setIsMobile] = useState(false);
-    
+
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 600px)");
     const update = (e) => setIsMobile(e.matches);
-    update(mq);                 // 최초 반영
+    update(mq); // 최초 반영
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
   }, []);
@@ -65,9 +64,9 @@ function RecruitingDetail() {
     }
   };
 
-
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   if (isLoading) {
@@ -97,129 +96,160 @@ function RecruitingDetail() {
 
   return (
     <>
-    {isMobile ? <MobileRecruitingDetail recruiting={recruiting} /> : (
-      <div className={styles.recruitingDetail}>
-        <div className={styles.wrap}>
-          <div className={styles.back_Div}>
-            <button className={styles.back_Btn} onClick={navigateToPrepage}>
-              <img src={BACK} className={styles.move_Back} alt="back" />
-            </button>
-          </div>
-          <div className={styles.recruite_con}>
-            <div className={styles.recruite_Intro}>
-              <div className={styles.intro_Info}>
-                <div className={styles.recruite_Top}>리크루팅 정보</div>
-                <div className={styles.intro_con}>
-                  <div className={styles.intro_con_left}>
-                    {recruiting && (
-                      <img
-                        src={recruiting.poster}
-                        className={styles.recruite_Pic}
-                        alt="recruite_IMG"
-                      />
-                    )}
-                    <div className={styles.sns_icons}>
+      {isMobile ? (
+        <MobileRecruitingDetail recruiting={recruiting} />
+      ) : (
+        <div className={styles.recruitingDetail}>
+          <div className={styles.wrap}>
+            <div className={styles.back_Div}>
+              <button className={styles.back_Btn} onClick={navigateToPrepage}>
+                <img src={BACK} className={styles.move_Back} alt="back" />
+              </button>
+            </div>
+            <div className={styles.recruite_con}>
+              <div className={styles.recruite_Intro}>
+                <div className={styles.intro_Info}>
+                  <div className={styles.recruite_Top}>리크루팅 정보</div>
+                  <div className={styles.intro_con}>
+                    <div className={styles.intro_con_left}>
                       {recruiting && (
-                        <a href={recruiting.instaUrl}>
-                          <img
-                            className={styles.sns_icon}
-                            src={INSTA}
-                            alt="sns_icon"
-                          ></img>
-                        </a>
+                        <img
+                          src={recruiting.poster}
+                          className={styles.recruite_Pic}
+                          alt="recruite_IMG"
+                        />
                       )}
-                      {recruiting && (
-                        <a href={recruiting.youtubeUrl}>
-                          <img
-                            className={styles.sns_icon}
-                            src={YOUTUBE}
-                            alt="sns_icon"
-                          ></img>
-                        </a>
-                      )}
-                      {recruiting && (
-                        <a href={recruiting.kakaoUrl}>
-                          <img
-                            className={styles.sns_icon}
-                            src={KAKAO}
-                            alt="sns_icon"
-                          ></img>
-                        </a>
-                      )}
+                      <div className={styles.sns_icons}>
+                        {recruiting && (
+                          <a href={recruiting.instaUrl}>
+                            <img
+                              className={styles.sns_icon}
+                              src={INSTA}
+                              alt="sns_icon"
+                            ></img>
+                          </a>
+                        )}
+                        {recruiting && (
+                          <a href={recruiting.youtubeUrl}>
+                            <img
+                              className={styles.sns_icon}
+                              src={YOUTUBE}
+                              alt="sns_icon"
+                            ></img>
+                          </a>
+                        )}
+                        {recruiting && (
+                          <a href={recruiting.kakaoUrl}>
+                            <img
+                              className={styles.sns_icon}
+                              src={KAKAO}
+                              alt="sns_icon"
+                            ></img>
+                          </a>
+                        )}
+                      </div>
+                      <div className={styles.recruite_left_cont}>
+                        <span
+                          className={styles.clubDetailText}
+                          dangerouslySetInnerHTML={{
+                            __html: recruiting.introductionLetter
+                              ? recruiting.introductionLetter
+                                  .replace(/\n\n\n\n/g, "<br /><br /><br />")
+                                  .replace(/\n\n/g, "<br /><br />")
+                                  .replace(/\n/g, "<br />")
+                              : "소개 정보 없음",
+                          }}
+                        />
+                      </div>
                     </div>
-                    <div className={styles.recruite_left_cont}>
-                      <span className={styles.clubDetailText}>
-                        {/* {recruiting.eligibility.split("\n").map((line, index) => (
-                          <React.Fragment key={index}>
-                            {line}
-                            <br />
-                          </React.Fragment>
-                        ))} */}
-                        {recruiting.introductionLetter}
-                      </span>
-                    </div>
-                  </div>
 
-                  <div className={styles.recruite_Info}>
-                    <div
-                      className={styles.club}
-                      onClick={() => navigateToClubDetail(recruiting?.clubId)}
-                    >
-                      {recruiting?.clubName ? `${recruiting?.clubName} >` : "동아리 정보 없음"}
-                    </div>
-                    <div className={styles.title}>
-                      {recruiting?.recruitingTitle || "타이틀 정보 없음"}
-                    </div>
-                    <div className={styles.infos}>
-                      <div className={styles.info_Box}>
-                        <span className={styles.fixed_Info}>카테고리</span>
-                        <span className={styles.variable_Info}>
-                          {recruiting?.category || "카테고리 정보 없음"}
-                        </span>
+                    <div className={styles.recruite_Info}>
+                      <div
+                        className={styles.club}
+                        onClick={() => navigateToClubDetail(recruiting?.clubId)}
+                      >
+                        {recruiting?.clubName
+                          ? `${recruiting?.clubName} >`
+                          : "동아리 정보 없음"}
                       </div>
-                      <div className={styles.info_Box}>
-                        <span className={styles.fixed_Info}>모집기간</span>
-                        <span className={styles.variable_Info}>
-                          {recruiting?.dates || "날짜 정보 없음"}
-                        </span>
+                      <div className={styles.title}>
+                        {recruiting?.recruitingTitle || "타이틀 정보 없음"}
                       </div>
-                      <div className={styles.info_Box}>
-                        <span className={styles.fixed_Info}>필수학기</span>
-                        <span className={styles.variable_Info}>
-                          {recruiting?.mandatorySemesters
-                            ? `${recruiting?.mandatorySemesters}학기`
-                            : "필수학기 정보 없음"}
-                        </span>
-                      </div>
-                      <div className={styles.info_Box}>
-                        <span className={styles.fixed_Info}>정모시간</span>
-                        <span className={styles.variable_Info}>
-                          {recruiting?.meetingTime || "없음"}
-                        </span>
-                      </div>
-                      <div className={styles.info_Box}>
-                        <span className={styles.fixed_Info}>활동내용</span>
-                        <span className={styles.variable_Info}>
-                          {recruiting?.content || "활동내용 정보 없음"}
-                        </span>
-                      </div>
-                      <div className={styles.info_Box}>
-                        <span className={styles.fixed_Info}>지원자격</span>
-                        <span className={styles.variable_Info}>
-                          {recruiting?.eligibility || "지원자격 없음"}
-                        </span>
-                      </div>
-                      <div className={styles.info_Box}>
-                        <span className={styles.fixed_Info}>면접안내</span>
-                        <span className={styles.variable_Info}>
-                          {recruiting?.notice || "면접안내 없음"}
-                        </span>
-                      </div>
-                      <div className={styles.info_Box}>
-                        <span className={styles.fixed_Info}>문의</span>
-                        <span className={styles.variable_Info}>
-                          {recruiting?.managerInfo || "문의 정보 없음"}
-                        </span>
+                      <div className={styles.infos}>
+                        <div className={styles.info_Box}>
+                          <span className={styles.fixed_Info}>카테고리</span>
+                          <span className={styles.variable_Info}>
+                            {recruiting?.category || "카테고리 정보 없음"}
+                          </span>
+                        </div>
+                        <div className={styles.info_Box}>
+                          <span className={styles.fixed_Info}>모집기간</span>
+                          <span className={styles.variable_Info}>
+                            {recruiting?.dates || "날짜 정보 없음"}
+                          </span>
+                        </div>
+                        <div className={styles.info_Box}>
+                          <span className={styles.fixed_Info}>필수학기</span>
+                          <span className={styles.variable_Info}>
+                            {recruiting?.mandatorySemesters
+                              ? `${recruiting?.mandatorySemesters}학기`
+                              : "필수학기 정보 없음"}
+                          </span>
+                        </div>
+                        <div className={styles.info_Box}>
+                          <span className={styles.fixed_Info}>정모시간</span>
+                          <span className={styles.variable_Info}>
+                            {recruiting?.meetingTime || "없음"}
+                          </span>
+                        </div>
+                        <div className={styles.info_Box}>
+                          <span className={styles.fixed_Info}>활동내용</span>
+                          <span
+                            className={styles.variable_Info}
+                            dangerouslySetInnerHTML={{
+                              __html: recruiting?.content
+                                ? recruiting.content
+                                    .replace(/\n\n\n\n/g, "<br /><br /><br />")
+                                    .replace(/\n\n/g, "<br /><br />")
+                                    .replace(/\n/g, "<br />")
+                                : "활동내용 정보 없음",
+                            }}
+                          />
+                        </div>
+                        <div className={styles.info_Box}>
+                          <span className={styles.fixed_Info}>지원자격</span>
+                          <span
+                            className={styles.variable_Info}
+                            dangerouslySetInnerHTML={{
+                              __html: recruiting?.eligibility
+                                ? recruiting.eligibility
+                                    .replace(/\n\n\n\n/g, "<br /><br /><br />")
+                                    .replace(/\n\n/g, "<br /><br />")
+                                    .replace(/\n/g, "<br />")
+                                : "지원자격 없음",
+                            }}
+                          />
+                        </div>
+                        <div className={styles.info_Box}>
+                          <span className={styles.fixed_Info}>면접안내</span>
+                          <span
+                            className={styles.variable_Info}
+                            dangerouslySetInnerHTML={{
+                              __html: recruiting?.notice
+                                ? recruiting.notice
+                                    .replace(/\n\n\n\n/g, "<br /><br /><br />")
+                                    .replace(/\n\n/g, "<br /><br />")
+                                    .replace(/\n/g, "<br />")
+                                : "면접안내 없음",
+                            }}
+                          />
+                        </div>
+                        <div className={styles.info_Box}>
+                          <span className={styles.fixed_Info}>문의</span>
+                          <span className={styles.variable_Info}>
+                            {recruiting?.managerInfo || "문의 정보 없음"}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -227,14 +257,13 @@ function RecruitingDetail() {
               </div>
             </div>
           </div>
+          <div className={styles.recruite_apply}>
+            <button className={styles.apply_Btn} onClick={navigateToApplypage}>
+              지원하러 가기
+            </button>
+          </div>
         </div>
-        <div className={styles.recruite_apply}>
-          <button className={styles.apply_Btn} onClick={navigateToApplypage}>
-            지원하러 가기
-          </button>
-        </div>
-      </div>
-    )}
+      )}
     </>
   );
 }

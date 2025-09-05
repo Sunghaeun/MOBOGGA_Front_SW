@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import RecruitingCard from "./RecruitingCard";
 import styles from "./styles/RecruitingList.module.css";
 import loadingStyles from "../styles/Loading.module.css";
@@ -13,6 +13,9 @@ function RecruitingList() {
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // 카테고리 버튼 ref들
+  const categoryRefs = useRef([]);
 
   // 4) 관리자 권한 받아오기 - Hooks를 최상위로 이동
   const { isManager, initialize } = useAuthStore();
@@ -52,6 +55,19 @@ function RecruitingList() {
       ? recruiting
       : recruiting.filter((item) => item.category === selectedCategory);
 
+  // selectedCategory 변경 시 해당 카테고리 버튼으로 스크롤
+  useEffect(() => {
+    const categories = ["전체", "정기모집", "추가모집", "상시모집"];
+    const index = categories.indexOf(selectedCategory);
+    if (index !== -1 && categoryRefs.current[index]) {
+      categoryRefs.current[index].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }, [selectedCategory]);
+
   if (isLoading) {
     return (
       <div className={loadingStyles.loading}>
@@ -89,6 +105,7 @@ function RecruitingList() {
               (category, idx) => (
                 <div
                   key={idx}
+                  ref={(el) => (categoryRefs.current[idx] = el)}
                   className={
                     selectedCategory === category
                       ? styles.activeCategory
