@@ -1,9 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import styles from "./styles/MobileRecruitingDetail.module.css";
 import PageHeader from "../Mobile/PageHeader";
 import insta from "../../assets/icons/i.svg";
 import youtube from "../../assets/icons/y.svg";
 import kakao from "../../assets/icons/k.svg";
+
+import RecruitingEndModal from "../Mobile/RecruitingEnd";
 
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +22,15 @@ function MobileRecruitingDetail({ recruiting = {} }) {
       alert("지원 링크가 없습니다.");
     }
   };
+
+  const [recruitingEndModalOpen, setRecruitingEndModalOpen] = useState(false);
+    // eslint-disable-next-line no-unused-vars
+    const openRecruitingEndModal = () => setRecruitingEndModalOpen(true);
+    const closeRecruitingEndModal = () => {
+      setRecruitingEndModalOpen(false);
+      document.body.style.removeProperty("overflow");
+    };
+  
 
   return (
     <>
@@ -162,11 +173,15 @@ function MobileRecruitingDetail({ recruiting = {} }) {
         </div>
 
         <div className={styles.applyButtonContainer}>
-          <button className={styles.apply_Btn} onClick={handleApply}>
+          <button className={styles.apply_Btn} onClick={openRecruitingEndModal}>
             지원하러가기
           </button>
         </div>
       </div>
+      <RecruitingEndModal 
+        open={recruitingEndModalOpen}
+        close={closeRecruitingEndModal}
+        />
     </>
   );
 }
