@@ -3,6 +3,8 @@ import styles from "./styles/Footer.module.css";
 import { useNavigate } from "react-router-dom";
 
 import moboggaLogo from "../assets/FooterLogo.svg";
+import likelion from "../assets/footer/likelion.png";
+import likelionhgu from "../assets/footer/likelionhgu.png";
 import insta from "../assets/instagram.svg";
 
 function Footer() {
@@ -49,7 +51,32 @@ function Footer() {
       </div>
 
       <div className={styles.secondContainer}>
-        <img src={moboggaLogo} className={styles.logoImg} alt="" />
+        <div className={styles.logos}>
+          <img
+            onClick={() => window.open("https://likelion.net/", "_blank")}
+            src={likelion}
+            className={styles.likelion}
+            alt=""
+          />
+          <div className={styles.verticalLine}></div>
+          <img
+            onClick={() => window.open("https://www.instagram.com/likelion_hgu/", "_blank")}
+            src={likelionhgu}
+            className={styles.likelionhgu}
+            alt=""
+          />
+          <div className={styles.verticalLine}></div>
+          <img
+            onClick={() => window.open("https://mobogga.netlify.app/faq", "_blank")}
+            src={moboggaLogo}
+            className={styles.logoImg}
+            alt=""
+          />
+        </div>
+        <div>
+          이 프로젝트는 멋쟁이사자처럼 한동대 소속 학생들의 아이디어로
+          탄생하였습니다.
+        </div>
         <div className={styles.contact}>
           <span>
             <a href="tel:+821095438893">연락처: 010-9543-8893</a>

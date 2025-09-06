@@ -10,8 +10,32 @@
   z-index: 1000;
 }
 
-.logoImg {
+.logos {
+  display: flex;
+  gap: 20px;
+  align-items: center;
   margin-bottom: 12px;
+  img {
+    cursor: pointer;
+  }
+}
+
+.verticalLine {
+  width: 1px;
+  height: 20px;
+  background-color: #636363;
+  opacity: 0.5;
+}
+
+.likelion {
+  height: 20px;
+  width: auto;
+}
+
+.likelionhgu {
+  height: 30px;
+  width: auto;
+  border-radius: 50%;
 }
 
 .firstContainer {
@@ -105,6 +129,9 @@
     height: auto;
     display: block;
     margin-right: 0;
+  }
+  .verticalLine {
+    height: 15px;
   }
   .insta {
     justify-content: flex-start;
