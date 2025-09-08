@@ -33,11 +33,13 @@
 
 .tape {
   position: absolute;
-  transform: translate(90%, -20%);
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -40%);
   z-index: 100;
-  img {
-    width: 100px;
-  }
+}
+.tape img {
+  width: 100px;
 }
 
 .mainImg:hover {
@@ -120,6 +122,7 @@
 
 .clubDate {
   display: flex;
+  justify-content: center;
 }
 
 .club {
@@ -153,9 +156,12 @@
 
 @media (max-width: 600px) {
   .showCard {
-    width: 194px;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     height: auto;
     margin-bottom: 20px;
+    box-sizing: border-box;
   }
 
   .card {
@@ -164,13 +170,15 @@
   }
 
   .tape {
-  position: absolute;
-  transform: translate(90%, -40%);
-  z-index: 100;
-  img {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -40%);
+    z-index: 100;
+  }
+  .tape img {
     width: 80px;
   }
-}
 
   .mainImg {
     width: 100%;
@@ -196,10 +204,12 @@
 
   .club {
     font: var(--CAPTION_SB) !important;
+    margin-right: 2px;
   }
 
   .date {
     font: var(--CAPTION) !important;
+    margin-left: 2px;
   }
 
   .date1 {

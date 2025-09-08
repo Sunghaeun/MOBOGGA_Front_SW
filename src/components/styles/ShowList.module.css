@@ -185,9 +185,10 @@
 
 @media (max-width: 600px) {
   .showlist {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
     width: 100%;
+    box-sizing: border-box;
   }
 
   .category {
@@ -202,13 +203,15 @@
     display: none;
   }
 
-  .inactiveCategory, .activeCategory {
+  .inactiveCategory,
+  .activeCategory {
     border-radius: 4px;
     padding: 2px 12px;
     margin: 0;
   }
 
-  .inactiveCategory span, .activeCategory span {
+  .inactiveCategory span,
+  .activeCategory span {
     font: var(--BODY04);
     font-size: 12px;
   }
@@ -218,10 +221,13 @@
   }
 
   .showCard {
-    width: calc((100% - 40px) / 2) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
   }
 
-  .noData{
+  .noData {
     font-size: 14px;
   }
 }
