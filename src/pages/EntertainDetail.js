@@ -257,13 +257,14 @@ function EntertainDetail() {
                       {entertainList?.introductionLetter || "소개 정보 없음"}
                     </span>
                   </div>
-
-                  <div className={styles.info_Box}>
-                    <span className={styles.fixed_Info}>신청기한</span>
-                    <span className={styles.variable_Info}>
-                      {entertainList?.date || "신청기한 정보 없음"}
-                    </span>
-                  </div>
+                  {entertainList?.category !== "먹거리" && (
+                    <div className={styles.info_Box}>
+                      <span className={styles.fixed_Info}>신청기한</span>
+                      <span className={styles.variable_Info}>
+                        {entertainList?.date || "신청기한 정보 없음"}
+                      </span>
+                    </div>
+                  )}
                   <div className={styles.info_Box}>
                     <span className={styles.fixed_Info}>일시</span>
                     <span className={styles.variable_Info}>
@@ -280,10 +281,11 @@ function EntertainDetail() {
                     <span className={styles.fixed_Info}>문의</span>
                     <span className={styles.variable_Info}>
                       {entertainList?.managerPhoneNumber || "담당자 정보 없음"}{" "}
-                      {entertainList?.manager ? "(" + entertainList.manager + ")" : ""}
+                      {entertainList?.manager
+                        ? "(" + entertainList.manager + ")"
+                        : ""}
                     </span>
                   </div>
-
                   <div className={styles.info_Box}>
                     <div className={styles.textBox}>
                       <span className={styles.fixed_Info1}>기타정보</span>
