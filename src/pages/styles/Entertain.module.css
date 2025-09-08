@@ -1,8 +1,18 @@
 .wrap {
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: 100vw;
   padding-top: 20px;
+}
+
+.desktop {
+  display: flex;
+  width: 100%;
+  padding: 0 128px;
+}
+
+.mobile {
+  display: none;
 }
 
 .back_Div {
@@ -16,6 +26,7 @@
 }
 .show_Intro {
   display: flex;
+  width: 100%;
   padding-left: 20px;
 
   margin-bottom: 200px;
@@ -41,6 +52,7 @@
 }
 
 .intro_Info {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -81,7 +93,6 @@
 }
 
 .show_Info {
-  width: 550px;
   margin-left: 64px;
   text-align: left;
 }
@@ -122,23 +133,19 @@
   flex-shrink: 0;
 }
 
-.fixed_Info1 {
-  width: 80px;
-  font-weight: bold;
+.fixed_Info {
+  width: 80px !important;
+  font: var(--BODY03_B);
   color: #8e3dff;
 
   display: inline-block;
   width: 100%;
 }
 
-.fixed_Info {
-  width: 80px;
-  font-weight: bold;
-  color: #6666ff;
-}
-
 .variable_Info {
-  color: #333;
+  font: var(--BODY03);
+
+  color: #121212;
   white-space: pre-line;
   word-break: break-word;
   overflow-wrap: break-word;
@@ -250,4 +257,16 @@
 
 .inner {
   width: 100%;
+}
+
+
+@media (max-width: 600px) {
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+    width: 100%
+  }
 }

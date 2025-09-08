@@ -3,14 +3,6 @@ import styles from "./styles/Dropdown.module.css";
 import useDetectClose from "./useDetectClose";
 import down from "../assets/Arrow.svg";
 
-/**
- * props
- * - options: string[] (필수)
- * - defaultValue: string (선택, 비제어일 때 초기 표시)
- * - value: string (선택, 제어 모드에서 표시값)
- * - onChange: (val: string) => void (선택, 제어 모드에서 선택 이벤트)
- * - className, style: (선택)
- */
 function Dropdown({
   options = [],
   defaultValue = "",

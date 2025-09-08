@@ -34,12 +34,10 @@
 
 .showlist {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  justify-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 36px;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  justify-items: stretch; /* 카드가 칼럼폭을 꽉 채우게 */
 }
 
 .category {
