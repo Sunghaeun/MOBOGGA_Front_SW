@@ -256,9 +256,6 @@ function EditShow() {
   };
 
   useEffect(() => {
-    // getShow 실행 조건 체크
-    // condition checks
-
     // authLoading이 undefined이면 false로 처리
     const loading = authLoading === undefined ? false : authLoading;
 
@@ -551,6 +548,29 @@ function EditShow() {
                     </span>
                   </span>
                 </div>
+                <div className={styles.info_Box}>
+                  <span className={styles.fixed_Info}>
+                    <span className={styles.info_txt}>좌석수</span>
+                  </span>
+                  <span
+                    className={styles.variable_Info}
+                    style={{
+                      display: "inline-flex",
+                      justifyContent: "left",
+                      alignItems: "center",
+                    }}
+                  >
+                    <input
+                      type="number"
+                      placeholder="000"
+                      onChange={(e) => setMaxPeople(e.target.value)}
+                      style={{ width: "5rem" }}
+                    />
+                    <span style={{ color: "#121212", marginLeft: "0.5rem" }}>
+                      석
+                    </span>
+                  </span>
+                </div>
 
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
@@ -765,9 +785,7 @@ function EditShow() {
                     )}
                     style={{ width: "3.75rem" }}
                     value={show.timeHour ?? "00"}
-                    onChange={(e) =>
-                      setShowTimePart(show.id, "hour", e.target.value)
-                    }
+                    onChange={(val) => setShowTimePart(show.id, "hour", val)}
                   />
                   <span className={styles.unit}>시</span>
                   <Dropdown
@@ -777,9 +795,7 @@ function EditShow() {
                     )}
                     style={{ width: "3.75rem" }}
                     value={show.timeMinute ?? "00"}
-                    onChange={(e) =>
-                      setShowTimePart(show.id, "minute", e.target.value)
-                    }
+                    onChange={(val) => setShowTimePart(show.id, "minute", val)}
                   />
                   <span className={styles.unit}>분</span>
                 </div>
@@ -827,7 +843,7 @@ function EditShow() {
             ))}
           </div>
 
-          <div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
             <button className={styles.make_show_submit} onClick={updateShow}>
               수정하기
             </button>

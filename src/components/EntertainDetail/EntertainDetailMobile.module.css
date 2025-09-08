@@ -1,0 +1,163 @@
+.wrap {
+  margin: 0 !important;
+  display: flex;
+  justify-content: center;
+}
+
+.show_con {
+  width: 100%;
+}
+
+.show_Intro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.intro_con {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.show_Top {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.back_Div {
+  display: block;
+  position: absolute;
+  left: 5%;
+  top: 50%;
+  transform: translateY(-50%); /* 수직 중앙 정렬 */
+  margin: 0 !important;
+}
+
+.picDiv {
+  width: 100vw;
+  height: 25rem;
+  background: var(
+    --Gradient-02,
+    linear-gradient(180deg, #ccc 0%, #fbfbfb 50%, #ccc 100%)
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.show_Pic {
+  width: 14rem;
+  height: 20rem;
+
+  border: 4px solid var(--gray-01-background, #fbfbfb);
+
+  /* Shadow 02 */
+  box-shadow: 8px 8px 20px 0 rgba(0, 0, 0, 0.25);
+}
+
+.sns_icons {
+  width: 80%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.sns_icon {
+  width: 24px;
+  color: #121212;
+}
+
+.show_Info {
+  margin: 0 3vw;
+}
+
+.back_Div {
+  margin-left: 85px;
+}
+
+.back_Btn {
+  background-color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.intro_Info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+}
+
+.intro_con_left {
+  width: 22.5625rem;
+  flex-shrink: 0;
+}
+
+.recruite_left_cont {
+  width: 22.5625rem !important;
+  max-width: 500px !important;
+  flex-shrink: 0;
+}
+
+.recruiting_info_content {
+  max-width: 500px;
+}
+
+.show_Top {
+  font-size: 24px;
+  font-weight: bold;
+  color: #121212;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.title {
+  font: var(--TITLE04_B);
+  margin: 5px 0;
+}
+
+.club {
+  margin-top: -10px;
+  margin-bottom: 10px;
+  font: var(--BODY02_B);
+  color: #ff3d12;
+  width: 40%;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.infos {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  margin: 0 2vw;
+  margin-bottom: 5rem;
+}
+
+.info_Box {
+  gap: 15px;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.fixed_Info {
+  width: 60px;
+  flex-shrink: 0;
+  font-weight: bold;
+  font: var(--BODY03_B);
+  color: #8e3dff;
+}
+
+.variable_Info {
+  color: var(--gray-10-typo-color, #121212);
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+  font: var(--BODY03);
+}

@@ -14,7 +14,7 @@ function ShowDetailMobile() {
   const { user, isLoggedIn, token, authLoading } = useAuthStore();
 
   const [show, setShow] = useState({});
-  const [count, setCount] = useState(0);
+  const [counts, setCounts] = useState({});
   // eslint-disable-next-line
   const [selectedSch, setSelectedSch] = useState(null);
   const [isDisable, setIsDisable] = useState(false);
@@ -22,6 +22,9 @@ function ShowDetailMobile() {
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
   const [activeSection, setIsActiveSection] = useState("info");
+
+  const [switchOpen, setSwitchOpen] = useState(false);
+  const [pendingSch, setPendingSch] = useState(null);
 
   const [secondModalOpen, setSecondModalOpen] = useState(false);
   const [failModalOpen, setFailModalOpen] = useState(false);
@@ -78,6 +81,20 @@ function ShowDetailMobile() {
   }, [limitOpen]);
 
   useEffect(() => {
+    if (!switchOpen) return;
+    const onKey = (e) => {
+      if (e.isComposing) return;
+      if (e.key === "Enter") {
+        e.preventDefault();
+        selectSchOkRef.current?.click();
+      }
+      if (e.key === "Escape") setSwitchOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [switchOpen]);
+
+  useEffect(() => {
     if (authLoading) {
       // 인증 로딩 중이면 대기
       return;
@@ -100,10 +117,15 @@ function ShowDetailMobile() {
       setFailModalOpen(true);
       return;
     }
+    const selectedCount = getCounts(selectedSch);
+    if (selectedCount <= 0) {
+      alert("1매 이상 선택해주세요.");
+      return;
+    }
 
     const requestData = {
       scheduleId: selectedSch.scheduleId,
-      wishToPurchaseTickets: count,
+      wishToPurchaseTickets: getCounts(selectedSch),
     };
 
     try {
@@ -127,25 +149,48 @@ function ShowDetailMobile() {
   const formatPrice = (price) =>
     typeof price === "number" ? price.toLocaleString("ko-KR") : "0";
 
-  useEffect(() => setCount(0), [selectedSch]);
+  const Minus = (sch) => {
+    if (!sch) return;
+    const cur = getCounts(sch);
+    if (cur > 0) setCountFor(sch, cur - 1);
+  };
+  const Plus = (sch) => {
+    if (!sch) return;
 
-  const Minus = () => {
-    if (count > 1) setCount(count - 1);
-  };
-  const Plus = () => {
-    const maxAvailable = Math.min(
-      selectedSch.maxPeople - selectedSch.applyPeople,
-      selectedSch.maxTickets
+    const key = schKey(sch);
+    const activeKey = Object.keys(counts).find((k) => counts[k] > 0);
+    if (activeKey && activeKey !== key) {
+      setPendingSch(sch);
+      setSwitchOpen(true);
+      return; // 증가하지 않음
+    }
+    const cur = getCounts(sch);
+    const avail = Math.max(
+      0,
+      Math.min(
+        (sch?.maxPeople ?? 0) - (sch?.applyPeople ?? 0),
+        sch?.maxTickets ?? Infinity
+      )
     );
-    if (count < maxAvailable) setCount(count + 1);
-    else if (count === selectedSch.maxTickets) setLimitOpen(true);
-    else alert(`현재 ${count}매를 예매할 수 있습니다.`);
+    if (cur < avail) setCountFor(sch, cur + 1);
+    else if (cur === (sch?.maxTickets ?? 0)) setLimitOpen(true);
+    else alert(`현재 ${cur}매를 예매할 수 있습니다.`);
   };
+
+  const schKey = (sch) =>
+    sch?.scheduleId ??
+    `${sch?.date ?? "d"}_${sch?.time ?? "t"}_${sch?.order ?? "o"}`;
+
+  const getCounts = (sch) => (sch ? counts[schKey(sch)] ?? 0 : 0);
+  const setCountFor = (sch, next) =>
+    setCounts({ [schKey(sch)]: Math.max(0, next) });
 
   const formatDate = (dateString) => {
     if (!dateString) return dateString;
     const parts = dateString.split("-");
-    return parts.length >= 3 ? `${parts[1]}월${parts[2]}일` : dateString;
+    return parts.length >= 3
+      ? `${parts[0]}.${parts[1]}.${parts[2]}`
+      : dateString;
     // YYYY-MM-DD 가정
   };
   const formatTime = (timeString) => {
@@ -364,14 +409,21 @@ function ShowDetailMobile() {
                           ? styles.selected_Label
                           : ""
                       }`}
-                            key={sch.scheduleId}
+                            key={schKey(sch)}
+                            onClick={() => {
+                              setSelectedSch(sch);
+                              setCounts((prev) => ({
+                                [schKey(sch)]: prev[schKey(sch)] ?? 0,
+                              }));
+                            }}
                           >
                             <div className={styles.Item_left}>
                               {sch.order}공
                             </div>
                             <div className={styles.Item_right}>
                               <div className={styles.ItemDate}>
-                                {sch.date} {sch?.time || "시간 정보 없음"}
+                                {formatDate(sch.date)}{" "}
+                                {formatTime(sch?.time) || "시간 정보 없음"}
                               </div>
                               <div className={styles.ItemMid}>
                                 {formatPrice(sch.cost)}원 |{" "}
@@ -387,16 +439,24 @@ function ShowDetailMobile() {
                                 <div className={styles.ticket_Btns}>
                                   <button
                                     className={styles.ticket_Btn}
-                                    onClick={Minus}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedSch(sch);
+                                      Minus(sch);
+                                    }}
                                   >
                                     -
                                   </button>
                                   <span className={styles.ticket_Count}>
-                                    {count}
+                                    {getCounts(sch)}
                                   </span>
                                   <button
                                     className={styles.ticket_Btn}
-                                    onClick={Plus}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedSch(sch);
+                                      Plus(sch);
+                                    }}
                                   >
                                     +
                                   </button>
@@ -427,7 +487,7 @@ function ShowDetailMobile() {
                           {formatTime(selectedSch.time)}
                         </span>
                       )}{" "}
-                      {count}매
+                      {getCounts(selectedSch)}매
                     </span>
                     가 맞는지
                   </span>
@@ -470,7 +530,10 @@ function ShowDetailMobile() {
                         <span className={styles.modal_strong_bl}>QR 코드</span>{" "}
                         로{" "}
                         <span>
-                          {formatPrice((selectedSch?.cost || 0) * count)}원
+                          {formatPrice(
+                            (selectedSch?.cost || 0) * getCounts(selectedSch)
+                          )}
+                          원
                         </span>{" "}
                         송금해주세요.
                       </span>
@@ -523,22 +586,59 @@ function ShowDetailMobile() {
 
               {/* 구매제한 안내 모달 */}
               <MobileModal
-                className={null}
+                className={styles.limitModal}
                 isOpen={limitOpen}
                 onClose={() => setLimitOpen(false)}
               >
-                <div className={styles.modal_con}>
-                  인당 {selectedSch?.maxTickets}매까지 구매 가능합니다
+                <div className={styles.modal_top}>
+                  <div>최대 {selectedSch?.maxTickets}매까지</div>{" "}
+                  <div>예매가능합니다.</div>
                 </div>
                 <div className={styles.modal_Btns}>
                   <button
                     type="button"
                     ref={limitOkRef}
                     autoFocus
-                    className={styles.modal_reserv_Btn}
+                    className={styles.modal_close_Btn}
                     onClick={() => setLimitOpen(false)}
                   >
                     확인
+                  </button>
+                </div>
+              </MobileModal>
+              {/* 회차 전환 확인 모달 */}
+              <MobileModal
+                className={null}
+                isOpen={switchOpen}
+                onClose={() => setSwitchOpen(false)}
+              >
+                <div className={styles.modal_top}>
+                  <p>이미 다른 회차에 수량이 담겨 있어요</p>
+                </div>
+                <div className={styles.modal_con}>
+                  한 번에 하나의 회차만 예매할 수 있습니다.
+                  <br />이 회차로 변경하시겠어요?
+                </div>
+                <div className={styles.modal_Btns}>
+                  <button
+                    className={styles.modal_close_Btn}
+                    onClick={() => setSwitchOpen(false)}
+                  >
+                    취소
+                  </button>
+                  <button
+                    ref={selectSchOkRef}
+                    className={styles.modal_reserv_Btn}
+                    onClick={() => {
+                      if (!pendingSch) return;
+                      // 선택 회차를 pendingSch로 전환하고, 수량은 "1"부터 시작(요청하신 동작: +를 눌렀으므로)
+                      setSelectedSch(pendingSch);
+                      setCounts({ [schKey(pendingSch)]: 1 });
+                      setPendingSch(null);
+                      setSwitchOpen(false);
+                    }}
+                  >
+                    변경
                   </button>
                 </div>
               </MobileModal>
@@ -550,11 +650,14 @@ function ShowDetailMobile() {
         <div className={styles.stickyBar}>
           <div className={styles.stickyTop}>
             <div className={styles.stickyLeft}>
-              <span className={styles.stickyCount}>총 {count}매</span>
+              <span className={styles.stickyCount}>
+                총 {getCounts(selectedSch)}매
+              </span>
             </div>
             <div className={styles.stickyRight}>
               <span className={styles.stickyTotal}>
-                {formatPrice((selectedSch?.cost || 0) * count)} 원
+                {formatPrice((selectedSch?.cost || 0) * getCounts(selectedSch))}{" "}
+                원
               </span>
             </div>
           </div>
