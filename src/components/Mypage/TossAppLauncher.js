@@ -9,7 +9,7 @@ const TossAppLauncher = () => {
     const recipient = "01012345678"; // 받는사람 전화번호
     const amount = 10000; // 송금 금액
     const message = encodeURIComponent("모보까 송금");
-    const tossLink = `tosspay://send?recipient=${recipient}&amount=${amount}&message=${message}`;
+    const tossLink = `supertoss://send?recipient=${recipient}&amount=${amount}&message=${message}`;
 
     const now = Date.now();
     setTimeout(() => {
