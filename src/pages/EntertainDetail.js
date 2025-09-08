@@ -249,10 +249,7 @@ function EntertainDetail() {
 
                 <div className={styles.infos}>
                   <div className={styles.info_Box}>
-                    <div className={styles.textBox}>
-                      <span className={styles.fixed_Info1}>소개</span>
-                    </div>
-
+                    <span className={styles.fixed_Info}>소개</span>
                     <span className={styles.variable_Info}>
                       {entertainList?.introductionLetter || "소개 정보 없음"}
                     </span>
