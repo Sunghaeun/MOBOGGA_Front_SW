@@ -287,14 +287,10 @@ function EntertainDetail() {
                     </span>
                   </div>
                   <div className={styles.info_Box}>
-                    <div className={styles.textBox}>
-                      <span className={styles.fixed_Info1}>기타정보</span>
-                    </div>
-                    <div className={styles.inner}>
-                      <span className={styles.variable_Info}>
-                        {renderEtcInfo(entertainList?.etcInfo)}
-                      </span>
-                    </div>
+                    <span className={styles.fixed_Info}>기타정보</span>
+                    <span className={styles.variable_Info}>
+                      {renderEtcInfo(entertainList?.etcInfo)}
+                    </span>
                   </div>
                 </div>
               </div>
