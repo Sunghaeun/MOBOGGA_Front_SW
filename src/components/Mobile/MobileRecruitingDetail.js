@@ -15,7 +15,27 @@ function MobileRecruitingDetail({ recruiting = {} }) {
     navigate(`/clubs/${clubId}`); // 동아리 상세 페이지로 이동
   };
 
+  const isRecruitingExpired = () => {
+    if (!recruiting.dates) return false;
+    
+    // dates 형식이 "YYYY-MM-DD ~ YYYY-MM-DD" 라고 가정
+    const dateRange = recruiting.dates.split(" ~ ");
+    if (dateRange.length !== 2) return false;
+    
+    const endDate = new Date(dateRange[1]);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // 시간 부분을 0으로 설정하여 날짜만 비교
+    
+    return endDate < today;
+  };
+
   const handleApply = () => {
+    // 지원기간이 만료되었는지 확인
+    if (isRecruitingExpired()) {
+      openRecruitingEndModal();
+      return;
+    }
+    
     if (recruiting.applicationUrl) {
       window.open(recruiting.applicationUrl, "_blank");
     } else {
@@ -173,7 +193,7 @@ function MobileRecruitingDetail({ recruiting = {} }) {
         </div>
 
         <div className={styles.applyButtonContainer}>
-          <button className={styles.apply_Btn} onClick={openRecruitingEndModal}>
+          <button className={styles.apply_Btn} onClick={handleApply}>
             지원하러가기
           </button>
         </div>
