@@ -25,7 +25,7 @@ const RecruitingEndModal = (props) => {
             </div>
           </main>
         </section>
-      ) : null}
+      ) : null} 
     </div>
 
         </>
