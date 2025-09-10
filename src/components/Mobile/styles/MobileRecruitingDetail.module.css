@@ -108,7 +108,8 @@
 
 .apply_Btn {
   width: 100%;
-  height: 41px;
+  /* height: 41px; */
+  padding: 15px 90px;
   background: #ff3d12;
   color: #fbfbfb;
   border: none;
@@ -116,12 +117,7 @@
   color: var(--gray-01-background, #fbfbfb);
   text-align: center;
 
-  /* Body 02 _ SB */
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 30px; /* 166.667% */
-
+  font: var(--BODY02_SB);
   &:hover {
     cursor: pointer;
     background: var(--DEEPORANGE);
@@ -134,7 +130,8 @@
   left: 0;
   right: 0;
   background: white;
-  padding: 24px 24px 24px 24px;
+  padding: 27px 20px 90px 20px;
+
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1001;
   display: flex;
