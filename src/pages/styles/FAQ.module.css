@@ -35,9 +35,7 @@
 .qnaSection,
 .contactSection {
   width: 100%;
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 40px 0;
+  padding: 40px 128px;
   box-sizing: border-box;
 }
 @media screen and (max-width: 768px) {
@@ -72,10 +70,12 @@
   margin-bottom: 24px;
 }
 .question {
+  font-size: 1rem;
   font-weight: 700;
   margin-bottom: 6px;
 }
 .answer {
+  font-size: 1rem;
   font-weight: 400;
   margin-left: 12px;
 }

@@ -53,29 +53,6 @@
   margin-top: 12px;
 }
 
-.top {
-  position: absolute;
-  width: 60px;
-
-  /* 원하는 위치로 조정 (예시: 살짝 위에서 떨어지는 느낌) */
-  top: -13%;
-  left: 50%;
-
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s;
-  pointer-events: none; /* hover 깜빡임 방지 */
-  z-index: 100;
-}
-
-/* 카드에 hover될 때만 나타남 */
-.clubCard:hover .top {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, 50%);
-  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s;
-}
-
 /* (선택) 카드 hover 시 이미지 그림자도 같이 */
 .clubCard:hover .mainImg {
   box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.25);
@@ -95,14 +72,14 @@
     max-width: none;
     margin: 0px;
   }
-  
+
   .name {
     font-size: 16px;
   }
 
   .clubCard:hover .name {
     font-size: 16px;
-}
+  }
 
   .clubImg {
     width: 100% !important;
@@ -114,5 +91,49 @@
     width: 100% !important;
     height: auto;
     aspect-ratio: 1 / 1;
+  }
+}
+
+.tape {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s;
+  pointer-events: none;
+}
+
+.clubCard:hover .tape {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -40%);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s;
+}
+
+.tape img {
+  width: 80px;
+}
+
+@media (max-width: 600px) {
+  .tape {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s 0.25s;
+    pointer-events: none;
+  }
+  .clubCard:hover .tape {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -40%);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s;
+  }
+  .tape img {
+    width: 60px;
   }
 }
