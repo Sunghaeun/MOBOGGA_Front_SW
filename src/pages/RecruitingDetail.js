@@ -16,7 +16,7 @@ function RecruitingDetail() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 600px)");
+    const mq = window.matchMedia("(max-width: 768px)");
     const update = (e) => setIsMobile(e.matches);
     update(mq); // 최초 반영
     mq.addEventListener("change", update);
@@ -69,6 +69,47 @@ function RecruitingDetail() {
     // eslint-disable-next-line
   }, []);
 
+  // variable_Info 내 텍스트에서 URL을 하이퍼링크로 변환하고 줄바꿈도 처리
+  function renderWithLinksAndLineBreaks(text) {
+    if (!text) return "";
+    const urlRegex = /https?:\/\/[\w\-@:%._+~#=/?,&;()[\]$'!*+=]+/g;
+    const lines = String(text).split(/\r?\n/);
+    return lines.map((line, idx) => {
+      const parts = [];
+      let lastIndex = 0;
+      let match;
+      urlRegex.lastIndex = 0;
+      while ((match = urlRegex.exec(line)) !== null) {
+        const url = match[0];
+        const index = match.index;
+        if (index > lastIndex) {
+          parts.push(line.substring(lastIndex, index));
+        }
+        parts.push(
+          <a
+            key={`link-${idx}-${index}`}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "#2b7cff", wordBreak: "break-all" }}
+          >
+            {url}
+          </a>
+        );
+        lastIndex = index + url.length;
+      }
+      if (lastIndex < line.length) {
+        parts.push(line.substring(lastIndex));
+      }
+      return (
+        <React.Fragment key={`line-${idx}`}>
+          {parts}
+          {idx !== lines.length - 1 && <br />}
+        </React.Fragment>
+      );
+    });
+  }
+
   if (isLoading) {
     return (
       <div className={loadingStyles.loading}>
@@ -97,7 +138,12 @@ function RecruitingDetail() {
   return (
     <>
       {isMobile ? (
-        <MobileRecruitingDetail recruiting={recruiting} />
+        <MobileRecruitingDetail
+          recruiting={recruiting}
+          isLoading={isLoading}
+          error={error}
+          onRetry={fetchData}
+        />
       ) : (
         <div className={styles.recruitingDetail}>
           <div className={styles.wrap}>
@@ -179,75 +225,67 @@ function RecruitingDetail() {
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>카테고리</span>
                           <span className={styles.variable_Info}>
-                            {recruiting?.category || "카테고리 정보 없음"}
+                            {renderWithLinksAndLineBreaks(
+                              recruiting?.category || "카테고리 정보 없음"
+                            )}
                           </span>
                         </div>
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>모집기간</span>
                           <span className={styles.variable_Info}>
-                            {recruiting?.dates || "날짜 정보 없음"}
+                            {renderWithLinksAndLineBreaks(
+                              recruiting?.dates || "날짜 정보 없음"
+                            )}
                           </span>
                         </div>
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>필수학기</span>
                           <span className={styles.variable_Info}>
-                            {recruiting?.mandatorySemesters
-                              ? `${recruiting?.mandatorySemesters}학기`
-                              : "필수학기 정보 없음"}
+                            {renderWithLinksAndLineBreaks(
+                              recruiting?.mandatorySemesters
+                                ? `${recruiting?.mandatorySemesters}학기`
+                                : "필수학기 정보 없음"
+                            )}
                           </span>
                         </div>
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>정모시간</span>
                           <span className={styles.variable_Info}>
-                            {recruiting?.meetingTime || "없음"}
+                            {renderWithLinksAndLineBreaks(
+                              recruiting?.meetingTime || "없음"
+                            )}
                           </span>
                         </div>
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>활동내용</span>
-                          <span
-                            className={styles.variable_Info}
-                            dangerouslySetInnerHTML={{
-                              __html: recruiting?.content
-                                ? recruiting.content
-                                    .replace(/\n\n\n\n/g, "<br /><br /><br />")
-                                    .replace(/\n\n/g, "<br /><br />")
-                                    .replace(/\n/g, "<br />")
-                                : "활동내용 정보 없음",
-                            }}
-                          />
+                          <span className={styles.variable_Info}>
+                            {renderWithLinksAndLineBreaks(
+                              recruiting?.content || "활동내용 정보 없음"
+                            )}
+                          </span>
                         </div>
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>지원자격</span>
-                          <span
-                            className={styles.variable_Info}
-                            dangerouslySetInnerHTML={{
-                              __html: recruiting?.eligibility
-                                ? recruiting.eligibility
-                                    .replace(/\n\n\n\n/g, "<br /><br /><br />")
-                                    .replace(/\n\n/g, "<br /><br />")
-                                    .replace(/\n/g, "<br />")
-                                : "지원자격 없음",
-                            }}
-                          />
+                          <span className={styles.variable_Info}>
+                            {renderWithLinksAndLineBreaks(
+                              recruiting?.eligibility || "지원자격 없음"
+                            )}
+                          </span>
                         </div>
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>면접안내</span>
-                          <span
-                            className={styles.variable_Info}
-                            dangerouslySetInnerHTML={{
-                              __html: recruiting?.notice
-                                ? recruiting.notice
-                                    .replace(/\n\n\n\n/g, "<br /><br /><br />")
-                                    .replace(/\n\n/g, "<br /><br />")
-                                    .replace(/\n/g, "<br />")
-                                : "면접안내 없음",
-                            }}
-                          />
+                          <span className={styles.variable_Info}>
+                            {renderWithLinksAndLineBreaks(
+                              recruiting?.notice || "면접안내 없음"
+                            )}
+                          </span>
                         </div>
                         <div className={styles.info_Box}>
                           <span className={styles.fixed_Info}>문의</span>
                           <span className={styles.variable_Info}>
-                            {recruiting?.managerInfo || "문의 정보 없음"}
+                            {renderWithLinksAndLineBreaks(
+                              recruiting?.managerInfo || "문의 정보 없음"
+                            )}
                           </span>
                         </div>
                       </div>

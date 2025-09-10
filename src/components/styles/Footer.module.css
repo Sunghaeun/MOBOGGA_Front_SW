@@ -5,7 +5,7 @@
   background: #eaeaea;
 
   box-sizing: border-box;
-  padding: 12px 128px 20px 128px;
+  padding: 36px 128px 20px 128px;
   position: relative;
   z-index: 1000;
 }
@@ -21,18 +21,18 @@
 }
 
 .verticalLine {
-  width: 1px;
-  height: 20px;
+  width: 2px;
+  height: 15px;
   background-color: #636363;
   opacity: 0.5;
 }
 
-.likelion {
+.likelionLogo {
   height: 20px;
   width: auto;
 }
 
-.likelionhgu {
+.likelionhguLogo {
   height: 30px;
   width: auto;
   border-radius: 50%;
@@ -48,7 +48,7 @@
 .secondContainer {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 5px;
 }
 
@@ -58,30 +58,16 @@
   color: var(--Gray-06, #636363);
 }
 
-.contact {
-  span a {
-    color: var(--Gray-06, #636363);
-    text-decoration: none;
-  }
-  span a:hover {
-    cursor: pointer;
-    text-decoration: underline;
-  }
+.address {
+  margin-bottom: 8px;
 }
 
-.insta {
+.links {
   display: flex;
   align-items: center;
   margin-bottom: 21px;
   cursor: pointer;
-}
-
-.insta span {
-  color: var(--Gray-08, #3e3e3e);
-  font-size: 11px;
-  font-weight: 500;
-
-  margin-left: 6px;
+  gap: 12px;
 }
 
 .secondContainer span {
