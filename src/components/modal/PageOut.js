@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import closeButton from "../../assets/modal/x.svg";
 
 
-const EditCheckModal = (props) => {
+const PageOutModal = (props) => {
   const { open, close } = props;
 
   return (
@@ -39,4 +39,4 @@ const EditCheckModal = (props) => {
   );
 };
 
-export default EditCheckModal;
+export default PageOutModal;
