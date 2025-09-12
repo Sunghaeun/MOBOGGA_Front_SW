@@ -57,6 +57,7 @@ import TossAppLauncher from "./components/Mypage/TossAppLauncher";
 import FAQ from "./pages/FAQ";
 
 import "./App.css";
+import ScrollToTop from "./components/ScrollToTop";
 
 // 메인 앱 컴포넌트 (ServerStatusProvider 내부)
 function AppContent() {
@@ -81,6 +82,7 @@ function AppContent() {
       <div className="App">
         <Header />
         <main>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/main" element={<Main />} />
