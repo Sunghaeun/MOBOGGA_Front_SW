@@ -199,6 +199,28 @@ function ShowDetailMobile() {
     return parts.length >= 2 ? `${parts[0]}시${parts[1]}분` : timeString;
   };
 
+  // 텍스트에 URL이 포함되어 있으면 하이퍼링크로 변환하고, 줄바꿈을 처리하는 함수
+  const renderWithLinksAndLineBreaks = (text) => {
+    if (!text) return text;
+    const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)(?=\s|$|[.,!?;:])/g;
+    const lines = text.split("\n");
+    const processedLines = lines.map((line) => {
+      const withLinks = line.replace(urlRegex, (match) => {
+        const url = match.replace(/[.,!?;:]$/, "");
+        const href = url.startsWith("http") ? url : `https://${url}`;
+        return `<a href="${href}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+      });
+      return withLinks;
+    });
+    return (
+      <div>
+        {processedLines.map((line, index) => (
+          <div key={index} dangerouslySetInnerHTML={{ __html: line }} />
+        ))}
+      </div>
+    );
+  };
+
   // 공연이 과거인지 판별 (endDate가 있으면 endDate 기준, 없으면 스케줄의 모든 날짜가 과거인지 확인)
   const isPastShow = () => {
     try {
@@ -333,9 +355,11 @@ function ShowDetailMobile() {
                     <div className={styles.info_Box}>
                       <div className={styles.fixed_Info}>소개글</div>
                       <div className={styles.variable_Info}>
-                        {show?.introductionLetter ||
-                          show?.intro ||
-                          "소개글 정보 없음"}
+                        {renderWithLinksAndLineBreaks(
+                          show?.introductionLetter ||
+                            show?.intro ||
+                            "소개글 정보 없음"
+                        )}
                       </div>
                     </div>
 
@@ -376,7 +400,9 @@ function ShowDetailMobile() {
                     <div className={styles.info_Box}>
                       <div className={styles.fixed_Info}>공지</div>
                       <div className={styles.variable_Info}>
-                        {show?.noticeLetter || "공지 정보 없음"}
+                        {renderWithLinksAndLineBreaks(
+                          show?.noticeLetter || "공지 정보 없음"
+                        )}
                       </div>
                     </div>
                   </div>

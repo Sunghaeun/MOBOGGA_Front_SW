@@ -91,7 +91,6 @@ function EntertainDetail() {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#2b7cff" }}
           >
             {url}
           </a>

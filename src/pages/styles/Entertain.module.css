@@ -45,6 +45,15 @@
   margin-bottom: 20px;
 }
 
+.sns_icons a {
+  color: #ff3d12; /* 링크 색상 */
+  text-decoration: none; /* 밑줄 제거 */
+}
+
+.sns_icons a:hover {
+  color: #d50024; /* 호버 시 색상 */
+}
+
 .sns_icon {
   height: 1.5rem;
   flex-shrink: 0;
@@ -151,6 +160,15 @@
   overflow-wrap: break-word;
 }
 
+.variable_Info a {
+  color: #ff3d12; /* 링크 색상 */
+  text-decoration: underline; /* 밑줄 */
+}
+
+.variable_Info a:hover {
+  color: #d50024; /* 호버 시 색상 */
+}
+
 /* 공연 회차 선택 등 */
 .show_ticket {
   margin-top: 40px;
@@ -185,9 +203,6 @@
 
 .fixed_Info {
   color: #8e3dff;
-}
-
-.show_ticket {
 }
 
 .sch_Item {
@@ -259,7 +274,6 @@
   width: 100%;
 }
 
-
 @media (max-width: 600px) {
   .desktop {
     display: none;
@@ -267,6 +281,6 @@
 
   .mobile {
     display: block;
-    width: 100%
+    width: 100%;
   }
 }

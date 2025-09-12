@@ -91,7 +91,6 @@ function RecruitingDetail() {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#2b7cff", wordBreak: "break-all" }}
           >
             {url}
           </a>
@@ -167,7 +166,11 @@ function RecruitingDetail() {
                       )}
                       <div className={styles.sns_icons}>
                         {recruiting && (
-                          <a href={recruiting.instaUrl}>
+                          <a
+                            href={recruiting.instaUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <img
                               className={styles.sns_icon}
                               src={INSTA}
@@ -176,7 +179,11 @@ function RecruitingDetail() {
                           </a>
                         )}
                         {recruiting && (
-                          <a href={recruiting.youtubeUrl}>
+                          <a
+                            href={recruiting.youtubeUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <img
                               className={styles.sns_icon}
                               src={YOUTUBE}
@@ -185,7 +192,11 @@ function RecruitingDetail() {
                           </a>
                         )}
                         {recruiting && (
-                          <a href={recruiting.kakaoUrl}>
+                          <a
+                            href={recruiting.kakaoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             <img
                               className={styles.sns_icon}
                               src={KAKAO}

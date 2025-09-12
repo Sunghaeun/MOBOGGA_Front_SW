@@ -151,8 +151,16 @@
 
 .variable_Info {
   color: #333;
-  white-space: pre-wrap; /* 줄바꿈 유지 */
   font: var(--BODY03);
+}
+
+.variable_Info a {
+  color: #ff3d12; /* 링크 색상 */
+  text-decoration: underline; /* 밑줄 */
+}
+
+.variable_Info a:hover {
+  color: #d50024; /* 호버 시 색상 */
 }
 
 /* 공연 회차 선택 등 */

@@ -107,6 +107,15 @@
   gap: 10px;
 }
 
+.variable_Info a {
+  color: #ff3d12; /* 링크 색상 */
+  text-decoration: underline; /* 밑줄 */
+}
+
+.variable_Info a:hover {
+  color: #d50024; /* 호버 시 색상 */
+}
+
 .disabled_Label {
   color: #acacac !important;
 }
@@ -154,6 +163,15 @@
   gap: 16px;
   margin-top: 24px;
   margin-bottom: 20px;
+}
+
+.sns_icons a {
+  color: #ff3d12; /* 링크 색상 */
+  text-decoration: none; /* 밑줄 제거 */
+}
+
+.sns_icons a:hover {
+  color: #d50024; /* 호버 시 색상 */
 }
 
 .sns_icon {
