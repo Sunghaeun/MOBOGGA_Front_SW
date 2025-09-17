@@ -167,7 +167,8 @@ function CreateRecruiting() {
         applicationUrl: src.applicationUrl ?? "", // ← applyUrl 대응
         photo: src.photo ?? null,
       };
-
+      console.log("data:", res.data);
+      console.log("Fetched recruiting data:", converted);
       setData((prev) => ({ ...prev, ...converted }));
     } catch (err) {
       if (err.response?.status === 401) {
@@ -335,6 +336,7 @@ function CreateRecruiting() {
                 className={missing.has("name") ? styles.invalid : ""}
                 placeholder="리크루팅 제목 (공백 포함 최대 30자까지 작성 가능합니다.)"
                 onChange={onChangeInput}
+                value={data.name}
               />
             </div>
 
