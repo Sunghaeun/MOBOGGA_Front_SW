@@ -219,8 +219,8 @@ if (qr instanceof File) {
   };
 
   const handleNotice = (e) => {
-    if (e.target.value.length <= 300) setNoticeLetter(e.target.value);
-    else alert("300자를 초과할 수 없습니다.");
+    if (e.target.value.length <= 700) setNoticeLetter(e.target.value);
+    else alert("700자를 초과할 수 없습니다.");
   };
 
   const handleAddRow = () => {
@@ -496,7 +496,7 @@ if (qr instanceof File) {
                   <span className={styles.variable_Info}>
                     <textarea
                       type="text"
-                      placeholder={`티켓 수령 장소, 환불 방법 및 기간, 에티켓 등 작성\n(공백 포함 최대 300백자까지 작성 가능합니다.)`}
+                      placeholder={`티켓 수령 장소, 환불 방법 및 기간, 에티켓 등 작성\n(공백 포함 최대 700백자까지 작성 가능합니다.)`}
                       onChange={handleNotice}
                     />
                   </span>
