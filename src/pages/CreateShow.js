@@ -171,9 +171,13 @@ function CreateShow() {
       new Blob([JSON.stringify(requestData)], { type: "application/json" })
     );
     formData.append("poster", poster, "poster.jpg");
-    if(qr instanceof File){
-    formData.append("qr", qr, "qr.jpg");}
-    else {formData.append("qr", "");}
+if (qr instanceof File) {
+  formData.append("qr", qr,"qr.jpg");
+}else {
+  // 빈 Blob 객체를 전송 (서버에서 파일 필드를 기대할 때 사용)
+  formData.append("qr", new Blob([]), "");
+}
+
 
     // Debug info removed: requestData and FormData remain unchanged.
 
@@ -195,6 +199,7 @@ function CreateShow() {
       }
     } catch (error) {
       // 에러는 사용자에게 알림
+
       alert(
         `저장 실패: ${
           error.response?.data?.message || error.message || "알 수 없는 오류"
