@@ -100,8 +100,6 @@ function CreateShow() {
   const handleQrChange = (e) => {
     const file = e.target.files?.[0] || null;
 
-    if (qrPreview?.startsWith("blob:")) URL.revokeObjectURL(qrPreview);
-
     setQr(file);
     setQrPreview(file ? URL.createObjectURL(file) : null);
   };
@@ -117,8 +115,7 @@ function CreateShow() {
     if (!name) return alert("제목을 입력해 주세요");
     if (!poster || !(poster instanceof File))
       return alert("공연 이미지를 선택해 주세요");
-    if (!qr || !(qr instanceof File))
-      return alert("송금 QR 이미지를 선택해 주세요"); // @RequestPart("qr")
+
     if (!location) return alert("장소를 입력해 주세요");
     if (!runtime || Number(runtime) <= 0)
       return alert("런타임을 입력해 주세요");
@@ -174,7 +171,9 @@ function CreateShow() {
       new Blob([JSON.stringify(requestData)], { type: "application/json" })
     );
     formData.append("poster", poster, "poster.jpg");
-    formData.append("qr", qr, "qr.jpg");
+    if(qr instanceof File){
+    formData.append("qr", qr, "qr.jpg");}
+    else {formData.append("qr", "");}
 
     // Debug info removed: requestData and FormData remain unchanged.
 
