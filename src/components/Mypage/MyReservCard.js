@@ -1,6 +1,7 @@
 /*eslint-disable*/
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 import styles from "./styles/MyReservCard.module.css";
 import Modal from "../Modal"; // Assuming Modal is a separate component
 import KakaoLinkButton from "./KakaoLinkButton";
@@ -41,6 +42,7 @@ function MyReservCard({ data }) {
     location,
     managerPhone,
     accountInfo,
+    accountName,
     ticketCount,
     price,
     paid,
@@ -101,7 +103,7 @@ function MyReservCard({ data }) {
                     className={styles.account_btn}
                     onClick={() => setSecondModalOpen(true)}
                   >
-                    송금 정보 보기
+                    송금정보 보기
                   </button>
                 ) : (
                   <div className={styles.card_content}>
@@ -112,19 +114,39 @@ function MyReservCard({ data }) {
                       계좌번호:
                     </div>
                     <div className={styles.card_account}>{accountInfo}</div>
+                    <div
+                      className={styles.card_account}
+                      style={accountName ? {} : { display: "none" }}
+                    >
+                      {" "}
+                      {" ("}
+                      {accountName}
+                      {")"}{" "}
+                    </div>
                   </div>
                 )}
               </>
             ) : (
-              <div className={styles.card_content} id={styles.account_info}>
-                <div
-                  className={styles.card_info_header}
-                  id={styles.account_box}
-                >
-                  계좌번호:
+              <>
+                <div className={styles.card_content} id={styles.account_info}>
+                  <div
+                    className={styles.card_info_header}
+                    id={styles.account_box}
+                  >
+                    계좌번호:
+                  </div>
+                  <div className={styles.card_account}>{accountInfo}</div>
+                  <div
+                    className={styles.card_account}
+                    style={accountName ? {} : { display: "none" }}
+                  >
+                    {" "}
+                    {" ("}
+                    {accountName}
+                    {")"}{" "}
+                  </div>
                 </div>
-                <div className={styles.card_account}>{accountInfo}</div>
-              </div>
+              </>
             ))}
           <div className={styles.ticket_info}>
             <div className={styles.ticket_num}>{ticketCount}매</div>
@@ -159,16 +181,18 @@ function MyReservCard({ data }) {
             </button>
           </div>
           <div className={styles.modal_mid}>
-            <div className={styles.modal_qr_wrap}>
-              <img
-                className={styles.modal_qr_img}
-                src={qrImage}
-                alt="QR 코드"
-              />
-            </div>
             <div className={styles.modal_account}>
               <span className={styles.modal_strong_bl}>
                 {accountInfo || "계좌 정보 없음"}
+              </span>
+              <span
+                className={styles.modal_strong_bl}
+                style={accountName ? {} : { display: "none" }}
+              >
+                {" "}
+                {" ("}
+                {accountName}
+                {")"}{" "}
               </span>
               <button
                 className={styles.modal_copy_btn}
@@ -192,11 +216,19 @@ function MyReservCard({ data }) {
               동아리 담당자의 확인 후 예매 확정이 이뤄집니다. <br />
             </div>
             <KakaoLinkButton
-              data={KakaoLinkButton}
+              title={title}
+              accountInfo={accountInfo}
+              accountName={accountName}
+              price={price}
               target="_blank"
               rel="noopener noreferrer"
             ></KakaoLinkButton>
+            <div style={{ fontSize: "0.7rem", color: "red" }}>
+              *카카오톡이 열리면 ‘나에게' 보낸 후 계좌번호를 눌러서 송금
+            </div>
             <TossAppLauncher
+              managerPhone={managerPhone}
+              price={price}
               target="_blank"
               rel="noopener noreferrer"
             ></TossAppLauncher>
@@ -207,3 +239,23 @@ function MyReservCard({ data }) {
   );
 }
 export default MyReservCard;
+
+MyReservCard.propTypes = {
+  data: PropTypes.shape({
+    showId: PropTypes.string,
+    poster: PropTypes.string,
+    title: PropTypes.string,
+    qrImage: PropTypes.string,
+    order: PropTypes.string,
+    date: PropTypes.string,
+    weekday: PropTypes.string,
+    time: PropTypes.string,
+    location: PropTypes.string,
+    managerPhone: PropTypes.string,
+    accountInfo: PropTypes.string,
+    accountName: PropTypes.string,
+    ticketCount: PropTypes.number,
+    price: PropTypes.number,
+    paid: PropTypes.bool,
+  }).isRequired,
+};

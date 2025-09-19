@@ -140,7 +140,7 @@
   }
   .card_text_box {
     flex: 1;
-    padding: 12px 0 0 3vw;
+    padding: 12px 0 0 4vw;
     display: flex;
     flex-direction: column;
     width: auto;
@@ -148,17 +148,17 @@
     height: 100%; /* 부모(card)와 동일하게 */
   }
   .card_title {
-    font-size: clamp(1rem, 6vw, 1.5rem);
+    font-size: clamp(0.8rem, 6vw, 1.3rem);
     font-weight: 800;
     line-height: 1.2;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
   }
   .card_content {
-    margin-bottom: 2px;
+    margin-bottom: 9px;
     flex-direction: row;
     font-size: clamp(0.85rem, 3vw, 1.1rem);
   }
@@ -173,7 +173,7 @@
   }
   .card_order {
     display: inline-block;
-    padding: 2px 8px;
+    padding: 1px 4px;
     border-radius: 8px;
     background: #f2e8ff;
     color: #8e3dff;
@@ -210,10 +210,10 @@
     background: #fff;
     color: #ff3d12;
     border: 1px solid #ff3d12;
-    padding: 6px 16px;
-    font-size: 1rem;
+    padding: 3px 10px;
+    font-size: 0.8em;
     font-weight: 600;
-    margin: 8px 0;
+    margin: 10px 0;
     cursor: pointer;
   }
   .divider {
@@ -250,6 +250,7 @@
     flex-direction: row !important;
     justify-content: center;
     align-items: center;
+    z-index: 10000;
   }
 
   .modal.modal_succ_re {
@@ -288,11 +289,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 32px 0 0 0;
+    padding: 36px 0 0 0;
   }
 
   .modal_title {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     text-align: center;
     margin: 0; /* margin 제거 */
@@ -313,7 +314,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 0 24px 0; /* 하단 패딩 줄임 */
+    padding: 24px 0 24px 0; /* 하단 패딩 줄임 */
   }
 
   .modal_qr_wrap {
@@ -342,7 +343,6 @@
     font-size: 1.05rem;
     color: #222;
     text-align: center;
-    margin-bottom: 24px;
     line-height: 1.7;
   }
 
