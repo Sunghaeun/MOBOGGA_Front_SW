@@ -186,6 +186,7 @@ if (qr instanceof File) {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        withCredentials: true,
       });
 
       // 저장 성공: resp.data 사용
@@ -199,7 +200,6 @@ if (qr instanceof File) {
       }
     } catch (error) {
       // 에러는 사용자에게 알림
-
       alert(
         `저장 실패: ${
           error.response?.data?.message || error.message || "알 수 없는 오류"
