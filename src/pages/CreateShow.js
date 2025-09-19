@@ -183,6 +183,7 @@ function CreateShow() {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        withCredentials: true,
       });
 
       // 저장 성공: resp.data 사용
