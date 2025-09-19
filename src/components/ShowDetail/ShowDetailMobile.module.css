@@ -70,7 +70,9 @@
 }
 
 .sectionBtns {
-  display: flex;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   justify-self: center;
   gap: 0;
   margin-bottom: 25px;
@@ -143,14 +145,14 @@
 }
 
 .title {
-  font: var(--TITLE02_B);
+  font: var(--TITLE04_B);
   margin-top: 5px;
 }
 
 .club {
   margin-top: -10px;
   margin-bottom: 10px;
-  font: var(--TITLE06);
+  font: var(--BODY02_B);
   color: #ff3d12;
   width: 40%;
 
@@ -344,24 +346,16 @@
 }
 
 .stickyReserveBtn {
-  display: flex;
-  width: 90vw;
-  height: 3.75rem;
-  padding: 0.125rem 4.5rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.625rem;
-  flex-shrink: 0;
-
-  border-radius: 0.4375rem;
+  width: 100%;
+  height: 41px;
+  padding: 15px 90px;
+  background: #ff3d12;
+  color: #fbfbfb;
   border: none;
-  background: var(--main-02, #ff3d12);
-
+  border-radius: 7px;
   color: var(--gray-01-background, #fbfbfb);
+  text-align: center;
   font: var(--BODY02_SB);
-  &:hover {
-    cursor: pointer;
-  }
 }
 
 .Reser_Btn_dis {

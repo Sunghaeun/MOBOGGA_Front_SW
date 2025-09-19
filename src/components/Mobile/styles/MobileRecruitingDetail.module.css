@@ -58,7 +58,6 @@
 .title {
   color: var(--gray-10-typo-color, #121212);
   font: var(--TITLE06);
-  font-size: 20px;
   margin-top: 24px;
   margin-bottom: 12px;
   padding-left: 16px;
@@ -66,7 +65,7 @@
 
 .recruitingDetailContent {
   color: var(--gray-10-typo-color, #121212);
-  font: var(--BODY04);
+  font: var(--BODY03);
 }
 
 .club {
@@ -130,7 +129,7 @@
   left: 0;
   right: 0;
   background: white;
-  padding: 27px 20px 90px 20px;
+  padding: 20px 20px 32px 20px;
 
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1001;
