@@ -1,0 +1,10 @@
+/* Seats.module.css */
+.main { padding: 12px; }
+
+/* 핵심: display:grid 와 크기 지정 */
+.grid {
+  display: grid;
+  gap: 8px;
+  /* 열 폭은 JS에서 gridTemplateColumns로 설정됨 */
+  grid-auto-rows: 40px; /* 각 행 높이 고정 */
+}

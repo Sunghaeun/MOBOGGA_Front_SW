@@ -59,6 +59,8 @@ import FAQ from "./pages/FAQ";
 import "./App.css";
 import ScrollToTop from "./components/ScrollToTop";
 
+import SeatTest from "./pages/SeatTest";
+
 // 메인 앱 컴포넌트 (ServerStatusProvider 내부)
 function AppContent() {
   const { isServerDown, retryConnection, closeModal } = useServerStatus();
@@ -97,41 +99,21 @@ function AppContent() {
             <Route path="/clubs" element={<Clubs />} />
             <Route path="/clubs/:id" element={<ClubDetail />} />
             <Route path="/recruiting" element={<Recruiting />} />
-            <Route
-              path="/recruiting/:recruitingId"
-              element={<RecruitingDetail />}
-            />
+            <Route path="/recruiting/:recruitingId" element={<RecruitingDetail />} />
             <Route path="/mypage" element={<Mypage />} />
             <Route path="/mypage/update" element={<UpdateProfile />} />
             <Route path="/manager/mypage" element={<ManagerMypage />} />
-            <Route
-              path="/manager/mypage/update"
-              element={<ManagerUpdateProfile />}
-            />
-            <Route
-              path="/manager/club/update"
-              element={<ManagerUpdateClub />}
-            />
-            <Route
-              path="/manager/holder/:scheduleId"
-              element={<ManagerHolderList />}
-            />
+            <Route path="/manager/mypage/update" element={<ManagerUpdateProfile />} />
+            <Route path="/manager/club/update" element={<ManagerUpdateClub />} />
+
+            <Route path="/manager/holder/:scheduleId" element={<ManagerHolderList />} />
             <Route path="/manager/show" element={<ManagerShowpage />} />
-            <Route
-              path="/manager/entertain"
-              element={<ManagerEntertainpage />}
-            />
-            <Route
-              path="/manager/recruiting"
-              element={<ManagerRecruitingpage />}
-            />
+            <Route path="/manager/entertain" element={<ManagerEntertainpage />} />
+            <Route path="/manager/recruiting" element={<ManagerRecruitingpage />} />
 
             <Route path="/add-info" element={<AddInfo />} />
             <Route path="/loading" element={<Loading />} />
-            <Route
-              path="/login/oauth2/code/google"
-              element={<OAuthCallback />}
-            />
+            <Route path="/login/oauth2/code/google" element={<OAuthCallback />} />
             <Route path="/404" element={<Error404 />} />
             <Route path="/faq" element={<FAQ />} />
 
@@ -139,15 +121,13 @@ function AppContent() {
             <Route path="/show/create" element={<CreateShow />} />
             <Route path="/entertain/create" element={<CreateEntertain />} />
 
-            <Route
-              path="/edit/recruiting/:recruitingId"
-              element={<EditRecruiting />}
-            />
-            <Route path="edit/entertain/:id" element={<EditEntertain />} />
-            <Route path="edit/show/:id" element={<EditShow />} />
+            <Route path="/edit/recruiting/:recruitingId" element={<EditRecruiting />} />
+            <Route path="/edit/entertain/:id" element={<EditEntertain />} />
+            <Route path="/edit/show/:id" element={<EditShow />} />
             <Route path="/manager/club/:id" element={<ManageClubDetail />} />
             <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
             <Route path="/tosslinktest" element={<TossAppLauncher />} />
+            <Route path="/seattest" element={<SeatTest />} />
           </Routes>
         </main>
         <Footer />
