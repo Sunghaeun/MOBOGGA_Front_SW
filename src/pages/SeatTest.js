@@ -3,7 +3,7 @@ import styles from "./styles/SeatTest.module.css";
 
 import Seats from "../components/Seat/Seats";
 import SeatModal from "../components/Seat/SeatModal";
-import { idToCode, codeToId, findSeatByCode } from "../utils/seatUtils";
+import { idToCode} from "../utils/seatUtils";
 
 function SeatTest() {
   const [seatModalOpen, setSeatModalOpen] = useState(false);
