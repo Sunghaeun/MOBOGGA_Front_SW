@@ -29,10 +29,8 @@ const makeSeats = () => {
 };
 
 
-const SeatModal = (props) => {
-  const { open, close } = props;
+const SeatModal = ({ open, close, onConfirm }) => {
   const [seats, setSeats] = useState(() => makeSeats());
-  const [selectedSeats, setSelectedSeats] = useState([]);
 
   const SEAT_PX = 36;      // 좌석 한 칸
   const AISLE_WIDTH = 40;  // 통로 폭
@@ -48,15 +46,10 @@ const SeatModal = (props) => {
   };
 
   const handleConfirm = () => {
-    const selectedSeats = seats
+    const selectedIds = seats
       .filter((s) => s.selected === 1)
       .map((s) => s.id);
-
-    setSelectedSeats(selectedSeats);
-    // 부모에도 넘기고 싶다면 props로 콜백 받아서 전달
-    // props.onConfirm && props.onConfirm(selectedIds);
-    //콘솔 확인
-    console.log(selectedSeats);
+    onConfirm && onConfirm(selectedIds);
     close();
   };
 
@@ -66,7 +59,7 @@ const SeatModal = (props) => {
       className={open ? `${styles.openModal} ${styles.modal}` : styles.modal} 
       onClick={close} // 모달 바깥 클릭 시 닫힘
     >
-      {open && props !== null ? (
+      {open && (
         <section onClick={(e) => e.stopPropagation()}>
           <main>
             <img className={styles.closeB} src={closeButton} alt="Close" onClick={close}/>
@@ -105,7 +98,7 @@ const SeatModal = (props) => {
             </div>
           </main>
         </section>
-      ) : null}
+      )}
     </div>
 
         </>
