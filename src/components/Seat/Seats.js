@@ -179,7 +179,7 @@ function Seats() {
   const COLS = 12;         // 총 좌석 열 수
   const AISLE_AFTER = 6;   // 6열 뒤에 통로
   const SEAT_PX = 36;      // 좌석 한 칸 너비
-  const AISLE_WIDTH = 28;  // 통로 너비 (원하는 값)
+  const AISLE_WIDTH = 28;  // 통로 너비 (원하는 값) 
 
   const gridTemplateColumns =
     `repeat(${AISLE_AFTER}, ${SEAT_PX}px) ${AISLE_WIDTH}px repeat(${COLS - AISLE_AFTER}, ${SEAT_PX}px)`;
