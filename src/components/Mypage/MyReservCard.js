@@ -6,12 +6,14 @@ import styles from "./styles/MyReservCard.module.css";
 import Modal from "../Modal"; // Assuming Modal is a separate component
 import KakaoLinkButton from "./KakaoLinkButton";
 import TossAppLauncher from "./TossAppLauncher";
+import SeatModal from "../Seat/SeatModal";
 
 function MyReservCard({ data }) {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
   const [secondModalOpen, setSecondModalOpen] = useState(false);
   const [showAccount, setShowAccount] = useState(false);
+  const [seatModalOpen, setSeatModalOpen] = useState(false);
 
   const handleCopyClipBoard = async (text) => {
     try {
@@ -149,7 +151,10 @@ function MyReservCard({ data }) {
               </>
             ))}
           <div className={styles.card_content}>
-            <div className={styles.seat_box}>
+            <div
+              className={styles.seat_box}
+              onClick={() => setSeatModalOpen(true)}
+            >
               {seat || " A1, A2, A3, A4, A5, B1, B2, B3, B4, B5 "}{" "}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -253,6 +258,13 @@ function MyReservCard({ data }) {
           </div>
         </Modal>
       )}
+      {seatModalOpen && (
+        <SeatModal
+          open={seatModalOpen}
+          close={() => setSeatModalOpen(false)}
+          onConfirm={() => setSeatModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
@@ -275,5 +287,6 @@ MyReservCard.propTypes = {
     ticketCount: PropTypes.number,
     price: PropTypes.number,
     paid: PropTypes.bool,
+    seat: PropTypes.string,
   }).isRequired,
 };
