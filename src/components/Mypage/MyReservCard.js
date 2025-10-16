@@ -67,6 +67,15 @@ function MyReservCard({ data }) {
           alt="공연 이미지"
           onClick={handleShowDetail}
         />
+        {/* 모바일에서 포스터 밑에 송금정보 보기 버튼 표시 */}
+        {paid === false && isMobile && !showAccount && (
+          <button
+            className={styles.account_btn}
+            onClick={() => setSecondModalOpen(true)}
+          >
+            송금정보 보기
+          </button>
+        )}
       </div>
       <div className={styles.card_text_box}>
         <div className={styles.card_title} onClick={handleShowDetail}>
@@ -96,40 +105,10 @@ function MyReservCard({ data }) {
               {managerPhone || "정보 없음"}
             </div>
           </div>
-          {/* 계좌정보: 모바일이면 버튼, PC면 그대로 노출 */}
+          {/* 계좌정보: 모바일이면 버튼 클릭 후 계좌정보 표시, PC면 그대로 노출 */}
           {paid === false &&
             (isMobile ? (
-              <>
-                {!showAccount ? (
-                  <button
-                    className={styles.account_btn}
-                    onClick={() => setSecondModalOpen(true)}
-                  >
-                    송금정보 보기
-                  </button>
-                ) : (
-                  <div className={styles.card_content}>
-                    <div
-                      className={styles.card_info_header}
-                      id={styles.account_box}
-                    >
-                      계좌번호:
-                    </div>
-                    <div className={styles.card_account}>{accountInfo}</div>
-                    <div
-                      className={styles.card_account}
-                      style={accountName ? {} : { display: "none" }}
-                    >
-                      {" "}
-                      {" ("}
-                      {accountName}
-                      {")"}{" "}
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
+              showAccount && (
                 <div className={styles.card_content}>
                   <div
                     className={styles.card_info_header}
@@ -148,7 +127,26 @@ function MyReservCard({ data }) {
                     {")"}{" "}
                   </div>
                 </div>
-              </>
+              )
+            ) : (
+              <div className={styles.card_content}>
+                <div
+                  className={styles.card_info_header}
+                  id={styles.account_box}
+                >
+                  계좌번호:
+                </div>
+                <div className={styles.card_account}>{accountInfo}</div>
+                <div
+                  className={styles.card_account}
+                  style={accountName ? {} : { display: "none" }}
+                >
+                  {" "}
+                  {" ("}
+                  {accountName}
+                  {")"}{" "}
+                </div>
+              </div>
             ))}
           <div className={styles.card_content}>
             <div
