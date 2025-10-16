@@ -1,0 +1,30 @@
+.seat {
+  width: 36px;
+  height: 36px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* 예약된 좌석 */
+.booked {
+  background: #d3d3d3;
+  color: #777;
+  cursor: not-allowed;
+}
+
+/* 내가 선택한 좌석 */
+.selected {
+  background: #FF3D12;
+  border: 1px solid #FF3D12;
+  color: #fff;
+  font-weight: bold;
+}
+
+.bookedImg{
+  width: 36px;
+  height: 36px;
+  border-radius: 3px;
+}
