@@ -1,6 +1,6 @@
 /* eslint-disable */
 import styles from "./NotReservationSeatModal.module.css";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import closeButton from "../../assets/modal/x.svg";
 import Seat from "./Seat";
@@ -28,27 +28,30 @@ const makeSeats = () => {
   return arr;
 };
 
-//API 호출 코드로 바꾸기
-const fetchIndexIds = async () => [1, 3, 50, 72, 99]; // 숫자 배열로 반환
 
-
-
-const SeatModal = ({ open, close, onConfirm }) => {
+const NotReservationSeatModal = ({ open, close, onConfirm }) => {
   const [seats, setSeats] = useState(() => makeSeats());
 
   const SEAT_PX = 36;      // 좌석 한 칸
   const AISLE_WIDTH = 40;  // 통로 폭
 
-  useEffect(() => {
-    let ignore = false;
-    (async () => {
-      const ids = await fetchIndexIds(); // 이미 [1,3,5] 형태
-      const idSet = new Set(ids);
-      if (ignore) return;
-      setSeats(prev => prev.map(s => ({ ...s, selected: idSet.has(s.id) ? 1 : 0 })));
-    })();
-    return () => { ignore = true; };
-  }, []);
+  const handleSeatClick = (id) => {
+    setSeats(prev =>
+      prev.map(seat =>
+        seat.id === id
+          ? { ...seat, selected: seat.selected === 1 ? 0 : 1 }
+          : seat
+      )
+    );
+  };
+
+  const handleConfirm = () => {
+    const selectedIds = seats
+      .filter((s) => s.selected === 1)
+      .map((s) => s.id);
+    onConfirm && onConfirm(selectedIds);
+    close();
+  };
 
   return (
     <>
@@ -61,8 +64,8 @@ const SeatModal = ({ open, close, onConfirm }) => {
           <main>
             <img className={styles.closeB} src={closeButton} alt="Close" onClick={close}/>
             <div className={styles.topContainer}>
-              <span>예약 좌석 위치</span>
-              <p/><p/>
+              <span>예매 불가 좌석 설정</span>
+              <p>지정석, 시야제한석 등 예매가 불가능한 좌석을 선택해주세요.</p>
             </div>
 
             <div className={styles.seatGrid}>
@@ -81,7 +84,7 @@ const SeatModal = ({ open, close, onConfirm }) => {
                     key={seat.id}
                     style={{ gridRowStart: seat.row, gridColumnStart: seat.gridCol }} 
                   >
-                    <Seat {...seat} />
+                    <Seat {...seat} onClick={() => handleSeatClick(seat.id)} />
                   </div>
                 ))}
               </div>
@@ -89,8 +92,8 @@ const SeatModal = ({ open, close, onConfirm }) => {
 
 
             <div className={styles.bottomContainer}>
-              <div className={styles.button} onClick={close}>
-                <span>확인</span>
+              <div className={styles.button} onClick={handleConfirm}>
+                <span>선택완료</span>
               </div>
             </div>
           </main>
@@ -102,4 +105,4 @@ const SeatModal = ({ open, close, onConfirm }) => {
   );
 };
 
-export default SeatModal;
+export default NotReservationSeatModal;
