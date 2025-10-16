@@ -34,7 +34,6 @@ function MyReservCard({ data }) {
     showId,
     poster,
     title,
-    qrImage,
     order,
     date,
     weekday,
@@ -46,6 +45,7 @@ function MyReservCard({ data }) {
     ticketCount,
     price,
     paid,
+    seat,
   } = data;
 
   const handleShowDetail = () => {
@@ -128,7 +128,7 @@ function MyReservCard({ data }) {
               </>
             ) : (
               <>
-                <div className={styles.card_content} id={styles.account_info}>
+                <div className={styles.card_content}>
                   <div
                     className={styles.card_info_header}
                     id={styles.account_box}
@@ -148,6 +148,24 @@ function MyReservCard({ data }) {
                 </div>
               </>
             ))}
+          <div className={styles.card_content}>
+            <div className={styles.seat_box}>
+              {seat || " A1, A2, A3, A4, A5, B1, B2, B3, B4, B5 "}{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="6"
+                height="10"
+                viewBox="0 0 6 10"
+                fill="none"
+              >
+                <path
+                  d="M1 0.5L4.79026 4.46967C5.06991 4.76256 5.06991 5.23744 4.79026 5.53033L1 9.5"
+                  stroke="#FF3D12"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+          </div>
           <div className={styles.ticket_info}>
             <div className={styles.ticket_num}>{ticketCount}매</div>
             <span className={styles.divider} />

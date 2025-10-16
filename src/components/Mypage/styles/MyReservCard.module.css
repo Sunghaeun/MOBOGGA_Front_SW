@@ -55,17 +55,14 @@
   overflow: hidden;
 }
 
-#account_info {
-  color: var(--ORANGE);
-}
-
 .card_info_box {
   align-items: left;
+  line-height: 24px; /* 171.429% */
 }
 
 .card_info_header {
   margin-right: 3px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 #order_box {
@@ -73,6 +70,23 @@
   font-weight: 400;
   line-height: 24px; /* 171.429% */
   letter-spacing: 0.14px;
+}
+
+.seat_box {
+  color: var(--main-02, #ff3d12);
+
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 171.429% */
+
+  display: inline-flex;
+  padding: 0 12px 0 6px;
+  align-items: center;
+  gap: 12px;
+  border-radius: 4px;
+  background: var(--Main-04, #ffefec);
+  cursor: pointer;
 }
 
 .card_order {
@@ -274,7 +288,7 @@
     max-width: 95vw;
     width: 100%;
     max-height: 70vh; /* 모달 최대 높이 제한 */
-    height: auto;     /* 내용에 따라 높이 자동 조정 */
+    height: auto; /* 내용에 따라 높이 자동 조정 */
     overflow-y: auto; /* 내용이 넘치면 스크롤 */
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
     position: fixed;
