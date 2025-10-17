@@ -193,9 +193,16 @@ function Mypage() {
         </div>
         <div className={styles.container}>
           <div className={styles.container_header}>
-            <div className={styles.reservlist_title}>
-              공연 예매 내역{" "}
-              <span style={{ color: "gray", fontSize: "20px" }}>(최신순)</span>
+            <div>
+              <div className={styles.reservlist_title}>
+                공연 예매 내역{" "}
+                <span style={{ color: "gray", fontSize: "20px" }}>
+                  (최신순)
+                </span>
+              </div>
+              <div className={styles.notice}>
+                *예매 취소 혹은 환불을 원하시는 경우, 해당 공연 동아리 담당자에게 연락바랍니다.
+              </div>
             </div>
             <div className={styles.reload_btn_box}>
               <img

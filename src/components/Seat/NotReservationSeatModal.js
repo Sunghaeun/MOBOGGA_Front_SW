@@ -1,6 +1,6 @@
 /* eslint-disable */
 import styles from "./NotReservationSeatModal.module.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import closeButton from "../../assets/modal/x.svg";
 import Seat from "./Seat";
@@ -29,7 +29,13 @@ const makeSeats = () => {
 };
 
 
-const NotReservationSeatModal = ({ open, close, onConfirm }) => {
+function NotReservationSeatModal({ open, close, onConfirm, seatTicket }) {
+  const [selectedSeats, setSelectedSeats] = useState([]);
+
+  useEffect(() => {
+    setSelectedSeats(seatTicket ?? []);
+  }, [seatTicket, open]);
+
   const [seats, setSeats] = useState(() => makeSeats());
 
   const SEAT_PX = 36;      // 좌석 한 칸
@@ -52,6 +58,16 @@ const NotReservationSeatModal = ({ open, close, onConfirm }) => {
     onConfirm && onConfirm(selectedIds);
     close();
   };
+
+  useEffect(() => {
+    // seatTicket에 맞게 seats의 selected 값을 초기화
+    setSeats(prevSeats =>
+      prevSeats.map(seat => ({
+        ...seat,
+        selected: (seatTicket ?? []).includes(seat.id) ? 1 : 0
+      }))
+    );
+  }, [seatTicket, open]);
 
   return (
     <>

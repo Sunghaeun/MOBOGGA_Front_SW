@@ -5,7 +5,7 @@ import insta from "../assets/icons/instagram.svg";
 import kakao from "../assets/icons/kakao.svg";
 import youtube from "../assets/icons/youtube.svg";
 import link from "../assets/icons/linkicons.svg";
-import defaultImg from "../assets/defaultImg.jpg";
+import defaultImg from "../assets/poster.png";
 
 import NotEnteredModal from "../components/modal/NotEnteredModal";
 import EditCheckModal from "../components/modal/EditCheckModal";
