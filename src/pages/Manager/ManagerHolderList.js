@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerHolderList.module.css";
@@ -10,6 +9,7 @@ import ServerErrorModal from "../../components/Mypage/ServerErrorModal";
 import SeatModal from "../../components/Seat/SeatModal";
 import useAuthStore from "../../stores/authStore";
 import apiClient from "../../utils/apiClient";
+import { idToCode } from "../../utils/seatUtils";
 import {
   generateCSV,
   downloadCSV,
@@ -385,19 +385,34 @@ function ManagerHolderList() {
   };
 
   const formatReservationData = (reservation_list) =>
-    reservation_list.map((item, index) => ({
-      id: item.reservationId || index,
-      date: item.createdAt || new Date().toLocaleDateString(),
-      name: item.name || "-",
-      stdId: item.stdCode || "-",
-      phone: item.phoneNumber || "-",
-      count: item.ticketNumber || 0,
-      price: item.price || 0,
-      status:
-        item.isPaid === true || item.isPaid === "true" ? "입금완료" : "미입금",
-      cancel: item.cancelRequest || false,
-      seats: item.seatCode ? item.seatCode.split(",").map((s) => s.trim()) : [],
-    }));
+    reservation_list.map((item, index) => {
+      // reservedSeats 배열을 좌석 코드로 변환
+      let seatCodes = [];
+      if (item.reservedSeats && Array.isArray(item.reservedSeats)) {
+        seatCodes = item.reservedSeats
+          .map((id) => idToCode(id))
+          .filter(Boolean);
+      } else if (item.seatCode) {
+        // fallback: 기존 seatCode 문자열 처리
+        seatCodes = item.seatCode.split(",").map((s) => s.trim());
+      }
+
+      return {
+        id: item.reservationId || index,
+        date: item.createdAt || new Date().toLocaleDateString(),
+        name: item.name || "-",
+        stdId: item.stdCode || "-",
+        phone: item.phoneNumber || "-",
+        count: item.ticketNumber || 0,
+        price: item.price || 0,
+        status:
+          item.isPaid === true || item.isPaid === "true"
+            ? "입금완료"
+            : "미입금",
+        cancel: item.cancelRequest || false,
+        seats: seatCodes,
+      };
+    });
 
   if (authLoading || isLoading) {
     return (
@@ -543,7 +558,9 @@ function ManagerHolderList() {
                         <input
                           type="checkbox"
                           checked={row.status === "입금완료"}
-                          onChange={() => handlePaymentToggle(row.id, row.status)}
+                          onChange={() =>
+                            handlePaymentToggle(row.id, row.status)
+                          }
                         />
                         <span className={styles.slider}></span>
                       </label>
@@ -574,29 +591,14 @@ function ManagerHolderList() {
                     </td>
                   </tr>
                   {expandedRows.has(row.id) && (
-                    <tr className={styles.expandedRow}>
-                      <td colSpan="9">
-                        <div className={styles.seatContainer}>
-                          <div className={styles.seatLabel}>예약 좌석:</div>
-                          <div className={styles.seatList}>
-                            {row.seats && row.seats.length > 0 ? (
-                              row.seats.map((seat, index) => (
-                                <button
-                                  key={index}
-                                  className={styles.seatItem}
-                                  onClick={() => handleSeatClick(seat)}
-                                  title={`${seat}을 선택하면 좌석 모달이 나타납니다`}
-                                >
-                                  {seat}
-                                </button>
-                              ))
-                            ) : (
-                              <span className={styles.noSeats}>
-                                좌석 정보가 없습니다
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                    <tr className={styles.seatRow}>
+                      <td colSpan="9" className={styles.seatRowTd}>
+                        <span className={styles.seatLabel}>좌석번호:</span>
+                        <span className={styles.seatText}>
+                          {row.seats && row.seats.length > 0
+                            ? row.seats.join(", ")
+                            : "좌석 정보가 없습니다"}
+                        </span>
                       </td>
                     </tr>
                   )}

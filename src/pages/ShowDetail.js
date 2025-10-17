@@ -304,7 +304,7 @@ const handleSelectSch = (scheduleId) => {
               onClick={() => navigate("/login")}
               className={loadingStyles.loginBtn}
             >
-              🔑 로그인하러 가기
+              로그인하러 가기
             </button>
           )}
         </div>
