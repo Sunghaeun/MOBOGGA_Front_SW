@@ -4,8 +4,10 @@ import styles from "./styles/CreateShow.module.css";
 import DELETE from "../assets/button_delete.svg";
 import useAuthStore from "../stores/authStore";
 import apiClient from "../utils/apiClient";
-import POSTER from "../assets/Poster.svg";
+import POSTER from "../assets/poster.png";
 import Dropdown from "../components/Dropdown";
+import NotReservationSeatModal from "../components/Seat/NotReservationSeatModal";
+import {idToCode} from "../utils/seatUtils";
 
 function CreateShow() {
   const navigate = useNavigate();
@@ -25,8 +27,10 @@ function CreateShow() {
   const [runtime, setRunTime] = useState("");
   const [managerPhoneNumber, setManagerPhoneNumber] = useState("");
   const [manager, setManager] = useState("");
+  const [seatReservationEnabled, setSeatReservationEnabled] = useState(true);
   // eslint-disable-next-line
   const [maxPeople, setMaxPeople] = useState(100);
+
   const [accountNumber, setAccountNumber] = useState("");
   const [accouuntName, setAccountName] = useState(""); // 기존 변수명 유지 (오타 포함)
   const [accountBankName, setAccountBankName] = useState("");
@@ -57,6 +61,7 @@ function CreateShow() {
       cost: "",
       maxTicket: 1,
       maxPeople: 100,
+      seatTicket: [],
     },
   ]);
 
@@ -145,6 +150,7 @@ function CreateShow() {
       endDate,
       runtime: Number(runtime),
       manager,
+      seatReservationEnabled,
       managerPhoneNumber,
       maxPeople,
       accountNumber,
@@ -161,6 +167,7 @@ function CreateShow() {
         cost: Number(s.cost),
         maxTicket: Number(s.maxTicket) || 0,
         maxPeople: Number(s.maxPeople) || 100,
+        seatTicket: s.seatTicket,
       })),
     };
 
@@ -180,7 +187,6 @@ if (qr instanceof File) {
 
 
     // Debug info removed: requestData and FormData remain unchanged.
-
     try {
       const resp = await apiClient.post("/manager/show/create", formData, {
         headers: {
@@ -206,6 +212,7 @@ if (qr instanceof File) {
         }`
       );
     }
+    console.log("최종 requestData:", requestData);
   };
 
   const handlename = (e) => {
@@ -236,6 +243,7 @@ if (qr instanceof File) {
           cost: "",
           maxTicket: 1,
           maxPeople: 100,
+          seatTicket: [],
         },
       ];
       // 혹시 모를 불일치 방지용 reindex
@@ -248,8 +256,39 @@ if (qr instanceof File) {
       prev.filter((s) => s.id !== id).map((s, i) => ({ ...s, order: i + 1 }))
     );
   };
+  const [notReservationSeatModalOpen, setNotReservationSeatModalOpen] = useState(false);
+
+  //몇번째 회차인지 기억하는 id
+  const [selectedShowId, setSelectedShowId] = useState(null);
+
+  // 예약 불가 좌석 지정 모달
+  const openNotReservationSeatModal = (showId) => {
+    setSelectedShowId(showId);
+    setNotReservationSeatModalOpen(true);
+  };
+
+  const closeNotReservationSeatModal = () => {
+    setNotReservationSeatModalOpen(false);
+    document.body.style.removeProperty("overflow");
+  };
+
+
+  const handleConfirmFromModal = (ids) => {
+    if (selectedShowId == null) return;
+      setShows((prev) =>
+        prev.map((s) =>
+          s.id === selectedShowId ? { ...s, seatTicket: ids } : s
+        )
+      );
+    setNotReservationSeatModalOpen(false);
+    setSeatReservationEnabled(true);
+    setSelectedShowId(null);
+    document.body.style.removeProperty("overflow");
+  };
+
 
   return (
+    <>
     <div>
       <div className={styles.CreateBody}>
         <div className={styles.headText}>공연 새로 만들기</div>
@@ -555,6 +594,7 @@ if (qr instanceof File) {
               <div>시간</div>
               <div>구매제한매수</div>
               <div>가격</div>
+              <div>제한석 설정</div>
               <div>회차추가</div>
               <div>삭제</div>
             </div>
@@ -570,7 +610,7 @@ if (qr instanceof File) {
                     onChange={(e) =>
                       updateSchedule(show.id, "date", e.target.value)
                     }
-                    style={{ width: "11rem" }}
+                    style={{ width: "8rem" }}
                   />
                 </div>
                 <div className={styles.form_detail_time}>
@@ -602,7 +642,7 @@ if (qr instanceof File) {
                       "22",
                       "23",
                     ]}
-                    style={{ width: "3.75rem" }}
+                    style={{ width: "3.2rem" }}
                     value={show.hour || ""}
                     onChange={(val) => updateSchedule(show.id, "hour", val)}
                   />
@@ -671,7 +711,7 @@ if (qr instanceof File) {
                       "58",
                       "59",
                     ]}
-                    style={{ width: "3.75rem" }}
+                    style={{ width: "3.2rem" }}
                     value={show.minute || ""}
                     onChange={(val) => updateSchedule(show.id, "minute", val)}
                   />
@@ -706,6 +746,9 @@ if (qr instanceof File) {
                   />
                   원
                 </div>
+                <div className={styles.modal_btn} onClick={() => openNotReservationSeatModal(show.id)}>
+                  설정
+                </div>
                 <div className={styles.add_show} onClick={handleAddRow}>
                   추가
                 </div>
@@ -722,10 +765,23 @@ if (qr instanceof File) {
             <button className={styles.make_show_submit} onClick={makeShow}>
               생성하기
             </button>
+
           </div>
         </div>
       </div>
     </div>
+
+    <NotReservationSeatModal
+      open={notReservationSeatModalOpen}
+      close={closeNotReservationSeatModal}
+      onConfirm={handleConfirmFromModal}
+      seatTicket={
+        selectedShowId
+          ? (shows.find(s => s.id === selectedShowId)?.seatTicket ?? [])
+          : []
+      }
+    />
+    </>
   );
 }
 
