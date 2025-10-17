@@ -229,15 +229,8 @@ function MyReservCard({ data }) {
                 </button>
               </div>
               <div className={styles.modal_desc}>
-                혹은{" "}
-                <span className={styles.modal_strong_bl}>
-                  QR 코드
-                </span>
-                로{" "}
-                <span>
-                  {price?.toLocaleString()}원
-                </span>{" "}
-                송금해주세요.
+                혹은 <span className={styles.modal_strong_bl}>QR 코드</span>로{" "}
+                <span>{price?.toLocaleString()}원</span> 송금해주세요.
                 <br />
                 입금자명은{" "}
                 <span className={styles.modal_strong}>학번+이름</span>
