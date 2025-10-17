@@ -3,23 +3,25 @@
   max-width: 600px;
   min-height: 230px;
   height: auto;
-  margin-bottom: 20px;
+  margin-bottom: 70px;
   display: flex;
 }
 
 .card_img_box {
-  width: 145px;
-  min-height: 205px;
+  width: 180px;
+  min-height: 210px;
   height: auto;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  gap: 10px;
 }
 
 .card_img {
-  width: 145px;
-  height: 205px;
-  object-fit: contain;
+  width: 180px;
+  height: 100%;
+  object-fit: cover;
   &:hover {
     cursor: pointer;
   }
@@ -27,7 +29,7 @@
 
 .card_text_box {
   width: 318px;
-  padding-left: 20px;
+  padding-left: 30px;
   padding-right: 10px;
   align-items: left;
 }
@@ -107,6 +109,7 @@
   grid-template-columns: 2fr 3fr 3fr;
   text-align: center;
   margin-top: 15px;
+  font-weight: 800;
 }
 
 .ticket_num {
@@ -124,6 +127,31 @@
 .deposit_status {
   grid-column: 3;
   grid-row: 1;
+}
+
+.account_btn {
+  display: none;
+  background: #fff;
+  color: #ff3d12;
+  border: 1px solid #ff3d12;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.account_btn:hover {
+  background: #ffefec;
+  transform: scale(1.05);
+}
+
+@media (min-width: 601px) {
+  .account_btn {
+    display: block;
+    width: 100%;
+  }
 }
 
 @media (max-width: 600px) {
@@ -411,6 +439,119 @@
     font-size: 1rem;
     margin-left: 8px;
   }
+}
+
+/* PC 버전 모달 스타일 */
+.modal_succ_re {
+  background: #fff;
+  border-radius: 24px;
+  padding: 0;
+  max-width: 95vw;
+  width: 100%;
+  max-height: 70vh;
+  height: auto;
+  overflow-y: auto;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+.modal_top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 36px 0 0 0;
+}
+
+.modal_top p {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+  color: #121212;
+}
+
+.modal_mid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+}
+
+.modal_con {
+  width: 100%;
+  text-align: center;
+}
+
+.modal_account {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.modal_strong_bl {
+  font-weight: 700;
+  color: #121212;
+}
+
+.modal_strong {
+  color: #ff3d12;
+  font-weight: 600;
+}
+
+.modal_desc {
+  font-size: 1rem;
+  color: #222;
+  text-align: center;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.modal_copy_btn {
+  padding: 4px 12px;
+  background: none;
+  border: 1px solid #ff3d12;
+  border-radius: 5px;
+  color: #ff3d12;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.modal_copy_btn:hover {
+  background: #ffefec;
+}
+
+.modal_Btns {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+.modal_ok_Btn {
+  padding: 8px 48px;
+  border: 1px solid #ff3d12;
+  background: #ff3d12;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal_ok_Btn:hover {
+  background: #e6350f;
 }
 
 @media (min-width: 601px) {

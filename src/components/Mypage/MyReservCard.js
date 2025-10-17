@@ -67,6 +67,15 @@ function MyReservCard({ data }) {
           alt="공연 이미지"
           onClick={handleShowDetail}
         />
+        {/* PC에서 포스터 밑에 송금정보 보기 버튼 표시 */}
+        {paid === false && !isMobile && (
+          <button
+            className={styles.account_btn}
+            onClick={() => setSecondModalOpen(true)}
+          >
+            송금정보 보기
+          </button>
+        )}
         {/* 모바일에서 포스터 밑에 송금정보 보기 버튼 표시 */}
         {paid === false && isMobile && !showAccount && (
           <button
@@ -164,7 +173,7 @@ function MyReservCard({ data }) {
                 <path
                   d="M1 0.5L4.79026 4.46967C5.06991 4.76256 5.06991 5.23744 4.79026 5.53033L1 9.5"
                   stroke="#FF3D12"
-                  stroke-linecap="round"
+                  strokeLinecap="round"
                 />
               </svg>
             </div>
@@ -193,66 +202,58 @@ function MyReservCard({ data }) {
           onClose={() => setSecondModalOpen(false)}
         >
           <div className={styles.modal_top}>
-            <p className={styles.modal_title}>송금 정보</p>
-            <button
-              className={styles.modal_close}
-              onClick={() => setSecondModalOpen(false)}
-            >
-              ×
-            </button>
+            <p>예매가 완료되었습니다.</p>
           </div>
           <div className={styles.modal_mid}>
-            <div className={styles.modal_account}>
-              <span className={styles.modal_strong_bl}>
-                {accountInfo || "계좌 정보 없음"}
-              </span>
-              <span
-                className={styles.modal_strong_bl}
-                style={accountName ? {} : { display: "none" }}
-              >
-                {" "}
-                {" ("}
-                {accountName}
-                {")"}{" "}
-              </span>
-              <button
-                className={styles.modal_copy_btn}
-                onClick={() => {
-                  handleCopyClipBoard(accountInfo || "계좌 정보 없음");
-                }}
-              >
-                복사
-              </button>
+            <div className={styles.modal_con}>
+              <div className={styles.modal_account}>
+                <span className={styles.modal_strong_bl}>
+                  {accountInfo || "계좌 정보 없음"}
+                </span>
+                <span
+                  className={styles.modal_strong_bl}
+                  style={accountName ? {} : { display: "none" }}
+                >
+                  {" "}
+                  {" ("}
+                  {accountName}
+                  {")"}{" "}
+                </span>
+                <button
+                  className={styles.modal_copy_btn}
+                  onClick={() => {
+                    handleCopyClipBoard(accountInfo || "계좌 정보 없음");
+                  }}
+                >
+                  복사
+                </button>
+              </div>
+              <div className={styles.modal_desc}>
+                혹은{" "}
+                <span className={styles.modal_strong_bl}>
+                  QR 코드
+                </span>
+                로{" "}
+                <span>
+                  {price?.toLocaleString()}원
+                </span>{" "}
+                송금해주세요.
+                <br />
+                입금자명은{" "}
+                <span className={styles.modal_strong}>학번+이름</span>
+                으로 해주세요.
+                <br />
+                계좌번호는 마이페이지에서 다시 볼 수 있습니다.
+              </div>
             </div>
-            <div className={styles.modal_desc}>
-              입금하실 금액:{" "}
-              <span className={styles.modal_strong_bl}>
-                {price?.toLocaleString()}원
-              </span>{" "}
-              <br />
-              입금자명은{" "}
-              <span className={styles.modal_strong_or}>학번+이름</span>으로
-              해주세요.
-              <br />
-              동아리 담당자의 확인 후 예매 확정이 이뤄집니다. <br />
-            </div>
-            <KakaoLinkButton
-              title={title}
-              accountInfo={accountInfo}
-              accountName={accountName}
-              price={price}
-              target="_blank"
-              rel="noopener noreferrer"
-            ></KakaoLinkButton>
-            <div style={{ fontSize: "0.7rem", color: "red" }}>
-              *카카오톡이 열리면 ‘나에게' 보낸 후 계좌번호를 눌러서 송금
-            </div>
-            <TossAppLauncher
-              managerPhone={managerPhone}
-              price={price}
-              target="_blank"
-              rel="noopener noreferrer"
-            ></TossAppLauncher>
+          </div>
+          <div className={styles.modal_Btns}>
+            <button
+              className={styles.modal_ok_Btn}
+              onClick={() => setSecondModalOpen(false)}
+            >
+              확인
+            </button>
           </div>
         </Modal>
       )}
