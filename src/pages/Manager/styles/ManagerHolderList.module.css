@@ -175,21 +175,85 @@
   cursor: pointer;
 }
 
+/* 토글 스위치 스타일 */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #d0d0d0;
+  transition: 0.3s ease;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s ease;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.slider:after {
+  content: "미입금";
+  position: absolute;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  right: 8px;
+  transition: opacity 0.3s ease;
+  opacity: 1;
+}
+
+input:checked + .slider {
+  background-color: #1ec800;
+}
+
+input:checked + .slider:before {
+  transform: translateX(54px);
+}
+
+input:checked + .slider:after {
+  content: "입금";
+  right: auto;
+  left: 8px;
+  opacity: 1;
+}
+
 .paymentToggleBtn {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
   border-radius: 4px;
   transition: background-color 0.2s ease;
 }
 
-.paymentToggleBtn:hover {
-  background-color: #f0f0f0;
-}
-
 .paymentIcon {
-  width: 40px;
+  width: 70px;
   height: 40px;
   object-fit: contain;
 }
@@ -319,6 +383,72 @@
 .retryBtn:active {
   transform: translateY(0);
   box-shadow: 0 2px 4px rgba(255, 61, 18, 0.2);
+}
+
+.nameWithToggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.toggleBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  transition: transform 0.2s ease;
+  color: black;
+}
+
+.toggleBtn.expanded {
+  transform: rotate(180deg);
+}
+
+.expandedRow {
+  background-color: #f8fafc;
+}
+
+.seatContainer {
+  padding: 16px;
+  background: #fff;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.seatLabel {
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.seatList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.seatItem {
+  background: #ff3d12;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.seatItem:hover {
+  background: #e6350f;
+  transform: scale(1.05);
+}
+
+.noSeats {
+  color: #999;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 900px) {

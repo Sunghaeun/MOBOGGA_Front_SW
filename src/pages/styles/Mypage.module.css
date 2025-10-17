@@ -147,6 +147,13 @@
   letter-spacing: 0.72px;
 }
 
+.notice {
+  font-size: 12px;
+  color: var(--Warning, #d50024);
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+
 .reload_icon {
   width: 20px;
   height: 20px;

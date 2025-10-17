@@ -6,12 +6,14 @@ import styles from "./styles/MyReservCard.module.css";
 import Modal from "../Modal"; // Assuming Modal is a separate component
 import KakaoLinkButton from "./KakaoLinkButton";
 import TossAppLauncher from "./TossAppLauncher";
+import SeatModal from "../Seat/SeatModal";
 
 function MyReservCard({ data }) {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
   const [secondModalOpen, setSecondModalOpen] = useState(false);
   const [showAccount, setShowAccount] = useState(false);
+  const [seatModalOpen, setSeatModalOpen] = useState(false);
 
   const handleCopyClipBoard = async (text) => {
     try {
@@ -34,7 +36,6 @@ function MyReservCard({ data }) {
     showId,
     poster,
     title,
-    qrImage,
     order,
     date,
     weekday,
@@ -46,6 +47,7 @@ function MyReservCard({ data }) {
     ticketCount,
     price,
     paid,
+    seat,
   } = data;
 
   const handleShowDetail = () => {
@@ -65,6 +67,24 @@ function MyReservCard({ data }) {
           alt="공연 이미지"
           onClick={handleShowDetail}
         />
+        {/* PC에서 포스터 밑에 송금정보 보기 버튼 표시 */}
+        {paid === false && !isMobile && (
+          <button
+            className={styles.account_btn}
+            onClick={() => setSecondModalOpen(true)}
+          >
+            송금정보 보기
+          </button>
+        )}
+        {/* 모바일에서 포스터 밑에 송금정보 보기 버튼 표시 */}
+        {paid === false && isMobile && !showAccount && (
+          <button
+            className={styles.account_btn}
+            onClick={() => setSecondModalOpen(true)}
+          >
+            송금정보 보기
+          </button>
+        )}
       </div>
       <div className={styles.card_text_box}>
         <div className={styles.card_title} onClick={handleShowDetail}>
@@ -94,41 +114,11 @@ function MyReservCard({ data }) {
               {managerPhone || "정보 없음"}
             </div>
           </div>
-          {/* 계좌정보: 모바일이면 버튼, PC면 그대로 노출 */}
+          {/* 계좌정보: 모바일이면 버튼 클릭 후 계좌정보 표시, PC면 그대로 노출 */}
           {paid === false &&
             (isMobile ? (
-              <>
-                {!showAccount ? (
-                  <button
-                    className={styles.account_btn}
-                    onClick={() => setSecondModalOpen(true)}
-                  >
-                    송금정보 보기
-                  </button>
-                ) : (
-                  <div className={styles.card_content}>
-                    <div
-                      className={styles.card_info_header}
-                      id={styles.account_box}
-                    >
-                      계좌번호:
-                    </div>
-                    <div className={styles.card_account}>{accountInfo}</div>
-                    <div
-                      className={styles.card_account}
-                      style={accountName ? {} : { display: "none" }}
-                    >
-                      {" "}
-                      {" ("}
-                      {accountName}
-                      {")"}{" "}
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <div className={styles.card_content} id={styles.account_info}>
+              showAccount && (
+                <div className={styles.card_content}>
                   <div
                     className={styles.card_info_header}
                     id={styles.account_box}
@@ -146,8 +136,48 @@ function MyReservCard({ data }) {
                     {")"}{" "}
                   </div>
                 </div>
-              </>
+              )
+            ) : (
+              <div className={styles.card_content}>
+                <div
+                  className={styles.card_info_header}
+                  id={styles.account_box}
+                >
+                  계좌번호:
+                </div>
+                <div className={styles.card_account}>{accountInfo}</div>
+                <div
+                  className={styles.card_account}
+                  style={accountName ? {} : { display: "none" }}
+                >
+                  {" "}
+                  {" ("}
+                  {accountName}
+                  {")"}{" "}
+                </div>
+              </div>
             ))}
+          <div className={styles.card_content}>
+            <div
+              className={styles.seat_box}
+              onClick={() => setSeatModalOpen(true)}
+            >
+              {seat || " A1, A2, A3, A4, A5, B1, B2, B3, B4, B5 "}{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="6"
+                height="10"
+                viewBox="0 0 6 10"
+                fill="none"
+              >
+                <path
+                  d="M1 0.5L4.79026 4.46967C5.06991 4.76256 5.06991 5.23744 4.79026 5.53033L1 9.5"
+                  stroke="#FF3D12"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+          </div>
           <div className={styles.ticket_info}>
             <div className={styles.ticket_num}>{ticketCount}매</div>
             <span className={styles.divider} />
@@ -172,68 +202,67 @@ function MyReservCard({ data }) {
           onClose={() => setSecondModalOpen(false)}
         >
           <div className={styles.modal_top}>
-            <p className={styles.modal_title}>송금 정보</p>
-            <button
-              className={styles.modal_close}
-              onClick={() => setSecondModalOpen(false)}
-            >
-              ×
-            </button>
+            <p>예매가 완료되었습니다.</p>
           </div>
           <div className={styles.modal_mid}>
-            <div className={styles.modal_account}>
-              <span className={styles.modal_strong_bl}>
-                {accountInfo || "계좌 정보 없음"}
-              </span>
-              <span
-                className={styles.modal_strong_bl}
-                style={accountName ? {} : { display: "none" }}
-              >
-                {" "}
-                {" ("}
-                {accountName}
-                {")"}{" "}
-              </span>
-              <button
-                className={styles.modal_copy_btn}
-                onClick={() => {
-                  handleCopyClipBoard(accountInfo || "계좌 정보 없음");
-                }}
-              >
-                복사
-              </button>
+            <div className={styles.modal_con}>
+              <div className={styles.modal_account}>
+                <span className={styles.modal_strong_bl}>
+                  {accountInfo || "계좌 정보 없음"}
+                </span>
+                <span
+                  className={styles.modal_strong_bl}
+                  style={accountName ? {} : { display: "none" }}
+                >
+                  {" "}
+                  {" ("}
+                  {accountName}
+                  {")"}{" "}
+                </span>
+                <button
+                  className={styles.modal_copy_btn}
+                  onClick={() => {
+                    handleCopyClipBoard(accountInfo || "계좌 정보 없음");
+                  }}
+                >
+                  복사
+                </button>
+              </div>
+              <div className={styles.modal_desc}>
+                혹은{" "}
+                <span className={styles.modal_strong_bl}>
+                  QR 코드
+                </span>
+                로{" "}
+                <span>
+                  {price?.toLocaleString()}원
+                </span>{" "}
+                송금해주세요.
+                <br />
+                입금자명은{" "}
+                <span className={styles.modal_strong}>학번+이름</span>
+                으로 해주세요.
+                <br />
+                계좌번호는 마이페이지에서 다시 볼 수 있습니다.
+              </div>
             </div>
-            <div className={styles.modal_desc}>
-              입금하실 금액:{" "}
-              <span className={styles.modal_strong_bl}>
-                {price?.toLocaleString()}원
-              </span>{" "}
-              <br />
-              입금자명은{" "}
-              <span className={styles.modal_strong_or}>학번+이름</span>으로
-              해주세요.
-              <br />
-              동아리 담당자의 확인 후 예매 확정이 이뤄집니다. <br />
-            </div>
-            <KakaoLinkButton
-              title={title}
-              accountInfo={accountInfo}
-              accountName={accountName}
-              price={price}
-              target="_blank"
-              rel="noopener noreferrer"
-            ></KakaoLinkButton>
-            <div style={{ fontSize: "0.7rem", color: "red" }}>
-              *카카오톡이 열리면 ‘나에게' 보낸 후 계좌번호를 눌러서 송금
-            </div>
-            <TossAppLauncher
-              managerPhone={managerPhone}
-              price={price}
-              target="_blank"
-              rel="noopener noreferrer"
-            ></TossAppLauncher>
+          </div>
+          <div className={styles.modal_Btns}>
+            <button
+              className={styles.modal_ok_Btn}
+              onClick={() => setSecondModalOpen(false)}
+            >
+              확인
+            </button>
           </div>
         </Modal>
+      )}
+      {seatModalOpen && (
+        <SeatModal
+          open={seatModalOpen}
+          close={() => setSeatModalOpen(false)}
+          onConfirm={() => setSeatModalOpen(false)}
+        />
       )}
     </div>
   );
@@ -257,5 +286,6 @@ MyReservCard.propTypes = {
     ticketCount: PropTypes.number,
     price: PropTypes.number,
     paid: PropTypes.bool,
+    seat: PropTypes.string,
   }).isRequired,
 };

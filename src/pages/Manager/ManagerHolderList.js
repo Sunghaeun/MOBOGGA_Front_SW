@@ -6,6 +6,7 @@ import PaidIcon from "../../assets/icons/paid_icon.svg";
 import UnpaidIcon from "../../assets/icons/nopaid_icon.svg";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
 import ServerErrorModal from "../../components/Mypage/ServerErrorModal";
+import SeatModal from "../../components/Seat/SeatModal";
 import useAuthStore from "../../stores/authStore";
 import apiClient from "../../utils/apiClient";
 import {
@@ -33,6 +34,9 @@ function ManagerHolderList() {
   const [selectedReservations, setSelectedReservations] = useState(new Set());
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [showBatchActions, setShowBatchActions] = useState(false);
+  const [expandedRows, setExpandedRows] = useState(new Set());
+  const [seatModalOpen, setSeatModalOpen] = useState(false);
+  const [selectedSeat, setSelectedSeat] = useState(null);
 
   const handleServerErrorModalClose = () => {
     setIsServerErrorModalOpen(false);
@@ -355,6 +359,21 @@ function ManagerHolderList() {
     setShowBatchActions(selectedReservations.size > 0);
   }, [selectedReservations]);
 
+  const handleToggleExpand = (reservationId) => {
+    const newExpanded = new Set(expandedRows);
+    if (newExpanded.has(reservationId)) {
+      newExpanded.delete(reservationId);
+    } else {
+      newExpanded.add(reservationId);
+    }
+    setExpandedRows(newExpanded);
+  };
+
+  const handleSeatClick = (seat) => {
+    setSelectedSeat(seat);
+    setSeatModalOpen(true);
+  };
+
   const handleRetry = () => {
     if (scheduleId && token) {
       setIsLoading(true);
@@ -376,6 +395,7 @@ function ManagerHolderList() {
       status:
         item.isPaid === true || item.isPaid === "true" ? "입금완료" : "미입금",
       cancel: item.cancelRequest || false,
+      seats: item.seatCode ? item.seatCode.split(",").map((s) => s.trim()) : [],
     }));
 
   if (authLoading || isLoading) {
@@ -432,7 +452,7 @@ function ManagerHolderList() {
                 : "다운로드할 데이터가 없습니다"
             }
           >
-            📥 CSV 추출 ({holderData.reservation_list?.length || 0}건)
+            CSV 추출 ({holderData.reservation_list?.length || 0}건)
           </button>
 
           {showBatchActions && (
@@ -445,21 +465,21 @@ function ManagerHolderList() {
                 onClick={() => handleBatchPaymentUpdate(true)}
                 title="선택된 예매자들을 입금완료로 변경"
               >
-                ✅ 입금완료 처리
+                입금완료 처리
               </button>
               <button
                 className={styles.batchBtn}
                 onClick={() => handleBatchPaymentUpdate(false)}
                 title="선택된 예매자들을 미입금으로 변경"
               >
-                ❌ 미입금 처리
+                미입금 처리
               </button>
               <button
                 className={styles.batchDeleteBtn}
                 onClick={handleBatchDelete}
                 title="선택된 예매자들을 삭제"
               >
-                🗑️ 선택 삭제
+                선택 삭제
               </button>
             </div>
           )}
@@ -489,60 +509,97 @@ function ManagerHolderList() {
           <tbody>
             {tableData.length > 0 ? (
               tableData.map((row) => (
-                <tr key={row.id}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={selectedReservations.has(row.id)}
-                      onChange={() => handleSelectReservation(row.id)}
-                    />
-                  </td>
-                  <td>{row.date}</td>
-                  <td>{row.name}</td>
-                  <td>{row.stdId}</td>
-                  <td>{row.phone}</td>
-                  <td>{row.count}</td>
-                  <td>{Number(row.price).toLocaleString()}</td>
-                  <td>
-                    <button
-                      className={styles.paymentToggleBtn}
-                      onClick={() => handlePaymentToggle(row.id, row.status)}
-                      title={`클릭하여 ${
-                        row.status === "입금완료" ? "미입금" : "입금완료"
-                      }으로 변경`}
-                    >
-                      <img
-                        src={row.status === "입금완료" ? PaidIcon : UnpaidIcon}
-                        alt={row.status}
-                        className={styles.paymentIcon}
+                <React.Fragment key={row.id}>
+                  <tr>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selectedReservations.has(row.id)}
+                        onChange={() => handleSelectReservation(row.id)}
                       />
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className={styles.cancelBtn}
-                      onClick={() => handleIndividualDelete(row.id, row.name)}
-                      title={`${row.name}님의 예매를 삭제`}
-                    >
-                      <img
-                        src={TrashDefault}
-                        alt="삭제"
-                        style={{ width: 20, height: 20 }}
-                      />
-                    </button>
-                    {row.cancel && (
-                      <span
-                        style={{
-                          color: "red",
-                          fontSize: "12px",
-                          marginLeft: "5px",
-                        }}
+                    </td>
+                    <td>{row.date}</td>
+                    <td>
+                      <div className={styles.nameWithToggle}>
+                        <span>{row.name}</span>
+                        <button
+                          className={`${styles.toggleBtn} ${
+                            expandedRows.has(row.id) ? styles.expanded : ""
+                          }`}
+                          onClick={() => handleToggleExpand(row.id)}
+                          title={expandedRows.has(row.id) ? "접기" : "펼치기"}
+                        >
+                          ▼
+                        </button>
+                      </div>
+                    </td>
+                    <td>{row.stdId}</td>
+                    <td>{row.phone}</td>
+                    <td>{row.count}</td>
+                    <td>{Number(row.price).toLocaleString()}</td>
+                    <td>
+                      <label className={styles.switch}>
+                        <input
+                          type="checkbox"
+                          checked={row.status === "입금완료"}
+                          onChange={() => handlePaymentToggle(row.id, row.status)}
+                        />
+                        <span className={styles.slider}></span>
+                      </label>
+                    </td>
+                    <td>
+                      <button
+                        className={styles.cancelBtn}
+                        onClick={() => handleIndividualDelete(row.id, row.name)}
+                        title={`${row.name}님의 예매를 삭제`}
                       >
-                        취소요청
-                      </span>
-                    )}
-                  </td>
-                </tr>
+                        <img
+                          src={TrashDefault}
+                          alt="삭제"
+                          style={{ width: 20, height: 20 }}
+                        />
+                      </button>
+                      {row.cancel && (
+                        <span
+                          style={{
+                            color: "red",
+                            fontSize: "12px",
+                            marginLeft: "5px",
+                          }}
+                        >
+                          취소요청
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                  {expandedRows.has(row.id) && (
+                    <tr className={styles.expandedRow}>
+                      <td colSpan="9">
+                        <div className={styles.seatContainer}>
+                          <div className={styles.seatLabel}>예약 좌석:</div>
+                          <div className={styles.seatList}>
+                            {row.seats && row.seats.length > 0 ? (
+                              row.seats.map((seat, index) => (
+                                <button
+                                  key={index}
+                                  className={styles.seatItem}
+                                  onClick={() => handleSeatClick(seat)}
+                                  title={`${seat}을 선택하면 좌석 모달이 나타납니다`}
+                                >
+                                  {seat}
+                                </button>
+                              ))
+                            ) : (
+                              <span className={styles.noSeats}>
+                                좌석 정보가 없습니다
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
               ))
             ) : (
               <tr>
@@ -570,6 +627,11 @@ function ManagerHolderList() {
           onClose={handleServerErrorModalClose}
         />
       )}
+      <SeatModal
+        open={seatModalOpen}
+        close={() => setSeatModalOpen(false)}
+        onConfirm={() => {}}
+      />
     </>
   );
 }
