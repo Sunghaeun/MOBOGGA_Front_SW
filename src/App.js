@@ -1,4 +1,4 @@
-// eslint-disable
+/* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 
