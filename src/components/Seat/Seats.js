@@ -241,6 +241,7 @@ function Seats({ seatTicket = [] , onSelectedSeatsChange }) {
       )
     );
     setSelectedSeats(seatTicket ?? []);
+    // eslint-disable-next-line
   }, [seatTicket]);
 
 
