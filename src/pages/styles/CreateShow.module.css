@@ -451,6 +451,7 @@ input[type="number"] {
 .info_txt {
   display: flex;
   width: 100%;
+  align-items: center;
 }
 
 .variable_Info {
