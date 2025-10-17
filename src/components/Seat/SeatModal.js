@@ -19,86 +19,98 @@ const makeSeats = () => {
         id: id++,
         row: r,
         col: c,
-        gridCol,       
+        gridCol,
         reservation: 0,
-        selected: 0
+        selected: 0,
       });
     }
   }
   return arr;
 };
 
-//API 호출 코드로 바꾸기
-const fetchIndexIds = async () => [1, 3, 50, 72, 99]; // 숫자 배열로 반환
-
-
-
-const SeatModal = ({ open, close, onConfirm }) => {
+const SeatModal = ({ open, close, onConfirm, reservedSeats = [] }) => {
   const [seats, setSeats] = useState(() => makeSeats());
 
-  const SEAT_PX = 36;      // 좌석 한 칸
-  const AISLE_WIDTH = 40;  // 통로 폭
+  const SEAT_PX = 36; // 좌석 한 칸
+  const AISLE_WIDTH = 40; // 통로 폭
 
   useEffect(() => {
     let ignore = false;
     (async () => {
-      const ids = await fetchIndexIds(); // 이미 [1,3,5] 형태
+      // reservedSeats가 있으면 사용, 없으면 API 호출
+      const ids =
+        reservedSeats && reservedSeats.length > 0
+          ? reservedSeats
+          : null;
+
       const idSet = new Set(ids);
       if (ignore) return;
-      setSeats(prev => prev.map(s => ({ ...s, selected: idSet.has(s.id) ? 1 : 0 })));
+      setSeats((prev) =>
+        prev.map((s) => ({ ...s, selected: idSet.has(s.id) ? 1 : 0 }))
+      );
     })();
-    return () => { ignore = true; };
-  }, []);
+    return () => {
+      ignore = true;
+    };
+  }, [reservedSeats]);
 
   return (
     <>
-    <div 
-      className={open ? `${styles.openModal} ${styles.modal}` : styles.modal} 
-      onClick={close} // 모달 바깥 클릭 시 닫힘
-    >
-      {open && (
-        <section onClick={(e) => e.stopPropagation()}>
-          <main>
-            <img className={styles.closeB} src={closeButton} alt="Close" onClick={close}/>
-            <div className={styles.topContainer}>
-              <span>예약 좌석 위치</span>
-              <p/><p/>
-            </div>
-
-            <div className={styles.seatGrid}>
-              <span>STAGE</span>
-              <div
-                className={styles.grid}
-                style={{
-                  gridTemplateColumns:
-                    `repeat(${AISLE_AFTER}, ${SEAT_PX}px) ${AISLE_WIDTH}px repeat(${COLS - AISLE_AFTER}, ${SEAT_PX}px)`,
-                  gridAutoRows: `${SEAT_PX}px`,
-                  gap: 8
-                }}
-              >
-                {seats.map(seat => (
-                  <div
-                    key={seat.id}
-                    style={{ gridRowStart: seat.row, gridColumnStart: seat.gridCol }} 
-                  >
-                    <Seat {...seat} />
-                  </div>
-                ))}
+      <div
+        className={open ? `${styles.openModal} ${styles.modal}` : styles.modal}
+        onClick={close} // 모달 바깥 클릭 시 닫힘
+      >
+        {open && (
+          <section onClick={(e) => e.stopPropagation()}>
+            <main>
+              <img
+                className={styles.closeB}
+                src={closeButton}
+                alt="Close"
+                onClick={close}
+              />
+              <div className={styles.topContainer}>
+                <span>예약 좌석 위치</span>
+                <p />
+                <p />
               </div>
-            </div>
 
-
-            <div className={styles.bottomContainer}>
-              <div className={styles.button} onClick={close}>
-                <span>확인</span>
+              <div className={styles.seatGrid}>
+                <span>STAGE</span>
+                <div
+                  className={styles.grid}
+                  style={{
+                    gridTemplateColumns: `repeat(${AISLE_AFTER}, ${SEAT_PX}px) ${AISLE_WIDTH}px repeat(${
+                      COLS - AISLE_AFTER
+                    }, ${SEAT_PX}px)`,
+                    gridAutoRows: `${SEAT_PX}px`,
+                    gap: 8,
+                  }}
+                >
+                  {seats.map((seat) => (
+                    <div
+                      key={seat.id}
+                      style={{
+                        gridRowStart: seat.row,
+                        gridColumnStart: seat.gridCol,
+                      }}
+                    >
+                      <Seat {...seat} />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </main>
-        </section>
-      )}
-    </div>
 
-        </>
+              <div className={styles.bottomContainer}>
+                <div className={styles.button} onClick={close}>
+                  <span>확인</span>
+                </div>
+              </div>
+            </main>
+          </section>
+        )}
+      </div>
+    </>
   );
 };
 

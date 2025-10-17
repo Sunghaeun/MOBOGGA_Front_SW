@@ -371,8 +371,8 @@ function ManagerHolderList() {
     setExpandedRows(newExpanded);
   };
 
-  const handleSeatClick = (seat) => {
-    setSelectedSeat(seat);
+  const handleSeatClick = (reservedSeats) => {
+    setSelectedSeat(reservedSeats);
     setSeatModalOpen(true);
   };
 
@@ -595,11 +595,15 @@ function ManagerHolderList() {
                     <tr className={styles.seatRow}>
                       <td colSpan="9" className={styles.seatRowTd}>
                         <span className={styles.seatLabel}>좌석번호:</span>
-                        <span className={styles.seatText}>
+                        <button
+                          onClick={() => handleSeatClick(row.reservedSeats || [])}
+                          className={styles.seatText}
+                          style={{ cursor: "pointer", border: "none", background: "none", padding: 0, textDecoration: "underline", color: "#007bff" }}
+                        >
                           {row.seats && row.seats.length > 0
                             ? row.seats.join(", ")
                             : "좌석 정보가 없습니다"}
-                        </span>
+                        </button>
                       </td>
                     </tr>
                   )}
@@ -635,6 +639,7 @@ function ManagerHolderList() {
         open={seatModalOpen}
         close={() => setSeatModalOpen(false)}
         onConfirm={() => {}}
+        reservedSeats={selectedSeat || []}
       />
     </>
   );
