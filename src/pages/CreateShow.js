@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import styles from "./styles/CreateShow.module.css";
 import DELETE from "../assets/button_delete.svg";
+import PLACE from "../assets/popover_place.svg";
 import useAuthStore from "../stores/authStore";
 import apiClient from "../utils/apiClient";
 import POSTER from "../assets/poster.png";
@@ -27,6 +28,7 @@ function CreateShow() {
   const [managerPhoneNumber, setManagerPhoneNumber] = useState("");
   const [manager, setManager] = useState("");
   const [seatReservationEnabled, setSeatReservationEnabled] = useState(true);
+  const [selectedPlace, setSelectedPlace] = useState("");
   // eslint-disable-next-line
   const [maxPeople, setMaxPeople] = useState(100);
 
@@ -365,18 +367,122 @@ if (qr instanceof File) {
                 <div className={styles.smallInfo}>
                   *하루만 진행할 경우 같은 날짜로 선택해주세요
                 </div>
+                
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
-                    <span className={styles.info_txt}>장소</span>
+                    <span className={styles.info_txt}>장소 <img src={PLACE} alt="icon" style={{width: 18}}/></span>
                   </span>
-                  <span className={styles.variable_Info}>
-                    <input
-                      type="text"
-                      placeholder="공연 장소"
-                      onChange={(e) => setLocation(e.target.value)}
-                    />
+                  <span
+                    className={styles.variable_Info}
+                    style={{
+                      display: "inline-flex",
+                      justifyContent: "left",
+                      alignItems: "center",
+                    }}
+                  >
+                    <label className={styles.radio}>
+                      <input
+                        type="radio"
+                        name="place"
+                        value="학관 104호"
+                        checked={selectedPlace === "학관 104호"}
+                        onChange={() => {
+                          setSelectedPlace("학관 104호");
+                          setSeatReservationEnabled(true);
+                        }}
+                        className={styles.radioInput}
+                      />
+                      학관 104호
+                    </label>
+                    <label
+                      className={styles.radio}
+                      style={{ marginLeft: "1rem" }}
+                    >
+                      <input
+                        type="radio"
+                        name="place"
+                        value="올네이션스홀"
+                        checked={selectedPlace === "올네이션스홀"}
+                        onChange={() => {setSelectedPlace("올네이션스홀");
+                          setSeatReservationEnabled(false);
+                        }}
+                      />
+                      올네이션스홀
+                    </label>
+                    <label
+                      className={styles.radio}
+                      style={{ marginLeft: "1rem" }}
+                    >
+                      <input
+                        type="radio"
+                        name="place"
+                        value="그레이스홀"
+                        checked={selectedPlace === "그레이스홀"}
+                        onChange={() => {setSelectedPlace("그레이스홀");
+                          setSeatReservationEnabled(false);
+                        }}
+                      />
+                      그레이스홀
+                    </label>
+                    <label
+                      className={styles.radio}
+                      style={{ marginLeft: "1rem" }}
+                    >
+                      <input
+                        type="radio"
+                        name="place"
+                        value="기타"
+                        checked={selectedPlace === "기타"}
+                        onChange={() => {setSelectedPlace("기타");
+                          setSeatReservationEnabled(false);
+                        }}
+                      />
+                      기타
+                    </label>
                   </span>
                 </div>
+                {selectedPlace === "학관 104호" && (
+  <div className={styles.info_Box}style={{marginTop: -20}}>
+    <span className={styles.fixed_Info}>
+    </span>
+    <span
+      className={styles.variable_Info}
+      style={{
+        display: "inline-flex",
+        justifyContent: "left",
+        alignItems: "center",
+        color: "#FF3D12"
+      }}
+    >
+      <label
+        className={styles.radio}
+        style={{ color: "#FF3D12" }}
+      >
+        <input
+          type="radio"
+          name="reservationType"
+          value="firstCome"
+          checked={seatReservationEnabled === false}
+          onChange={() => setSeatReservationEnabled(false)}
+          className={styles.radioInput}
+        />
+        선착순
+      </label>
+      <label className={styles.radio} style={{ marginLeft: "1rem", color: "#FF3D12" }}>
+        <input
+          type="radio"
+          name="reservationType"
+          value="seat"
+          checked={seatReservationEnabled === true}
+          onChange={() => setSeatReservationEnabled(true)}
+          className={styles.radioInput}
+        />
+        좌석예매
+      </label>
+      
+    </span>
+  </div>
+)}
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>러닝타임</span>
