@@ -187,6 +187,7 @@ function Seats({ seatTicket = [] , onSelectedSeatsChange }) {
   // 통로 뒤쪽 좌석은 컬럼을 1칸 밀어서 배치
   const colWithAisle = (col) => (col > AISLE_AFTER ? col + 1 : col);
 
+  // eslint-disable-next-line
   const [selectedSeats, setSelectedSeats] = useState([]);
 
 //   const handleSeatClick = (id) => {

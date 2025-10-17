@@ -164,8 +164,6 @@ function ShowDetail() {
     if (!selectedSch) return setSelectSchOpen(true);
     const id = selectedSch.scheduleId;
   const current = countBySch[id] || 0;
-
-
     const maxAvailable = Math.min(
       selectedSch.maxPeople - selectedSch.applyPeople,
       selectedSch.maxTickets
