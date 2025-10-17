@@ -15,7 +15,7 @@ function ShowDetail() {
   const { user, isLoggedIn, token, authLoading } = useAuthStore();
 
   const [show, setShow] = useState({});
-  const [count, setCount] = useState(1);
+  const [countBySch, setCountBySch] = useState({});
   const [selectedSch, setSelectedSch] = useState(null);
   const [isDisable, setIsDisable] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -119,7 +119,7 @@ function ShowDetail() {
 
     const requestData = {
       scheduleId: selectedSch.scheduleId,
-      wishToPurchaseTickets: count,
+      wishToPurchaseTickets: countBySch[selectedSch.scheduleId] || 0,
     };
 
     try {
@@ -143,40 +143,78 @@ function ShowDetail() {
   const formatPrice = (price) =>
     typeof price === "number" ? price.toLocaleString("ko-KR") : "0";
 
-  useEffect(() => setCount(0), [selectedSch]);
-
   const Minus = () => {
-    setCount((prev) => Math.max(prev - 1, 1));
+     if (!selectedSch) return;
+        const id = selectedSch.scheduleId;
+        const current = countBySch[id] || 0;
+
+  setCountBySch((prev) => ({
+    ...prev,
+    [id]: Math.max(current - 1, 1),
+  }));
   };
   const Plus = () => {
     if (!selectedSch) return setSelectSchOpen(true);
+    const id = selectedSch.scheduleId;
+  const current = countBySch[id] || 0;
+
 
     const maxAvailable = Math.min(
       selectedSch.maxPeople - selectedSch.applyPeople,
       selectedSch.maxTickets
     );
-    if (count < maxAvailable) setCount((prev) => prev + 1);
-    else if (count === selectedSch.maxTickets) setLimitOpen(true);
-    else alert(`현재 ${count}매를 예매할 수 있습니다.`);
-  };
+    if (current < maxAvailable) {
+    setCountBySch((prev) => ({
+      ...prev,
+      [id]: current + 1,
+    }));
+  } else if (current === selectedSch.maxTickets) {
+    setLimitOpen(true);
+  } else {
+    alert(`현재 ${current}매를 예매할 수 있습니다.`);
+  }
+};
 
   const formatDate = (dateString) => {
     if (!dateString) return dateString;
     const parts = dateString.split("-");
-    return parts.length >= 3 ? `${parts[1]}월${parts[2]}일` : dateString;
+    return parts.length >= 3 ? `${parts[0]}.${parts[1]}.${parts[2]}` : dateString;
     // YYYY-MM-DD 가정
   };
+
   const formatTime = (timeString) => {
     if (!timeString) return timeString;
     const parts = timeString.split(":");
     return parts.length >= 2 ? `${parts[0]}시${parts[1]}분` : timeString;
   };
+//요일 구하는 함수
+  const getDayOfWeek = (dateString) => {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+  if (isNaN(date)) return "";
+
+  const days = ["일", "월", "화", "수", "목", "금", "토"];
+  return days[date.getDay()];
+};
 
   // ✅ 회차 변경 시 count 초기화
   const handleSelectSch = (scheduleId) => {
   const sch = show?.scheduleList.find((s) => s?.scheduleId === scheduleId);
   setSelectedSch(sch);
-  setCount(1); // 선택 바뀌면 1로 리셋
+  setCountBySch((prev) => {
+    const updated = { ...prev };
+
+    // 모든 회차 count 0으로 초기화
+    Object.keys(updated).forEach((id) => {
+      updated[id] = 0;
+    });
+
+    // 새로 선택된 회차 count를 1로 설정
+    updated[scheduleId] = 1;
+
+    return updated;
+  });
 };
 
   // 텍스트에 URL이 포함되어 있으면 하이퍼링크로 변환하고, 줄바꿈을 처리하는 함수
@@ -337,8 +375,8 @@ function ShowDetail() {
                         <span className={styles.info_txt}>날짜</span>
                       </span>
                       <span className={styles.variable_Info}>
-                        {show?.startDate || "시작 날짜 정보 없음"} -{" "}
-                        {show?.endDate || "끝 날짜 정보 없음"}
+                        {formatDate(show?.startDate) || "시작 날짜 정보 없음"} -{" "}
+                        {formatDate(show?.endDate) || "끝 날짜 정보 없음"}
                       </span>
                     </div>
 
@@ -412,27 +450,28 @@ function ShowDetail() {
                               onChange={() => handleSelectSch(sch.scheduleId)}
 
                           />
-                          <span>{sch.order}공</span>
-                          <span><span>{sch.date} {" "}{formatTime(sch?.time) || "시간 정보 없음"}</span>
-                          <div>{formatPrice(sch.cost)}원 |{" "}
-                          {isFull ? (
-                            <span className={styles.disabled_Label}>매진</span>
-                          ) : (
-                            <span className={styles.people_Count}>
-                              {" "}
-                              {sch.applyPeople}/{sch.maxPeople}
-                            </span>
-                          )}</div>
-                          <div className={styles.ticket_Btns}>
-                <button className={styles.ticket_Btn} onClick={Minus}>
-                  -
-                </button>
-                <span className={styles.ticket_Count}>{count}</span>
-                <button className={styles.ticket_Btn} onClick={Plus}>
-                  +
-                </button>
-              </div>
-              </span>
+                          <div className={styles.order}>{sch.order}공</div>
+                          <div className={styles.sch_info}>
+                              <span id={styles.time}>{formatDate(sch.date)}({getDayOfWeek(sch.date)}) {" "}{formatTime(sch?.time) || "시간 정보 없음"}</span>
+                            <div id={styles.sch_mid}>{formatPrice(sch.cost)}원  |{"  "}
+                              {isFull ? (
+                                <span className={styles.disabled_Label}>매진</span>
+                              ) : (
+                                <span className={styles.people_Count}>
+                                  {" "}
+                                  {sch.applyPeople}/{sch.maxPeople}
+                                </span>
+                              )}</div>
+                            <div className={styles.ticket_Btns}>
+                              <button className={styles.ticket_Btn} onClick={Minus}>
+                                -
+                              </button>
+                              <span className={styles.ticket_Count}>{countBySch[sch.scheduleId] || 0}</span>
+                              <button className={styles.ticket_Btn} onClick={Plus}>
+                                +
+                              </button>
+                            </div>
+                          </div>
                         </label>
                       );
                     })}
@@ -442,7 +481,7 @@ function ShowDetail() {
             <div className={styles.ticket_Box}>
               <div className={styles.section}>총 금액</div>
               <div className={styles.total}>
-                {formatPrice((selectedSch?.cost || 0) * count)}원
+                {formatPrice((selectedSch?.cost || 0) * (countBySch[selectedSch?.scheduleId] || 0))}원
               </div>
 
               <div className={styles.ticket_Reser}>
@@ -477,7 +516,7 @@ function ShowDetail() {
                           {formatTime(selectedSch.time)}
                         </span>
                       )}{" "}
-                      {count}매
+                      {countBySch[selectedSch?.scheduleId]}매
                     </span>
                   </div>
                   <div className={styles.modal_con}>
@@ -522,7 +561,7 @@ function ShowDetail() {
                           </span>
                           로{" "}
                           <span>
-                            {formatPrice((selectedSch?.cost || 0) * count)}원
+                            {formatPrice((selectedSch?.cost || 0) * countBySch[selectedSch?.scheduleId])}원
                           </span>{" "}
                           송금해주세요.
                         </span>
@@ -626,8 +665,8 @@ function ShowDetail() {
           isPastShow={isPastShow}
           selectedSch={selectedSch}
           setSelectedSch={setSelectedSch}
-          count={count}
-          setCount={setCount}
+          count={countBySch[selectedSch?.scheduleId]}
+          setCount={countBySch}
           isDisable={isDisable}
           setOpen={setOpen}
           setSelectSchOpen={setSelectSchOpen}
