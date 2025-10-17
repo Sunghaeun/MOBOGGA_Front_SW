@@ -167,7 +167,7 @@
 .show_ticket {
   width: 100%;
   margin-top: 40px;
-  margin-bottom: 100px;
+  margin-bottom: 60px;
   justify-content: space-between;
   align-items: flex-start;
   display: flex;
@@ -446,4 +446,12 @@ background: var(--gray-01-background, #FBFBFB);
 
     width: 100vw;
   }
+}
+
+.show_row{
+  display: flex;
+  flex-direction: row;
+  padding-right: 128px;
+  justify-content: space-between;
+  margin-bottom: 160px;
 }

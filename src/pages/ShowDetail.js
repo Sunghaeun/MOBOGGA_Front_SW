@@ -7,6 +7,7 @@ import apiClient from "../utils/apiClient";
 import Modal from "../components/Modal";
 import BACK from "../assets/ShowBackButton.svg";
 import ShowDetailMobile from "../components/ShowDetail/ShowDetailMobile";
+import Seats from "../components/Seat/Seats";
 
 function ShowDetail() {
   const { showId } = useParams();
@@ -28,6 +29,8 @@ function ShowDetail() {
   const [selectSchOpen, setSelectSchOpen] = useState(false);
   const limitOkRef = useRef(null);
   const selectSchOkRef = useRef(null);
+  const [selectedShowId, setSelectedShowId] = useState(null);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   const navigateToPrepage = () => navigate(-1);
 
@@ -120,7 +123,11 @@ function ShowDetail() {
     const requestData = {
       scheduleId: selectedSch.scheduleId,
       wishToPurchaseTickets: count,
+      wishSeats: selectedIds,
     };
+
+    console.log(requestData);
+
 
     try {
       await apiClient.post("/show/detail/reservation", requestData);
@@ -173,9 +180,10 @@ function ShowDetail() {
   };
 
   // ✅ 회차 변경 시 count 초기화
-  const handleSelectSch = (scheduleId) => {
+const handleSelectSch = (scheduleId) => {
   const sch = show?.scheduleList.find((s) => s?.scheduleId === scheduleId);
   setSelectedSch(sch);
+  setSelectedShowId(scheduleId); // 추가
   setCount(1); // 선택 바뀌면 1로 리셋
 };
 
@@ -409,8 +417,8 @@ function ShowDetail() {
                             name="schedule"
                             disabled={isFull}
                             className={styles.ticket_Radio}
-                              onChange={() => handleSelectSch(sch.scheduleId)}
-
+                            onChange={() => handleSelectSch(sch.scheduleId)}
+                            checked={selectedShowId === sch.scheduleId}
                           />
                           <span>{sch.order}공</span>
                           <span><span>{sch.date} {" "}{formatTime(sch?.time) || "시간 정보 없음"}</span>
@@ -438,7 +446,17 @@ function ShowDetail() {
                     })}
               </div>
             </div>
+          </div>
 
+          <div className={styles.show_row}>
+
+            <Seats
+              seatTicket={show.scheduleList?.find(s => s.scheduleId === selectedShowId)?.seatTicket || []}
+              onSelectedSeatsChange={(selectedIds) => {
+                setSelectedIds(selectedIds);
+                console.log("선택된 좌석 인덱스 번호:", selectedIds);
+              }}
+            />
             <div className={styles.ticket_Box}>
               <div className={styles.section}>총 금액</div>
               <div className={styles.total}>
