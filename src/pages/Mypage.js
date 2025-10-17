@@ -154,6 +154,9 @@ function Mypage() {
           />
         </header>
         <div className={styles.mobile_reservlist}>
+          <div className={styles.notice}>
+            *예매 취소 혹은 환불의 경우, 해당 동아리 담당자에게 연락바랍니다.
+          </div>
           {isLoading && (
             <div className={loadingStyles.loading}>
               <div className={loadingStyles.loadingSpinner}></div>
@@ -201,7 +204,8 @@ function Mypage() {
                 </span>
               </div>
               <div className={styles.notice}>
-                *예매 취소 혹은 환불을 원하시는 경우, 해당 공연 동아리 담당자에게 연락바랍니다.
+                *예매 취소 혹은 환불을 원하시는 경우, 해당 공연 동아리
+                담당자에게 연락바랍니다.
               </div>
             </div>
             <div className={styles.reload_btn_box}>

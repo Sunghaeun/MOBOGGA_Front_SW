@@ -124,6 +124,7 @@
   border-bottom: 1px solid #e0e0e0;
   padding: 12px 8px;
   text-align: center;
+  vertical-align: middle;
 }
 
 .table th {
@@ -406,49 +407,33 @@ input:checked + .slider:after {
   transform: rotate(180deg);
 }
 
-.expandedRow {
+.seatRow {
   background-color: #f8fafc;
 }
 
-.seatContainer {
-  padding: 16px;
-  background: #fff;
-  border-radius: 8px;
+.seatRow td {
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 8px;
   text-align: left;
+}
+
+.seatRowTd {
+  padding: 12px 8px !important;
+  text-align: left !important;
 }
 
 .seatLabel {
   font-weight: 600;
-  margin-bottom: 12px;
-  color: #333;
+  color: #ff3d12;
+  white-space: nowrap;
+  display: inline;
+  margin-right: 4px;
 }
 
-.seatList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.seatItem {
-  background: #ff3d12;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 12px;
-  cursor: pointer;
+.seatText {
+  color: #ff3d12;
   font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-}
-
-.seatItem:hover {
-  background: #e6350f;
-  transform: scale(1.05);
-}
-
-.noSeats {
-  color: #999;
-  font-size: 0.9rem;
+  display: inline;
 }
 
 @media (max-width: 900px) {
