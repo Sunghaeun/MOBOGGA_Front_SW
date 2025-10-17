@@ -4,7 +4,7 @@ import styles from "./styles/CreateShow.module.css";
 import DELETE from "../assets/button_delete.svg";
 import useAuthStore from "../stores/authStore";
 import apiClient from "../utils/apiClient";
-import POSTER from "../assets/Poster.svg";
+import POSTER from "../assets/poster.png";
 import Dropdown from "../components/Dropdown";
 
 function CreateShow() {
