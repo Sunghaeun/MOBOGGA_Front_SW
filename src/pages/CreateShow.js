@@ -7,7 +7,6 @@ import apiClient from "../utils/apiClient";
 import POSTER from "../assets/poster.png";
 import Dropdown from "../components/Dropdown";
 import NotReservationSeatModal from "../components/Seat/NotReservationSeatModal";
-import {idToCode} from "../utils/seatUtils";
 
 function CreateShow() {
   const navigate = useNavigate();
