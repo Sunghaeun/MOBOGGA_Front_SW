@@ -326,6 +326,7 @@ function MyReservCard({ data }) {
           open={seatModalOpen}
           close={() => setSeatModalOpen(false)}
           onConfirm={() => setSeatModalOpen(false)}
+          reservedSeats={reservedSeatList}
         />
       )}
     </div>
