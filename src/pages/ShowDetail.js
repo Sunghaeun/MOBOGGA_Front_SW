@@ -143,10 +143,10 @@ function ShowDetail() {
   const formatPrice = (price) =>
     typeof price === "number" ? price.toLocaleString("ko-KR") : "0";
 
-  useEffect(() => setCount(1), [selectedSch]);
+  useEffect(() => setCount(0), [selectedSch]);
 
   const Minus = () => {
-    if (count > 1) setCount(count - 1);
+    setCount((prev) => Math.max(prev - 1, 1));
   };
   const Plus = () => {
     if (!selectedSch) return setSelectSchOpen(true);
@@ -155,7 +155,7 @@ function ShowDetail() {
       selectedSch.maxPeople - selectedSch.applyPeople,
       selectedSch.maxTickets
     );
-    if (count < maxAvailable) setCount(count + 1);
+    if (count < maxAvailable) setCount((prev) => prev + 1);
     else if (count === selectedSch.maxTickets) setLimitOpen(true);
     else alert(`현재 ${count}매를 예매할 수 있습니다.`);
   };
@@ -171,6 +171,13 @@ function ShowDetail() {
     const parts = timeString.split(":");
     return parts.length >= 2 ? `${parts[0]}시${parts[1]}분` : timeString;
   };
+
+  // ✅ 회차 변경 시 count 초기화
+  const handleSelectSch = (scheduleId) => {
+  const sch = show?.scheduleList.find((s) => s?.scheduleId === scheduleId);
+  setSelectedSch(sch);
+  setCount(1); // 선택 바뀌면 1로 리셋
+};
 
   // 텍스트에 URL이 포함되어 있으면 하이퍼링크로 변환하고, 줄바꿈을 처리하는 함수
   const renderWithLinksAndLineBreaks = (text) => {
@@ -377,6 +384,7 @@ function ShowDetail() {
           <div className={styles.show_ticket}>
             <div className={styles.ticket_Box}>
               <div className={styles.section}>공연 회차 선택</div>
+              <div className={styles.count_info}>*한 회차 당 최대 {selectedSch?.maxTickets}매까지 예매 가능합니다</div>
               <div className={styles.selectSch}>
                 {show &&
                   Array.isArray(show.scheduleList) &&
@@ -401,18 +409,12 @@ function ShowDetail() {
                             name="schedule"
                             disabled={isFull}
                             className={styles.ticket_Radio}
-                            onChange={(e) =>
-                              setSelectedSch(
-                                show.scheduleList.find(
-                                  (s) =>
-                                    s?.scheduleId === Number(e.target.value)
-                                )
-                              )
-                            }
+                              onChange={() => handleSelectSch(sch.scheduleId)}
+
                           />
-                          {sch.order}공: {sch.date}{" "}
-                          {sch?.time || "시간 정보 없음"} |{" "}
-                          {formatPrice(sch.cost)}원 |{" "}
+                          <span>{sch.order}공</span>
+                          <span><span>{sch.date} {" "}{formatTime(sch?.time) || "시간 정보 없음"}</span>
+                          <div>{formatPrice(sch.cost)}원 |{" "}
                           {isFull ? (
                             <span className={styles.disabled_Label}>매진</span>
                           ) : (
@@ -420,16 +422,8 @@ function ShowDetail() {
                               {" "}
                               {sch.applyPeople}/{sch.maxPeople}
                             </span>
-                          )}
-                        </label>
-                      );
-                    })}
-              </div>
-            </div>
-
-            <div className={styles.ticket_Box}>
-              <div className={styles.section}>구매 매수</div>
-              <div className={styles.ticket_Btns}>
+                          )}</div>
+                          <div className={styles.ticket_Btns}>
                 <button className={styles.ticket_Btn} onClick={Minus}>
                   -
                 </button>
@@ -438,7 +432,11 @@ function ShowDetail() {
                   +
                 </button>
               </div>
-              <div className={styles.count_info}>예매가능합니다</div>
+              </span>
+                        </label>
+                      );
+                    })}
+              </div>
             </div>
 
             <div className={styles.ticket_Box}>
