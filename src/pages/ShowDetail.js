@@ -42,7 +42,6 @@ function ShowDetail() {
 
       const _res = await apiClient.get(`/show/detail/${showId}`);
       setShow(_res.data || {});
-      console.log(_res.data);
       setError(null);
     } catch (err) {
       // fetch error handled below
@@ -118,6 +117,12 @@ function ShowDetail() {
       return;
     }
 
+    const needCount = countBySch[selectedSch.scheduleId] || 0;
+    if (selectedIds.length !== needCount) {
+      alert(`좌석을 ${needCount}개 선택해주세요.`);
+      return;
+    }
+
     if (!isLoggedIn) {
       setOpen(false);
       setFailModalOpen(true);
@@ -130,7 +135,6 @@ function ShowDetail() {
       wishSeats: selectedIds,
     };
 
-    console.log(requestData);
 
 
     try {
@@ -505,7 +509,6 @@ const handleSelectSch = (scheduleId) => {
               maxSelectable={countBySch[selectedShowId] || 1}
               onSelectedSeatsChange={(ids) => {
                 setSelectedIds(ids);
-                console.log("선택된 좌석 인덱스 번호:", ids);
               }}
             />
             <div className={styles.ticket_Box}>
