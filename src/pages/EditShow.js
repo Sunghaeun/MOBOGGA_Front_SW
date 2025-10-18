@@ -181,7 +181,7 @@ function EditShow() {
       // API 요청
       const res = await apiClient.get(`/manager/show/update/${id}`);
       // 응답 수신: res.data 사용
-      console.log("Show data received:", res.data);
+      // console.log("Show data received:", res.data);
       const src = res.data ?? {};
       setName(src.name ?? "");
       setLocation(src.location ?? "");

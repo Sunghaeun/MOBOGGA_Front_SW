@@ -213,7 +213,7 @@ if (qr instanceof File) {
         }`
       );
     }
-    console.log("최종 requestData:", requestData);
+    // console.log("최종 requestData:", requestData);
   };
 
   const handlename = (e) => {
