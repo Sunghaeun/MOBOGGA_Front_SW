@@ -181,7 +181,7 @@ function EditShow() {
       // API 요청
       const res = await apiClient.get(`/manager/show/update/${id}`);
       // 응답 수신: res.data 사용
-
+      console.log("Show data received:", res.data);
       const src = res.data ?? {};
       setName(src.name ?? "");
       setLocation(src.location ?? "");
@@ -235,7 +235,7 @@ function EditShow() {
       setShows(mapped);
 
       // 이미지 URL
-      const serverPoster = src.photo || src.posterUrl || "";
+      const serverPoster = src.photo || src.posterUrl || src.poster || "";
       const serverQr = src.qr || src.qrUrl || "";
       setPosterUrl(serverPoster);
       setQrUrl(serverQr);
