@@ -65,32 +65,23 @@ import SeatTest from "./pages/SeatTest";
 // 로케이션에 따라 헤더/푸터 조건부 렌더링
 function LayoutContent() {
   const location = useLocation();
-  const isComingSoon = location.pathname === "/";
+  const isLanding = location.pathname === "/";
 
   const { isServerDown, retryConnection, closeModal } = useServerStatus();
 
-  // ComingSoon 페이지일 때 body 스크롤 비활성화 및 main padding 제거
+  // Landing 페이지일 때 body 스크롤 비활성화 (Header와 Footer는 표시)
   useEffect(() => {
-    const mainElement = document.querySelector("main");
-    if (isComingSoon) {
-      document.body.style.overflow = "hidden";
-      if (mainElement) {
-        mainElement.style.paddingTop = "0";
-      }
+    if (isLanding) {
+      // Landing 페이지에서는 body 스크롤만 제어하고 Header/Footer는 표시
+      document.body.style.overflow = "auto";
     } else {
       document.body.style.overflow = "auto";
-      if (mainElement) {
-        mainElement.style.paddingTop = "";
-      }
     }
 
     return () => {
       document.body.style.overflow = "auto";
-      if (mainElement) {
-        mainElement.style.paddingTop = "";
-      }
     };
-  }, [isComingSoon]);
+  }, [isLanding]);
 
   const handleRetry = async () => {
     const success = await retryConnection();
@@ -102,12 +93,11 @@ function LayoutContent() {
 
   return (
     <div className="App">
-      {!isComingSoon && <Header />}
+      <Header />
       <main>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<ComingSoon />} />
-          {/* <Route path="/" element={<Landing />} /> */}
+          <Route path="/" element={<Landing />} />
           <Route path="/main" element={<Main />} />
           <Route path="/show/experience" element={<Main />} />
           <Route path="/show/street" element={<Main />} />
@@ -166,7 +156,7 @@ function LayoutContent() {
           <Route path="/seattest" element={<SeatTest />} />
         </Routes>
       </main>
-      {!isComingSoon && <Footer />}
+      <Footer />
 
       {/* 서버 다운 모달 */}
       <ServerDownModal

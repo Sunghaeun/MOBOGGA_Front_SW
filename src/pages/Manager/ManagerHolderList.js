@@ -630,12 +630,10 @@ function ManagerHolderList() {
                             border: "none",
                             background: "none",
                             padding: 0,
-                            textDecoration: "underline",
-                            color: "#007bff",
                           }}
                         >
                           {row.seats && row.seats.length > 0
-                            ? row.seats.join(", ")
+                            ? row.seats.join(", ") + " >"
                             : "좌석 정보가 없습니다"}
                         </button>
                       </td>

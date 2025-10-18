@@ -71,7 +71,7 @@ function ShowList() {
       // console.log("Fetching show data from /attraction/list"); // 디버깅용
       const res = await apiClient.get("/attraction/list");
       // console.log("API Response:", res); // 디버깅용
-      console.log("Response data:", res.data); // 디버깅용
+      // console.log("Response data:", res.data); // 디버깅용
 
       if (!res.data || !res.data.entireList) {
         throw new Error("Invalid response structure");
