@@ -100,16 +100,18 @@
 }
 
 .modal_top {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
+  color: var(--gray-10-typo-color, #121212);
   text-align: center;
-  line-height: 1.4;
+
+  /* Body 01 _ SB */
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 33px; /* 165% */
 }
 
 .modal_con {
   font-size: 14px;
-  color: #666;
   text-align: center;
   line-height: 1.4;
 }
@@ -121,35 +123,45 @@
 }
 
 .modal_close_Btn {
-  padding: 12px 24px;
-  background: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  display: inline-flex;
+  padding: 4px 24px;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--gray-01-background, #fbfbfb);
+  color: var(--main-02, #ff3d12);
+
+  /* Body 04 _ R */
   font-size: 14px;
-  font-weight: 500;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 171.429% */
 }
 
 .modal_close_Btn:hover {
+  cursor: pointer;
   background: #e8e8e8;
-  border-color: #bbb;
 }
 
 .modal_ok_Btn {
-  padding: 12px 24px;
-  background: #ff4757;
-  border: 1px solid #ff4757;
-  border-radius: 8px;
+  display: inline-flex;
+  padding: 4px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--main-02, #ff3d12);
+  background: var(--main-02, #ff3d12);
+  color: var(--gray-01-background, #fbfbfb);
+
+  /* Body 04 _ R */
   font-size: 14px;
-  font-weight: 500;
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 171.429% */
 }
 
 .modal_ok_Btn:hover {
-  background: #ff3742;
+  cursor: pointer;
+  background: var(--DEEP-ORANGE, #ff1a00);
   border-color: #ff3742;
 }

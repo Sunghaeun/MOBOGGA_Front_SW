@@ -27,7 +27,7 @@ function ManagerProfileInfoCard({ formData }) {
             <div className={styles.detail_body}>{formData.clubName}</div>
           </div>
           <div className={styles.detail_box}>
-            <div className={styles.detail_head}>담당자 </div>
+            <div className={styles.detail_head}>관리자 </div>
             <div className={styles.detail_body}>{formData.name}</div>
           </div>
           <div className={styles.detail_box}>
