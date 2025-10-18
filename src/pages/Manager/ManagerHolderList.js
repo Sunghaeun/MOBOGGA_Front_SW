@@ -2,9 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./styles/ManagerHolderList.module.css";
-import TrashDefault from "../../assets/icons/trash_default.svg";
-import PaidIcon from "../../assets/icons/paid_icon.svg";
-import UnpaidIcon from "../../assets/icons/nopaid_icon.svg";
 import LoginOverModal from "../../components/Mypage/LoginOverModal";
 import ServerErrorModal from "../../components/Mypage/ServerErrorModal";
 import SeatModal from "../../components/Seat/SeatModal";
@@ -412,6 +409,7 @@ function ManagerHolderList() {
             : "미입금",
         cancel: item.cancelRequest || false,
         seats: seatCodes,
+        reservedSeats: item.reservedSeats || [],
       };
     });
 
@@ -471,33 +469,48 @@ function ManagerHolderList() {
           >
             CSV 추출 ({holderData.reservation_list?.length || 0}건)
           </button>
+          <button
+            className={styles.batchBtn}
+            onClick={() => handleBatchPaymentUpdate(true)}
+            disabled={selectedReservations.size === 0}
+            title={
+              selectedReservations.size > 0
+                ? `선택된 ${selectedReservations.size}건의 예매자를 입금완료로 변경`
+                : "변경할 예매자를 선택해주세요"
+            }
+          >
+            입금완료 처리
+          </button>
+          <button
+            className={styles.batchBtn}
+            onClick={() => handleBatchPaymentUpdate(false)}
+            disabled={selectedReservations.size === 0}
+            title={
+              selectedReservations.size > 0
+                ? `선택된 ${selectedReservations.size}건의 예매자를 미입금으로 변경`
+                : "변경할 예매자를 선택해주세요"
+            }
+          >
+            미입금 처리
+          </button>
+          <button
+            className={styles.batchBtn}
+            onClick={handleBatchDelete}
+            disabled={selectedReservations.size === 0}
+            title={
+              selectedReservations.size > 0
+                ? `선택된 ${selectedReservations.size}건의 예매자를 삭제`
+                : "삭제할 예매자를 선택해주세요"
+            }
+          >
+            선택 삭제
+          </button>
 
           {showBatchActions && (
             <div className={styles.batchActions}>
               <span className={styles.selectedCount}>
                 {selectedReservations.size}개 선택됨
               </span>
-              <button
-                className={styles.batchBtn}
-                onClick={() => handleBatchPaymentUpdate(true)}
-                title="선택된 예매자들을 입금완료로 변경"
-              >
-                입금완료 처리
-              </button>
-              <button
-                className={styles.batchBtn}
-                onClick={() => handleBatchPaymentUpdate(false)}
-                title="선택된 예매자들을 미입금으로 변경"
-              >
-                미입금 처리
-              </button>
-              <button
-                className={styles.batchDeleteBtn}
-                onClick={handleBatchDelete}
-                title="선택된 예매자들을 삭제"
-              >
-                선택 삭제
-              </button>
             </div>
           )}
         </div>
@@ -520,7 +533,7 @@ function ManagerHolderList() {
               <th>매수</th>
               <th>가격</th>
               <th>입금상태</th>
-              <th>삭제</th>
+              <th>예매취소</th>
             </tr>
           </thead>
           <tbody>
@@ -572,11 +585,23 @@ function ManagerHolderList() {
                         onClick={() => handleIndividualDelete(row.id, row.name)}
                         title={`${row.name}님의 예매를 삭제`}
                       >
-                        <img
-                          src={TrashDefault}
-                          alt="삭제"
-                          style={{ width: 20, height: 20 }}
-                        />
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 14 14"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          style={{
+                            strokeWidth: "1px",
+                            stroke: "var(--Gray-08, #3E3E3E)",
+                          }}
+                        >
+                          <path
+                            d="M13 1L1 13M13 13L1 1.00001"
+                            stroke="#3E3E3E"
+                            strokeLinecap="round"
+                          />
+                        </svg>
                       </button>
                       {row.cancel && (
                         <span
@@ -596,9 +621,18 @@ function ManagerHolderList() {
                       <td colSpan="9" className={styles.seatRowTd}>
                         <span className={styles.seatLabel}>좌석번호:</span>
                         <button
-                          onClick={() => handleSeatClick(row.reservedSeats || [])}
+                          onClick={() =>
+                            handleSeatClick(row.reservedSeats || [])
+                          }
                           className={styles.seatText}
-                          style={{ cursor: "pointer", border: "none", background: "none", padding: 0, textDecoration: "underline", color: "#007bff" }}
+                          style={{
+                            cursor: "pointer",
+                            border: "none",
+                            background: "none",
+                            padding: 0,
+                            textDecoration: "underline",
+                            color: "#007bff",
+                          }}
                         >
                           {row.seats && row.seats.length > 0
                             ? row.seats.join(", ")

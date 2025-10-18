@@ -23,11 +23,9 @@
   background: #ff3d12;
   color: #fff;
   border: none;
-  border-radius: 4px;
   padding: 8px 18px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -43,14 +41,27 @@
   opacity: 0.6;
 }
 
+.batchBtn {
+  color: black;
+  border: 1px solid var(--BLACK);
+  padding: 8px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #FBFBFB;
+}
+
+.batchBtn:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
 .batchActions {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  background: #f0f8ff;
-  border: 1px solid #d1e7ff;
-  border-radius: 6px;
   margin-left: auto;
 }
 
@@ -59,46 +70,6 @@
   font-weight: 600;
   font-size: 0.9rem;
   margin-right: 8px;
-}
-
-.batchBtn {
-  background: #3b82f6;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.batchBtn:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
-}
-
-.batchDeleteBtn {
-  background: #dc2626;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.batchDeleteBtn:hover {
-  background: #b91c1c;
-  transform: translateY(-1px);
 }
 
 .selectBtn,
@@ -148,11 +119,6 @@
 
 .table tbody tr:hover {
   background-color: #f8fafc;
-}
-
-.table tbody tr:has(input[type="checkbox"]:checked) {
-  background-color: #eff6ff;
-  border-left: 3px solid #3b82f6;
 }
 
 .statusPaid {
