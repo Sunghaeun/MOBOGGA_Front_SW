@@ -5,7 +5,7 @@ import Seat from "./Seat";
 
 import selected from "../../assets/seat/seatSelcted_26.svg";
 
-function Seats({ seatTicket = [] , onSelectedSeatsChange }) {
+function Seats({ seatTicket = [], selectedIds = [], maxSelectable = 1, onSelectedSeatsChange = () => {} }) {
   const [seats, setSeats] = useState([
     // row 1 (ids 1~12)
     { id: 1, row: 1, col: 1, reservation: 0, selected: 0 },
@@ -176,6 +176,7 @@ function Seats({ seatTicket = [] , onSelectedSeatsChange }) {
     { id: 144, row: 12, col: 12, reservation: 0, selected: 0 }
   ]);
 
+  /*
   const COLS = 12;         // 총 좌석 열 수
   const AISLE_AFTER = 6;   // 6열 뒤에 통로
   const SEAT_PX = 36;      // 좌석 한 칸 너비
@@ -227,6 +228,38 @@ function Seats({ seatTicket = [] , onSelectedSeatsChange }) {
     }
   };
 
+  // const handleSelectSch = (scheduleId) => {
+  //   const sch = show?.scheduleList.find((s) => s?.scheduleId === scheduleId);
+  //   setSelectedSch(sch);
+  //   setSelectedShowId(scheduleId);
+
+  //   // ✅ 좌석 선택 초기화 (부모 상태)
+  //   setSelectedIds([]);
+
+  //   setCountBySch((prev) => {
+  //     const updated = { ...prev };
+  //     Object.keys(updated).forEach((id) => (updated[id] = 0));
+  //     updated[scheduleId] = 1;
+  //     return updated;
+  //   });
+  // };
+
+  useEffect(() => {
+    // seatTicket 의미에 따라 reservation 값을 정하세요.
+    // (예: seatTicket이 '선택 가능 좌석 id' 목록이면 includes -> reservation=0)
+    setSeats((prev) =>
+      prev.map((seat) => ({
+        ...seat,
+        selected: 0,                                         // ✅ 선택 초기화
+        reservation: seatTicket.includes(seat.id) ? 0 : 1,   // 필요 시 반대로
+      }))
+    );
+    setSelectedSeats([]);
+    onSelectedSeatsChange([]); // 부모에도 초기화 반영
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seatTicket]);
+
+
   useEffect(() => {
     if (!seatTicket || seatTicket.length === 0) {
       setSeats(seats);
@@ -243,6 +276,64 @@ function Seats({ seatTicket = [] , onSelectedSeatsChange }) {
     setSelectedSeats(seatTicket ?? []);
     // eslint-disable-next-line
   }, [seatTicket]);
+
+  useEffect(() => {
+    setSeats(prev =>
+      prev.map(seat => ({
+        ...seat,
+        selected: (selectedIds ?? []).includes(seat.id) ? 1 : 0
+      }))
+    );
+  }, [selectedIds]);*/
+
+  const COLS = 12;
+  const AISLE_AFTER = 6;
+  const SEAT_PX = 36;
+  const AISLE_WIDTH = 28;
+
+  const gridTemplateColumns =
+    `repeat(${AISLE_AFTER}, ${SEAT_PX}px) ${AISLE_WIDTH}px repeat(${COLS - AISLE_AFTER}, ${SEAT_PX}px)`;
+
+  const colWithAisle = (col) => (col > AISLE_AFTER ? col + 1 : col);
+
+  // 회차/좌석 제한 정보가 바뀔 때마다 좌석 예약/선택 상태 초기화
+  useEffect(() => {
+    setSeats(prev =>
+      prev.map(seat => ({
+        ...seat,
+        reservation: seatTicket.includes(seat.id) ? 0 : 1,
+        selected: (selectedIds ?? []).includes(seat.id) ? 1 : 0
+      }))
+    );
+  }, [seatTicket, selectedIds]);
+
+  // 좌석 클릭 시 선택 상태 토글 및 부모에 전달
+  const handleSeatClick = (id) => {
+    // 현재 선택된 좌석 수
+    const currentSelected = seats.filter(seat => seat.selected === 1).map(seat => seat.id);
+
+    // 선택 해제는 항상 허용
+    const isAlreadySelected = currentSelected.includes(id);
+    if (!isAlreadySelected && currentSelected.length >= maxSelectable) {
+      alert(`최대 ${maxSelectable}개 좌석만 선택할 수 있습니다.`);
+      return;
+    }
+
+    setSeats(prev =>
+      prev.map(seat =>
+        seat.id === id
+          ? { ...seat, selected: seat.selected === 1 ? 0 : 1 }
+          : seat
+      )
+    );
+
+    // 클릭 후 선택된 좌석 id 배열 추출
+    const newSelectedIds = isAlreadySelected
+      ? currentSelected.filter(sid => sid !== id)
+      : [...currentSelected, id];
+
+    onSelectedSeatsChange(newSelectedIds);
+  };
 
 
   return (
