@@ -702,7 +702,11 @@ if (qr instanceof File) {
               <div>시간</div>
               <div>구매제한매수</div>
               <div>가격</div>
-              <div>제한석 설정</div>
+              {seatReservationEnabled && (
+                  <>
+                    <div>제한석 설정</div>
+                  </>
+              )}
               <div>회차추가</div>
               <div>삭제</div>
             </div>
@@ -854,9 +858,13 @@ if (qr instanceof File) {
                   />
                   원
                 </div>
-                <div className={styles.modal_btn} onClick={() => openNotReservationSeatModal(show.id)}>
-                  설정
-                </div>
+                {seatReservationEnabled && (
+                  <>
+                    <div className={styles.modal_btn} onClick={() => openNotReservationSeatModal(show.id)}>
+                      설정
+                    </div>
+                </>
+                )}
                 <div className={styles.add_show} onClick={handleAddRow}>
                   추가
                 </div>
