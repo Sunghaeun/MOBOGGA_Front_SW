@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import styles from "./styles/CreateShow.module.css";
 import DELETE from "../assets/button_delete.svg";
 import PLACE from "../assets/popover_place.svg";
@@ -287,6 +287,9 @@ if (qr instanceof File) {
     document.body.style.removeProperty("overflow");
   };
 
+  useEffect(() => {
+    setLocation(selectedPlace);
+  }, [selectedPlace]);
 
   return (
     <>
