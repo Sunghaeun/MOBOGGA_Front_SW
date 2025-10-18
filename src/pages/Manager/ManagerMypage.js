@@ -113,8 +113,6 @@ function ManagerMypage() {
         // data structure issue
         throw new Error("공연 내역 데이터 형식이 올바르지 않습니다.");
       }
-      console.log("Reservation List Data:", data.reservationList);
-
       setReservManageCards(data.reservationList || []);
       // reservation data set
     } catch (err) {

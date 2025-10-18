@@ -112,7 +112,7 @@ function ReservManageCard({ data, onDeleted }) {
           <div className={styles.modal_top}>
             정말로 이 공연을 삭제하시겠습니까?
           </div>
-          <div className={styles.modal_con}>이 작업은 되돌릴 수 없습니다.</div>
+          <div className={styles.modal_con}>회차에 연결된 공연이 삭제되며,<br/> 삭제한 공연은 복구할 수 없으니 신중히 진행해주세요.</div>
           <div className={styles.modal_Btns}>
             <button
               onClick={closeDeleteModal}
@@ -121,7 +121,7 @@ function ReservManageCard({ data, onDeleted }) {
               취소
             </button>
             <button onClick={confirmDelete} className={styles.modal_ok_Btn}>
-              삭제
+              삭제하기
             </button>
           </div>
         </div>
