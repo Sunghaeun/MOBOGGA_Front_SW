@@ -26,7 +26,7 @@ function ComingSoon() {
             현재<span className={styles.highlight}> 서버 점검</span> 중입니다.
             <br />
             <div className={styles.subText}>
-              <span style={{ fontSize: "24px" }}>점검 시간: 2025.10.17(금) 20시 ~ 24시 (4시간)</span>
+              <span style={{ fontSize: "24px" }}>빠른 시일 내에 완료될 예정입니다.</span>
               <br />
               <br />
               {/* <span style={{ fontSize: "14px", opacity: 0.8 }}>
