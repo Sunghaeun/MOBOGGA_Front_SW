@@ -98,6 +98,7 @@ function LayoutContent() {
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<ComingSoon />} />
+          <Route path="/main" element={<Main />} />
           {/* <Route path="/" element={<Landing />} />
           <Route path="/main" element={<Main />} />
           <Route path="/show/experience" element={<Main />} />
