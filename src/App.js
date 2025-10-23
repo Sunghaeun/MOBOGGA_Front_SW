@@ -97,9 +97,7 @@ function LayoutContent() {
       <main>
         <ScrollToTop />
         <Routes>
-          <Route path="/" element={<ComingSoon />} />
-          <Route path="/main" element={<Main />} />
-          {/* <Route path="/" element={<Landing />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/main" element={<Main />} />
           <Route path="/show/experience" element={<Main />} />
           <Route path="/show/street" element={<Main />} />
@@ -155,7 +153,7 @@ function LayoutContent() {
           <Route path="/manager/club/:id" element={<ManageClubDetail />} />
           <Route path="/kakaolinktest" element={<KakaoLinkButton />} />
           <Route path="/tosslinktest" element={<TossAppLauncher />} />
-          <Route path="/seattest" element={<SeatTest />} /> */}
+          <Route path="/seattest" element={<SeatTest />} />
         </Routes>
       </main>
       <Footer />
