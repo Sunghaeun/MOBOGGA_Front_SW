@@ -659,7 +659,7 @@ function EditShow() {
                   </div>
                 )}
 
-                <div className={styles.smallInfo}>
+                <div className={styles.smallInfo} style={{ color: "#D50024" }}>
                   * 장소 및 예매 방식은 수정 불가합니다
                 </div>
 
@@ -951,11 +951,17 @@ function EditShow() {
                   원
                 </div>
 
-                {/* ✅ 좌석예매일 때만 VIP석 설정 버튼 표시 */}
                 {seatReservationEnabled && (
                   <>
-                    <div className={styles.modal_btn} onClick={() => openNotReservationSeatModal(show.seatId)}> 
-                      설정
+                    <div 
+                      className={`${styles.modal_btn} ${show.id !== null ? styles.disabled_btn : ''}`}
+                      onClick={() => {
+                        if (show.id === null) { // ✅ 새 회차만 클릭 가능
+                          openNotReservationSeatModal(show.seatId);
+                        }
+                      }}
+                    > 
+                      {show.id !== null ? '수정불가' : '설정'}
                     </div>
                   </>
                 )}
