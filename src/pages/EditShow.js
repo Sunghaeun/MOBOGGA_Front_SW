@@ -50,6 +50,8 @@ function EditShow() {
 
   const [posterPreview, setPosterPreview] = useState(null);
   const [qrPreview, setQrPreview] = useState(null);
+  const [selectedSeatCount, setSelectedSeatCount] = useState(0);
+  
 
   const [shows, setShows] = useState([
     {
@@ -60,7 +62,7 @@ function EditShow() {
       time: "",
       cost: "",
       maxTicket: 1,
-      maxPeople: 100,
+      maxPeople: 144,
       seatTicket: [], // ✅ seatTicket 추가
     },
   ]);
@@ -78,6 +80,11 @@ function EditShow() {
 
   const handleConfirmFromModal = (ids) => {
     if (selectedShowId == null) return;
+
+    const seatCount = ids.length;
+    setSelectedSeatCount(seatCount);
+    const newMaxPeople = 144 - seatCount;
+
     setShows((prev) =>
       prev.map((s) => {
         if (s.seatId !== selectedShowId) return s;
@@ -85,15 +92,16 @@ function EditShow() {
         // ✅ id가 null이면 새 회차, 아니면 기존 회차
         if (s.id === null) {
           console.log("새 회차에 editSeats 저장:", ids);
-          return { ...s, editSeats: ids }; // 새 회차는 editSeats에 저장
+          return { ...s, editSeats: ids , maxPeople: newMaxPeople }; // 새 회차는 editSeats에 저장
         } else {
           console.log("기존 회차에 seatTicket 저장:", ids);
-          return { ...s, seatTicket: ids }; // 기존 회차는 seatTicket에 저장
+          return { ...s, seatTicket: ids, maxPeople: newMaxPeople }; // 기존 회차는 seatTicket에 저장
         }
       })
     );
   
     setNotReservationSeatModalOpen(false);
+    setSeatReservationEnabled(true);
     setSelectedShowId(null);
     document.body.style.removeProperty("overflow");
   };
@@ -331,7 +339,7 @@ function EditShow() {
         time: toHms(s.time),
         cost: Number(s.cost),
         maxTicket: Number(s.maxTicket) || 0,
-        maxPeople: Number(s.maxPeople) || 100,
+        maxPeople: Number(s.maxPeople) || 144,
         editSeats: s.editSeats || [],
       })),
     };
@@ -410,7 +418,7 @@ function EditShow() {
           timeMinute: "00",
           cost: "",
           maxTicket: 1,
-          maxPeople: 100,
+          maxPeople: 144,
           seatTicket: [],
           editSeats: [],
         },

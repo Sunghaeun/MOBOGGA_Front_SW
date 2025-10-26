@@ -30,7 +30,7 @@ function CreateShow() {
   const [seatReservationEnabled, setSeatReservationEnabled] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState("");
   // eslint-disable-next-line
-  const [maxPeople, setMaxPeople] = useState(100);
+  const [maxPeople, setMaxPeople] = useState(144);
 
   const [accountNumber, setAccountNumber] = useState("");
   const [accouuntName, setAccountName] = useState(""); // 기존 변수명 유지 (오타 포함)
@@ -38,6 +38,7 @@ function CreateShow() {
   const [introductionLetter, setIntroductionLetter] = useState("");
   const [noticeLetter, setNoticeLetter] = useState("");
   const [earlyBird, setEarlyBird] = useState(false);
+  const [selectedSeatCount, setSelectedSeatCount] = useState(0);
 
   // eslint-disable-next-line
   const [maxTickets, setMaxTickets] = useState("");
@@ -61,7 +62,7 @@ function CreateShow() {
       minute: "00",
       cost: "",
       maxTicket: 1,
-      maxPeople: 100,
+      maxPeople: 144,
       seatTicket: [],
     },
   ]);
@@ -167,7 +168,7 @@ function CreateShow() {
         time: toHmsFromHM(s.hour, s.minute),
         cost: Number(s.cost),
         maxTicket: Number(s.maxTicket) || 0,
-        maxPeople: Number(s.maxPeople) || 100,
+        maxPeople: Number(s.maxPeople) || 144,
         seatTicket: s.seatTicket,
       })),
     };
@@ -258,7 +259,7 @@ function CreateShow() {
           minute: "00",
           cost: "",
           maxTicket: 1,
-          maxPeople: 100,
+          maxPeople: 144,
           seatTicket: [],
         },
       ];
@@ -291,11 +292,17 @@ function CreateShow() {
 
   const handleConfirmFromModal = (ids) => {
     if (selectedShowId == null) return;
-      setShows((prev) =>
-        prev.map((s) =>
-          s.id === selectedShowId ? { ...s, seatTicket: ids } : s
-        )
-      );
+
+    const seatCount = ids.length;
+    setSelectedSeatCount(seatCount);
+    const newMaxPeople = 144 - seatCount;
+    
+    setShows((prev) =>
+      prev.map((s) =>
+        s.id === selectedShowId ? { ...s, seatTicket: ids, maxPeople: newMaxPeople } : s
+      )
+    );
+
     setNotReservationSeatModalOpen(false);
     setSeatReservationEnabled(true);
     setSelectedShowId(null);
