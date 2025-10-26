@@ -27,10 +27,10 @@ function CreateShow() {
   const [runtime, setRunTime] = useState("");
   const [managerPhoneNumber, setManagerPhoneNumber] = useState("");
   const [manager, setManager] = useState("");
-  const [seatReservationEnabled, setSeatReservationEnabled] = useState(true);
+  const [seatReservationEnabled, setSeatReservationEnabled] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState("");
   // eslint-disable-next-line
-  const [maxPeople, setMaxPeople] = useState(100);
+  const [maxPeople, setMaxPeople] = useState(144);
 
   const [accountNumber, setAccountNumber] = useState("");
   const [accouuntName, setAccountName] = useState(""); // 기존 변수명 유지 (오타 포함)
@@ -38,6 +38,7 @@ function CreateShow() {
   const [introductionLetter, setIntroductionLetter] = useState("");
   const [noticeLetter, setNoticeLetter] = useState("");
   const [earlyBird, setEarlyBird] = useState(false);
+  const [selectedSeatCount, setSelectedSeatCount] = useState(0);
 
   // eslint-disable-next-line
   const [maxTickets, setMaxTickets] = useState("");
@@ -58,10 +59,10 @@ function CreateShow() {
       order: 1,
       date: "",
       hour: "",
-      minute: "",
+      minute: "00",
       cost: "",
       maxTicket: 1,
-      maxPeople: 100,
+      maxPeople: 144,
       seatTicket: [],
     },
   ]);
@@ -119,8 +120,8 @@ function CreateShow() {
     }
 
     if (!name) return alert("제목을 입력해 주세요");
-    if (!poster || !(poster instanceof File))
-      return alert("공연 이미지를 선택해 주세요");
+    // if (!poster || !(poster instanceof File))
+    //   return alert("공연 이미지를 선택해 주세요");
 
     if (!location) return alert("장소를 입력해 주세요");
     if (!runtime || Number(runtime) <= 0)
@@ -167,10 +168,11 @@ function CreateShow() {
         time: toHmsFromHM(s.hour, s.minute),
         cost: Number(s.cost),
         maxTicket: Number(s.maxTicket) || 0,
-        maxPeople: Number(s.maxPeople) || 100,
+        maxPeople: Number(s.maxPeople) || 144,
         seatTicket: s.seatTicket,
       })),
     };
+    console.log("최종 requestData:", requestData);
 
     // 3) FormData (파트명 정확히: poster / request / qr)
     const formData = new FormData();
@@ -178,13 +180,27 @@ function CreateShow() {
       "request",
       new Blob([JSON.stringify(requestData)], { type: "application/json" })
     );
-    formData.append("poster", poster, "poster.jpg");
-if (qr instanceof File) {
-  formData.append("qr", qr,"qr.jpg");
-}else {
-  // 빈 Blob 객체를 전송 (서버에서 파일 필드를 기대할 때 사용)
-  formData.append("qr", new Blob([]), "");
-}
+
+    if (poster instanceof File) {
+      formData.append("poster", poster, "poster.jpg");
+    } else {
+      // POSTER 이미지를 Blob으로 변환
+      try {
+        const response = await fetch(POSTER);
+        const blob = await response.blob();
+        formData.append("poster", blob, "default-poster.png");
+      } catch (error) {
+        console.error("기본 포스터 로드 실패:", error);
+        formData.append("poster", new Blob([]), "");
+      }
+    }
+
+    if (qr instanceof File) {
+      formData.append("qr", qr,"qr.jpg");
+    }else {
+      // 빈 Blob 객체를 전송 (서버에서 파일 필드를 기대할 때 사용)
+      formData.append("qr", new Blob([]), "");
+    }
 
 
     // Debug info removed: requestData and FormData remain unchanged.
@@ -240,10 +256,10 @@ if (qr instanceof File) {
           order: prev.length + 1,
           date: "",
           hour: "",
-          minute: "",
+          minute: "00",
           cost: "",
           maxTicket: 1,
-          maxPeople: 100,
+          maxPeople: 144,
           seatTicket: [],
         },
       ];
@@ -276,11 +292,17 @@ if (qr instanceof File) {
 
   const handleConfirmFromModal = (ids) => {
     if (selectedShowId == null) return;
-      setShows((prev) =>
-        prev.map((s) =>
-          s.id === selectedShowId ? { ...s, seatTicket: ids } : s
-        )
-      );
+
+    const seatCount = ids.length;
+    setSelectedSeatCount(seatCount);
+    const newMaxPeople = 144 - seatCount;
+    
+    setShows((prev) =>
+      prev.map((s) =>
+        s.id === selectedShowId ? { ...s, seatTicket: ids, maxPeople: newMaxPeople } : s
+      )
+    );
+
     setNotReservationSeatModalOpen(false);
     setSeatReservationEnabled(true);
     setSelectedShowId(null);
@@ -391,7 +413,6 @@ if (qr instanceof File) {
                         checked={selectedPlace === "학관 104호"}
                         onChange={() => {
                           setSelectedPlace("학관 104호");
-                          setSeatReservationEnabled(true);
                         }}
                         className={styles.radioInput}
                       />
@@ -509,7 +530,7 @@ if (qr instanceof File) {
                     </span>
                   </span>
                 </div>
-                <div className={styles.info_Box}>
+                {/* <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>좌석수</span>
                   </span>
@@ -531,7 +552,7 @@ if (qr instanceof File) {
                       석
                     </span>
                   </span>
-                </div>
+                </div> */}
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>담당자</span>
@@ -694,7 +715,13 @@ if (qr instanceof File) {
           </div>
 
           <div className={styles.Each_show_All}>
-            <div className={styles.Each_shows}>공연 회차 만들기</div>
+            <div className={styles.rowContainer}>
+              <div className={styles.Each_shows}>공연 회차 수정</div>
+
+                <div className={styles.add_show} onClick={handleAddRow}>
+                  회차 추가
+                </div>
+            </div>
 
             <div className={styles.Each_shows_Name}>
               <div className={styles.form}>회차</div>
@@ -704,10 +731,9 @@ if (qr instanceof File) {
               <div>가격</div>
               {seatReservationEnabled && (
                   <>
-                    <div>제한석 설정</div>
+                    <div>VIP석 설정</div>
                   </>
               )}
-              <div>회차추가</div>
               <div>삭제</div>
             </div>
 
@@ -865,9 +891,7 @@ if (qr instanceof File) {
                     </div>
                 </>
                 )}
-                <div className={styles.add_show} onClick={handleAddRow}>
-                  추가
-                </div>
+
                 <div className={styles.delete_Btn}>
                   <button onClick={() => handleRemoveRow(show.id)}>
                     <img src={DELETE} alt="delete"></img>

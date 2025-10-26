@@ -175,14 +175,13 @@ input[type="number"] {
   width: 100%;
   display: grid;
   grid-template-columns:
-    6rem /* 회차 */
-    10rem /* 날짜 */
-    10rem /* 시간 */
-    9rem /* 구매제한매수 */
-    9rem /* 가격 */
-    8rem /*제한석*/
-    8rem /*회차추가*/
-    8rem; /* 삭제 */
+    1fr      /* 회차 - 유연하게 */
+    2fr      /* 날짜 - 더 넓게 */
+    2fr      /* 시간 - 더 넓게 */
+    1.5fr    /* 구매제한매수 */
+    1.5fr    /* 가격 */
+    1.3fr    /* VIP석 설정 */
+    1fr;     /* 삭제 */
   gap: 1rem;
   padding: 15px 0;
   align-items: center;
@@ -203,7 +202,6 @@ input[type="number"] {
 
 .form_detail_time {
   display: flex;
-  justify-content: center;
   align-items: center; /* 세로 중앙 정렬 */
 }
 
@@ -265,7 +263,8 @@ input[type="number"] {
 /* 회차 추가 버튼 */
 .add_show {
   display: inline-flex;
-  width:30px;
+  height: 24px;
+  width: 60px;
   padding: 4px 24px;
   justify-content: center;
   align-items: center;
@@ -281,6 +280,9 @@ input[type="number"] {
   font-weight: 400;
   line-height: 1.5rem; /* 171.429% */
 
+  margin-bottom: 20px;
+  margin-right: 20px;
+
   &:hover {
     border: 1px solid var(--main-02, #ff3d12);
     background: var(--Main-04, #ffefec);
@@ -292,7 +294,7 @@ input[type="number"] {
 
 .modal_btn {
   display: inline-flex;
-  width:30px;
+  width: 40%;
   padding: 4px 24px;
   justify-content: center;
   align-items: center;
@@ -542,4 +544,23 @@ input[type="number"] {
 
 input[type="radio"] {
   accent-color: black; /* 선택됐을 때 검은색으로 표시 */
+}
+
+.disabled_btn {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  background-color: #f5f5f5 !important;
+  color: #999 !important;
+  pointer-events: none; /* ✅ 클릭 자체를 막음 */
+}
+
+.disabled_btn:hover {
+  background-color: #f5f5f5 !important;
+  color: #999 !important;
+}
+
+.rowContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
 }

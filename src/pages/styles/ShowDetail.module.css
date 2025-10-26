@@ -207,9 +207,11 @@
 }
 
 .selectSch{
-  display: flex;
-  gap: 24px;
+  display: grid;
+  width:100%;
+  gap: 1rem;
   margin-top: 12px;
+  grid-template-columns: repeat(3, 1fr);
 }
 #time {
   font: var(--BODY02_B)
@@ -229,6 +231,7 @@
   background: var(--gray-01-background, #FBFBFB);
   padding: 12px;
   cursor: pointer;
+  min-height: 100px;
   appearance: none;
 }
 
@@ -444,6 +447,12 @@
   font: var(--BODY04);
   &:hover {
     cursor: pointer;
+  }
+}
+
+@media (min-width: 1600px) {
+  .selectSch {
+    grid-template-columns: repeat(4, 1fr); /* 2개씩 배치 */
   }
 }
 
