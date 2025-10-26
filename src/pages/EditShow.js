@@ -861,7 +861,13 @@ function EditShow() {
           </div>
 
           <div className={styles.Each_show_All}>
-            <div className={styles.Each_shows}>공연 회차 수정</div>
+            <div className={styles.rowContainer}>
+              <div className={styles.Each_shows}>공연 회차 수정</div>
+
+                <div className={styles.add_show} onClick={handleAddRow}>
+                  회차 추가
+                </div>
+            </div>
 
             <div className={styles.Each_shows_Name}>
               <div className={styles.form}>회차</div>
@@ -875,7 +881,6 @@ function EditShow() {
                   <div>VIP석 설정</div>
                 </>
               )}
-              <div>회차 추가</div>
               <div>삭제</div>
             </div>
 
@@ -965,10 +970,6 @@ function EditShow() {
                     </div>
                   </>
                 )}
-
-                <div className={styles.add_show} onClick={handleAddRow}>
-                  추가
-                </div>
 
                 <div className={styles.delete_Btn}>
                   <button onClick={() => handleRemoveRow(show.seatId)}> 
