@@ -119,7 +119,7 @@ function ShowDetail() {
     }
 
     const needCount = countBySch[selectedSch.scheduleId] || 0;
-    if (selectedIds.length !== needCount) {
+    if (show.seatReservationEnabled && selectedIds.length !== needCount) {
       alert(`좌석을 ${needCount}개 선택해주세요.`);
       return;
     }
@@ -133,7 +133,7 @@ function ShowDetail() {
     const requestData = {
       scheduleId: selectedSch.scheduleId,
       wishToPurchaseTickets: countBySch[selectedSch.scheduleId] || 0,
-      wishSeats: selectedIds,
+      wishSeats: show.seatReservationEnabled ? selectedIds : [],
     };
 
 
@@ -495,14 +495,7 @@ const handleSelectSch = (scheduleId) => {
           </div>
 
           <div className={styles.show_row}>
-
-            {/* <Seats
-              seatTicket={show.scheduleList?.find(s => s.scheduleId === selectedShowId)?.seatTicket || []}
-              onSelectedSeatsChange={(selectedIds) => {
-                setSelectedIds(selectedIds);
-                console.log("선택된 좌석 인덱스 번호:", selectedIds);
-              }}
-            /> */}
+          {show.seatReservationEnabled && (
             <Seats
               key={selectedShowId || "no-sel"} // 리마운트 유도
               seatTicket={show.scheduleList?.find(s => s.scheduleId === selectedShowId)?.seatTicket || []}
@@ -512,6 +505,7 @@ const handleSelectSch = (scheduleId) => {
                 setSelectedIds(ids);
               }}
             />
+          )}
             <div className={styles.ticket_Box}>
               <div className={styles.section}>총 금액</div>
               <div className={styles.total}>

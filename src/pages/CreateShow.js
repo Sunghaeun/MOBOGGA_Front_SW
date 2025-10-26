@@ -27,7 +27,7 @@ function CreateShow() {
   const [runtime, setRunTime] = useState("");
   const [managerPhoneNumber, setManagerPhoneNumber] = useState("");
   const [manager, setManager] = useState("");
-  const [seatReservationEnabled, setSeatReservationEnabled] = useState(true);
+  const [seatReservationEnabled, setSeatReservationEnabled] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState("");
   // eslint-disable-next-line
   const [maxPeople, setMaxPeople] = useState(100);
@@ -119,8 +119,8 @@ function CreateShow() {
     }
 
     if (!name) return alert("제목을 입력해 주세요");
-    if (!poster || !(poster instanceof File))
-      return alert("공연 이미지를 선택해 주세요");
+    // if (!poster || !(poster instanceof File))
+    //   return alert("공연 이미지를 선택해 주세요");
 
     if (!location) return alert("장소를 입력해 주세요");
     if (!runtime || Number(runtime) <= 0)
@@ -171,6 +171,7 @@ function CreateShow() {
         seatTicket: s.seatTicket,
       })),
     };
+    console.log("최종 requestData:", requestData);
 
     // 3) FormData (파트명 정확히: poster / request / qr)
     const formData = new FormData();
@@ -178,13 +179,27 @@ function CreateShow() {
       "request",
       new Blob([JSON.stringify(requestData)], { type: "application/json" })
     );
-    formData.append("poster", poster, "poster.jpg");
-if (qr instanceof File) {
-  formData.append("qr", qr,"qr.jpg");
-}else {
-  // 빈 Blob 객체를 전송 (서버에서 파일 필드를 기대할 때 사용)
-  formData.append("qr", new Blob([]), "");
-}
+
+    if (poster instanceof File) {
+      formData.append("poster", poster, "poster.jpg");
+    } else {
+      // POSTER 이미지를 Blob으로 변환
+      try {
+        const response = await fetch(POSTER);
+        const blob = await response.blob();
+        formData.append("poster", blob, "default-poster.png");
+      } catch (error) {
+        console.error("기본 포스터 로드 실패:", error);
+        formData.append("poster", new Blob([]), "");
+      }
+    }
+
+    if (qr instanceof File) {
+      formData.append("qr", qr,"qr.jpg");
+    }else {
+      // 빈 Blob 객체를 전송 (서버에서 파일 필드를 기대할 때 사용)
+      formData.append("qr", new Blob([]), "");
+    }
 
 
     // Debug info removed: requestData and FormData remain unchanged.
@@ -391,7 +406,6 @@ if (qr instanceof File) {
                         checked={selectedPlace === "학관 104호"}
                         onChange={() => {
                           setSelectedPlace("학관 104호");
-                          setSeatReservationEnabled(true);
                         }}
                         className={styles.radioInput}
                       />
