@@ -58,7 +58,7 @@ function CreateShow() {
       order: 1,
       date: "",
       hour: "",
-      minute: "",
+      minute: "00",
       cost: "",
       maxTicket: 1,
       maxPeople: 100,
@@ -240,7 +240,7 @@ if (qr instanceof File) {
           order: prev.length + 1,
           date: "",
           hour: "",
-          minute: "",
+          minute: "00",
           cost: "",
           maxTicket: 1,
           maxPeople: 100,
@@ -509,7 +509,7 @@ if (qr instanceof File) {
                     </span>
                   </span>
                 </div>
-                <div className={styles.info_Box}>
+                {/* <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>좌석수</span>
                   </span>
@@ -531,7 +531,7 @@ if (qr instanceof File) {
                       석
                     </span>
                   </span>
-                </div>
+                </div> */}
                 <div className={styles.info_Box}>
                   <span className={styles.fixed_Info}>
                     <span className={styles.info_txt}>담당자</span>
@@ -704,7 +704,7 @@ if (qr instanceof File) {
               <div>가격</div>
               {seatReservationEnabled && (
                   <>
-                    <div>제한석 설정</div>
+                    <div>VIP석 설정</div>
                   </>
               )}
               <div>회차추가</div>

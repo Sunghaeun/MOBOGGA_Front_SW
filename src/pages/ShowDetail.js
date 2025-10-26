@@ -42,6 +42,7 @@ function ShowDetail() {
 
       const _res = await apiClient.get(`/show/detail/${showId}`);
       setShow(_res.data || {});
+      console.log(_res.data);
       setError(null);
     } catch (err) {
       // fetch error handled below
