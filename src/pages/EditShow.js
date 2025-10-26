@@ -893,7 +893,7 @@ function EditShow() {
                     onChange={(e) =>
                       updateSchedule(show.seatId, "date", e.target.value) // ✅ id → seatId
                     }
-                    style={{ width: "11rem" }}
+                    style={{ width: "8rem" }}
                   />
                 </div>
 
@@ -903,7 +903,7 @@ function EditShow() {
                     options={Array.from({ length: 24 }, (_, i) =>
                       String(i).padStart(2, "0")
                     )}
-                    style={{ width: "3.75rem" }}
+                    style={{ width: "3.2rem" }}
                     value={show.timeHour ?? "00"}
                     onChange={(val) => setShowTimePart(show.seatId, "hour", val)} // ✅ id → seatId
                   />
@@ -913,7 +913,7 @@ function EditShow() {
                     options={Array.from({ length: 60 }, (_, i) =>
                       String(i).padStart(2, "0")
                     )}
-                    style={{ width: "3.75rem" }}
+                    style={{ width: "3.2rem" }}
                     value={show.timeMinute ?? "00"}
                     onChange={(val) => setShowTimePart(show.seatId, "minute", val)} // ✅ id → seatId
                   />
