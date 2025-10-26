@@ -38,6 +38,7 @@ function CreateShow() {
   const [introductionLetter, setIntroductionLetter] = useState("");
   const [noticeLetter, setNoticeLetter] = useState("");
   const [earlyBird, setEarlyBird] = useState(false);
+  // eslint-disable-next-line
   const [selectedSeatCount, setSelectedSeatCount] = useState(0);
 
   // eslint-disable-next-line
