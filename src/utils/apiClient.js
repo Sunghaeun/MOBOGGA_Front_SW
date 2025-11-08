@@ -9,7 +9,7 @@ class ApiClient {
   constructor() {
     // axios 인스턴스 생성
     this.client = axios.create({
-      baseURL: process.env.REACT_APP_API_URL,
+      baseURL: `${process.env.REACT_APP_API_URL}test`,
       withCredentials: true,
     });
 

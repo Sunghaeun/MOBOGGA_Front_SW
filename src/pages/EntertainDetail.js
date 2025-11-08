@@ -20,7 +20,7 @@ function EntertainDetail() {
 
   // API BASE & endpoint
   const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
-  const endpoint = `${API_BASE}/entertain/detail/${id}`;
+  const endpoint = `${API_BASE}/test/entertain/detail/${id}`;
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -119,20 +119,35 @@ function EntertainDetail() {
     );
   }
 
+  // if (error) {
+  //   return (
+  //     <div className={loadingStyles.error}>
+  //       <div className={loadingStyles.errorIcon}>⚠️</div>
+  //       <div className={loadingStyles.errorMessage}>{error}</div>
+  //       <button
+  //         onClick={() => fetchEntertain()}
+  //         className={loadingStyles.retryBtn}
+  //       >
+  //         다시 시도
+  //       </button>
+  //     </div>
+  //   );
+  // }
   if (error) {
-    return (
-      <div className={loadingStyles.error}>
-        <div className={loadingStyles.errorIcon}>⚠️</div>
-        <div className={loadingStyles.errorMessage}>{error}</div>
-        <button
-          onClick={() => fetchEntertain()}
-          className={loadingStyles.retryBtn}
-        >
-          다시 시도
-        </button>
-      </div>
-    );
-  }
+   const errorMessage =
+     error?.response?.data?.message ??
+     error?.message ??
+     String(error);
+   return (
+     <div className={loadingStyles.error}>
+       <div className={loadingStyles.errorIcon}>⚠️</div>
+       <div className={loadingStyles.errorMessage}>{errorMessage}</div>
+       <button onClick={() => fetchEntertain()} className={loadingStyles.retryBtn}>
+         다시 시도
+       </button>
+     </div>
+   );
+ }
 
   // const getAuth = async () => {
   //   try {

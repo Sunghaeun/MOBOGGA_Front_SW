@@ -20,7 +20,7 @@ function EntertainDetailMobile() {
 
   // API BASE & endpoint
   const API_BASE = (process.env.REACT_APP_API_URL || "").replace(/\/+$/, "");
-  const endpoint = `${API_BASE}/entertain/detail/${id}`;
+  const endpoint = `${API_BASE}/test/entertain/detail/${id}`;
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);

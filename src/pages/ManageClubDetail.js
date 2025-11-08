@@ -28,7 +28,7 @@ function ClubDetail() {
   const getClub = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/club/detail/${id}`
+        `${process.env.REACT_APP_API_URL}test/club/detail/${id}`
       );
 
       setClub(res.data);
