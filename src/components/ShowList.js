@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import ShowCard from "./ShowCard";
 import styles from "./styles/ShowList.module.css";
@@ -5,6 +6,7 @@ import loadingStyles from "../styles/Loading.module.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import useAuthStore from "../stores/authStore";
 import apiClient from "../utils/apiClient";
+import axios from "axios";
 
 import image1 from "../assets/mainTest/1.png";
 
@@ -64,14 +66,18 @@ function ShowList() {
 
   // 1) show 데이터 가져오기
   const getShow = async () => {
+    console.log("ShowList API 요청 시작"); // 디버깅용
+    console.log("API URL:", process.env.REACT_APP_API_URL); // 환경변수 확인
+
     try {
       setIsLoading(true);
-      setError(null);
+      setError(null); 
 
-      // console.log("Fetching show data from /attraction/list"); // 디버깅용
-      const res = await apiClient.get("/attraction/list");
-      // console.log("API Response:", res); // 디버깅용
-      // console.log("Response data:", res.data); // 디버깅용
+      const fullUrl = `${process.env.REACT_APP_API_URL}/test/attraction/list`;
+      console.log("Full API URL:", fullUrl); // 전체 URL 확인
+
+      const res = await axios.get(fullUrl);
+      console.log("API 응답 성공:", res.data); // 응답 확인
 
       if (!res.data || !res.data.entireList) {
         throw new Error("Invalid response structure");
@@ -119,8 +125,8 @@ function ShowList() {
       });
       setShow(converted);
     } catch (err) {
-      // console.error("Error fetching show data:", err);
-      // console.error("Error response:", err.response);
+      console.error("API 에러 발생:", err); // 에러 상세 정보
+      console.error("에러 응답:", err.response); // 서버 응답 확인
       setError("공연 목록을 불러오는데 실패했습니다.");
     } finally {
       setIsLoading(false);

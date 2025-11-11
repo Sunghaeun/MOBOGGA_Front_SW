@@ -46,7 +46,7 @@ function RecruitingDetail() {
       setError(null);
 
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}test/recruiting/detail/${recruitingId}`
+        `${process.env.REACT_APP_API_URL}/test/recruiting/detail/${recruitingId}`
       );
       if (response.data) {
         setRecruiting(response.data);

@@ -45,7 +45,7 @@ function ClubList() {
       setIsLoading(true);
       setError(null);
 
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}test/club/list`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/test/club/list`);
       setClub(res.data.clubList);
     } catch (err) {
       setError("동아리 목록을 불러오는데 실패했습니다.");

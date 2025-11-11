@@ -34,7 +34,7 @@ function RecruitingList() {
       setError(null);
 
       const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}test/recruiting/list`
+        `${process.env.REACT_APP_API_URL}/test/recruiting/list`
       );
       setRecruiting(res.data.recruitingList);
     } catch (err) {
