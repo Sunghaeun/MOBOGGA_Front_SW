@@ -17,7 +17,7 @@ function Main() {
   console.log('Is mobile:', isMobile); // 모바일 여부 확인
 
   // /main에서는 배너 표시, /show/*에서는 배너 미표시
-  const showBanner = location.pathname === "/main";
+  const showBanner = location.pathname === "/main"; 
 
   console.log('Show banner:', showBanner); // 배너 표시 여부 확인
 
