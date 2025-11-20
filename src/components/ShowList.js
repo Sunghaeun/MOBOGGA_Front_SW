@@ -73,7 +73,7 @@ function ShowList() {
       setIsLoading(true);
       setError(null); 
 
-      const fullUrl = `${process.env.REACT_APP_API_URL}/test/attraction/list`;
+      const fullUrl = `${process.env.REACT_APP_API_URL}test/attraction/list`;
       console.log("Full API URL:", fullUrl); // 전체 URL 확인
 
       const res = await axios.get(fullUrl);
